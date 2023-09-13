@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name = "viewport"
+	content = "width=device-width , initial-scale=1.0">
+	<title> ryan little </title>
+	<link rel = "stylesheet" href = "styles.css">
+</head>
+	<body>
+		<h1> Ryan Little </h1>
+		<u1 class = "horizontal">
+		<li> <a href = "https://instagram.com/ryan.ltt">instagram</a>
+			 <a href = "https://www.youtube.com/channel/UCNoJfsETVvKlPHeEeWarSiA"> youtube </a>
+		</li>
+		</u1>
+		<p> i like to code. some of the languages i code in include:  </p>
+		<ul>
+		<li> python </li>
+		<li> java </li>
+		<li> c++ </li>
+		<li> c </li>
+		<li> c# </li>
+		</ul>
+		<span> test </span>
+		<a href = "projects.html">
+		<button id = "b2" type="button" class = "button" > projects </button>
+		</a>
+		<button id = "b1" type="button" class = "button2" > about me </button>
+		
+	</body>
+</html>
