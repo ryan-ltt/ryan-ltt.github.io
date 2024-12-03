@@ -95,10 +95,10 @@ function handleClick(button: HTMLButtonElement) {
     currentPlayer = currentPlayer === Player.X ? Player.O : Player.X;
     if (!win){
         if (currentPlayer == "O"){
-            document.getElementById("wintext").innerText = "rabbit's turn! turncount: " + turnCount;
+            document.getElementById("wintext").innerText = "rabbit's turn!";
         }
         else{
-            document.getElementById("wintext").innerText = "horse's turn! turncount: " + turnCount;
+            document.getElementById("wintext").innerText = "horse's turn!";
         }
     }
     if (turnCount == 9 && !win){
