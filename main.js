@@ -28,8 +28,8 @@ var Player;
 var currentPlayer = Player.X;
 // link to where images are stored
 var playerImages = (_a = {},
-    _a[Player.X] = './images/horse.jpg',
-    _a[Player.O] = './images/rabbit.jpg',
+    _a[Player.X] = 'images/horse.jpg',
+    _a[Player.O] = 'images/rabbit.jpg',
     _a);
 // Select all buttons with the class 'item-button'
 var buttons = document.querySelectorAll('.item-button');
@@ -81,10 +81,10 @@ function handleClick(button) {
     currentPlayer = currentPlayer === Player.X ? Player.O : Player.X;
     if (!win) {
         if (currentPlayer == "O") {
-            document.getElementById("wintext").innerText = "rabbit's turn! turncount: " + turnCount;
+            document.getElementById("wintext").innerText = "rabbit's turn!";
         }
         else {
-            document.getElementById("wintext").innerText = "horse's turn! turncount: " + turnCount;
+            document.getElementById("wintext").innerText = "horse's turn!";
         }
     }
     if (turnCount == 9 && !win) {

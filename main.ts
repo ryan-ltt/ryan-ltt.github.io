@@ -29,8 +29,8 @@ let currentPlayer: Player = Player.X;
 
 // link to where images are stored
 const playerImages: { [key in Player]: string } = {
-    [Player.X]: './images/horse.jpg',
-    [Player.O]: './images/rabbit.jpg',
+    [Player.X]: 'images/horse.jpg',
+    [Player.O]: 'images/rabbit.jpg',
 };
 
 // Select all buttons with the class 'item-button'
