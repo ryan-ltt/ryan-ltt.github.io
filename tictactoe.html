@@ -7,51 +7,24 @@
 	<title> ryan little </title>
 	<link rel = "stylesheet" href = "tictactoe.css">
 
-<style> 
-
-    .text {
-      margin-bottom: 20px; /* Space between the text and the grid */
-      font-size: 24px; /* Adjust font size as needed */
-      font-family: "Comic Sans MS", "Comic Sans", cursive;
-      
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap; /* Allows items to wrap into new rows */
-      width: 300px; /* Adjust based on your desired grid size */
-      
-    }
-    .item {
-      width: 33.33%; /* 100% / 3 items per row */
-      height: 100px; /* Adjust height as needed */
-      color:red;
-      box-sizing: border-box;
-      border: 1px solid #000000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      
-      
-    }
-  </style>
 </head>
 <body>
+    <div id="log"></div>
     <div class="text"><h1>tic tac toe</h1></div>
     <div class="container">
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
-        <button class="item-button item"></button>
+      <button class="item-button item" data-index="1"></button>
+      <button class="item-button item" data-index="2"></button>
+      <button class="item-button item" data-index="3"></button>
+      <button class="item-button item" data-index="4"></button>
+      <button class="item-button item" data-index="5"></button>
+      <button class="item-button item" data-index="6"></button>
+      <button class="item-button item" data-index="7"></button>
+      <button class="item-button item" data-index="8"></button>
+      <button class="item-button item" data-index="9"></button>
       
     </div>
-
+    <div id = "wintext">horse's turn!</div>
+    <div id = "refreshtext"></div>
     <script src="main.js"></script>
   </body>
   </html>
