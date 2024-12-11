@@ -10,7 +10,7 @@ td {
 h1 {
   margin-top: 0px;
   margin-bottom: 10px;
-  font-family: sans-serif;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
   font-size: 4rem;
   background: linear-gradient(
     to right,
@@ -27,9 +27,10 @@ h1 {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 3px black;
 }
 body {
-  background-color: blanchedalmond;
+  background-color: lightblue;
   margin: 0;
   height: 100vh;
   display: flex;
@@ -42,6 +43,7 @@ body {
   display: flex;
   flex-wrap: wrap; /* Allows items to wrap into new rows */
   width: 300px; /* Adjust based on your desired grid size */
+  margin-bottom: 10px;
 }
 .item {
   width: 33.33%; /* 100% / 3 items per row */
@@ -60,4 +62,54 @@ body {
 }
 .item:hover {
   background-color: #e0e0e0;
+}
+
+.top-left-buttons {
+  position: fixed; /* or absolute */
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 10px; /* space between the buttons */
+}
+
+.back-buttons {
+  background: #fff;
+  border: 1px solid #000;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.back-buttons:active
+{
+	background-color: #32a6a8;
+	transform: translate(0px,2px);
+}
+
+#gametext, #refreshtext {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.layout-wrapper {
+  position: relative; 
+  width: 100%;
+  text-align: center; /* Centers inline-block or inline elements inside */
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.content-section {
+  display: inline-block; 
+  /*max-width: 600px;    /* Optional: limit width of content for better appearance */
+  vertical-align: top; 
+}
+
+.image-section {
+  position: absolute;
+  top: 20px;    /* Adjust as needed */
+  right: 20px;  /* Adjust as needed */
+}
+
+.image-section img {
+  max-width: 200px; /* Adjust size as needed */
 }
