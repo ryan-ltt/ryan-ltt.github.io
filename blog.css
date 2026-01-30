@@ -73,3 +73,8 @@ a.blog-title:hover
 {
 	text-decoration: underline;
 }
+.blog-title b
+{
+	font-weight: 900;
+	font-size: 18px;
+}
