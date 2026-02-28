@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>city builder</title>
+  <link rel="stylesheet" href="citybuilder.css">
+</head>
+<body>
+  <div class="top-left-buttons">
+    <a href="index.html">
+      <button class="back-buttons">back to homepage</button>
+    </a>
+    <a href="projects.html">
+      <button class="back-buttons">back to projects</button>
+    </a>
+  </div>
+
+  <div class="game-wrapper">
+    <h1>city builder</h1>
+    <div class="game-container">
+      <div class="discoveries-panel">
+        <h2>discoveries</h2>
+        <div id="discoveries-list">
+          <p class="hint" id="discoveries-empty">no buildings<br>discovered yet</p>
+        </div>
+      </div>
+      <canvas id="gameCanvas" width="512" height="512"></canvas>
+      <div class="sidebar">
+
+        <div class="panel">
+          <h2>view</h2>
+          <div class="zoom-row">
+            <button id="zoom-out" class="zoom-btn">−</button>
+            <span id="zoom-label">100%</span>
+            <button id="zoom-in" class="zoom-btn">+</button>
+          </div>
+          <div class="stat-row">
+            <span>center</span>
+            <span class="value" id="cam-pos">8, 8</span>
+          </div>
+          <p class="hint">drag · scroll · wasd</p>
+        </div>
+
+        <div class="panel">
+          <h2>stats</h2>
+          <div class="stat-row"><span>day</span><span class="value" id="sim-day">1</span></div>
+          <div class="stat-row"><span>gold</span><span class="value" id="gold">$200</span></div>
+          <div class="stat-row"><span>buildings</span><span class="value" id="stat-buildings">0</span></div>
+          <div class="stat-row"><span>happiness</span><span class="value" id="happiness">100%</span></div>
+        </div>
+
+        <div class="panel">
+          <h2>people</h2>
+          <div class="stat-row"><span>alive</span><span class="value" id="people-count">0 / 80</span></div>
+          <div class="stat-row"><span>lifespan</span><span class="value" id="lifespan-val">120t</span></div>
+          <button id="spawn-btn" class="action-btn">spawn person ($50 gold)</button>
+          <button id="upgrade-btn" class="action-btn upgrade">upgrade lifespan (10 food)</button>
+          <p class="hint">click map to spawn</p>
+        </div>
+
+        <div class="panel">
+          <h2>stockpile</h2>
+          <div class="stat-row"><span>wood</span><span class="value" id="res-wood">0</span></div>
+          <div class="stat-row"><span>stone</span><span class="value" id="res-stone">0</span></div>
+          <div class="stat-row"><span>food</span><span class="value" id="res-food">0</span></div>
+        </div>
+
+        <div class="panel" id="votes-panel" style="display:none">
+          <h2>town hall votes</h2>
+          <div class="stat-row"><span>church</span><span class="value" id="votes-church">0 / 10</span></div>
+          <div class="stat-row"><span>park</span><span class="value" id="votes-park">0 / 10</span></div>
+          <div class="stat-row"><span>factory</span><span class="value" id="votes-factory">0 / 10</span></div>
+          <p class="hint">votes cast when depositing at town hall</p>
+        </div>
+
+        <div class="panel">
+          <p id="message"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="citybuilder.js"></script>
+</body>
+</html>
