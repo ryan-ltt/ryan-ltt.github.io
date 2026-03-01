@@ -27,7 +27,7 @@ const BASE_LIFESPAN       = 120;
 const LIFESPAN_PER_LEVEL  = 40;
 const MAX_LIFESPAN_UPGRADES = 10;
 const CARRY_CAP           = 5;
-const MAX_PEOPLE          = 80;
+const MAX_PEOPLE          = 250;
 const BUILD_COOLDOWN      = 16;
 const SPAWN_COST          = 5;    // gold cost to spawn a person
 const PERSON_COLORS = ['#e53935','#fb8c00','#43a047','#1e88e5','#8e24aa','#d81b60','#546e7a','#6d4c41'];
@@ -63,6 +63,7 @@ let houseRegistry = {}; // houseId → { r, c }
 let nextHouseId  = 0;
 let lifespanLevel   = 0;
 let simTick         = 0;
+let pendingTownHall = false; // true when a remote cluster is waiting to form a new TH
 
 // ── Discoveries ───────────────────────────────────────────────────────────────
 
@@ -244,16 +245,46 @@ function foodWeight(th) {
 
 function wouldBlockPath(r, c) {
   const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
+
+  // Collect walkable cardinal neighbours of the tile being placed
+  const neighbours = [];
   for (const [dr, dc] of cardinals) {
     const nr = r+dr, nc = c+dc;
-    if (!inBounds(nr, nc) || grid[nr][nc] !== ROAD) continue;
-    let walkable = 0;
-    for (const [er, ec] of cardinals) {
-      const xr = nr+er, xc = nc+ec;
-      if (xr === r && xc === c) continue;
-      if (inBounds(xr, xc) && (grid[xr][xc] === GRASS || grid[xr][xc] === ROAD)) walkable++;
+    if (!inBounds(nr, nc)) continue;
+    const t = grid[nr][nc];
+    if (t === GRASS || t === ROAD || t === PARK) neighbours.push([nr, nc]);
+  }
+
+  // 0 or 1 walkable neighbours — can never enclose anything
+  if (neighbours.length <= 1) return false;
+
+  // BFS flood-fill from the first neighbour, treating (r,c) as impassable.
+  // If any other neighbour is not reached, the placement splits the open area.
+  const isWalkable = (tr, tc) => {
+    if (tr === r && tc === c) return false; // hypothetically filled
+    if (!inBounds(tr, tc)) return false;
+    const t = grid[tr][tc];
+    return t === GRASS || t === ROAD || t === PARK;
+  };
+
+  const visited = new Set();
+  const key = (tr, tc) => tr * 1000 + tc;
+  const queue = [neighbours[0]];
+  visited.add(key(...neighbours[0]));
+
+  while (queue.length > 0) {
+    const [cr, cc] = queue.shift();
+    for (const [dr, dc] of cardinals) {
+      const nr = cr+dr, nc = cc+dc;
+      if (!isWalkable(nr, nc) || visited.has(key(nr, nc))) continue;
+      visited.add(key(nr, nc));
+      queue.push([nr, nc]);
     }
-    if (walkable === 0) return true;
+  }
+
+  // If any neighbour wasn't reached, placing here would isolate it
+  for (let i = 1; i < neighbours.length; i++) {
+    if (!visited.has(key(...neighbours[i]))) return true;
   }
   return false;
 }
@@ -769,6 +800,7 @@ function registerHouse(r, c, th) {
 }
 
 function tryBuild(p) {
+  if (pendingTownHall) return; // halt all building until new TH is formed
   if (p.buildCooldown > 0) { p.buildCooldown--; return; }
 
   const r = Math.round(p.y), c = Math.round(p.x);
@@ -799,42 +831,55 @@ function tryBuildTownHall() {
   for (let r = 5; r < MAP_ROWS-5; r += 3) {
     for (let c = 5; c < MAP_COLS-5; c += 3) {
       if (grid[r][c] !== HOUSE) continue;
-      let localHouses = 0, localTownHalls = 0;
-      for (let dr = -5; dr <= 5; dr++)
-        for (let dc = -5; dc <= 5; dc++) {
+
+      // Must be more than 10 tiles (Manhattan) from every existing town hall
+      const parentTH = nearestTownHall(r, c);
+      if (!parentTH) continue;
+      const distToParent = Math.abs(r - parentTH.r) + Math.abs(c - parentTH.c);
+      if (distToParent <= 10) continue;
+
+      // Count houses clustered within a 7-tile radius — these are the "settlers"
+      let localHouses = 0;
+      for (let dr = -7; dr <= 7; dr++)
+        for (let dc = -7; dc <= 7; dc++) {
           if (!inBounds(r+dr, c+dc)) continue;
-          if (grid[r+dr][c+dc] === HOUSE)     localHouses++;
-          if (grid[r+dr][c+dc] === TOWN_HALL) localTownHalls++;
+          if (grid[r+dr][c+dc] === HOUSE) localHouses++;
         }
-      if (localHouses >= TOWN_HALL_TRIGGER.houses && localTownHalls === 0) {
-        const parentTH = nearestTownHall(r, c);
-        if (parentTH &&
-            parentTH.resources.wood  >= TOWN_HALL_TRIGGER.wood &&
-            parentTH.resources.stone >= TOWN_HALL_TRIGGER.stone) {
-          parentTH.resources.wood  -= TOWN_HALL_TRIGGER.wood;
-          parentTH.resources.stone -= TOWN_HALL_TRIGGER.stone;
-          // Remove the house from registry and popCap since it becomes a TH
-          for (const [id, h] of Object.entries(houseRegistry)) {
-            if (h.r === r && h.c === c) {
-              delete houseRegistry[id];
-              parentTH.popCap = Math.max(1, parentTH.popCap - 1);
-              break;
-            }
-          }
-          grid[r][c] = TOWN_HALL;
-          const newTH = {
-            r, c,
-            resources: { wood: 0, stone: 0, food: 0 },
-            votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
-            popCap: 1,
-          };
-          townHalls.push(newTH);
-          recordDiscovery(TOWN_HALL);
-          showMessage('town hall built at ' + c + ', ' + r);
-          updateUI();
-          return;
+
+      if (localHouses < TOWN_HALL_TRIGGER.houses) continue;
+
+      // Cluster qualifies — halt all other building until this TH is formed
+      pendingTownHall = true;
+
+      // Parent TH must have enough resources to fund the founding
+      if (parentTH.resources.wood  < TOWN_HALL_TRIGGER.wood ||
+          parentTH.resources.stone < TOWN_HALL_TRIGGER.stone) return; // wait for resources
+
+      parentTH.resources.wood  -= TOWN_HALL_TRIGGER.wood;
+      parentTH.resources.stone -= TOWN_HALL_TRIGGER.stone;
+
+      // Remove the house from registry and popCap since it becomes a TH
+      for (const [id, h] of Object.entries(houseRegistry)) {
+        if (h.r === r && h.c === c) {
+          delete houseRegistry[id];
+          parentTH.popCap = Math.max(1, parentTH.popCap - 1);
+          break;
         }
       }
+
+      grid[r][c] = TOWN_HALL;
+      const newTH = {
+        r, c,
+        resources: { wood: 0, stone: 0, food: 0 },
+        votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
+        popCap: 1,
+      };
+      townHalls.push(newTH);
+      pendingTownHall = false;
+      recordDiscovery(TOWN_HALL);
+      showMessage('town hall built at ' + c + ', ' + r);
+      updateUI();
+      return;
     }
   }
 }
@@ -971,25 +1016,17 @@ function simulationTick() {
 }
 
 // ── Simulation speed control ───────────────────────────────────────────────
-let simSpeedIndex = 2; // 0=paused, 1=slow, 2=normal, 3=fast
-const SIM_SPEEDS = [null, 500, 250, 100];
-const SIM_SPEED_LABELS = ['paused', '½×', '1×', '2×'];
 let simIntervalId = setInterval(simulationTick, SIM_INTERVAL);
 
-function setSimSpeed(index) {
-  simSpeedIndex = index;
+function setSimSpeed(value) {
+  // value: 0 = paused, 1–10 = multiplier (1× = 250ms, 10× = 25ms)
   clearInterval(simIntervalId);
   simIntervalId = null;
-  if (SIM_SPEEDS[index] !== null) {
-    simIntervalId = setInterval(simulationTick, SIM_SPEEDS[index]);
+  if (value > 0) {
+    simIntervalId = setInterval(simulationTick, Math.round(SIM_INTERVAL / value));
   }
-  // Update button states
-  const btns = ['speed-pause', 'speed-slow', 'speed-normal', 'speed-fast'];
-  btns.forEach((id, i) => {
-    const btn = document.getElementById(id);
-    if (!btn) return;
-    btn.classList.toggle('selected', i === index);
-  });
+  const label = document.getElementById('speed-label');
+  if (label) label.textContent = value === 0 ? 'paused' : value + '×';
 }
 
 // ── UI ────────────────────────────────────────────────────────────────────────
@@ -1591,10 +1628,23 @@ document.getElementById('zoom-in').addEventListener('click', () =>
 document.getElementById('zoom-out').addEventListener('click', () =>
   applyZoom(zoomIndex - 1, canvas.width / 2, canvas.height / 2));
 
-document.getElementById('speed-pause').addEventListener('click', () => setSimSpeed(0));
-document.getElementById('speed-slow').addEventListener('click',  () => setSimSpeed(1));
-document.getElementById('speed-normal').addEventListener('click',() => setSimSpeed(2));
-document.getElementById('speed-fast').addEventListener('click',  () => setSimSpeed(3));
+document.getElementById('speed-slider').addEventListener('input', e => {
+  setSimSpeed(parseInt(e.target.value));
+});
+
+document.getElementById('speed-pause').addEventListener('click', () => {
+  const slider = document.getElementById('speed-slider');
+  const current = parseInt(slider.value);
+  if (current === 0) {
+    // Resume to 1× if we were fully paused
+    slider.value = 1;
+    setSimSpeed(1);
+  } else {
+    slider.value = 0;
+    setSimSpeed(0);
+  }
+  document.getElementById('speed-pause').classList.toggle('selected', parseInt(slider.value) === 0);
+});
 
 document.getElementById('spawn-btn').addEventListener('click', () => {
   showMessage('click the map to spawn a person');
@@ -1673,7 +1723,7 @@ const SAVE_KEY = 'citybuilder_save';
 function saveGame() {
   const data = {
     v: 1,
-    gold, lifespanLevel, simTick, nextPersonId, nextHouseId,
+    gold, lifespanLevel, simTick, nextPersonId, nextHouseId, pendingTownHall,
     grid:        grid.map(row => [...row]),
     resourceMap: resourceMap.map(row => row.map(cell => cell ? { ...cell } : null)),
     townHalls:   townHalls.map(th => ({
@@ -1697,11 +1747,12 @@ function loadGame() {
     const data = JSON.parse(raw);
     if (data.v !== 1) { showMessage('save version mismatch.'); return false; }
 
-    gold          = data.gold;
-    lifespanLevel = data.lifespanLevel;
-    simTick       = data.simTick;
-    nextPersonId  = data.nextPersonId;
-    nextHouseId   = data.nextHouseId;
+    gold             = data.gold;
+    lifespanLevel    = data.lifespanLevel;
+    simTick          = data.simTick;
+    nextPersonId     = data.nextPersonId;
+    nextHouseId      = data.nextHouseId;
+    pendingTownHall  = data.pendingTownHall ?? false;
 
     for (let r = 0; r < MAP_ROWS; r++)
       for (let c = 0; c < MAP_COLS; c++) {

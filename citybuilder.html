@@ -43,9 +43,8 @@
             <p class="hint">drag · scroll · wasd</p>
             <div class="speed-row">
               <button id="speed-pause" class="speed-btn">⏸</button>
-              <button id="speed-slow"  class="speed-btn">0.5×</button>
-              <button id="speed-normal" class="speed-btn selected">1×</button>
-              <button id="speed-fast"  class="speed-btn">2×</button>
+              <input id="speed-slider" class="speed-slider" type="range" min="0" max="10" value="1" step="1">
+              <span id="speed-label" class="speed-label">1×</span>
             </div>
             <div id="event-log"></div>
           </div>
