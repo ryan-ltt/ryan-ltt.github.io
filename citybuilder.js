@@ -5,8 +5,8 @@ ctx.imageSmoothingEnabled = false;
 // Reference tile size all draw functions are authored at
 const BASE = 32;
 
-const MAP_COLS = 64;
-const MAP_ROWS = 64;
+const MAP_COLS = 100;
+const MAP_ROWS = 100;
 
 const ZOOM_LEVELS = [8, 12, 16, 24, 32, 48, 64];
 const ZOOM_LABELS  = ['25%', '37%', '50%', '75%', '100%', '150%', '200%'];
@@ -27,7 +27,7 @@ const BASE_LIFESPAN       = 120;
 const LIFESPAN_PER_LEVEL  = 40;
 const MAX_LIFESPAN_UPGRADES = 10;
 const CARRY_CAP           = 5;
-const MAX_PEOPLE          = 250;
+const MAX_PEOPLE          = 500;
 const BUILD_COOLDOWN      = 16;
 const SPAWN_COST          = 5;    // gold cost to spawn a person
 const PERSON_COLORS = ['#e53935','#fb8c00','#43a047','#1e88e5','#8e24aa','#d81b60','#546e7a','#6d4c41'];
@@ -832,11 +832,11 @@ function tryBuildTownHall() {
     for (let c = 5; c < MAP_COLS-5; c += 3) {
       if (grid[r][c] !== HOUSE) continue;
 
-      // Must be more than 10 tiles (Manhattan) from every existing town hall
+      // Must be more than 15 tiles (Manhattan) from every existing town hall
       const parentTH = nearestTownHall(r, c);
       if (!parentTH) continue;
       const distToParent = Math.abs(r - parentTH.r) + Math.abs(c - parentTH.c);
-      if (distToParent <= 10) continue;
+      if (distToParent <= 20) continue;
 
       // Count houses clustered within a 7-tile radius — these are the "settlers"
       let localHouses = 0;
