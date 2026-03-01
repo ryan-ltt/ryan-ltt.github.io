@@ -1,5 +1,5 @@
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 // Reference tile size all draw functions are authored at
@@ -11,11 +11,11 @@ const MAP_ROWS = 64;
 const ZOOM_LEVELS = [8, 12, 16, 24, 32, 48, 64];
 const ZOOM_LABELS  = ['25%', '37%', '50%', '75%', '100%', '150%', '200%'];
 
-const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7;
+const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7, TREE_FARM = 8, STONE_FARM = 9;
 
 // Flat colours used for LOD / minimap-like rendering at very small tile sizes
-const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00'];
-const TILE_NAMES  = ['grass', 'path', 'house', 'shop', 'park', 'factory', 'church', 'town hall'];
+const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00', '#388e3c', '#78909c'];
+const TILE_NAMES  = ['grass', 'path', 'house', 'shop', 'park', 'factory', 'church', 'town hall', 'tree farm', 'stone farm'];
 
 // Income per second from structures built by the civilization
 const TILE_INCOME = { [FACTORY]: 30 };
@@ -33,12 +33,14 @@ const SPAWN_COST          = 5;    // gold cost to spawn a person
 const PERSON_COLORS = ['#e53935','#fb8c00','#43a047','#1e88e5','#8e24aa','#d81b60','#546e7a','#6d4c41'];
 
 const BUILD_COSTS = {
-  [ROAD]:      { wood: 1, stone: 0, food: 0 },
-  [HOUSE]:     { wood: 5, stone: 0, food: 0 },
-  [CHURCH]:    { wood: 2, stone: 4, food: 0 },
-  [PARK]:      { wood: 0, stone: 0, food: 0 },
-  [FACTORY]:   { wood: 5, stone: 5, food: 2 },
-  [TOWN_HALL]: { wood: 0, stone: 0, food: 0 }, // auto-placed, cost handled separately
+  [ROAD]:       { wood: 1, stone: 0, food: 0 },
+  [HOUSE]:      { wood: 5, stone: 0, food: 0 },
+  [CHURCH]:     { wood: 2, stone: 4, food: 0 },
+  [PARK]:       { wood: 0, stone: 0, food: 0 },
+  [FACTORY]:    { wood: 5, stone: 5, food: 2 },
+  [TOWN_HALL]:  { wood: 0, stone: 0, food: 0 }, // auto-placed, cost handled separately
+  [TREE_FARM]:  { wood: 3, stone: 2, food: 0 },
+  [STONE_FARM]: { wood: 2, stone: 3, food: 0 },
 };
 
 const TOWN_HALL_TRIGGER = { houses: 6, wood: 20, stone: 15 };
@@ -55,20 +57,23 @@ for (let r = 0; r < MAP_ROWS; r++) resourceMap.push(new Array(MAP_COLS).fill(nul
 let gold         = 5;
 let people       = [];
 let nextPersonId = 0;
-let civilResources  = { wood: 0, stone: 0, food: 0 };
+let townHalls    = []; // { r, c, resources:{wood,stone,food}, votes:{...}, popCap }
+let houseRegistry = {}; // houseId → { r, c }
+let nextHouseId  = 0;
 let lifespanLevel   = 0;
 let simTick         = 0;
-let townHallVotes   = { [CHURCH]: 0, [PARK]: 0, [FACTORY]: 0 };
 
 // ── Discoveries ───────────────────────────────────────────────────────────────
 
 const BUILDING_INFO = {
-  [ROAD]:      { name: 'path',      desc: 'Dirt trail. People move faster along paths. Required before most buildings can be placed.' },
-  [HOUSE]:     { name: 'house',     desc: 'Shelter. Resources are deposited here. Rarely spawns new people and enables town hall upgrade.' },
-  [PARK]:      { name: 'park',      desc: '+5% happiness. Generates food nodes nearby over time.' },
-  [FACTORY]:   { name: 'factory',   desc: '+$30 gold/sec. -10% happiness. Requires town hall.' },
-  [CHURCH]:    { name: 'church',    desc: 'Place of worship. Requires 2 wood + 4 stone to build.' },
-  [TOWN_HALL]: { name: 'town hall', desc: 'Civic centre. People deposit here and vote on new buildings. Unlocks factories.' },
+  [ROAD]:       { name: 'path',       desc: 'Dirt trail. People walk along paths. Required before most buildings can be placed.' },
+  [HOUSE]:      { name: 'house',      desc: 'Shelter. Increases pop cap by 1. Resources are deposited here.' },
+  [PARK]:       { name: 'park',       desc: '+5% happiness. Generates food nodes nearby over time.' },
+  [FACTORY]:    { name: 'factory',    desc: '+$30 gold/sec. -10% happiness. Requires town hall.' },
+  [CHURCH]:     { name: 'church',     desc: 'Place of worship. Requires 2 wood + 4 stone to build.' },
+  [TOWN_HALL]:  { name: 'town hall',  desc: 'Civic centre. People deposit here and vote on new buildings.' },
+  [TREE_FARM]:  { name: 'tree farm',  desc: 'Generates wood nodes on nearby grass. Built when wood supply is low.' },
+  [STONE_FARM]: { name: 'stone farm', desc: 'Generates stone nodes on nearby grass. Built when stone supply is low.' },
 };
 
 // Set of tile types that have been placed at least once
@@ -88,7 +93,9 @@ function drawTileToContext(targetCtx, type, x, y, size) {
     case PARK:      drawPark(0, 0);     break;
     case FACTORY:   drawFactory(0, 0);  break;
     case CHURCH:    drawChurch(0, 0);   break;
-    case TOWN_HALL: drawTownHall(0, 0); break;
+    case TOWN_HALL:  drawTownHall(0, 0);  break;
+    case TREE_FARM:  drawTreeFarm(0, 0);  break;
+    case STONE_FARM: drawStoneFarm(0, 0); break;
     default:
       targetCtx.fillStyle = TILE_COLORS[type] || '#ccc';
       targetCtx.fillRect(0, 0, BASE, BASE);
@@ -195,6 +202,49 @@ function inBounds(r, c) {
   return r >= 0 && r < MAP_ROWS && c >= 0 && c < MAP_COLS;
 }
 
+function nearestTownHall(r, c) {
+  let best = null, bestDist = Infinity;
+  for (const th of townHalls) {
+    const d = Math.abs(th.r - r) + Math.abs(th.c - c);
+    if (d < bestDist) { bestDist = d; best = th; }
+  }
+  return best;
+}
+
+function globalPopCap() {
+  return Math.min(MAX_PEOPLE, townHalls.reduce((s, th) => s + th.popCap, 0));
+}
+
+function woodWeight(th) {
+  const w = th.resources.wood, s = th.resources.stone;
+  if (w + s === 0) return 15;
+  const ratio = w / (w + s + 1);
+  return ratio < 0.3 ? 40 : ratio < 0.5 ? 15 : 3;
+}
+
+function stoneWeight(th) {
+  const w = th.resources.wood, s = th.resources.stone;
+  if (w + s === 0) return 15;
+  const ratio = s / (w + s + 1);
+  return ratio < 0.3 ? 40 : ratio < 0.5 ? 15 : 3;
+}
+
+function wouldBlockPath(r, c) {
+  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
+  for (const [dr, dc] of cardinals) {
+    const nr = r+dr, nc = c+dc;
+    if (!inBounds(nr, nc) || grid[nr][nc] !== ROAD) continue;
+    let walkable = 0;
+    for (const [er, ec] of cardinals) {
+      const xr = nr+er, xc = nc+ec;
+      if (xr === r && xc === c) continue;
+      if (inBounds(xr, xc) && (grid[xr][xc] === GRASS || grid[xr][xc] === ROAD)) walkable++;
+    }
+    if (walkable === 0) return true;
+  }
+  return false;
+}
+
 function getCanvasPos(e) {
   const rect = canvas.getBoundingClientRect();
   return {
@@ -234,11 +284,21 @@ function regenerateResources() {
   }
   for (let r = 0; r < MAP_ROWS; r++) {
     for (let c = 0; c < MAP_COLS; c++) {
-      if (grid[r][c] !== PARK) continue;
-      if (Math.random() > 0.4) continue;
-      const site = findGrassSiteNear(r, c, 1, 3);
-      if (site && !resourceMap[site.r][site.c]) {
-        resourceMap[site.r][site.c] = { type: 'food', amount: 5 + Math.floor(Math.random() * 8) };
+      const t = grid[r][c];
+      if (t === PARK && Math.random() < 0.4) {
+        const site = findGrassSiteNear(r, c, 1, 3);
+        if (site && !resourceMap[site.r][site.c])
+          resourceMap[site.r][site.c] = { type: 'food', amount: 5 + Math.floor(Math.random() * 8) };
+      }
+      if (t === TREE_FARM && Math.random() < 0.6) {
+        const site = findGrassSiteNear(r, c, 1, 3);
+        if (site && !resourceMap[site.r][site.c])
+          resourceMap[site.r][site.c] = { type: 'wood', amount: 4 + Math.floor(Math.random() * 6) };
+      }
+      if (t === STONE_FARM && Math.random() < 0.6) {
+        const site = findGrassSiteNear(r, c, 1, 3);
+        if (site && !resourceMap[site.r][site.c])
+          resourceMap[site.r][site.c] = { type: 'stone', amount: 4 + Math.floor(Math.random() * 6) };
       }
     }
   }
@@ -268,7 +328,7 @@ function currentMaxAge() {
 }
 
 function spawnPersonFree(r, c) {
-  if (!inBounds(r, c) || people.length >= MAX_PEOPLE) return;
+  if (!inBounds(r, c) || people.length >= globalPopCap()) return;
   people.push({
     id: nextPersonId++,
     x: c, y: r,
@@ -279,13 +339,39 @@ function spawnPersonFree(r, c) {
     color: PERSON_COLORS[nextPersonId % PERSON_COLORS.length],
     mode: 'build',   // 'build' | 'gather'
     homeR: r, homeC: c,
+    houseId: null,
   });
 }
 
 function spawnPerson(r, c) {
   if (!inBounds(r, c)) return;
-  if (people.length >= MAX_PEOPLE) {
-    showMessage('too many people!');
+
+  // First ever spawn: place the starting town hall on the clicked tile
+  if (townHalls.length === 0) {
+    if (gold < SPAWN_COST) {
+      showMessage('need $' + SPAWN_COST + ' gold to spawn!');
+      return;
+    }
+    grid[r][c] = TOWN_HALL;
+    townHalls.push({
+      r, c,
+      resources: { wood: 10, stone: 0, food: 100 },
+      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
+      popCap: 1,
+    });
+    recordDiscovery(TOWN_HALL);
+    gold -= SPAWN_COST;
+    // Spawn person on an adjacent grass tile
+    const site = findGrassSiteNear(r, c, 1, 3);
+    if (site) spawnPersonFree(site.r, site.c);
+    updateUI();
+    render();
+    return;
+  }
+
+  const cap = globalPopCap();
+  if (people.length >= cap) {
+    showMessage('population cap reached! build more houses.');
     return;
   }
   if (gold < SPAWN_COST) {
@@ -345,42 +431,57 @@ function movePerson(p) {
   const carried = p.wood + p.stone + p.food;
   updatePersonMode(p);
 
+  const cardinalOffsets = [[-1,0],[1,0],[0,-1],[0,1]];
+
   const weights = dirs.map(d => {
     const nr = Math.round(p.y) + d.dr;
     const nc = Math.round(p.x) + d.dc;
     if (!inBounds(nr, nc)) return 0;
 
     const t = grid[nr][nc];
+    // Buildings are impassable walls — only GRASS and ROAD are walkable
+    if (t !== GRASS && t !== ROAD) return 0;
+
     const res = resourceMap[nr][nc];
     let w = 1.0;
 
+    // Check if moving to (nr,nc) puts us adjacent to a town hall (deposit point)
+    const adjTownHall = cardinalOffsets.some(([er, ec]) => {
+      const ar = nr+er, ac = nc+ec;
+      return inBounds(ar, ac) && grid[ar][ac] === TOWN_HALL;
+    });
+
+    // When full, navigate directly toward the nearest town hall
+    const th = carried >= CARRY_CAP ? nearestTownHall(Math.round(p.y), Math.round(p.x)) : null;
+    const thDistAfter  = th ? Math.abs(nr - th.r) + Math.abs(nc - th.c) : Infinity;
+    const thDistBefore = th ? Math.abs(Math.round(p.y) - th.r) + Math.abs(Math.round(p.x) - th.c) : Infinity;
+
     if (p.mode === 'build') {
-      // Stay near settlement: strongly prefer roads and buildings
+      // Stay near settlement: strongly prefer roads
       if (t === ROAD) w *= 4.0;
-      if (t !== GRASS && t !== ROAD) w *= 2.0;
-      // Avoid wandering far from home
-      const distAfter = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
-      if (distAfter > 12) w *= 0.1;
+      // Avoid wandering far from home when not carrying
+      if (carried < CARRY_CAP) {
+        const distAfter = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
+        if (distAfter > 12) w *= 0.1;
+      }
       // Gather nearby resources of opportunity
       if (res && res.amount > 0 && carried < CARRY_CAP) w *= 2.0;
-      // Deposit when full
-      if ((t === HOUSE || t === TOWN_HALL) && carried >= CARRY_CAP) w *= 5.0;
+      // When full, head toward the nearest town hall
+      if (th) {
+        if (thDistAfter < thDistBefore) w *= 6.0;
+        if (adjTownHall) w *= 8.0;
+      }
 
     } else {
-      // Gather mode: head away from home toward resources, avoid roads (already settled)
+      // Gather mode: head away from home toward resources
       const distAfter = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
-      // Bias away from home while empty
       if (carried === 0) w *= 1.0 + distAfter * 0.08;
-      // Strongly seek resources
       if (res && res.amount > 0 && carried < CARRY_CAP) w *= 6.0;
-      // Roads are fine to traverse but not a draw
       if (t === ROAD) w *= 1.2;
-      // When carrying, head back toward home
-      if (carried > 0) {
-        const distBefore = Math.abs(Math.round(p.y) - p.homeR) + Math.abs(Math.round(p.x) - p.homeC);
-        if (distAfter < distBefore) w *= 4.0;
-        // Deposit at house/town hall
-        if ((t === HOUSE || t === TOWN_HALL) && carried >= CARRY_CAP) w *= 6.0;
+      // When full, head straight to the nearest town hall
+      if (th) {
+        if (thDistAfter < thDistBefore) w *= 8.0;
+        if (adjTownHall) w *= 10.0;
       }
     }
 
@@ -402,11 +503,14 @@ function movePerson(p) {
   if (inBounds(nr, nc)) {
     p.y = nr;
     p.x = nc;
-    // Update home anchor when person is near a house or town hall
-    const t = grid[nr][nc];
-    if (t === HOUSE || t === TOWN_HALL) {
-      p.homeR = nr;
-      p.homeC = nc;
+    // Update home anchor when adjacent to a town hall
+    for (const [er, ec] of cardinalOffsets) {
+      const ar = nr+er, ac = nc+ec;
+      if (inBounds(ar, ac) && grid[ar][ac] === TOWN_HALL) {
+        p.homeR = ar;
+        p.homeC = ac;
+        break;
+      }
     }
   }
 }
@@ -430,16 +534,23 @@ function gatherResources() {
 }
 
 function depositResources() {
+  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
   for (const p of people) {
     const r = Math.round(p.y), c = Math.round(p.x);
     const carried = p.wood + p.stone + p.food;
     if (carried === 0) continue;
-    if (grid[r][c] === HOUSE || grid[r][c] === TOWN_HALL) {
-      civilResources.wood  += p.wood;
-      civilResources.stone += p.stone;
-      civilResources.food  += p.food;
+    for (const [dr, dc] of cardinals) {
+      const nr = r+dr, nc = c+dc;
+      if (!inBounds(nr, nc)) continue;
+      if (grid[nr][nc] !== TOWN_HALL) continue;
+      const th = nearestTownHall(nr, nc);
+      if (!th) break;
+      th.resources.wood  += p.wood;
+      th.resources.stone += p.stone;
+      th.resources.food  += p.food;
       p.wood = 0; p.stone = 0; p.food = 0;
-      if (grid[r][c] === TOWN_HALL) castVote(r, c);
+      castVote(th);
+      break;
     }
   }
 }
@@ -515,15 +626,16 @@ function chooseBuildType(r, c) {
   const weights = { [ROAD]: pathWeight, [HOUSE]: houseWeight };
 
   // Churches and parks available once there are a few local houses (no town hall required)
+  // Hard caps: max 2 churches, 3 parks per 11×11 area
   if (cardinalPaths > 0 && localHouses >= 2) {
-    weights[CHURCH]  = localChurches === 0 ? 30 : Math.max(2, 30 - localChurches * 10);
-    weights[PARK]    = localParks === 0 ? 25 : Math.max(2, 25 - localParks * 8);
+    weights[CHURCH] = localChurches >= 2 ? 0 : (localChurches === 0 ? 30 : Math.max(2, 30 - localChurches * 10));
+    weights[PARK]   = localParks    >= 3 ? 0 : (localParks    === 0 ? 25 : Math.max(2, 25 - localParks * 8));
   }
 
   // Factories and boosted premium buildings only after a local town hall
   if (localTownHalls > 0 && cardinalPaths > 0) {
-    weights[CHURCH]  = localChurches === 0 ? 35 : Math.max(2, 35 - localChurches * 10);
-    weights[PARK]    = Math.max(2, 30 - localParks * 8);
+    weights[CHURCH] = localChurches >= 2 ? 0 : (localChurches === 0 ? 35 : Math.max(2, 35 - localChurches * 10));
+    weights[PARK]   = localParks    >= 3 ? 0 : Math.max(2, 30 - localParks * 8);
     weights[FACTORY] = localHouses >= 5 && localFactories < 3 ? 25 : 3;
   }
 
@@ -537,18 +649,25 @@ function chooseBuildType(r, c) {
   return null;
 }
 
-function canAffordBuild(type) {
+function canAffordBuild(type, th) {
+  if (!th) return false;
   const cost = BUILD_COSTS[type];
-  return civilResources.wood  >= cost.wood
-      && civilResources.stone >= cost.stone
-      && civilResources.food  >= cost.food;
+  return th.resources.wood  >= cost.wood
+      && th.resources.stone >= cost.stone
+      && th.resources.food  >= cost.food;
 }
 
-function spendBuildCost(type) {
+function spendBuildCost(type, th) {
   const cost = BUILD_COSTS[type];
-  civilResources.wood  -= cost.wood;
-  civilResources.stone -= cost.stone;
-  civilResources.food  -= cost.food;
+  th.resources.wood  -= cost.wood;
+  th.resources.stone -= cost.stone;
+  th.resources.food  -= cost.food;
+}
+
+function registerHouse(r, c, th) {
+  const id = nextHouseId++;
+  houseRegistry[id] = { r, c };
+  th.popCap++;
 }
 
 function tryBuild(p) {
@@ -557,11 +676,18 @@ function tryBuild(p) {
   const r = Math.round(p.y), c = Math.round(p.x);
   if (grid[r][c] !== GRASS) return;
 
-  const chosen = chooseBuildType(r, c);
-  if (chosen === null || !canAffordBuild(chosen)) return;
+  const th = nearestTownHall(r, c);
+  if (!th) return;
 
-  spendBuildCost(chosen);
+  const chosen = chooseBuildType(r, c);
+  if (chosen === null || !canAffordBuild(chosen, th)) return;
+
+  // Non-road buildings must not trap adjacent path tiles
+  if (chosen !== ROAD && wouldBlockPath(r, c)) return;
+
+  spendBuildCost(chosen, th);
   grid[r][c] = chosen;
+  if (chosen === HOUSE) registerHouse(r, c, th);
   recordDiscovery(chosen);
   p.buildCooldown = BUILD_COOLDOWN;
 }
@@ -582,11 +708,28 @@ function tryBuildTownHall() {
           if (grid[r+dr][c+dc] === TOWN_HALL) localTownHalls++;
         }
       if (localHouses >= TOWN_HALL_TRIGGER.houses && localTownHalls === 0) {
-        if (civilResources.wood  >= TOWN_HALL_TRIGGER.wood &&
-            civilResources.stone >= TOWN_HALL_TRIGGER.stone) {
-          civilResources.wood  -= TOWN_HALL_TRIGGER.wood;
-          civilResources.stone -= TOWN_HALL_TRIGGER.stone;
+        const parentTH = nearestTownHall(r, c);
+        if (parentTH &&
+            parentTH.resources.wood  >= TOWN_HALL_TRIGGER.wood &&
+            parentTH.resources.stone >= TOWN_HALL_TRIGGER.stone) {
+          parentTH.resources.wood  -= TOWN_HALL_TRIGGER.wood;
+          parentTH.resources.stone -= TOWN_HALL_TRIGGER.stone;
+          // Remove the house from registry and popCap since it becomes a TH
+          for (const [id, h] of Object.entries(houseRegistry)) {
+            if (h.r === r && h.c === c) {
+              delete houseRegistry[id];
+              parentTH.popCap = Math.max(1, parentTH.popCap - 1);
+              break;
+            }
+          }
           grid[r][c] = TOWN_HALL;
+          const newTH = {
+            r, c,
+            resources: { wood: 0, stone: 0, food: 0 },
+            votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
+            popCap: 1,
+          };
+          townHalls.push(newTH);
           recordDiscovery(TOWN_HALL);
           showMessage('a town hall rises!');
           updateUI();
@@ -597,49 +740,70 @@ function tryBuildTownHall() {
   }
 }
 
-function castVote(thR, thC) {
+function castVote(th) {
   let localChurches = 0, localParks = 0, localFactories = 0, localHouses = 0;
   for (let dr = -5; dr <= 5; dr++)
     for (let dc = -5; dc <= 5; dc++) {
-      if (!inBounds(thR+dr, thC+dc)) continue;
-      const t = grid[thR+dr][thC+dc];
+      if (!inBounds(th.r+dr, th.c+dc)) continue;
+      const t = grid[th.r+dr][th.c+dc];
       if (t === CHURCH)  localChurches++;
       if (t === PARK)    localParks++;
       if (t === FACTORY) localFactories++;
       if (t === HOUSE)   localHouses++;
     }
+
+  const housingPressure = (th.popCap - people.length <= 2) ? 60 : 0;
+
   const w = {
-    [CHURCH]:  localChurches === 0 ? 40 : Math.max(3, 40 - localChurches * 12),
-    [PARK]:    Math.max(3, 30 - localParks * 8),
-    [FACTORY]: localHouses >= 8 && localFactories < 3 ? 30 : 4,
+    [HOUSE]:      housingPressure,
+    [CHURCH]:     localChurches >= 2 ? 0 : (localChurches === 0 ? 40 : Math.max(3, 40 - localChurches * 12)),
+    [PARK]:       localParks    >= 3 ? 0 : Math.max(3, 30 - localParks * 8),
+    [FACTORY]:    localHouses >= 8 && localFactories < 3 ? 30 : 4,
+    [TREE_FARM]:  woodWeight(th),
+    [STONE_FARM]: stoneWeight(th),
   };
+
   const total = Object.values(w).reduce((a, b) => a + b, 0);
+  if (total === 0) return;
   let rand = Math.random() * total;
   for (const [type, weight] of Object.entries(w)) {
     rand -= weight;
     if (rand <= 0) {
-      townHallVotes[parseInt(type)]++;
-      checkVoteThreshold(thR, thC);
+      const intType = parseInt(type);
+      if (intType === HOUSE) {
+        // Build a house immediately near this TH
+        const site = findGrassSiteNear(th.r, th.c, 2, 12);
+        if (site && !wouldBlockPath(site.r, site.c) && canAffordBuild(HOUSE, th)) {
+          spendBuildCost(HOUSE, th);
+          grid[site.r][site.c] = HOUSE;
+          registerHouse(site.r, site.c, th);
+          recordDiscovery(HOUSE);
+          showMessage('a new house was built!');
+        }
+      } else {
+        th.votes[intType] = (th.votes[intType] || 0) + 1;
+        checkVoteThreshold(th);
+      }
       return;
     }
   }
 }
 
-function checkVoteThreshold(thR, thC) {
-  for (const type of [CHURCH, PARK, FACTORY]) {
-    if (townHallVotes[type] >= VOTE_THRESHOLD) {
-      if (canAffordBuild(type)) {
-        const site = findGrassSiteNear(thR, thC, 2, 12);
-        if (site) {
-          spendBuildCost(type);
+function checkVoteThreshold(th) {
+  for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM]) {
+    if ((th.votes[type] || 0) >= VOTE_THRESHOLD) {
+      if (canAffordBuild(type, th)) {
+        const site = findGrassSiteNear(th.r, th.c, 2, 12);
+        if (site && !wouldBlockPath(site.r, site.c)) {
+          spendBuildCost(type, th);
           grid[site.r][site.c] = type;
           recordDiscovery(type);
-          townHallVotes[type] = 0;
+          th.votes[type] = 0;
           showMessage(TILE_NAMES[type] + ' built by popular vote!');
           updateUI();
         }
       } else {
-        townHallVotes[type] = 0;
+        th.votes[type] = 0;
       }
     }
   }
@@ -651,11 +815,13 @@ function upgradeLifespan() {
     return;
   }
   const cost = lifespanUpgradeCost();
-  if (civilResources.food < cost) {
-    showMessage('need ' + cost + ' food!');
+  // Draw food from whichever town hall has the most
+  const th = townHalls.reduce((best, t) => (!best || t.resources.food > best.resources.food) ? t : best, null);
+  if (!th || th.resources.food < cost) {
+    showMessage('need ' + cost + ' food in a town hall!');
     return;
   }
-  civilResources.food -= cost;
+  th.resources.food -= cost;
   lifespanLevel++;
   const newMax = currentMaxAge();
   for (const p of people) p.maxAge = newMax;
@@ -664,14 +830,15 @@ function upgradeLifespan() {
 }
 
 function houseSpawnPeople() {
-  if (people.length >= MAX_PEOPLE) return;
+  const cap = globalPopCap();
+  if (people.length >= cap) return;
   for (let r = 0; r < MAP_ROWS; r++) {
     for (let c = 0; c < MAP_COLS; c++) {
       if (grid[r][c] !== HOUSE) continue;
       if (Math.random() > 0.003) continue; // ~0.3% chance per house per tick
       const site = findGrassSiteNear(r, c, 1, 2);
       if (site) spawnPersonFree(site.r, site.c);
-      if (people.length >= MAX_PEOPLE) return;
+      if (people.length >= cap) return;
     }
   }
 }
@@ -717,40 +884,51 @@ function updateUI() {
   hapEl.textContent = happy + '%';
   hapEl.className = 'value ' + (happy >= 70 ? 'pos' : happy >= 40 ? '' : 'neg');
 
-  document.getElementById('people-count').textContent = people.length + ' / ' + MAX_PEOPLE;
+  const cap = globalPopCap();
+  document.getElementById('people-count').textContent = people.length + ' / ' + cap;
   document.getElementById('lifespan-val').textContent = currentMaxAge() + 't';
 
-  document.getElementById('res-wood').textContent  = civilResources.wood;
-  document.getElementById('res-stone').textContent = civilResources.stone;
-  document.getElementById('res-food').textContent  = civilResources.food;
+  // Aggregate resources across all town halls for display
+  const totalRes = { wood: 0, stone: 0, food: 0 };
+  for (const th of townHalls) {
+    totalRes.wood  += th.resources.wood;
+    totalRes.stone += th.resources.stone;
+    totalRes.food  += th.resources.food;
+  }
+  document.getElementById('res-wood').textContent  = totalRes.wood;
+  document.getElementById('res-stone').textContent = totalRes.stone;
+  document.getElementById('res-food').textContent  = totalRes.food;
 
   const upgCost = lifespanUpgradeCost();
   const upgBtn = document.getElementById('upgrade-btn');
+  const maxFood = townHalls.reduce((m, th) => Math.max(m, th.resources.food), 0);
   if (lifespanLevel >= MAX_LIFESPAN_UPGRADES) {
     upgBtn.textContent = 'lifespan maxed';
     upgBtn.disabled = true;
   } else {
     upgBtn.textContent = 'upgrade lifespan (' + upgCost + ' food)';
-    upgBtn.disabled = civilResources.food < upgCost;
+    upgBtn.disabled = maxFood < upgCost;
   }
 
   const spawnBtn = document.getElementById('spawn-btn');
   spawnBtn.textContent = 'spawn person ($' + SPAWN_COST + ' gold)';
-  spawnBtn.disabled = gold < SPAWN_COST || people.length >= MAX_PEOPLE;
+  spawnBtn.disabled = gold < SPAWN_COST || people.length >= cap;
 
   document.getElementById('zoom-label').textContent = ZOOM_LABELS[zoomIndex];
   const centerC = Math.floor(camX + (canvas.width  / tileSize) / 2);
   const centerR = Math.floor(camY + (canvas.height / tileSize) / 2);
   document.getElementById('cam-pos').textContent = centerC + ', ' + centerR;
 
-  let hasTownHall = false;
-  outer: for (let r = 0; r < MAP_ROWS; r++)
-    for (let c = 0; c < MAP_COLS; c++)
-      if (grid[r][c] === TOWN_HALL) { hasTownHall = true; break outer; }
-  document.getElementById('votes-panel').style.display = hasTownHall ? '' : 'none';
-  document.getElementById('votes-church').textContent  = townHallVotes[CHURCH]  + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-park').textContent    = townHallVotes[PARK]    + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-factory').textContent = townHallVotes[FACTORY] + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-panel').style.display = townHalls.length > 0 ? '' : 'none';
+  const totalVotes = { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 };
+  for (const th of townHalls)
+    for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM])
+      totalVotes[type] += th.votes[type] || 0;
+  document.getElementById('votes-church').textContent    = totalVotes[CHURCH]     + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-park').textContent      = totalVotes[PARK]       + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-factory').textContent   = totalVotes[FACTORY]    + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-tree-farm').textContent  = totalVotes[TREE_FARM]  + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-stone-farm').textContent = totalVotes[STONE_FARM] + ' / ' + VOTE_THRESHOLD;
 }
 
 // ── Pixel-art draw functions (all authored at 32×32, origin at top-left) ──────
@@ -892,6 +1070,56 @@ function drawTownHall(x, y) {
   ctx.fillStyle = '#ff6f00'; ctx.fillRect(x+1, y+13, 30, 2);
 }
 
+function drawTreeFarm(x, y) {
+  // Brown soil base
+  ctx.fillStyle = '#795548'; ctx.fillRect(x, y, BASE, BASE);
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect(x+1, y+20, 30, 12);
+  // Row lines in soil
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(x+2, y+24, 28, 1);
+  ctx.fillRect(x+2, y+28, 28, 1);
+  // Three small trees
+  // Tree trunks
+  ctx.fillStyle = '#4e342e';
+  ctx.fillRect(x+4,  y+14, 2, 7);
+  ctx.fillRect(x+15, y+12, 2, 9);
+  ctx.fillRect(x+26, y+14, 2, 7);
+  // Tree canopies
+  ctx.fillStyle = '#2e7d32';
+  ctx.fillRect(x+1,  y+6,  8, 9);
+  ctx.fillRect(x+12, y+4,  8, 9);
+  ctx.fillRect(x+23, y+6,  8, 9);
+  ctx.fillStyle = '#43a047';
+  ctx.fillRect(x+2,  y+7,  6, 6);
+  ctx.fillRect(x+13, y+5,  6, 6);
+  ctx.fillRect(x+24, y+7,  6, 6);
+}
+
+function drawStoneFarm(x, y) {
+  // Dark ground base
+  ctx.fillStyle = '#546e7a'; ctx.fillRect(x, y, BASE, BASE);
+  ctx.fillStyle = '#455a64';
+  ctx.fillRect(x+1, y+18, 30, 13);
+  // Quarry lines
+  ctx.fillStyle = '#37474f';
+  ctx.fillRect(x+2, y+22, 28, 1);
+  ctx.fillRect(x+2, y+26, 28, 1);
+  // Stone blocks arranged in cluster
+  ctx.fillStyle = '#90a4ae';
+  ctx.fillRect(x+3,  y+5,  10, 10);
+  ctx.fillRect(x+19, y+7,  10, 10);
+  ctx.fillRect(x+11, y+10, 8,  8);
+  ctx.fillStyle = '#b0bec5';
+  ctx.fillRect(x+4,  y+6,  5, 5);
+  ctx.fillRect(x+20, y+8,  5, 5);
+  ctx.fillRect(x+12, y+11, 4, 4);
+  // Chisel marks
+  ctx.fillStyle = '#78909c';
+  ctx.fillRect(x+6,  y+8,  2, 1);
+  ctx.fillRect(x+21, y+10, 2, 1);
+}
+
 // ── Tile & entity renderers ────────────────────────────────────────────────────
 
 function drawTile(r, c, x, y, ts) {
@@ -910,7 +1138,9 @@ function drawTile(r, c, x, y, ts) {
       case PARK:      drawPark(0, 0);     break;
       case FACTORY:   drawFactory(0, 0);  break;
       case CHURCH:    drawChurch(0, 0);   break;
-      case TOWN_HALL: drawTownHall(0, 0); break;
+      case TOWN_HALL:  drawTownHall(0, 0);  break;
+      case TREE_FARM:  drawTreeFarm(0, 0);  break;
+      case STONE_FARM: drawStoneFarm(0, 0); break;
     }
     ctx.restore();
   }
@@ -1070,6 +1300,48 @@ function applyZoom(newIdx, pivotPx, pivotPy) {
   updateUI();
 }
 
+// ── Demolish ──────────────────────────────────────────────────────────────────
+
+let demolishMode = false;
+
+function setDemolishMode(on) {
+  demolishMode = on;
+  const btn = document.getElementById('demolish-btn');
+  if (on) {
+    btn.textContent = 'stop demolishing';
+    btn.style.background = '#ef9a9a';
+    canvas.classList.add('demolish');
+  } else {
+    btn.textContent = 'demolish (right-click)';
+    btn.style.background = '#ffebee';
+    canvas.classList.remove('demolish');
+  }
+}
+
+function demolishTile(r, c) {
+  const t = grid[r][c];
+  if (t === GRASS) return;
+
+  if (t === HOUSE) {
+    for (const [id, h] of Object.entries(houseRegistry)) {
+      if (h.r === r && h.c === c) {
+        delete houseRegistry[id];
+        const th = nearestTownHall(r, c);
+        if (th && th.popCap > 1) th.popCap--;
+        break;
+      }
+    }
+  }
+
+  if (t === TOWN_HALL) {
+    const idx = townHalls.findIndex(th => th.r === r && th.c === c);
+    if (idx !== -1) townHalls.splice(idx, 1);
+  }
+
+  grid[r][c] = GRASS;
+  updateUI();
+}
+
 // ── Input ─────────────────────────────────────────────────────────────────────
 
 canvas.addEventListener('mousedown', (e) => {
@@ -1114,7 +1386,7 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 window.addEventListener('mouseup', () => {
-  canvas.style.cursor = 'crosshair';
+  canvas.style.cursor = demolishMode ? '' : 'crosshair';
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -1132,7 +1404,20 @@ canvas.addEventListener('click', (e) => {
   const { r, c }   = canvasToTile(px, py);
   if (!inBounds(r, c)) return;
 
-  spawnPerson(r, c);
+  if (demolishMode) {
+    demolishTile(r, c);
+  } else {
+    spawnPerson(r, c);
+  }
+  render();
+});
+
+canvas.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  const { px, py } = getCanvasPos(e);
+  const { r, c }   = canvasToTile(px, py);
+  if (!inBounds(r, c) || grid[r][c] === GRASS) return;
+  demolishTile(r, c);
   render();
 });
 
@@ -1154,6 +1439,10 @@ document.getElementById('spawn-btn').addEventListener('click', () => {
 
 document.getElementById('upgrade-btn').addEventListener('click', () => {
   upgradeLifespan();
+});
+
+document.getElementById('demolish-btn').addEventListener('click', () => {
+  setDemolishMode(!demolishMode);
 });
 
 window.addEventListener('keydown', (e) => {
@@ -1218,13 +1507,120 @@ setInterval(() => {
   }
 }, 1000);
 
+// ── Save / Load ───────────────────────────────────────────────────────────────
+
+const SAVE_KEY = 'citybuilder_save';
+
+function saveGame() {
+  const data = {
+    v: 1,
+    gold, lifespanLevel, simTick, nextPersonId, nextHouseId,
+    grid:        grid.map(row => [...row]),
+    resourceMap: resourceMap.map(row => row.map(cell => cell ? { ...cell } : null)),
+    townHalls:   townHalls.map(th => ({
+      r: th.r, c: th.c,
+      resources: { ...th.resources },
+      votes: { ...th.votes },
+      popCap: th.popCap,
+    })),
+    houseRegistry: JSON.parse(JSON.stringify(houseRegistry)),
+    people: people.map(p => ({ ...p })),
+    discovered: [...discovered],
+  };
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  showMessage('game saved!');
+}
+
+function loadGame() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { showMessage('no save found.'); return false; }
+  try {
+    const data = JSON.parse(raw);
+    if (data.v !== 1) { showMessage('save version mismatch.'); return false; }
+
+    gold          = data.gold;
+    lifespanLevel = data.lifespanLevel;
+    simTick       = data.simTick;
+    nextPersonId  = data.nextPersonId;
+    nextHouseId   = data.nextHouseId;
+
+    for (let r = 0; r < MAP_ROWS; r++)
+      for (let c = 0; c < MAP_COLS; c++) {
+        grid[r][c]        = data.grid[r][c];
+        resourceMap[r][c] = data.resourceMap[r][c];
+      }
+
+    townHalls    = data.townHalls;
+    houseRegistry = data.houseRegistry;
+    people       = data.people;
+    discovered.clear();
+    for (const t of data.discovered) discovered.add(t);
+
+    renderDiscoveries();
+    clampCamera();
+    render();
+    updateUI();
+    showMessage('game loaded!');
+    return true;
+  } catch (e) {
+    showMessage('failed to load save.');
+    return false;
+  }
+}
+
+function deleteSave() {
+  localStorage.removeItem(SAVE_KEY);
+  showMessage('save deleted.');
+}
+
+function exportSave() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { showMessage('nothing to export — save first.'); return; }
+  const blob = new Blob([raw], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'citybuilder_save.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importSave(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      JSON.parse(e.target.result); // validate JSON before storing
+      localStorage.setItem(SAVE_KEY, e.target.result);
+      loadGame();
+    } catch {
+      showMessage('invalid save file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('save-btn').addEventListener('click', saveGame);
+document.getElementById('load-btn').addEventListener('click', loadGame);
+document.getElementById('export-btn').addEventListener('click', exportSave);
+document.getElementById('import-btn').addEventListener('click', () => {
+  document.getElementById('import-input').click();
+});
+document.getElementById('import-input').addEventListener('change', (e) => {
+  importSave(e.target.files[0]);
+  e.target.value = ''; // reset so same file can be re-imported
+});
+document.getElementById('delete-save-btn').addEventListener('click', () => {
+  if (confirm('Delete saved game?')) deleteSave();
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 clampCamera();
 initResourceMap();
 
-civilResources.wood = 10;
-civilResources.food = 100;
-
-render();
-updateUI();
+// Auto-load save if one exists
+if (!loadGame()) {
+  render();
+  updateUI();
+}

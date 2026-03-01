@@ -28,26 +28,47 @@
       <canvas id="gameCanvas" width="512" height="512"></canvas>
       <div class="sidebar">
 
-        <div class="panel">
-          <h2>view</h2>
-          <div class="zoom-row">
-            <button id="zoom-out" class="zoom-btn">−</button>
-            <span id="zoom-label">100%</span>
-            <button id="zoom-in" class="zoom-btn">+</button>
+        <div class="stats-stockpile-row">
+          <div class="panel">
+            <h2>view</h2>
+            <div class="zoom-row">
+              <button id="zoom-out" class="zoom-btn">−</button>
+              <span id="zoom-label">100%</span>
+              <button id="zoom-in" class="zoom-btn">+</button>
+            </div>
+            <div class="stat-row">
+              <span>center</span>
+              <span class="value" id="cam-pos">8, 8</span>
+            </div>
+            <p class="hint">drag · scroll · wasd</p>
           </div>
-          <div class="stat-row">
-            <span>center</span>
-            <span class="value" id="cam-pos">8, 8</span>
+
+          <div class="panel">
+            <h2>save</h2>
+            <button id="save-btn" class="action-btn">save</button>
+            <button id="load-btn" class="action-btn">load</button>
+            <button id="export-btn" class="action-btn">export file</button>
+            <button id="import-btn" class="action-btn">import file</button>
+            <input type="file" id="import-input" accept=".json" style="display:none">
+            <button id="delete-save-btn" class="action-btn" style="background:#ffebee">delete save</button>
           </div>
-          <p class="hint">drag · scroll · wasd</p>
         </div>
 
-        <div class="panel">
-          <h2>stats</h2>
-          <div class="stat-row"><span>day</span><span class="value" id="sim-day">1</span></div>
-          <div class="stat-row"><span>gold</span><span class="value" id="gold">$200</span></div>
-          <div class="stat-row"><span>buildings</span><span class="value" id="stat-buildings">0</span></div>
-          <div class="stat-row"><span>happiness</span><span class="value" id="happiness">100%</span></div>
+        <div class="stats-stockpile-row">
+          <div class="panel">
+            <h2>stats</h2>
+            <div class="stat-row"><span>day</span><span class="value" id="sim-day">1</span></div>
+            <div class="stat-row"><span>gold</span><span class="value" id="gold">$200</span></div>
+            <div class="stat-row"><span>buildings</span><span class="value" id="stat-buildings">0</span></div>
+            <div class="stat-row"><span>happiness</span><span class="value" id="happiness">100%</span></div>
+          </div>
+
+          <div class="panel">
+            <h2>stockpile</h2>
+            <div class="stat-row"><span>wood</span><span class="value" id="res-wood">0</span></div>
+            <div class="stat-row"><span>stone</span><span class="value" id="res-stone">0</span></div>
+            <div class="stat-row"><span>food</span><span class="value" id="res-food">0</span></div>
+          </div>
         </div>
 
         <div class="panel">
@@ -59,24 +80,22 @@
           <p class="hint">click map to spawn</p>
         </div>
 
-        <div class="panel">
-          <h2>stockpile</h2>
-          <div class="stat-row"><span>wood</span><span class="value" id="res-wood">0</span></div>
-          <div class="stat-row"><span>stone</span><span class="value" id="res-stone">0</span></div>
-          <div class="stat-row"><span>food</span><span class="value" id="res-food">0</span></div>
-        </div>
-
         <div class="panel" id="votes-panel" style="display:none">
           <h2>town hall votes</h2>
           <div class="stat-row"><span>church</span><span class="value" id="votes-church">0 / 10</span></div>
           <div class="stat-row"><span>park</span><span class="value" id="votes-park">0 / 10</span></div>
           <div class="stat-row"><span>factory</span><span class="value" id="votes-factory">0 / 10</span></div>
+          <div class="stat-row"><span>tree farm</span><span class="value" id="votes-tree-farm">0 / 10</span></div>
+          <div class="stat-row"><span>stone farm</span><span class="value" id="votes-stone-farm">0 / 10</span></div>
           <p class="hint">votes cast when depositing at town hall</p>
         </div>
 
         <div class="panel">
+          <button id="demolish-btn" class="action-btn" style="background:#ffebee">demolish (right-click)</button>
+          <p class="hint">or click tile in demolish mode</p>
           <p id="message"></p>
         </div>
+
 
       </div>
     </div>
