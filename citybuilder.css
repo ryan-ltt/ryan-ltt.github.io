@@ -192,6 +192,50 @@ h1 {
   text-align: center;
 }
 
+.speed-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+#event-log {
+  margin-top: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  padding-top: 4px;
+}
+
+.log-entry {
+  font-size: 10px;
+  font-family: Monaco, monospace;
+  color: #333;
+  padding: 1px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.speed-btn {
+  flex: 1;
+  height: 24px;
+  border: 2px solid #000;
+  background: white;
+  font-family: Monaco, monospace;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.speed-btn:hover {
+  background: #000;
+  color: white;
+}
+
+.speed-btn.selected {
+  background: #000;
+  color: white;
+}
+
 .hint {
   font-size: 10px;
   color: #888;

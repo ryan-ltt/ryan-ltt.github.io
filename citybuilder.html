@@ -41,6 +41,13 @@
               <span class="value" id="cam-pos">8, 8</span>
             </div>
             <p class="hint">drag · scroll · wasd</p>
+            <div class="speed-row">
+              <button id="speed-pause" class="speed-btn">⏸</button>
+              <button id="speed-slow"  class="speed-btn">0.5×</button>
+              <button id="speed-normal" class="speed-btn selected">1×</button>
+              <button id="speed-fast"  class="speed-btn">2×</button>
+            </div>
+            <div id="event-log"></div>
           </div>
 
           <div class="panel">
@@ -93,7 +100,6 @@
         <div class="panel">
           <button id="demolish-btn" class="action-btn" style="background:#ffebee">demolish (right-click)</button>
           <p class="hint">or click tile in demolish mode</p>
-          <p id="message"></p>
         </div>
 
 
