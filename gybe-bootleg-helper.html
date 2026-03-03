@@ -551,20 +551,21 @@ function normalizeSong(raw) {
         '12-28-99': '12-28-99', '12-28-99 (outro)': '12-28-99', '12-28-99 (w/ outro)': '12-28-99',
         '12-28-99 (w/outro)': '12-28-99', '12-28-99 w/ outro': '12-28-99', '11-28-99 w/ outro': '12-28-99',
         '12.28.99': '12-28-99', '12.28.99 (w/ outro)': '12-28-99', '12/28/99 (w/ outro)': '12-28-99',
-        'impro + 12-28-99': '12-28-99',
-        'intro': 'intro', 'hope drone': 'intro',
+        'impro + 12-28-99': '12-28-99', '09-15-00': '12-28-99', '09-15-00 (cont.)': '12-28-99',
+        'intro': 'intro', 'hope drone': 'intro', 'the dead flag blues (intro version)': 'intro',
         'improvisation': 'improvisation', 'improv': 'improvisation', 'impro': 'improvisation',
         'improvised': 'improvisation', 'improvisation/impro': 'improvisation',
-        '2 nouveau tower': '2 nouveau tower',
-        '3rd part': '3rd part',
-        'albanian': 'albanian',
-        'anthem for no state': 'anthem for no state', 'anthem for no state (part 1)': 'anthem for no state',
+        '2 nouveau tower': '2 nouveau tower', 'fam/famine': '2 nouveau tower', 'fam/famine -> undoing a luciferian towers': '2 nouveau tower',
+        '3rd part': '3rd part', 'broken windows, locks of love part iii': '3rd part', 'new thing (part 3)': '3rd part',
+        'albanian': 'albanian', 'mladic': 'albanian',
+        'anthem for no state': 'anthem for no state', 'anthem for no state (part 1)': 'anthem for no state', 'new new': 'anthem for no state', 'railroads': 'anthem for no state',
         'babys in a thundercloud': 'babys in a thundercloud',
-        'behemoth': 'behemoth', 'behemoth (part 2)': 'behemoth',
+        'behemoth': 'behemoth', 'behemoth (part 2)': 'behemoth', "big'un": 'behemoth',
         'blaise bailey finnegan iii': 'blaise bailey finnegan III',
         'blaise bailey finnegan ii': 'blaise bailey finnegan III',
         'blaise bailey finnegan iiii': 'blaise bailey finnegan III',
-        'bosses hang': 'bosses hang', 'bosses hang (section)': 'bosses hang', '[bosses hang ?]': 'bosses hang',
+        'bbf3': 'blaise bailey finnegan III',
+        'bosses hang': 'bosses hang', 'bosses hang (section)': 'bosses hang', '[bosses hang ?]': 'bosses hang', 'old new': 'bosses hang', 'buildings': 'bosses hang',
         'broken spires at dead kapital': 'broken spires at dead kapital',
         'chart #3': 'chart #3', 'chart #3/steve reich': 'chart #3',
         'steve reich': 'steve reich',
@@ -575,32 +576,34 @@ function normalizeSong(raw) {
         'do you know how to waltz': 'do you know how to waltz',
         'fire at static valley': 'fire at static valley', 'fire at static vallley': 'fire at static valley',
         '(?) fire at static valley': 'fire at static valley',
-        'gamelan': 'gamelan',
+        'gamelan': 'gamelan', 'we drift like worried fire': 'gamelan',
         'gathering storm': 'gathering storm', 'gathering storm (part 2)': 'gathering storm',
         'gathering storm (part ii)': 'gathering storm', 'gathering storm pt. i': 'gathering storm',
         'gatheering storm': 'gathering storm', 'gathering strom': 'gathering storm', 'gatherng storm': 'gathering storm',
+        'storm': 'gathering storm', 'new thing': 'gathering storm', 'lift yr. skinny fists like antennas to heaven': 'gathering storm', "therry's": 'gathering storm',
         'glacier': 'glacier', 'glaicer': 'glacier',
         'j.l.h. outro': 'j.l.h. outro', 'j.l.h outro': 'j.l.h. outro', 'j.l.h. (outro)': 'j.l.h. outro',
-        'j.l.h. outro jam': 'j.l.h. outro', 'intro -> j.l.h. outro': 'j.l.h. outro',
-        'john hughes': 'john hughes',
-        'kicking horse on broken hill': 'kicking horse on broken hill', 'kicking horses on brokenhill': 'kicking horse on broken hill',
+        'j.l.h. outro jam': 'j.l.h. outro', 'intro -> j.l.h. outro': 'j.l.h. outro', 'john lee hooker outro': 'j.l.h. outro',
+        'john hughes': 'john hughes', 'she dreamt she was a bulldozer, she dreamt she was alone in an empty field': 'john hughes',
+        'kicking horse on broken hill': 'kicking horse on broken hill', 'kicking horses on brokenhill': 'kicking horse on broken hill', 'bolero': 'kicking horse on broken hill',
         "macrimmon's lament": "macrimmon's lament",
         'monheim': 'monheim', 'monhiem': 'monheim',
-        'motherfucker = redeemer': 'motherfucker = redeemer',
-        'moya': 'moya', 'moya (?)': 'moya', 'moya (aborted)': 'moya',
+        'motherfucker = redeemer': 'motherfucker = redeemer', 'tiny silver hammers': 'motherfucker = redeemer',
+        'moya': 'moya', 'moya (?)': 'moya', 'moya (aborted)': 'moya', 'gorecki': 'moya',
         'nothings alrite in our life': 'nothings alrite in our lives', 'nothings alrite in our lives': 'nothings alrite in our lives',
         'pale spectator takes photographs': 'pale spectator takes photographs',
         'piss crowns are trebled': 'piss crowns are trebled',
         'raindrops cast in lead': 'raindrops cast in lead',
         'sad mafioso': 'sad mafioso', 'sad mafioso (part 2)': 'sad mafioso',
         'the sad mafioso': 'sad mafioso', 'the sad mafioso + outro': 'sad mafioso', 'the sad mafiosos': 'sad mafioso',
-        'sun is a hole': 'sun is a hole / sun is vapors', 'sun is a hole sun is vapors': 'sun is a hole / sun is vapors',
-        'tazer floyd': 'tazer floyd',
-        'the boy': 'the cowboy', 'the cowboy': 'the cowboy',
+        'sun is a hole': 'sun is a hole sun is vapors', 'sun is a hole sun is vapors': 'sun is a hole sun is vapors', 'sun is a hole / sun is vapors': 'sun is a hole sun is vapors',
+        'tazer floyd': 'tazer floyd', 'rockets fall on rocket falls': 'tazer floyd',
+        'the boy': 'the cowboy', 'the cowboy': 'the cowboy', 'slow moving trains': 'the cowboy',
         'the dead flag blues': 'the dead flag blues',
         'the dead flag blues (outro)': 'the dead flag blues (outro)',
         'the dead flag blues outro': 'the dead flag blues (outro)', '(?)the dead flag blues (outro)': 'the dead flag blues (outro)',
         'world police': 'world police', 'wold police': 'world police', 'world police (part i)': 'world police',
+        'world police and friendly fire': 'world police', "norsola's thing": 'world police',
     };
     return MAP[s] || null;
 }
@@ -671,12 +674,20 @@ function switchTab(name) {
 // ─── SONG FINDER ──────────────────────────────────────────────────────────
 let selected = new Set();
 
+// Build reverse map: canonical → [alias, alias, ...]
+const ALIAS_MAP = {};
+for (const song of CANONICAL_SONGS) ALIAS_MAP[song] = [];
+// We'll populate it by running normalizeSong on all MAP keys after normalizeSong is defined.
+// (populated in init below)
+
 function renderSongGrid(filter) {
     const grid = document.getElementById('songGrid');
     grid.innerHTML = '';
     const f = (filter || '').toLowerCase().trim();
     for (const song of CANONICAL_SONGS) {
-        if (f && !song.toLowerCase().includes(f)) continue;
+        const matchesCanon = song.toLowerCase().includes(f);
+        const matchesAlias = f && (ALIAS_MAP[song] || []).some(a => a.includes(f));
+        if (f && !matchesCanon && !matchesAlias) continue;
         const tag = document.createElement('div');
         tag.className = 'song-tag' + (selected.has(song) ? ' selected' : '');
         tag.textContent = song;
@@ -1004,6 +1015,14 @@ function filterEraShows(id, value) {
 }
 
 // ─── Init ──────────────────────────────────────────────────────────────────
+// Populate ALIAS_MAP from normalizeSong's internal MAP
+(function() {
+    const aliases = ['12-28-99','12-28-99 (outro)','12-28-99 (w/ outro)','12-28-99 (w/outro)','12-28-99 w/ outro','11-28-99 w/ outro','12.28.99','12.28.99 (w/ outro)','12/28/99 (w/ outro)','impro + 12-28-99','09-15-00','09-15-00 (cont.)','intro','hope drone','the dead flag blues (intro version)','improvisation','improv','impro','improvised','improvisation/impro','2 nouveau tower','fam/famine','fam/famine -> undoing a luciferian towers','3rd part','broken windows, locks of love part iii','new thing (part 3)','albanian','mladic','anthem for no state','anthem for no state (part 1)','new new','railroads','babys in a thundercloud','behemoth','behemoth (part 2)',"big'un",'blaise bailey finnegan iii','blaise bailey finnegan ii','blaise bailey finnegan iiii','bbf3','bosses hang','bosses hang (section)','[bosses hang ?]','old new','buildings','broken spires at dead kapital','chart #3','chart #3/steve reich','steve reich','cliff','dead flag blues','dead flag blues (outro)','dead metheny','dead metheny (w/ outro)','death metheny','divorce & fever','do you know how to waltz','fire at static valley','fire at static vallley','(?) fire at static valley','gamelan','we drift like worried fire','gathering storm','gathering storm (part 2)','gathering storm (part ii)','gathering storm pt. i','gatheering storm','gathering strom','gatherng storm','storm','new thing','lift yr. skinny fists like antennas to heaven',"therry's",'glacier','glaicer','improvisation','j.l.h. outro','j.l.h outro','j.l.h. (outro)','j.l.h. outro jam','intro -> j.l.h. outro','john lee hooker outro','john hughes','she dreamt she was a bulldozer, she dreamt she was alone in an empty field','kicking horse on broken hill','kicking horses on brokenhill','bolero',"macrimmon's lament",'monheim','monhiem','motherfucker = redeemer','tiny silver hammers','moya','moya (?)','moya (aborted)','gorecki','nothings alrite in our life','nothings alrite in our lives','pale spectator takes photographs','piss crowns are trebled','raindrops cast in lead','sad mafioso','sad mafioso (part 2)','the sad mafioso','the sad mafioso + outro','the sad mafiosos','sun is a hole','sun is a hole sun is vapors','sun is a hole / sun is vapors','tazer floyd','rockets fall on rocket falls','the boy','the cowboy','slow moving trains','the dead flag blues','the dead flag blues (outro)','the dead flag blues outro','(?)the dead flag blues (outro)','world police','wold police','world police (part i)','world police and friendly fire',"norsola's thing",'piss crowns are trebled','raindrops cast in lead','babys in a thundercloud','broken spires at dead kapital','pale spectator takes photographs','anthem for no state','glacier','cliff','fire at static valley','bosses hang','2 nouveau tower'];
+    for (const alias of aliases) {
+        const canon = normalizeSong(alias);
+        if (canon && ALIAS_MAP[canon]) ALIAS_MAP[canon].push(alias);
+    }
+})();
 buildIndex();
 buildAlbumSections();
 renderSongGrid();
