@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gybe bootleg helper</title>
+    <link rel="stylesheet" href="projects.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 20px 0 0 0;
+            border-bottom: 2px solid black;
+        }
+        .tab-btn {
+            padding: 8px 20px;
+            font-family: Monaco;
+            font-size: 14px;
+            background: white;
+            border: 2px solid black;
+            border-bottom: none;
+            cursor: pointer;
+            margin-right: -2px;
+            color: #555;
+            transition: all 0.1s;
+        }
+        .tab-btn.active {
+            background: black;
+            color: white;
+        }
+        .tab-btn:hover:not(.active) {
+            background: #eee;
+            color: black;
+        }
+        .tab-panel {
+            display: none;
+            padding-top: 20px;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+        .song-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .song-tag {
+            padding: 6px 14px;
+            border: 2px solid black;
+            background: white;
+            font-family: Monaco;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .song-tag:hover { background: #eee; }
+        .song-tag.selected { background: black; color: white; }
+        .selected-list {
+            margin: 12px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .selected-list span {
+            display: inline-block;
+            background: black;
+            color: white;
+            font-family: Monaco;
+            font-size: 12px;
+            padding: 3px 10px;
+            margin: 3px 4px 3px 0;
+        }
+        .find-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: black;
+            color: white;
+            border: 2px solid black;
+            font-family: Monaco;
+            font-size: 15px;
+            cursor: pointer;
+            margin: 8px 0 24px 0;
+            transition: all 0.15s;
+        }
+        .find-btn:hover { background: white; color: black; }
+        .clear-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            font-family: Monaco;
+            font-size: 15px;
+            cursor: pointer;
+            margin: 8px 0 24px 8px;
+            transition: all 0.15s;
+        }
+        .clear-btn:hover { background: #eee; }
+        .results { margin-top: 8px; }
+        .result-show {
+            border: 2px solid black;
+            background: white;
+            margin-bottom: 12px;
+            padding: 14px 18px;
+        }
+        .result-show .show-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .result-show .show-date {
+            font-family: Monaco;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .result-show .show-venue {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+            margin-left: 10px;
+        }
+        .result-show .match-count {
+            font-family: Monaco;
+            font-size: 13px;
+            color: #333;
+            white-space: nowrap;
+        }
+        .result-show .setlist {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.8;
+        }
+        .result-show .setlist .matched {
+            font-weight: bold;
+            color: black;
+            background: #ffe066;
+            padding: 0 2px;
+        }
+        .recordings {
+            margin-top: 8px;
+            font-family: Monaco;
+            font-size: 12px;
+        }
+        .recordings a {
+            display: inline-block;
+            margin-right: 10px;
+            color: #0066cc;
+            text-decoration: none;
+            border-bottom: 1px solid #0066cc;
+        }
+        .recordings a:hover { color: #004499; border-bottom-color: #004499; }
+        .rec-label { color: #555; margin-right: 4px; }
+        .no-results {
+            font-family: Monaco;
+            font-size: 14px;
+            color: #555;
+            margin: 16px 0;
+        }
+        h2 {
+            font-family: Monaco;
+            font-size: 18px;
+            margin: 28px 0 8px 0;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 7px 12px;
+            font-family: Monaco;
+            font-size: 13px;
+            border: 2px solid black;
+            background: white;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .search-box:focus { outline: none; background: #f5f5ff; }
+        .opts-row {
+            margin: 10px 0 4px 0;
+            font-family: Monaco;
+            font-size: 13px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .opts-row label { cursor: pointer; }
+
+        /* discover tab */
+        .show-search-wrap { position: relative; margin-bottom: 8px; }
+        .show-search-box {
+            width: 100%;
+            max-width: 560px;
+            padding: 7px 12px;
+            font-family: Monaco;
+            font-size: 13px;
+            border: 2px solid black;
+            background: white;
+            box-sizing: border-box;
+        }
+        .show-search-box:focus { outline: none; background: #f5f5ff; }
+        .show-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 560px;
+            max-height: 240px;
+            overflow-y: auto;
+            border: 2px solid black;
+            border-top: none;
+            background: white;
+            z-index: 10;
+            display: none;
+        }
+        .show-dropdown-item {
+            padding: 6px 12px;
+            font-family: Monaco;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .show-dropdown-item:hover { background: #eee; }
+        .show-dropdown-item.selected-show { background: black; color: white; }
+        .seed-list {
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .seed-tag {
+            display: inline-flex;
+            align-items: center;
+            background: black;
+            color: white;
+            font-family: Monaco;
+            font-size: 12px;
+            padding: 3px 10px;
+            gap: 8px;
+        }
+        .seed-tag .remove {
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            opacity: 0.7;
+        }
+        .seed-tag .remove:hover { opacity: 1; }
+        .listened-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 2px solid #ccc;
+        }
+        .upload-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            font-family: Monaco;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .upload-btn:hover { background: #eee; }
+        .listened-count {
+            font-family: Monaco;
+            font-size: 13px;
+            color: #555;
+            margin-left: 12px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            font-family: Monaco;
+            font-size: 13px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+        .download-btn:hover { background: #eee; }
+
+        /* eras tab */
+        .era-block {
+            border: 2px solid black;
+            background: white;
+            margin-bottom: 12px;
+        }
+        .era-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .era-header:hover { background: #f5f5f5; }
+        .era-title {
+            font-family: Monaco;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .era-subtitle {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+            margin-top: 4px;
+        }
+        .era-meta {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+            text-align: right;
+        }
+        .era-toggle {
+            font-family: Monaco;
+            font-size: 16px;
+            margin-left: 12px;
+        }
+        .era-body {
+            display: none;
+            border-top: 2px solid black;
+            padding: 14px 18px;
+        }
+        .era-body.open { display: block; }
+        .era-songs {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 14px;
+            line-height: 1.8;
+        }
+        .era-songs .sig-song {
+            display: inline-block;
+            background: #ffe066;
+            padding: 1px 6px;
+            margin: 2px 3px 2px 0;
+        }
+        .era-shows { margin-top: 8px; }
+        .era-show-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: Monaco;
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            gap: 12px;
+        }
+        .era-show-row:last-child { border-bottom: none; }
+        .era-show-date { font-weight: bold; white-space: nowrap; }
+        .era-show-venue { color: #555; flex: 1; }
+        .era-show-recs { white-space: nowrap; }
+        .era-show-recs a { color: #0066cc; text-decoration: none; border-bottom: 1px solid #0066cc; margin-left: 6px; }
+        .era-show-recs a:hover { color: #004499; }
+        .era-show-toggle { cursor: pointer; color: #999; font-size: 14px; padding: 0 4px; user-select: none; }
+        .era-show-toggle:hover { color: black; }
+        .era-show-setlist {
+            display: none;
+            padding: 6px 0 4px 0;
+            font-family: Monaco;
+            font-size: 11px;
+            color: #444;
+            line-height: 1.9;
+            border-bottom: 1px solid #eee;
+        }
+        .era-show-setlist.open { display: block; }
+        .era-filter {
+            margin-bottom: 10px;
+        }
+        .era-filter input {
+            padding: 5px 10px;
+            font-family: Monaco;
+            font-size: 12px;
+            border: 2px solid black;
+            background: white;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        .era-filter input:focus { outline: none; background: #f5f5ff; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>gybe bootleg helper</h1>
+        <nav class="nav-buttons">
+            <a href="index.html" class="button">home</a>
+            <a href="projects.html" class="button">projects</a>
+        </nav>
+    </header>
+
+    <main>
+        <p>data from <a href="https://gybecc.neocities.org" target="_blank">gybecc.neocities.org</a> · <a href="https://archive.org/details/GodspeedYouBlackEmperor" target="_blank">archive.org</a>.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('finder')">song finder</button>
+            <button class="tab-btn" onclick="switchTab('discover')">discover</button>
+            <button class="tab-btn" onclick="switchTab('eras')">shows</button>
+        </div>
+
+        <!-- SONG FINDER TAB -->
+        <div class="tab-panel active" id="tab-finder">
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 12px 0;">select songs you want to hear, find which shows contain them.</p>
+            <input type="text" class="search-box" id="songSearch" placeholder="filter songs..." oninput="filterSongs()">
+            <div class="song-grid" id="songGrid"></div>
+            <div class="selected-list" id="selectedList"></div>
+            <div class="opts-row">
+                <span>mode:
+                    <label style="margin-left:8px;"><input type="radio" name="mode" value="any" checked> any</label>
+                    <label style="margin-left:12px;"><input type="radio" name="mode" value="all"> all</label>
+                </span>
+                <label><input type="checkbox" id="recordingsOnly"> recordings only</label>
+            </div>
+            <div>
+                <button class="find-btn" onclick="findShows()">find shows</button>
+                <button class="clear-btn" onclick="clearAll()">clear</button>
+            </div>
+            <div class="results" id="finderResults"></div>
+        </div>
+
+        <!-- DISCOVER TAB -->
+        <div class="tab-panel" id="tab-discover">
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 12px 0;">enter shows you've heard, get recommendations for something different.</p>
+
+            <h2 style="margin-top:0;">seed shows</h2>
+            <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 8px 0;">search for a show or paste a list of dates. recommendations will be as different as possible from your seeds.</p>
+            <div class="show-search-wrap">
+                <input type="text" class="show-search-box" id="showSearch" placeholder="search by date or venue..." oninput="onShowSearch()" onblur="closeDropdown()" autocomplete="off">
+                <div class="show-dropdown" id="showDropdown"></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:flex-start;">
+                <textarea id="bulkDates" rows="3" placeholder="paste dates here (one per line, YYYY-MM-DD)..." style="width:100%;max-width:560px;font-family:Monaco;font-size:12px;border:2px solid black;padding:7px 12px;box-sizing:border-box;resize:vertical;"></textarea>
+                <button class="upload-btn" style="white-space:nowrap;margin-top:0;" onclick="addBulkDates()">add dates</button>
+            </div>
+            <div style="font-family:Monaco;font-size:12px;color:#c00;margin:4px 0 8px 0;" id="bulkError"></div>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <div class="seed-list" id="seedList"></div>
+                <button class="upload-btn" id="clearSeedsBtn" onclick="clearSeeds()" style="display:none;white-space:nowrap;">clear all</button>
+            </div>
+
+            <div class="listened-section">
+                <h2>listened list</h2>
+                <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 10px 0;">optionally upload a list of shows you've already heard — recommendations will exclude them.<br>file format: one date per line (YYYY-MM-DD), or a JSON array of dates.</p>
+                <button class="upload-btn" onclick="document.getElementById('listenedFile').click()">upload list</button>
+                <input type="file" id="listenedFile" accept=".txt,.json" style="display:none" onchange="loadListened(this)">
+                <span class="listened-count" id="listenedCount"></span>
+                <button class="download-btn" onclick="downloadListened()" id="downloadBtn" style="display:none">download list</button>
+            </div>
+
+            <div class="opts-row" style="margin-top:16px;">
+                <label><input type="checkbox" id="discoverRecordingsOnly"> recordings only</label>
+            </div>
+            <div>
+                <button class="find-btn" onclick="discoverShows()">recommend</button>
+                <button class="clear-btn" onclick="clearDiscover()">clear</button>
+            </div>
+            <div class="results" id="discoverResults"></div>
+        </div>
+
+        <!-- ERAS TAB -->
+        <div class="tab-panel" id="tab-eras">
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 16px 0;">all shows with recordings, grouped by year.</p>
+            <div id="erasContainer"></div>
+        </div>
+    </main>
+
+    <script src="setlists-data.js"></script>
+    <script>
+// ─── Canonical songs ───────────────────────────────────────────────────────
+const CANONICAL_SONGS = [
+    '12-28-99', '2 nouveau tower', '3rd part', 'albanian', 'anthem for no state',
+    'babys in a thundercloud', 'behemoth', 'blaise bailey finnegan III', 'bosses hang',
+    'broken spires at dead kapital', 'chart #3', 'cliff', 'dead flag blues', 'dead metheny',
+    'divorce & fever', 'do you know how to waltz', 'fire at static valley', 'gamelan',
+    'gathering storm', 'glacier', 'j.l.h. outro', 'john hughes', 'kicking horse on broken hill',
+    "macrimmon's lament", 'monheim', 'motherfucker = redeemer', 'moya',
+    'nothings alright in our lives', 'pale spectator takes photographs', 'piss crowns are trebled',
+    'raindrops cast in lead', 'sad mafioso', 'steve reich', 'sun is a hole sun is vapors',
+    'tazer floyd', 'the cowboy', 'the dead flag blues', 'the dead flag blues (outro)',
+    'the sad mafioso', 'world police',
+];
+
+// ─── Normalization ─────────────────────────────────────────────────────────
+function normalizeSong(raw) {
+    const s = raw.toLowerCase()
+        .replace(/\s+thanks to\b.*/g, '')
+        .replace(/\s+\[.*/g, '')
+        .replace(/\s+note\s*:.*/g, '')
+        .replace(/\s+(order not confirmed|only the confirmed|unconfirmed).*/g, '')
+        .replace(/\s+".*/g, '')
+        .replace(/\(soundcheck\)|\(tape\)/g, '')
+        .replace(/\s*\(w\/[^)]+\)/g, '')
+        .replace(/\s*\(aborted\)/g, '')
+        .replace(/\s*\(\?\)/g, '')
+        .replace(/motherfucking/g, 'motherfucker')
+        .replace(/motherfucker=redeemer/, 'motherfucker = redeemer')
+        .trim();
+
+    const MAP = {
+        '12-28-99': '12-28-99', '12-28-99 (outro)': '12-28-99', '12-28-99 (w/ outro)': '12-28-99',
+        '12-28-99 (w/outro)': '12-28-99', '12-28-99 w/ outro': '12-28-99', '11-28-99 w/ outro': '12-28-99',
+        '12.28.99': '12-28-99', '12.28.99 (w/ outro)': '12-28-99', '12/28/99 (w/ outro)': '12-28-99',
+        'impro + 12-28-99': '12-28-99',
+        '2 nouveau tower': '2 nouveau tower',
+        '3rd part': '3rd part',
+        'albanian': 'albanian',
+        'anthem for no state': 'anthem for no state', 'anthem for no state (part 1)': 'anthem for no state',
+        'babys in a thundercloud': 'babys in a thundercloud',
+        'behemoth': 'behemoth', 'behemoth (part 2)': 'behemoth',
+        'blaise bailey finnegan iii': 'blaise bailey finnegan III',
+        'blaise bailey finnegan ii': 'blaise bailey finnegan III',
+        'blaise bailey finnegan iiii': 'blaise bailey finnegan III',
+        'bosses hang': 'bosses hang', 'bosses hang (section)': 'bosses hang', '[bosses hang ?]': 'bosses hang',
+        'broken spires at dead kapital': 'broken spires at dead kapital',
+        'chart #3': 'chart #3', 'chart #3/steve reich': 'chart #3',
+        'steve reich': 'steve reich',
+        'cliff': 'cliff',
+        'dead flag blues': 'dead flag blues', 'dead flag blues (outro)': 'dead flag blues',
+        'dead metheny': 'dead metheny', 'dead metheny (w/ outro)': 'dead metheny', 'death metheny': 'dead metheny',
+        'divorce & fever': 'divorce & fever',
+        'do you know how to waltz': 'do you know how to waltz',
+        'fire at static valley': 'fire at static valley', 'fire at static vallley': 'fire at static valley',
+        '(?) fire at static valley': 'fire at static valley',
+        'gamelan': 'gamelan',
+        'gathering storm': 'gathering storm', 'gathering storm (part 2)': 'gathering storm',
+        'gathering storm (part ii)': 'gathering storm', 'gathering storm pt. i': 'gathering storm',
+        'gatheering storm': 'gathering storm', 'gathering strom': 'gathering storm', 'gatherng storm': 'gathering storm',
+        'glacier': 'glacier', 'glaicer': 'glacier',
+        'j.l.h. outro': 'j.l.h. outro', 'j.l.h outro': 'j.l.h. outro', 'j.l.h. (outro)': 'j.l.h. outro',
+        'j.l.h. outro jam': 'j.l.h. outro', 'intro -> j.l.h. outro': 'j.l.h. outro',
+        'john hughes': 'john hughes',
+        'kicking horse on broken hill': 'kicking horse on broken hill', 'kicking horses on brokenhill': 'kicking horse on broken hill',
+        "macrimmon's lament": "macrimmon's lament",
+        'monheim': 'monheim', 'monhiem': 'monheim',
+        'motherfucker = redeemer': 'motherfucker = redeemer',
+        'moya': 'moya', 'moya (?)': 'moya', 'moya (aborted)': 'moya',
+        'nothings alrite in our life': 'nothings alright in our lives', 'nothings alright in our lives': 'nothings alright in our lives',
+        'pale spectator takes photographs': 'pale spectator takes photographs',
+        'piss crowns are trebled': 'piss crowns are trebled',
+        'raindrops cast in lead': 'raindrops cast in lead',
+        'sad mafioso': 'sad mafioso', 'sad mafioso (part 2)': 'sad mafioso',
+        'the sad mafioso': 'the sad mafioso', 'the sad mafioso + outro': 'the sad mafioso', 'the sad mafiosos': 'the sad mafioso',
+        'sun is a hole': 'sun is a hole / sun is vapors', 'sun is a hole sun is vapors': 'sun is a hole / sun is vapors',
+        'tazer floyd': 'tazer floyd',
+        'the boy': 'the cowboy', 'the cowboy': 'the cowboy',
+        'the dead flag blues': 'the dead flag blues',
+        'the dead flag blues (outro)': 'the dead flag blues (outro)',
+        'the dead flag blues outro': 'the dead flag blues (outro)', '(?)the dead flag blues (outro)': 'the dead flag blues (outro)',
+        'world police': 'world police', 'wold police': 'world police', 'world police (part i)': 'world police',
+    };
+    return MAP[s] || null;
+}
+
+// ─── Index & show song sets ────────────────────────────────────────────────
+let shows = [];
+let showIndex = {};
+let showSongSets = []; // per show: Set of canonical songs
+
+function buildIndex() {
+    shows = SETLISTS_DATA;
+    showIndex = {};
+    showSongSets = [];
+    for (let i = 0; i < shows.length; i++) {
+        const seen = new Set();
+        for (const rawSong of shows[i].songs) {
+            const canon = normalizeSong(rawSong);
+            if (canon && !seen.has(canon)) {
+                seen.add(canon);
+                if (!showIndex[canon]) showIndex[canon] = [];
+                showIndex[canon].push(i);
+            }
+        }
+        showSongSets.push(seen);
+    }
+}
+
+// ─── Shared render helpers ─────────────────────────────────────────────────
+function renderShowCard(show, labelHtml, highlightSet) {
+    const setlistHtml = show.songs.map(rawSong => {
+        const canon = normalizeSong(rawSong);
+        if (canon && highlightSet && highlightSet.has(canon)) {
+            return `<span class="matched">${rawSong}</span>`;
+        }
+        return rawSong;
+    }).join(' &nbsp;·&nbsp; ');
+
+    const recHtml = show.recordings && show.recordings.length > 0
+        ? `<div class="recordings"><span class="rec-label">recordings:</span>${show.recordings.map((r, i) => `<a href="${r.url}" target="_blank">[${i + 1}] archive.org</a>`).join('')}</div>`
+        : '';
+
+    return `<div class="result-show">
+        <div class="show-header">
+            <div><span class="show-date">${show.date}</span><span class="show-venue">${show.venue}</span></div>
+            <span class="match-count">${labelHtml}</span>
+        </div>
+        <div class="setlist">${setlistHtml}</div>
+        ${recHtml}
+    </div>`;
+}
+
+// ─── Tab switching ─────────────────────────────────────────────────────────
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['finder','discover','eras'][i] === name);
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === 'tab-' + name);
+    });
+}
+
+// ─── SONG FINDER ──────────────────────────────────────────────────────────
+let selected = new Set();
+
+function renderSongGrid(filter) {
+    const grid = document.getElementById('songGrid');
+    grid.innerHTML = '';
+    const f = (filter || '').toLowerCase().trim();
+    for (const song of CANONICAL_SONGS) {
+        if (f && !song.toLowerCase().includes(f)) continue;
+        const tag = document.createElement('div');
+        tag.className = 'song-tag' + (selected.has(song) ? ' selected' : '');
+        tag.textContent = song;
+        tag.onclick = () => toggleSong(song, tag);
+        grid.appendChild(tag);
+    }
+}
+
+function filterSongs() {
+    renderSongGrid(document.getElementById('songSearch').value);
+}
+
+function toggleSong(song, el) {
+    if (selected.has(song)) { selected.delete(song); el.classList.remove('selected'); }
+    else { selected.add(song); el.classList.add('selected'); }
+    renderSelectedList();
+}
+
+function renderSelectedList() {
+    const div = document.getElementById('selectedList');
+    if (selected.size === 0) { div.innerHTML = ''; return; }
+    div.innerHTML = 'selected: ' + [...selected].map(s => `<span>${s}</span>`).join('');
+}
+
+function clearAll() {
+    selected.clear();
+    renderSongGrid(document.getElementById('songSearch').value);
+    renderSelectedList();
+    document.getElementById('finderResults').innerHTML = '';
+}
+
+function findShows() {
+    const resultsDiv = document.getElementById('finderResults');
+    if (selected.size === 0) {
+        resultsDiv.innerHTML = '<p class="no-results">select at least one song.</p>';
+        return;
+    }
+    const query = [...selected];
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    const recordingsOnly = document.getElementById('recordingsOnly').checked;
+
+    const scores = {};
+    for (const song of query) {
+        for (const idx of (showIndex[song] || [])) {
+            scores[idx] = (scores[idx] || 0) + 1;
+        }
+    }
+
+    const minScore = mode === 'all' ? query.length : 1;
+    const ranked = Object.entries(scores)
+        .sort((a, b) => b[1] - a[1] || b[0] - a[0])
+        .filter(([idx, score]) => score >= minScore && (!recordingsOnly || shows[idx].recordings.length > 0));
+
+    if (ranked.length === 0) {
+        resultsDiv.innerHTML = `<p class="no-results">${mode === 'all' ? 'no shows found containing all selected songs.' : 'no shows found with these songs.'}</p>`;
+        return;
+    }
+
+    const modeLabel = mode === 'all' ? 'containing all songs' : 'ranked by match';
+    let html = `<h2>shows ${modeLabel} (${ranked.length} found)</h2>`;
+    for (const [idx, score] of ranked) {
+        const matchLabel = score === query.length ? `all ${score} songs` : `${score} / ${query.length} songs`;
+        html += renderShowCard(shows[idx], matchLabel, selected);
+    }
+    resultsDiv.innerHTML = html;
+}
+
+// ─── DISCOVER ─────────────────────────────────────────────────────────────
+let seedIndices = new Set();   // show indices used as seeds
+let listenedDates = new Set(); // dates from uploaded list
+
+function showLabel(show) {
+    return `${show.date} — ${show.venue}`;
+}
+
+function onShowSearch() {
+    const q = document.getElementById('showSearch').value.toLowerCase().trim();
+    const dropdown = document.getElementById('showDropdown');
+    if (!q) { dropdown.style.display = 'none'; return; }
+
+    const matches = [];
+    for (let i = 0; i < shows.length; i++) {
+        if (matches.length >= 40) break;
+        const s = shows[i];
+        if (s.date.includes(q) || s.venue.toLowerCase().includes(q)) {
+            matches.push(i);
+        }
+    }
+
+    if (matches.length === 0) { dropdown.style.display = 'none'; return; }
+
+    dropdown.innerHTML = matches.map(i => {
+        const cls = seedIndices.has(i) ? ' selected-show' : '';
+        return `<div class="show-dropdown-item${cls}" onmousedown="addSeed(${i})">${showLabel(shows[i])}</div>`;
+    }).join('');
+    dropdown.style.display = 'block';
+}
+
+function closeDropdown() {
+    setTimeout(() => { document.getElementById('showDropdown').style.display = 'none'; }, 150);
+}
+
+function addSeed(idx) {
+    if (seedIndices.has(idx)) return;
+    seedIndices.add(idx);
+    renderSeedList();
+    document.getElementById('showSearch').value = '';
+    document.getElementById('showDropdown').style.display = 'none';
+}
+
+function removeSeed(idx) {
+    seedIndices.delete(idx);
+    renderSeedList();
+}
+
+function renderSeedList() {
+    const div = document.getElementById('seedList');
+    const clearBtn = document.getElementById('clearSeedsBtn');
+    if (seedIndices.size === 0) { div.innerHTML = ''; clearBtn.style.display = 'none'; return; }
+    div.innerHTML = [...seedIndices].map(i =>
+        `<div class="seed-tag">${showLabel(shows[i])}<span class="remove" onclick="removeSeed(${i})">×</span></div>`
+    ).join('');
+    clearBtn.style.display = seedIndices.size > 1 ? 'inline-block' : 'none';
+}
+
+function clearSeeds() {
+    seedIndices.clear();
+    renderSeedList();
+}
+
+function loadListened(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const text = e.target.result.trim();
+        let dates = [];
+        try {
+            const parsed = JSON.parse(text);
+            dates = Array.isArray(parsed) ? parsed : Object.keys(parsed);
+        } catch {
+            dates = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        }
+        listenedDates = new Set(dates);
+        const countEl = document.getElementById('listenedCount');
+        countEl.textContent = `${listenedDates.size} shows loaded`;
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+function downloadListened() {
+    const blob = new Blob([JSON.stringify([...listenedDates], null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'gybe-listened.json';
+    a.click();
+}
+
+// Build a date → show index map for fast lookup
+let dateToIdx = {};
+function buildDateIndex() {
+    for (let i = 0; i < shows.length; i++) {
+        dateToIdx[shows[i].date] = i;
+    }
+}
+
+function addBulkDates() {
+    const raw = document.getElementById('bulkDates').value;
+    const errEl = document.getElementById('bulkError');
+    const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const notFound = [];
+    for (const line of lines) {
+        // Accept YYYY-MM-DD anywhere in the line
+        const m = line.match(/(\d{4}-\d{2}-\d{2})/);
+        if (!m) { notFound.push(line); continue; }
+        const date = m[1];
+        const idx = dateToIdx[date];
+        if (idx === undefined) { notFound.push(date); continue; }
+        seedIndices.add(idx);
+    }
+    renderSeedList();
+    document.getElementById('bulkDates').value = '';
+    errEl.textContent = notFound.length ? `not found: ${notFound.join(', ')}` : '';
+}
+
+function clearDiscover() {
+    seedIndices.clear();
+    listenedDates.clear();
+    renderSeedList();
+    document.getElementById('showSearch').value = '';
+    document.getElementById('bulkDates').value = '';
+    document.getElementById('bulkError').textContent = '';
+    document.getElementById('listenedCount').textContent = '';
+    document.getElementById('downloadBtn').style.display = 'none';
+    document.getElementById('discoverResults').innerHTML = '';
+}
+
+function discoverShows() {
+    const resultsDiv = document.getElementById('discoverResults');
+    const recordingsOnly = document.getElementById('discoverRecordingsOnly').checked;
+
+    if (seedIndices.size === 0 && listenedDates.size === 0) {
+        resultsDiv.innerHTML = '<p class="no-results">add at least one seed show or upload a listened list.</p>';
+        return;
+    }
+
+    // Build union of seed song sets
+    const seedSongs = new Set();
+    for (const idx of seedIndices) {
+        for (const song of showSongSets[idx]) seedSongs.add(song);
+    }
+
+    // Score candidates: dissimilarity = 1 - Jaccard(candidate, seedSongs)
+    // Jaccard = |intersection| / |union|
+    // We want lowest Jaccard (most different), excluding seeds and listened shows
+    const excludeDates = new Set([...listenedDates, ...[...seedIndices].map(i => shows[i].date)]);
+
+    const candidates = [];
+    for (let i = 0; i < shows.length; i++) {
+        const show = shows[i];
+        if (excludeDates.has(show.date)) continue;
+        if (recordingsOnly && show.recordings.length === 0) continue;
+
+        // If no seeds provided, just return all non-listened shows ordered by date
+        if (seedSongs.size === 0) {
+            candidates.push({ idx: i, jaccard: 0, shared: 0 });
+            continue;
+        }
+
+        const candidateSongs = showSongSets[i];
+        if (candidateSongs.size === 0) continue;
+
+        let intersection = 0;
+        for (const s of candidateSongs) { if (seedSongs.has(s)) intersection++; }
+        const union = seedSongs.size + candidateSongs.size - intersection;
+        const jaccard = union > 0 ? intersection / union : 0;
+        candidates.push({ idx: i, jaccard, shared: intersection });
+    }
+
+    // Sort by jaccard asc (most different first), break ties by date desc
+    candidates.sort((a, b) => a.jaccard - b.jaccard || shows[b.idx].date.localeCompare(shows[a.idx].date));
+
+    if (candidates.length === 0) {
+        resultsDiv.innerHTML = '<p class="no-results">no shows found.</p>';
+        return;
+    }
+
+    const prefix = seedSongs.size > 0 ? 'most different from your seeds' : 'shows not in your listened list';
+    let html = `<h2>${prefix} (${candidates.length} found)</h2>`;
+    for (const { idx, jaccard, shared } of candidates) {
+        const pct = Math.round((1 - jaccard) * 100);
+        const label = seedSongs.size > 0
+            ? `${pct}% different${shared > 0 ? ` · ${shared} song${shared > 1 ? 's' : ''} in common` : ''}`
+            : '';
+        html += renderShowCard(shows[idx], label, null);
+    }
+    resultsDiv.innerHTML = html;
+}
+
+// ─── SHOWS (by year) ───────────────────────────────────────────────────────
+function buildEras() {
+    const container = document.getElementById('erasContainer');
+    container.innerHTML = '';
+
+    // Group shows with recordings by year
+    const byYear = {};
+    for (const show of shows) {
+        if (show.recordings.length === 0) continue;
+        const y = show.date.slice(0, 4);
+        if (!byYear[y]) byYear[y] = [];
+        byYear[y].push(show);
+    }
+
+    for (const year of Object.keys(byYear).sort()) {
+        const yearShows = byYear[year];
+        const block = document.createElement('div');
+        block.className = 'era-block';
+        block.innerHTML = `
+            <div class="era-header" onclick="toggleEra('y${year}')">
+                <div><div class="era-title">${year}</div></div>
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <div class="era-meta">${yearShows.length} recordings</div>
+                    <div class="era-toggle" id="toggle-y${year}">+</div>
+                </div>
+            </div>
+            <div class="era-body" id="body-y${year}">
+                <div class="era-filter">
+                    <input type="text" placeholder="filter shows..." oninput="filterEraShows('y${year}', this.value)">
+                </div>
+                <div class="era-shows" id="shows-y${year}">
+                    ${renderEraShowList(yearShows, '')}
+                </div>
+            </div>`;
+        container.appendChild(block);
+    }
+}
+
+function renderEraShowList(eraShows, filter) {
+    const f = (filter || '').toLowerCase().trim();
+    const filtered = f ? eraShows.filter(s => s.date.includes(f) || s.venue.toLowerCase().includes(f)) : eraShows;
+    if (filtered.length === 0) return '<p style="font-family:Monaco;font-size:12px;color:#555;">no shows match.</p>';
+    return filtered.map(s => {
+        const recsHtml = s.recordings.map((r, i) => `<a href="${r.url}" target="_blank">[${i+1}]</a>`).join('');
+        const mainSongs = [], soundcheckSongs = [];
+        for (const song of s.songs) {
+            if (/\(soundcheck\)/i.test(song)) soundcheckSongs.push(song);
+            else mainSongs.push(song);
+        }
+        const renderSong = song => {
+            const m = song.match(/^(.*?)\s+thanks to\b(.*)$/i);
+            return m
+                ? `${m[1]}<br><span style="color:#999;padding-left:16px;">thanks to${m[2]}</span>`
+                : song;
+        };
+        let setlistText = '';
+        if (soundcheckSongs.length > 0) {
+            setlistText += `<span style="color:#999;font-size:10px;display:block;margin-bottom:2px;">soundcheck</span>` +
+                soundcheckSongs.map(song => `<span style="color:#aaa;">${song.replace(/\s*\(soundcheck\)/i, '')}</span>`).join('<br>') +
+                `<br><span style="color:#999;font-size:10px;display:block;margin-top:6px;margin-bottom:2px;">setlist</span>`;
+        }
+        setlistText += mainSongs.map(renderSong).join('<br>');
+        const id = 'sl-' + s.date.replace(/\W/g, '-');
+        return `<div class="era-show-row" onclick="toggleShowSetlist('${id}')" style="cursor:pointer;">
+            <span class="era-show-date">${s.date.replace(/[a-z]$/, '')}</span>
+            <span class="era-show-venue">${s.venue}</span>
+            <span class="era-show-recs" onclick="event.stopPropagation()">${recsHtml}</span>
+            <span class="era-show-toggle" id="tgl-${id}">+</span>
+        </div>
+        <div class="era-show-setlist" id="${id}">${setlistText}</div>`;
+    }).join('');
+}
+
+function toggleShowSetlist(id) {
+    const el = document.getElementById(id);
+    const tgl = document.getElementById('tgl-' + id);
+    const isOpen = el.classList.toggle('open');
+    tgl.textContent = isOpen ? '−' : '+';
+}
+
+function toggleEra(id) {
+    const body = document.getElementById('body-' + id);
+    const toggle = document.getElementById('toggle-' + id);
+    const isOpen = body.classList.toggle('open');
+    toggle.textContent = isOpen ? '−' : '+';
+}
+
+function filterEraShows(id, value) {
+    const showsDiv = document.getElementById('shows-' + id);
+    const year = id.slice(1); // strip leading 'y'
+    const yearShows = shows.filter(s => s.date.startsWith(year) && s.recordings.length > 0);
+    showsDiv.innerHTML = renderEraShowList(yearShows, value);
+}
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+buildIndex();
+buildDateIndex();
+renderSongGrid();
+buildEras();
+    </script>
+</body>
+</html>

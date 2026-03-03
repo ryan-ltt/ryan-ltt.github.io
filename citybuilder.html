@@ -64,6 +64,7 @@
           <div class="panel">
             <h2>stats</h2>
             <div class="stat-row"><span>day</span><span class="value" id="sim-day">1</span></div>
+            <div class="stat-row"><span>time</span><span class="value" id="sim-time">7:00am</span></div>
             <div class="stat-row"><span>gold</span><span class="value" id="gold">$200</span></div>
             <div class="stat-row"><span>buildings</span><span class="value" id="stat-buildings">0</span></div>
             <div class="stat-row"><span>happiness</span><span class="value" id="happiness">100%</span></div>
@@ -82,13 +83,25 @@
           </div>
         </div>
 
-        <div class="panel">
-          <h2>people</h2>
-          <div class="stat-row"><span>alive</span><span class="value" id="people-count">0 / 80</span></div>
-          <div class="stat-row"><span>lifespan</span><span class="value" id="lifespan-val">120t</span></div>
-          <button id="spawn-btn" class="action-btn">spawn person ($50 gold)</button>
-          <button id="upgrade-btn" class="action-btn upgrade">upgrade lifespan (10 food)</button>
-          <p class="hint">click map to spawn</p>
+        <div class="stats-stockpile-row">
+          <div class="panel">
+            <h2>people</h2>
+            <div class="stat-row"><span>alive</span><span class="value" id="people-count">0 / 80</span></div>
+            <div class="stat-row"><span>lifespan</span><span class="value" id="lifespan-val">10d</span></div>
+            <button id="spawn-btn" class="action-btn">spawn person ($50 gold)</button>
+            <button id="upgrade-btn" class="action-btn upgrade">upgrade lifespan (10 food)</button>
+            <p class="hint">click map to spawn</p>
+          </div>
+
+          <div class="panel">
+            <h2>workforce</h2>
+            <div class="stat-row"><span>founders</span><span class="value" id="job-founder">0</span></div>
+            <div class="stat-row"><span>gatherers</span><span class="value" id="job-gatherer">0</span></div>
+            <div class="stat-row"><span>explorers</span><span class="value" id="job-explorer">0</span></div>
+            <div class="stat-row"><span>workers</span><span class="value" id="job-worker">0</span></div>
+            <div class="stat-row"><span>idle</span><span class="value" id="job-idle">0</span></div>
+            <div class="stat-row" style="margin-top:4px;border-top:1px solid #eee;padding-top:4px"><span>staffed</span><span class="value" id="buildings-staffed">0 / 0</span></div>
+          </div>
         </div>
 
         <div class="panel" id="votes-panel" style="display:none">
@@ -103,6 +116,7 @@
           <div class="stat-row"><span>factory</span><span class="value" id="votes-factory">0 / 10</span></div>
           <div class="stat-row"><span>tree farm</span><span class="value" id="votes-tree-farm">0 / 10</span></div>
           <div class="stat-row"><span>stone farm</span><span class="value" id="votes-stone-farm">0 / 10</span></div>
+          <div class="stat-row"><span>farm</span><span class="value" id="votes-farm">0 / 10</span></div>
           <p class="hint">votes cast when depositing at town hall</p>
         </div>
 

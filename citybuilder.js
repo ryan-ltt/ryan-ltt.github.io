@@ -23,14 +23,30 @@ const TILE_INCOME = { [FACTORY]: 30 };
 // ── Simulation constants ───────────────────────────────────────────────────────
 
 const SIM_INTERVAL        = 250;
-const BASE_LIFESPAN       = 120;
-const LIFESPAN_PER_LEVEL  = 40;
-const MAX_LIFESPAN_UPGRADES = 10;
+const BASE_LIFESPAN       = 10 * 96;  // 10 days
+const LIFESPAN_PER_LEVEL  = 96;        // 1 day per upgrade
+const MAX_LIFESPAN_UPGRADES = 90;      // max 100 days
 const CARRY_CAP           = 5;
 const MAX_PEOPLE          = 1000;
-const BUILD_COOLDOWN      = 16;
+const TH_BUILD_INTERVAL   = 12; // ticks between each TH autonomous build attempt
 const SPAWN_COST          = 5;    // gold cost to spawn a person
 const PERSON_COLORS = ['#e53935','#fb8c00','#43a047','#1e88e5','#8e24aa','#d81b60','#546e7a','#6d4c41'];
+
+const DAY_LENGTH   = 96;  // ticks per in-game day (1 tick = 15 min)
+const HOUR_DAWN    = 7;   // hour work starts
+const HOUR_DUSK    = 21;  // hour workers leave buildings, evening begins
+// midnight (hour 0) is when people sleep — derived from DAY_LENGTH wrap
+
+const WORKER_JOBS = new Set([FACTORY, FARM, CHURCH, TREE_FARM, STONE_FARM, PARK]);
+const MAX_WORKERS_PER_BUILDING = 3;
+const WORKER_OUTPUT = {
+  [FARM]:       { food:  2 },  // staffed farms produce 2×; unstaffed still produce 1 via farmProduceFood
+  [TREE_FARM]:  { wood:  1 },
+  [STONE_FARM]: { stone: 1 },
+  [FACTORY]:    { gold:  1 },
+  [CHURCH]:     { food:  1 },
+  [PARK]:       { food:  1 },
+};
 
 const HOUSE_POP     = 1;
 const ROW_HOUSE_POP = 4;
@@ -67,9 +83,9 @@ let nextPersonId = 0;
 let townHalls    = []; // { r, c, resources:{wood,stone,food}, votes:{...}, popCap }
 let houseRegistry = {}; // houseId → { r, c }
 let nextHouseId  = 0;
+let buildingRegistry = {}; // `${r},${c}` → { r, c, type, workers: [] }
 let lifespanLevel   = 0;
 let simTick         = 0;
-let pendingTownHall = false; // true when a remote cluster is waiting to form a new TH
 let selectedTHIndex = 0;    // which town hall is shown in stockpile/votes panels
 let lastExploreTick = -200; // cooldown: minimum ticks between explorer dispatches
 
@@ -194,6 +210,17 @@ let camDragStartX = 0, camDragStartY = 0;
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function timeOfDay() {
+  const tickInDay = simTick % DAY_LENGTH;
+  const totalMins = tickInDay * 15;
+  const hour      = Math.floor(totalMins / 60);
+  const minute    = totalMins % 60;
+  const isNight   = hour < HOUR_DAWN;                   // midnight–7am
+  const isEvening = !isNight && hour >= HOUR_DUSK;      // 9pm–midnight
+  const isDay     = !isNight && !isEvening;             // 7am–9pm
+  return { hour, minute, tickInDay, isNight, isEvening, isDay };
+}
 
 function clampCamera() {
   camX = clamp(camX, 0, Math.max(0, MAP_COLS - canvas.width  / tileSize));
@@ -385,25 +412,34 @@ function currentMaxAge() {
   return BASE_LIFESPAN + lifespanLevel * LIFESPAN_PER_LEVEL;
 }
 
-function spawnPersonFree(r, c) {
-  if (!inBounds(r, c) || people.length >= globalPopCap()) return;
-  people.push({
+function spawnPersonFree(r, c, houseId = null, force = false) {
+  if (!inBounds(r, c) || (!force && people.length >= globalPopCap())) return;
+  const p = {
     id: nextPersonId++,
     x: c, y: r,
     age: 0,
     maxAge: currentMaxAge(),
     wood: 0, stone: 0, food: 0,
-    buildCooldown: Math.floor(Math.random() * BUILD_COOLDOWN),
     color: PERSON_COLORS[nextPersonId % PERSON_COLORS.length],
-    mode: 'build',      // 'build' | 'gather' | 'explore'
+    mode: 'gather',     // 'gather' | 'explore' | 'found' | 'home' | 'social'
+    job:  'gatherer',   // 'gatherer' | 'explorer' | 'founder' | 'worker' | 'idle'
+    assignedBuildingKey: null, // "${r},${c}" of assigned building, or null
+    insideBuilding: false,     // true when worker is hidden inside a building
+    sleeping:      false,      // true from midnight until dawn
+    socialTarget:  null,       // { r, c } destination during evening social phase
     gatherFood: false,  // true when food is critically low
     homeR: r, homeC: c,
     houseId: null,
     gatherTarget:  null, // { r, c } directed gather destination
+    foundTarget:   null, // { r, c } destination when founding a new TH
     exploreWood:   0,    // founding resources carried while exploring
     exploreStone:  0,
     exploreTick:   0,    // ticks spent in explore mode (for timeout)
-  });
+  };
+  people.push(p);
+  if (houseId != null && houseRegistry[houseId]) {
+    assignHouse(p, houseId, houseRegistry[houseId]);
+  }
 }
 
 function spawnPerson(r, c) {
@@ -419,14 +455,15 @@ function spawnPerson(r, c) {
     townHalls.push({
       r, c,
       resources: { wood: 10, stone: 0, food: 100 },
-      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
-      popCap: 1,
+      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0 },
+      popCap: 0,
+      buildTimer: TH_BUILD_INTERVAL,
     });
     recordDiscovery(TOWN_HALL);
     gold -= SPAWN_COST;
-    // Spawn person on an adjacent grass tile
+    // Spawn founder on an adjacent grass tile — force=true bypasses popCap (starts at 0)
     const site = findGrassSiteNear(r, c, 1, 3);
-    if (site) spawnPersonFree(site.r, site.c);
+    if (site) spawnPersonFree(site.r, site.c, null, true);
     updateUI();
     render();
     return;
@@ -472,6 +509,8 @@ function agePeople() {
         resourceMap[r][c] = { type: dominant, amount: total };
       }
       gold += 5;
+      unassignWorker(p);
+      unassignHouse(p);
       return false;
     }
     return true;
@@ -479,6 +518,9 @@ function agePeople() {
 }
 
 function updatePersonMode(p) {
+  if (p.job === 'worker') return; // workers are managed by workerTick
+  if (p.mode === 'found') return; // founder manages their own mode
+  if (p.sleeping || p.mode === 'home' || p.mode === 'social') return; // time-of-day modes
   const r = Math.round(p.y), c = Math.round(p.x);
 
   // --- Explore mode: check termination; bypass all other logic ---
@@ -491,9 +533,9 @@ function updatePersonMode(p) {
     }
     if (minDist >= 25 || p.exploreTick > 200) {
       dropExplorerCache(p, r, c);
-      p.homeR = r; p.homeC = c;
+      if (p.houseId == null) { p.homeR = r; p.homeC = c; }
       p.exploreWood = 0; p.exploreStone = 0; p.exploreTick = 0;
-      p.mode = 'build'; p.buildCooldown = 0;
+      p.mode = 'gather';
       showMessage('explorer settled at ' + c + ', ' + r);
     }
     return;
@@ -502,12 +544,11 @@ function updatePersonMode(p) {
   // --- Explore trigger ---
   const cap = globalPopCap();
   const th0 = nearestTownHall(r, c);
-  if (p.mode === 'build'
-      && !pendingTownHall
+  if (p.mode === 'gather'
       && simTick - lastExploreTick >= 200
       && cap > 0 && people.length / cap >= 0.80
       && townHalls.length === 1
-      && !people.some(q => q.mode === 'explore')
+      && !people.some(q => q.mode === 'explore' || q.mode === 'found')
       && th0 && th0.resources.wood  >= TOWN_HALL_TRIGGER.wood
              && th0.resources.stone >= TOWN_HALL_TRIGGER.stone
       && Math.random() < 0.0002) {
@@ -523,59 +564,13 @@ function updatePersonMode(p) {
     return;
   }
 
-  // --- Existing logic ---
-  const carried = p.wood + p.stone + p.food;
+  // Default: everyone who is not a worker, explorer, or founder is a gatherer.
+  p.mode = 'gather';
+
+  // Food-critical flag: prioritise food nodes when TH food is very low.
   const th = nearestTownHall(r, c);
-
-  // Measure how resource-rich the nearest town hall is
-  const thWood  = th ? th.resources.wood  : 0;
-  const thStone = th ? th.resources.stone : 0;
-  const thFood  = th ? th.resources.food  : 0;
-  const thTotal = thWood + thStone + thFood;
-
-  // Can the TH currently afford at least the cheapest buildable thing?
-  const canBuildSomething = th && (
-    canAffordBuild(ROAD,       th) ||
-    canAffordBuild(HOUSE,      th) ||
-    canAffordBuild(TREE_FARM,  th) ||
-    canAffordBuild(STONE_FARM, th) ||
-    canAffordBuild(ROW_HOUSE,  th) ||
-    canAffordBuild(APARTMENT,  th)
-  );
-
-  // Food scarcity: ticks of food remaining per person
-  const foodTicksLeft = (th && people.length > 0) ? thFood / people.length : thFood;
-  const foodCritical = foodTicksLeft < 5;
-  const foodLow      = foodTicksLeft < 15;
-
-  // Force gather if TH is broke — nothing to build toward, or food is critical
-  if (!canBuildSomething || foodCritical) {
-    p.mode = 'gather';
-    p.gatherFood = foodCritical; // flag: prioritise food nodes when hungry
-    return;
-  }
-  if (!foodLow) p.gatherFood = false;
-
-  if (p.mode === 'build') {
-    // Switch to gather when local resources are scarce AND TH is low
-    let nearbyRes = false;
-    for (let dr = -4; dr <= 4 && !nearbyRes; dr++)
-      for (let dc = -4; dc <= 4 && !nearbyRes; dc++)
-        if (inBounds(r+dr, c+dc) && resourceMap[r+dr][c+dc]) nearbyRes = true;
-    // Only switch to gather if also carrying nothing and TH is low
-    if (!nearbyRes && carried === 0 && thTotal < 10) p.mode = 'gather';
-  } else {
-    // Switch back to build based on how stocked the TH is
-    const buildThreshold = thTotal >= 30 ? 1
-                         : thTotal >= 15 ? 3
-                         : CARRY_CAP;
-
-    if (carried >= buildThreshold) p.mode = 'build';
-    if (carried === 0 && Math.abs(r - p.homeR) + Math.abs(c - p.homeC) < 4 && canBuildSomething) p.mode = 'build';
-  }
-
-  // Clear gather target when leaving gather mode
-  if (p.mode !== 'gather') p.gatherTarget = null;
+  const foodTicksLeft = (th && people.length > 0) ? th.resources.food / people.length : 999;
+  p.gatherFood = foodTicksLeft < 5;
 }
 
 function hasFarmResourceAdjacentTo(r, c) {
@@ -653,7 +648,13 @@ function movePerson(p) {
     { dr:  0, dc:  1 },
   ];
 
+  if (p.insideBuilding) return; // workers are inside their building — skip movement
   const r = Math.round(p.y), c = Math.round(p.x);
+  // Sleeping and already at home tile — go inside and hide
+  if (p.sleeping && r === p.homeR && c === p.homeC) {
+    p.insideBuilding = true;
+    return;
+  }
   const carried = p.wood + p.stone + p.food;
   updatePersonMode(p);
 
@@ -668,7 +669,6 @@ function movePerson(p) {
     // Buildings are impassable walls — only GRASS, ROAD, and PARK are walkable
     if (t !== GRASS && t !== ROAD && t !== PARK) return 0;
 
-    const res = resourceMap[nr][nc];
     let w = 1.0;
 
     // Check if moving to (nr,nc) puts us adjacent to a town hall (deposit point)
@@ -692,24 +692,7 @@ function movePerson(p) {
     const thDistAfter  = th ? Math.abs(nr - th.r) + Math.abs(nc - th.c) : Infinity;
     const thDistBefore = th ? Math.abs(Math.round(p.y) - th.r) + Math.abs(Math.round(p.x) - th.c) : Infinity;
 
-    if (p.mode === 'build') {
-      // Stay near settlement: strongly prefer roads
-      if (t === ROAD) w *= 4.0;
-      // Avoid wandering far from home when not carrying
-      if (carried < CARRY_CAP) {
-        const distAfter = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
-        if (distAfter > 12) w *= 0.1;
-      }
-      // Gather nearby resources of opportunity
-      if (res && res.amount > 0 && carried < CARRY_CAP) w *= 2.0;
-      if (adjFarmRes && carried < CARRY_CAP) w *= 2.0;
-      // When full, head toward the nearest town hall
-      if (th) {
-        if (thDistAfter < thDistBefore) w *= 6.0;
-        if (adjTownHall) w *= 8.0;
-      }
-
-    } else if (p.mode === 'explore') {
+    if (p.mode === 'explore') {
       // Move away from all town halls
       let minDistAfter = Infinity, minDistBefore = Infinity;
       for (const eth of townHalls) {
@@ -722,6 +705,40 @@ function movePerson(p) {
       else if (minDistAfter === minDistBefore)  w *= 2;
       else                                      w *= 0.1;
       if (t === ROAD) w *= 0.4; // avoid roads leading back to settlement
+
+    } else if (p.mode === 'home') {
+      // Walk straight home to sleep
+      const distAfter  = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
+      const distBefore = Math.abs(r  - p.homeR)  + Math.abs(c  - p.homeC);
+      if (distAfter < distBefore) w *= 40;
+      else if (distAfter > distBefore) w *= 0.01;
+      if (t === ROAD) w *= 1.5;
+
+    } else if (p.mode === 'social') {
+      // Evening: wander to nearest park/church/town-hall area
+      if (!p.socialTarget) p.socialTarget = findSocialTarget(r, c);
+      if (p.socialTarget) {
+        const td  = Math.abs(nr - p.socialTarget.r) + Math.abs(nc - p.socialTarget.c);
+        const td0 = Math.abs(r  - p.socialTarget.r) + Math.abs(c  - p.socialTarget.c);
+        if (td < td0) w *= 10;
+        else if (td > td0) w *= 0.2;
+      } else {
+        // No venue — loiter near home
+        const distAfter = Math.abs(nr - p.homeR) + Math.abs(nc - p.homeC);
+        w *= 1.0 + Math.max(0, 6 - distAfter) * 0.3;
+      }
+      if (t === ROAD) w *= 2.0;
+      if (t === PARK) w *= 3.0;
+
+    } else if (p.mode === 'found') {
+      // Walk directly toward the founding target
+      if (p.foundTarget) {
+        const td  = Math.abs(nr - p.foundTarget.r) + Math.abs(nc - p.foundTarget.c);
+        const td0 = Math.abs(r  - p.foundTarget.r) + Math.abs(c  - p.foundTarget.c);
+        if (td < td0)      w *= 40;
+        else if (td > td0) w *= 0.05;
+      }
+      if (t === ROAD) w *= 1.5;
 
     } else {
       // Gather mode: directed to nearest resource, then return to TH
@@ -778,17 +795,13 @@ function movePerson(p) {
   if (inBounds(nr, nc)) {
     p.y = nr;
     p.x = nc;
-    // Update home anchor when adjacent to a town hall (not while exploring)
-    if (p.mode !== 'explore') {
-      for (const [er, ec] of cardinalOffsets) {
-        const ar = nr+er, ac = nc+ec;
-        if (inBounds(ar, ac) && grid[ar][ac] === TOWN_HALL) {
-          p.homeR = ar;
-          p.homeC = ac;
-          break;
-        }
-      }
-    }
+  }
+
+  // Founding arrival: when close enough to target, place the new town hall
+  if (p.mode === 'found' && p.foundTarget) {
+    const ar = Math.round(p.y), ac = Math.round(p.x);
+    if (Math.abs(ar - p.foundTarget.r) + Math.abs(ac - p.foundTarget.c) <= 1)
+      placeFoundedTH(p);
   }
 }
 
@@ -854,141 +867,6 @@ function depositResources() {
   }
 }
 
-function chooseBuildType(r, c) {
-  let localHouses = 0, localPaths = 0, localTownHalls = 0;
-  let localFarms = 0;
-  for (let dr = -5; dr <= 5; dr++) {
-    for (let dc = -5; dc <= 5; dc++) {
-      if (!inBounds(r+dr, c+dc)) continue;
-      const t = grid[r+dr][c+dc];
-      if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) localHouses++;
-      if (t === ROAD)      localPaths++;
-      if (t === TOWN_HALL) localTownHalls++;
-      if (t === FARM)      localFarms++;
-    }
-  }
-
-  // No house nearby — founding: build a house first
-  if (localHouses === 0) return HOUSE;
-
-  // Cardinal-only adjacency scan (N/S/E/W only)
-  let cardinalPaths = 0, cardinalBuildings = 0;
-  const N = inBounds(r-1,c) && grid[r-1][c] === ROAD;
-  const S = inBounds(r+1,c) && grid[r+1][c] === ROAD;
-  const W = inBounds(r,c-1) && grid[r][c-1] === ROAD;
-  const E = inBounds(r,c+1) && grid[r][c+1] === ROAD;
-  cardinalPaths = (N?1:0) + (S?1:0) + (W?1:0) + (E?1:0);
-  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
-  for (const [dr, dc] of cardinals) {
-    if (!inBounds(r+dr, c+dc)) continue;
-    const t = grid[r+dr][c+dc];
-    if (t !== ROAD && t !== GRASS) cardinalBuildings++;
-  }
-
-  // Straight-line bonus: continuing an existing axis scores much higher than branching
-  const continuesNS = (N && S);
-  const continuesEW = (E && W);
-  const continuesStraight = continuesNS || continuesEW;
-  // Branching penalty: 3+ cardinal path neighbours means we'd create a junction
-  const branchPenalty = cardinalPaths >= 3 ? 0.15 : (cardinalPaths === 2 && !continuesStraight ? 0.35 : 1.0);
-
-  // 8-neighbour path density — penalise when immediate area is already crowded
-  let neighbourPaths = 0;
-  for (let dr = -1; dr <= 1; dr++)
-    for (let dc = -1; dc <= 1; dc++) {
-      if (dr === 0 && dc === 0) continue;
-      if (inBounds(r+dr, c+dc) && grid[r+dr][c+dc] === ROAD) neighbourPaths++;
-    }
-  const overCrowded = Math.max(0, neighbourPaths - 2);
-  const crowdPenalty = Math.pow(0.5, overCrowded);
-
-  // 5×5 path saturation — the more paths already in the local area, the less we want more
-  // localPaths is counted in the 11×11 scan above; rescale to a 5×5 equivalent (~25 tiles)
-  // Treat >8 local paths as saturated; each path beyond that halves the weight again
-  const pathSaturation = Math.max(0, localPaths - 8);
-  const saturationPenalty = Math.pow(0.6, pathSaturation);
-
-  // Paths only allowed adjacent to another path or a building
-  const basePathWeight = continuesStraight ? 100
-                       : cardinalPaths > 0 ? 50
-                       : cardinalBuildings > 0 ? 20
-                       : 0;
-  const pathWeight = Math.round(basePathWeight * branchPenalty * crowdPenalty * saturationPenalty);
-
-  // ── House placement: encourage buildings lining the sides of streets ──────────
-
-  // Houses must not be placed in line with a through-road (that tile should stay as road)
-  if (continuesStraight) return ROAD;
-
-  // Determine which roads are adjacent and whether each is a through-road
-  // (a through-road has at least one more road/building on its far side — it's not a dead stub)
-  const isThroughRoad = (roadR, roadC, fromR, fromC) => {
-    const [dr, dc] = [roadR - fromR, roadC - fromC];
-    // Check the far side of the road tile (continue in same direction)
-    const farR = roadR + dr, farC = roadC + dc;
-    if (inBounds(farR, farC)) {
-      const ft = grid[farR][farC];
-      if (ft === ROAD || ft === TOWN_HALL) return true;
-    }
-    // Also check perpendicular — if the road turns, it's still connected
-    const perps = [[dc, dr], [-dc, -dr]];
-    for (const [pr2, pc2] of perps) {
-      const pr3 = roadR + pr2, pc3 = roadC + pc2;
-      if (inBounds(pr3, pc3) && grid[pr3][pc3] === ROAD) return true;
-    }
-    return false;
-  };
-
-  // Count how many adjacent roads are through-roads vs stubs
-  let throughRoadCount = 0, stubRoadCount = 0;
-  if (N) isThroughRoad(r-1, c, r, c) ? throughRoadCount++ : stubRoadCount++;
-  if (S) isThroughRoad(r+1, c, r, c) ? throughRoadCount++ : stubRoadCount++;
-  if (W) isThroughRoad(r, c-1, r, c) ? throughRoadCount++ : stubRoadCount++;
-  if (E) isThroughRoad(r, c+1, r, c) ? throughRoadCount++ : stubRoadCount++;
-
-  // At a junction (3+ road neighbours) — keep clear for traffic, no houses
-  if (cardinalPaths >= 3) return ROAD;
-
-  // Terrace bonus: building already alongside this street face in the same perpendicular direction
-  const isBuilding = (tr, tc) => {
-    if (!inBounds(tr, tc)) return false;
-    const t = grid[tr][tc];
-    return t !== GRASS && t !== ROAD && t !== PARK && t !== TOWN_HALL;
-  };
-  let terraceBonus = 1.0;
-  // Check for neighbours perpendicular to the road direction
-  if (N || S) {
-    if (isBuilding(r, c-1) || isBuilding(r, c+1)) terraceBonus = 2.5;
-  }
-  if (E || W) {
-    if (isBuilding(r-1, c) || isBuilding(r+1, c)) terraceBonus = 2.5;
-  }
-
-  // Base house weight: falls off faster when density is high (upgrade preferred over new builds)
-  const baseHouseWeight = throughRoadCount > 0 ? Math.max(0, 40 - localHouses * 6)
-                        : stubRoadCount > 0    ? Math.max(0, 20 - localHouses * 6)
-                        : 0;
-  const houseWeight = Math.round(baseHouseWeight * terraceBonus);
-
-  const weights = { [ROAD]: pathWeight, [HOUSE]: houseWeight };
-
-  // Farms only after a local town hall — churches/parks/factories come only from town hall votes
-  if (localTownHalls > 0 && cardinalPaths > 0) {
-    if (localFarms < 3) {
-      const th = nearestTownHall(r, c);
-      weights[FARM] = th ? foodWeight(th) : 0;
-    }
-  }
-
-  const total = Object.values(weights).reduce((a, b) => a + b, 0);
-  if (total === 0) return null;
-  let rand = Math.random() * total;
-  for (const [type, w] of Object.entries(weights)) {
-    rand -= w;
-    if (rand <= 0) return parseInt(type);
-  }
-  return null;
-}
 
 function canAffordBuild(type, th) {
   if (!th) return false;
@@ -1014,10 +892,91 @@ function findHouseRegistryEntry(r, c) {
 
 function registerHouse(r, c, th, slots) {
   const id = nextHouseId++;
-  houseRegistry[id] = { r, c, slots };
+  houseRegistry[id] = { r, c, slots, residents: [] };
+  const h = houseRegistry[id];
   th.popCap += slots;
+  // Assign any homeless people into vacant slots immediately
+  for (const p of people) {
+    if (h.residents.length >= slots) break;
+    if (p.houseId != null) continue;
+    assignHouse(p, id, h);
+  }
 }
 
+function findHouseWithVacancy() {
+  for (const [id, h] of Object.entries(houseRegistry)) {
+    if (h.residents.length < h.slots) return [Number(id), h];
+  }
+  return null;
+}
+
+function assignHouse(p, id, h) {
+  p.houseId = id;
+  // Point homeR/homeC at a walkable tile adjacent to the house so people
+  // can actually reach their "home" position (the house tile itself is impassable).
+  let homeR = h.r, homeC = h.c;
+  for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+    const nr = h.r + dr, nc = h.c + dc;
+    if (!inBounds(nr, nc)) continue;
+    const t = grid[nr][nc];
+    if (t === GRASS || t === ROAD || t === PARK) { homeR = nr; homeC = nc; break; }
+  }
+  p.homeR = homeR;
+  p.homeC = homeC;
+  if (!h.residents.includes(p.id)) h.residents.push(p.id);
+}
+
+function unassignHouse(p) {
+  if (p.houseId == null) return;
+  const h = houseRegistry[p.houseId];
+  if (h) {
+    const idx = h.residents.indexOf(p.id);
+    if (idx !== -1) h.residents.splice(idx, 1);
+  }
+  p.houseId = null;
+}
+
+// ── Building registry helpers ─────────────────────────────────────────────────
+
+function registerBuilding(r, c, type) {
+  buildingRegistry[r + ',' + c] = { r, c, type, workers: [] };
+}
+
+function unregisterBuilding(r, c) {
+  const entry = buildingRegistry[r + ',' + c];
+  if (!entry) return;
+  for (const pid of [...entry.workers]) {
+    const p = people.find(q => q.id === pid);
+    if (p) unassignWorker(p);
+  }
+  delete buildingRegistry[r + ',' + c];
+}
+
+function assignWorker(p, br, bc) {
+  const key = br + ',' + bc;
+  const entry = buildingRegistry[key];
+  if (!entry || entry.workers.includes(p.id)) return;
+  if (entry.workers.length >= MAX_WORKERS_PER_BUILDING) return;
+  if (p.assignedBuildingKey) unassignWorker(p);
+  entry.workers.push(p.id);
+  p.job = 'worker';
+  p.assignedBuildingKey = key;
+  p.insideBuilding = true;
+  p.gatherTarget = null;
+}
+
+function unassignWorker(p) {
+  if (!p.assignedBuildingKey) return;
+  const entry = buildingRegistry[p.assignedBuildingKey];
+  if (entry) {
+    const idx = entry.workers.indexOf(p.id);
+    if (idx !== -1) entry.workers.splice(idx, 1);
+  }
+  p.job = 'gatherer';
+  p.assignedBuildingKey = null;
+  p.insideBuilding = false;
+  p.mode = 'gather';
+}
 
 // Returns true if placing a non-road building at (r,c) would sit on the direct corridor
 // between this tile and the nearest town hall — reserving that line for road access.
@@ -1035,37 +994,259 @@ function wouldBlockCorridor(r, c, th) {
   return nt === GRASS || nt === ROAD || nt === PARK || nt === TOWN_HALL;
 }
 
-function tryBuild(p) {
-  if (pendingTownHall) return; // halt all building until new TH is formed
-  if (p.buildCooldown > 0) { p.buildCooldown--; return; }
+// ── Town-hall autonomous build engine ─────────────────────────────────────────
 
-  const r = Math.round(p.y), c = Math.round(p.x);
-  const tileHere = grid[r][c];
-  if (tileHere !== GRASS && tileHere !== ROAD) return;
-
-  const th = nearestTownHall(r, c);
-  if (!th) return;
-
-  const chosen = chooseBuildType(r, c);
-  if (chosen === null || !canAffordBuild(chosen, th)) return;
-
-  // Can't place a road on a road; and any building on a road tile must not break pathfinding
-  if (tileHere === ROAD && chosen === ROAD) return;
-  if (wouldBlockPath(r, c)) return;
-  // Non-road buildings must not sit on the direct axis between this tile and the TH
-  if (chosen !== ROAD && wouldBlockCorridor(r, c, th)) return;
-
-  spendBuildCost(chosen, th);
-  grid[r][c] = chosen;
-  if (chosen === HOUSE) registerHouse(r, c, th, HOUSE_POP);
-  recordDiscovery(chosen);
-  if (chosen !== ROAD) showMessage(TILE_NAMES[chosen] + ' built at ' + c + ', ' + r);
-  p.buildCooldown = BUILD_COOLDOWN;
+// BFS from tiles adjacent to th. Treats (r,c) as hypothetically impassable.
+// Returns true if any cardinal neighbour of (r,c) is reachable from the TH —
+// guaranteeing the placed building has walkable access connected to the TH.
+function isTHReachable(r, c, th) {
+  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
+  const seeds = [];
+  for (const [dr, dc] of cardinals) {
+    const sr = th.r+dr, sc = th.c+dc;
+    if (!inBounds(sr,sc)) continue;
+    const t = grid[sr][sc];
+    if (t === GRASS || t === ROAD || t === PARK) seeds.push([sr,sc]);
+  }
+  if (seeds.length === 0) return false;
+  const key = (tr, tc) => tr * 1000 + tc;
+  const visited = new Set();
+  const queue = [];
+  for (const s of seeds) {
+    const k = key(...s);
+    if (!visited.has(k)) { visited.add(k); queue.push(s); }
+  }
+  const walkable = (tr, tc) => {
+    if (tr === r && tc === c) return false;
+    if (!inBounds(tr,tc)) return false;
+    const t = grid[tr][tc];
+    return t === GRASS || t === ROAD || t === PARK;
+  };
+  while (queue.length > 0) {
+    const [cr, cc] = queue.shift();
+    for (const [dr, dc] of cardinals) {
+      const nr = cr+dr, nc = cc+dc;
+      if (!walkable(nr,nc) || visited.has(key(nr,nc))) continue;
+      visited.add(key(nr,nc));
+      queue.push([nr,nc]);
+    }
+  }
+  for (const [dr, dc] of cardinals) {
+    const nr = r+dr, nc = c+dc;
+    if (inBounds(nr,nc) && visited.has(key(nr,nc))) return true;
+  }
+  return false;
 }
 
-function tryUpgradeHousing() {
-  if (pendingTownHall) return;
+// Score for extending a road to (r,c): prefers straight lines, penalises junctions/crowding.
+function roadScore(r, c) {
+  const N = inBounds(r-1,c) && grid[r-1][c] === ROAD;
+  const S = inBounds(r+1,c) && grid[r+1][c] === ROAD;
+  const W = inBounds(r,c-1) && grid[r][c-1] === ROAD;
+  const E = inBounds(r,c+1) && grid[r][c+1] === ROAD;
+  const cardinalPaths = (N?1:0)+(S?1:0)+(W?1:0)+(E?1:0);
+  const continuesStraight = (N&&S)||(E&&W);
+  const branchPenalty = cardinalPaths >= 3 ? 0.15
+                      : (cardinalPaths === 2 && !continuesStraight) ? 0.35 : 1.0;
+  let neighbourPaths = 0;
+  for (let dr = -1; dr <= 1; dr++)
+    for (let dc = -1; dc <= 1; dc++) {
+      if (dr===0&&dc===0) continue;
+      if (inBounds(r+dr,c+dc) && grid[r+dr][c+dc] === ROAD) neighbourPaths++;
+    }
+  const crowdPenalty = Math.pow(0.5, Math.max(0, neighbourPaths - 2));
+  const base = continuesStraight ? 100 : cardinalPaths > 0 ? 50 : 20;
+  return Math.round(base * branchPenalty * crowdPenalty);
+}
 
+// Attempt to grow the road network by one tile. Returns true if a road was placed.
+function thRoadStep(th) {
+  if (!canAffordBuild(ROAD, th)) return false;
+  const candidates = [];
+  let roadExists = false;
+  for (let dr = -20; dr <= 20; dr++) {
+    for (let dc = -20; dc <= 20; dc++) {
+      const r = th.r+dr, c = th.c+dc;
+      if (!inBounds(r,c) || Math.abs(dr)+Math.abs(dc) > 20) continue;
+      if (grid[r][c] !== ROAD) continue;
+      roadExists = true;
+      for (const [er,ec] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+        const nr = r+er, nc = c+ec;
+        if (!inBounds(nr,nc) || grid[nr][nc] !== GRASS) continue;
+        candidates.push({ r: nr, c: nc, score: roadScore(nr,nc) });
+      }
+    }
+  }
+  if (!roadExists) {
+    for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+      const nr = th.r+dr, nc = th.c+dc;
+      if (inBounds(nr,nc) && grid[nr][nc] === GRASS)
+        candidates.push({ r: nr, c: nc, score: 100 });
+    }
+  }
+  if (candidates.length === 0) return false;
+  candidates.sort((a,b) => b.score - a.score);
+  for (const { r, c } of candidates.slice(0, 8)) {
+    if (wouldBlockPath(r,c)) continue;
+    spendBuildCost(ROAD, th);
+    grid[r][c] = ROAD;
+    recordDiscovery(ROAD);
+    return true;
+  }
+  return false;
+}
+
+// Score for placing a house at (r,c): prefers road-fronted, terrace-bonus, penalises density.
+function houseScore(r, c) {
+  const N = inBounds(r-1,c) && grid[r-1][c] === ROAD;
+  const S = inBounds(r+1,c) && grid[r+1][c] === ROAD;
+  const E = inBounds(r,c+1) && grid[r][c+1] === ROAD;
+  const W = inBounds(r,c-1) && grid[r][c-1] === ROAD;
+  const cardinalPaths = (N?1:0)+(S?1:0)+(E?1:0)+(W?1:0);
+  if (cardinalPaths === 0 || cardinalPaths >= 3) return 0;
+  let localHouses = 0;
+  for (let dr = -5; dr <= 5; dr++)
+    for (let dc = -5; dc <= 5; dc++) {
+      if (!inBounds(r+dr,c+dc)) continue;
+      const t = grid[r+dr][c+dc];
+      if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) localHouses++;
+    }
+  const isBldg = (tr, tc) => {
+    if (!inBounds(tr,tc)) return false;
+    const t = grid[tr][tc];
+    return t !== GRASS && t !== ROAD && t !== PARK && t !== TOWN_HALL;
+  };
+  let terraceBonus = 1.0;
+  if (N||S) { if (isBldg(r,c-1)||isBldg(r,c+1)) terraceBonus = 2.5; }
+  if (E||W) { if (isBldg(r-1,c)||isBldg(r+1,c)) terraceBonus = 2.5; }
+  const base = Math.max(0, 40 - localHouses * 6);
+  return Math.round(base * terraceBonus);
+}
+
+// Attempt to place one house near the TH. Returns true if placed.
+function thHouseStep(th) {
+  if (!canAffordBuild(HOUSE, th)) return false;
+  const candidates = [];
+  for (let dr = -15; dr <= 15; dr++) {
+    for (let dc = -15; dc <= 15; dc++) {
+      const r = th.r+dr, c = th.c+dc;
+      if (!inBounds(r,c) || grid[r][c] !== GRASS) continue;
+      const score = houseScore(r,c);
+      if (score === 0) continue;
+      if (wouldBlockPath(r,c)) continue;
+      if (wouldBlockCorridor(r,c,th)) continue;
+      if (!isTHReachable(r,c,th)) continue;
+      candidates.push({ r, c, score });
+    }
+  }
+  if (candidates.length === 0) return false;
+  candidates.sort((a,b) => b.score - a.score);
+  const { r, c } = candidates[0];
+  spendBuildCost(HOUSE, th);
+  grid[r][c] = HOUSE;
+  registerHouse(r, c, th, HOUSE_POP);
+  recordDiscovery(HOUSE);
+  showMessage('house built at ' + c + ', ' + r);
+  return true;
+}
+
+// Count how many valid building sites remain within the TH's radius.
+// Used to compute founding probability.
+function thAvailableSpace(th) {
+  let count = 0;
+  for (let dr = -20; dr <= 20; dr++) {
+    for (let dc = -20; dc <= 20; dc++) {
+      const r = th.r+dr, c = th.c+dc;
+      if (!inBounds(r,c) || grid[r][c] !== GRASS) continue;
+      const hasRoad = [[-1,0],[1,0],[0,-1],[0,1]].some(([er,ec]) =>
+        inBounds(r+er,c+ec) && grid[r+er][c+ec] === ROAD);
+      if (!hasRoad) continue;
+      if (wouldBlockPath(r,c)) continue;
+      if (!isTHReachable(r,c,th)) continue;
+      count++;
+    }
+  }
+  return count;
+}
+
+// Find a GRASS tile at least 30 tiles (Manhattan) from every existing TH.
+function findFoundingSite() {
+  for (let attempt = 0; attempt < 200; attempt++) {
+    const r = Math.floor(Math.random() * MAP_ROWS);
+    const c = Math.floor(Math.random() * MAP_COLS);
+    if (grid[r][c] !== GRASS) continue;
+    let farEnough = true;
+    for (const eth of townHalls) {
+      if (Math.abs(r-eth.r) + Math.abs(c-eth.c) < 30) { farEnough = false; break; }
+    }
+    if (farEnough) return { r, c };
+  }
+  return null;
+}
+
+// Dispatch a gatherer from th to found a new TH at a remote site.
+function tryFoundNewTH(th) {
+  if (people.some(p => p.mode === 'found')) return; // one expedition at a time
+  if (th.resources.wood  < TOWN_HALL_TRIGGER.wood)  return;
+  if (th.resources.stone < TOWN_HALL_TRIGGER.stone) return;
+  const site = findFoundingSite();
+  if (!site) return;
+  let best = null, bestDist = Infinity;
+  for (const p of people) {
+    if (p.job === 'worker' || p.mode === 'explore' || p.mode === 'found') continue;
+    const myTH = nearestTownHall(Math.round(p.y), Math.round(p.x));
+    if (!myTH || myTH.r !== th.r || myTH.c !== th.c) continue;
+    const d = Math.abs(Math.round(p.y)-th.r) + Math.abs(Math.round(p.x)-th.c);
+    if (d < bestDist) { bestDist = d; best = p; }
+  }
+  if (!best) return;
+  th.resources.wood  -= TOWN_HALL_TRIGGER.wood;
+  th.resources.stone -= TOWN_HALL_TRIGGER.stone;
+  best.mode        = 'found';
+  best.job         = 'founder';
+  best.foundTarget = { r: site.r, c: site.c };
+  best.gatherTarget = null;
+  showMessage('founder dispatched to ' + site.c + ', ' + site.r);
+}
+
+// Called when a founding person arrives at their target. Places the new TH.
+function placeFoundedTH(p) {
+  const fr = p.foundTarget.r, fc = p.foundTarget.c;
+  if (inBounds(fr,fc) && grid[fr][fc] === GRASS) {
+    grid[fr][fc] = TOWN_HALL;
+    townHalls.push({
+      r: fr, c: fc,
+      resources: { wood: 0, stone: 0, food: 0 },
+      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0 },
+      popCap: 0,
+      buildTimer: TH_BUILD_INTERVAL,
+    });
+    recordDiscovery(TOWN_HALL);
+    showMessage('new town hall founded at ' + fc + ', ' + fr);
+    updateUI();
+  }
+  p.mode = 'gather'; p.job = 'gatherer';
+  p.foundTarget = null; p.gatherTarget = null;
+}
+
+// Per-TH autonomous build tick: roads first, then houses.
+// Probability of dispatching a founder scales with how full the TH's build area is.
+function thAutoBuild(th) {
+  const space = thAvailableSpace(th);
+  const foundProb = Math.max(0, 1 - Math.pow(space / 12, 0.6));
+  if (Math.random() < foundProb) tryFoundNewTH(th);
+  // If there are valid house sites available, prefer houses when population pressure is high,
+  // otherwise build roads to open up more sites.
+  const fillRatio = th.popCap > 0 ? people.length / th.popCap : 1;
+  if (space > 0 && fillRatio > 0.5) {
+    if (!thHouseStep(th)) thRoadStep(th);
+  } else {
+    if (!thRoadStep(th)) thHouseStep(th);
+  }
+}
+
+
+function tryUpgradeHousing() {
   // Upgrade threshold drops with housing density: dense areas upgrade sooner
   const cap = globalPopCap();
   if (cap === 0) return;
@@ -1126,78 +1307,9 @@ function tryUpgradeHousing() {
   }
 }
 
-function buildFromPeople() {
-  for (const p of people) {
-    tryBuild(p);
-  }
-}
-
-function tryBuildTownHall() {
-  let anyClusterQualifies = false;
-  for (let r = 5; r < MAP_ROWS-5; r += 3) {
-    for (let c = 5; c < MAP_COLS-5; c += 3) {
-      const _seedTile = grid[r][c];
-      if (_seedTile !== HOUSE && _seedTile !== ROW_HOUSE && _seedTile !== APARTMENT) continue;
-
-      // Must be more than 15 tiles (Manhattan) from every existing town hall
-      const parentTH = nearestTownHall(r, c);
-      if (!parentTH) continue;
-      const distToParent = Math.abs(r - parentTH.r) + Math.abs(c - parentTH.c);
-      if (distToParent <= 20) continue;
-
-      // Count houses clustered within a 7-tile radius — these are the "settlers"
-      let localHouses = 0;
-      for (let dr = -7; dr <= 7; dr++)
-        for (let dc = -7; dc <= 7; dc++) {
-          if (!inBounds(r+dr, c+dc)) continue;
-          const _t = grid[r+dr][c+dc];
-          if (_t === HOUSE || _t === ROW_HOUSE || _t === APARTMENT) localHouses++;
-        }
-
-      if (localHouses < TOWN_HALL_TRIGGER.houses) continue;
-
-      // A qualifying cluster exists — pause building to save up
-      anyClusterQualifies = true;
-      pendingTownHall = true;
-
-      // Parent TH must have enough resources to fund the founding
-      if (parentTH.resources.wood  < TOWN_HALL_TRIGGER.wood ||
-          parentTH.resources.stone < TOWN_HALL_TRIGGER.stone) continue; // keep scanning, don't freeze forever
-
-      parentTH.resources.wood  -= TOWN_HALL_TRIGGER.wood;
-      parentTH.resources.stone -= TOWN_HALL_TRIGGER.stone;
-
-      // Remove the housing tile from registry and adjust popCap since it becomes a TH
-      const _seedEntry = findHouseRegistryEntry(r, c);
-      const _seedSlots = _seedEntry ? _seedEntry.slots : HOUSE_POP;
-      if (_seedEntry) {
-        for (const [id, e] of Object.entries(houseRegistry)) {
-          if (e === _seedEntry) { delete houseRegistry[id]; break; }
-        }
-      }
-      parentTH.popCap = Math.max(1, parentTH.popCap - _seedSlots);
-
-      grid[r][c] = TOWN_HALL;
-      const newTH = {
-        r, c,
-        resources: { wood: 0, stone: 0, food: 0 },
-        votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0 },
-        popCap: 1,
-      };
-      townHalls.push(newTH);
-      pendingTownHall = false;
-      recordDiscovery(TOWN_HALL);
-      showMessage('town hall built at ' + c + ', ' + r);
-      updateUI();
-      return;
-    }
-  }
-  // No qualifying cluster found — release the building freeze
-  if (!anyClusterQualifies) pendingTownHall = false;
-}
 
 function castVote(th) {
-  let localChurches = 0, localParks = 0, localFactories = 0, localHouses = 0;
+  let localChurches = 0, localParks = 0, localFactories = 0, localHouses = 0, localFarms = 0;
   for (let dr = -5; dr <= 5; dr++)
     for (let dc = -5; dc <= 5; dc++) {
       if (!inBounds(th.r+dr, th.c+dc)) continue;
@@ -1206,17 +1318,16 @@ function castVote(th) {
       if (t === PARK)    localParks++;
       if (t === FACTORY) localFactories++;
       if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) localHouses++;
+      if (t === FARM)    localFarms++;
     }
 
-  const housingPressure = (th.popCap - people.length <= 2) ? 60 : 0;
-
   const w = {
-    [HOUSE]:      housingPressure,
     [CHURCH]:     localChurches >= 2 ? 0 : (localChurches === 0 ? 40 : Math.max(3, 40 - localChurches * 12)),
     [PARK]:       localParks    >= 3 ? 0 : foodWeight(th),
     [FACTORY]:    localHouses >= 8 && localFactories < 3 ? 30 : localHouses >= 4 ? 2 : 0,
     [TREE_FARM]:  woodWeight(th),
     [STONE_FARM]: stoneWeight(th),
+    [FARM]:       localFarms < 3 ? foodWeight(th) : 0,
   };
 
   const total = Object.values(w).reduce((a, b) => a + b, 0);
@@ -1226,37 +1337,25 @@ function castVote(th) {
     rand -= weight;
     if (rand <= 0) {
       const intType = parseInt(type);
-      if (intType === HOUSE) {
-        // Build a house immediately near this TH
-        const site = findGrassSiteNear(th.r, th.c, 2, 12);
-        const adjRoad = site && [[-1,0],[1,0],[0,-1],[0,1]].some(([dr,dc]) => {
-          const nr = site.r+dr, nc = site.c+dc;
-          return inBounds(nr,nc) && grid[nr][nc] === ROAD;
-        });
-        if (site && adjRoad && !wouldBlockPath(site.r, site.c) && canAffordBuild(HOUSE, th)) {
-          spendBuildCost(HOUSE, th);
-          grid[site.r][site.c] = HOUSE;
-          registerHouse(site.r, site.c, th, HOUSE_POP);
-          recordDiscovery(HOUSE);
-          showMessage('house built at ' + site.c + ', ' + site.r);
-        }
-      } else {
-        th.votes[intType] = (th.votes[intType] || 0) + 1;
-        checkVoteThreshold(th);
-      }
+      th.votes[intType] = (th.votes[intType] || 0) + 1;
+      checkVoteThreshold(th);
       return;
     }
   }
 }
 
 function checkVoteThreshold(th) {
-  for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM]) {
+  for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM, FARM]) {
     if ((th.votes[type] || 0) >= VOTE_THRESHOLD) {
       if (canAffordBuild(type, th)) {
         const site = findGrassSiteNear(th.r, th.c, 2, 12);
-        if (site && !wouldBlockPath(site.r, site.c)) {
+        if (site && !wouldBlockPath(site.r, site.c) && isTHReachable(site.r, site.c, th)) {
           spendBuildCost(type, th);
           grid[site.r][site.c] = type;
+          if (WORKER_JOBS.has(type)) {
+            registerBuilding(site.r, site.c, type);
+            autoAssignWorkers(th);
+          }
           recordDiscovery(type);
           th.votes[type] = 0;
           showMessage(TILE_NAMES[type] + ' built at ' + site.c + ', ' + site.r + ' (voted)');
@@ -1286,31 +1385,148 @@ function upgradeLifespan() {
   const newMax = currentMaxAge();
   for (const p of people) p.maxAge = newMax;
   updateUI();
-  showMessage('lifespan increased to ' + newMax + ' ticks!');
+  showMessage('lifespan increased to ' + Math.round(newMax / DAY_LENGTH) + ' days!');
 }
 
 function houseSpawnPeople() {
   const cap = globalPopCap();
   if (people.length >= cap) return;
-  for (let r = 0; r < MAP_ROWS; r++) {
-    for (let c = 0; c < MAP_COLS; c++) {
-      const _ht = grid[r][c];
-      if (_ht !== HOUSE && _ht !== ROW_HOUSE && _ht !== APARTMENT) continue;
-      const spawnChance = 0.003; // same per-building rate; larger buildings benefit via higher popCap
-      if (Math.random() > spawnChance) continue;
-      const site = findGrassSiteNear(r, c, 1, 2);
-      if (site) spawnPersonFree(site.r, site.c);
-      if (people.length >= cap) return;
-    }
+  for (const [id, h] of Object.entries(houseRegistry)) {
+    if (people.length >= cap) return;
+    if (h.residents.length >= h.slots) continue; // house full
+    const spawnChance = 0.003;
+    if (Math.random() > spawnChance) continue;
+    const site = findGrassSiteNear(h.r, h.c, 1, 2);
+    if (site) spawnPersonFree(site.r, site.c, Number(id));
   }
 }
 
 // ── Simulation tick ───────────────────────────────────────────────────────────
 
+function workerTick() {
+  for (const [, entry] of Object.entries(buildingRegistry)) {
+    if (entry.workers.length === 0) continue;
+    const th = nearestTownHall(entry.r, entry.c);
+    if (!th) continue;
+    const out = WORKER_OUTPUT[entry.type];
+    if (!out) continue;
+    for (const [resource, amount] of Object.entries(out)) {
+      const total = amount * entry.workers.length;
+      if (resource === 'gold') gold += total;
+      else th.resources[resource] = (th.resources[resource] || 0) + total;
+    }
+  }
+}
+
+function farmWorkerCap(th) {
+  // How many ticks of food remain per person in this TH?
+  const food = th.resources.food || 0;
+  const pop  = people.length || 1;
+  const ticksLeft = food / pop;
+  // Scale 0–3 workers: full staff below 5 ticks, none above 30 ticks
+  if (ticksLeft >= 30) return 0;
+  if (ticksLeft >= 20) return 1;
+  if (ticksLeft >= 10) return 2;
+  return MAX_WORKERS_PER_BUILDING;
+}
+
+function autoAssignWorkers(th) {
+  for (const [, entry] of Object.entries(buildingRegistry)) {
+    if (!WORKER_JOBS.has(entry.type)) continue;
+    const closestTH = nearestTownHall(entry.r, entry.c);
+    if (!closestTH || closestTH.r !== th.r || closestTH.c !== th.c) continue;
+    // Farms get a dynamic cap based on food scarcity; other buildings use the standard max
+    const cap = entry.type === FARM ? farmWorkerCap(th) : MAX_WORKERS_PER_BUILDING;
+    // Release excess farm workers if food situation improved
+    if (entry.type === FARM && entry.workers.length > cap) {
+      while (entry.workers.length > cap) {
+        const pid = entry.workers[entry.workers.length - 1];
+        const p = people.find(q => q.id === pid);
+        if (p) unassignWorker(p);
+        else entry.workers.pop();
+      }
+    }
+    while (entry.workers.length < cap) {
+      let best = null, bestDist = Infinity;
+      for (const p of people) {
+        if (p.job === 'worker' || p.mode === 'explore' || p.mode === 'found') continue;
+        const pr = Math.round(p.y), pc = Math.round(p.x);
+        const myTH = nearestTownHall(pr, pc);
+        if (!myTH || myTH.r !== th.r || myTH.c !== th.c) continue;
+        const d = Math.abs(pr - entry.r) + Math.abs(pc - entry.c);
+        if (d < bestDist) { bestDist = d; best = p; }
+      }
+      if (!best) break;
+      assignWorker(best, entry.r, entry.c);
+    }
+  }
+}
+
+function findSocialTarget(r, c) {
+  const SOCIAL_TILES = new Set([PARK, CHURCH, TOWN_HALL]);
+  let best = null, bestDist = Infinity;
+  for (let dr = -20; dr <= 20; dr++) {
+    for (let dc = -20; dc <= 20; dc++) {
+      const nr = r + dr, nc = c + dc;
+      if (!inBounds(nr, nc) || !SOCIAL_TILES.has(grid[nr][nc])) continue;
+      for (const [er, ec] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+        const ar = nr + er, ac = nc + ec;
+        if (!inBounds(ar, ac)) continue;
+        const at = grid[ar][ac];
+        if (at !== GRASS && at !== ROAD && at !== PARK) continue;
+        const d = Math.abs(dr) + Math.abs(dc);
+        if (d < bestDist) { bestDist = d; best = { r: ar, c: ac }; }
+        break;
+      }
+    }
+  }
+  return best;
+}
+
+function applyTimeOfDay() {
+  const { tickInDay } = timeOfDay();
+
+  // Dusk (9pm): workers leave buildings, everyone enters evening social mode
+  if (tickInDay === HOUR_DUSK * 4) {
+    for (const p of [...people]) {
+      if (p.job === 'worker') unassignWorker(p);
+    }
+    for (const p of people) {
+      if (p.sleeping) continue;
+      p.mode = 'social';
+      p.socialTarget = null; // will be recomputed in movePerson
+      p.gatherTarget = null;
+    }
+  }
+
+  // Midnight (tick 0 of each day): everyone goes home to sleep
+  if (tickInDay === 0 && simTick > 0) {
+    for (const p of people) {
+      if (p.sleeping) continue;
+      p.sleeping = true;
+      p.mode = 'home';
+      p.gatherTarget = null;
+    }
+  }
+
+  // Dawn (7am): everyone wakes, workers are reassigned for the day
+  if (tickInDay === HOUR_DAWN * 4) {
+    for (const p of people) {
+      p.sleeping = false;
+      p.insideBuilding = false; // emerge from house at dawn
+      if (p.mode === 'home' || p.mode === 'social') p.mode = 'gather';
+    }
+    for (const th of townHalls) autoAssignWorkers(th);
+  }
+}
+
 function farmProduceFood() {
   for (let r = 0; r < MAP_ROWS; r++) {
     for (let c = 0; c < MAP_COLS; c++) {
       if (grid[r][c] !== FARM) continue;
+      // Skip if this farm has workers — workerTick() handles its output
+      const key = r + ',' + c;
+      if (buildingRegistry[key] && buildingRegistry[key].workers.length > 0) continue;
       const th = nearestTownHall(r, c);
       if (th) th.resources.food++;
     }
@@ -1321,14 +1537,22 @@ function simulationTick() {
   simTick++;
   agePeople();
   consumeFood();
+  applyTimeOfDay();
+  workerTick();
   farmProduceFood();
   movePeople();
   gatherResources();
   depositResources();
-  buildFromPeople();
+  for (const th of townHalls) {
+    th.buildTimer = (th.buildTimer || 0) - 1;
+    if (th.buildTimer <= 0) {
+      thAutoBuild(th);
+      th.buildTimer = TH_BUILD_INTERVAL;
+    }
+  }
   tryUpgradeHousing();
   houseSpawnPeople();
-  if (simTick % 40  === 0) tryBuildTownHall();
+  if (simTick % 50  === 0) for (const th of townHalls) autoAssignWorkers(th);
   if (simTick % 100 === 0) regenerateResources();
   updateUI();
   render();
@@ -1353,7 +1577,13 @@ function setSimSpeed(value) {
 function updateUI() {
   document.getElementById('gold').textContent = '$' + Math.floor(gold);
 
-  const day = Math.floor(simTick / 16) + 1;
+  const { hour, minute } = timeOfDay();
+  const h12  = hour % 12 || 12;
+  const ampm = hour < 12 ? 'am' : 'pm';
+  const mm   = String(minute).padStart(2, '0');
+  document.getElementById('sim-time').textContent = `${h12}:${mm}${ampm}`;
+
+  const day = Math.floor(simTick / DAY_LENGTH) + 1;
   document.getElementById('sim-day').textContent = day;
 
   let buildings = 0, parks = 0, factories = 0;
@@ -1373,7 +1603,7 @@ function updateUI() {
 
   const cap = globalPopCap();
   document.getElementById('people-count').textContent = people.length + ' / ' + cap;
-  document.getElementById('lifespan-val').textContent = currentMaxAge() + 't';
+  document.getElementById('lifespan-val').textContent = Math.round(currentMaxAge() / DAY_LENGTH) + 'd';
 
   // Per-TH stockpile display
   if (selectedTHIndex >= townHalls.length) selectedTHIndex = Math.max(0, townHalls.length - 1);
@@ -1402,6 +1632,18 @@ function updateUI() {
   spawnBtn.textContent = 'spawn person ($' + SPAWN_COST + ' gold)';
   spawnBtn.disabled = gold < SPAWN_COST || people.length >= cap;
 
+  // Workforce breakdown
+  const jobCounts = { founder: 0, gatherer: 0, explorer: 0, worker: 0, idle: 0 };
+  for (const p of people) jobCounts[p.job] = (jobCounts[p.job] || 0) + 1;
+  document.getElementById('job-founder').textContent  = jobCounts.founder;
+  document.getElementById('job-gatherer').textContent = jobCounts.gatherer;
+  document.getElementById('job-explorer').textContent = jobCounts.explorer;
+  document.getElementById('job-worker').textContent   = jobCounts.worker;
+  document.getElementById('job-idle').textContent     = jobCounts.idle;
+  const bEntries = Object.values(buildingRegistry);
+  const staffed = bEntries.filter(e => e.workers.length > 0).length;
+  document.getElementById('buildings-staffed').textContent = staffed + ' / ' + bEntries.length;
+
   document.getElementById('zoom-label').textContent = ZOOM_LABELS[zoomIndex];
   const centerC = Math.floor(camX + (canvas.width  / tileSize) / 2);
   const centerR = Math.floor(camY + (canvas.height / tileSize) / 2);
@@ -1415,11 +1657,12 @@ function updateUI() {
     : 'town hall';
   document.getElementById('votes-prev').disabled = selectedTHIndex === 0;
   document.getElementById('votes-next').disabled = selectedTHIndex >= townHalls.length - 1;
-  document.getElementById('votes-church').textContent    = (v[CHURCH]     || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-park').textContent      = (v[PARK]       || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-factory').textContent   = (v[FACTORY]    || 0) + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-church').textContent     = (v[CHURCH]     || 0) + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-park').textContent       = (v[PARK]       || 0) + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-factory').textContent    = (v[FACTORY]    || 0) + ' / ' + VOTE_THRESHOLD;
   document.getElementById('votes-tree-farm').textContent  = (v[TREE_FARM]  || 0) + ' / ' + VOTE_THRESHOLD;
   document.getElementById('votes-stone-farm').textContent = (v[STONE_FARM] || 0) + ' / ' + VOTE_THRESHOLD;
+  document.getElementById('votes-farm').textContent       = (v[FARM]       || 0) + ' / ' + VOTE_THRESHOLD;
 }
 
 // ── Pixel-art draw functions (all authored at 32×32, origin at top-left) ──────
@@ -1748,6 +1991,7 @@ function drawResourceNodes() {
 
 function drawPeople() {
   for (const p of people) {
+    if (p.insideBuilding) continue; // workers are hidden inside their building
     const { x: px, y: py } = tileToCanvas(p.y, p.x);
     if (px < -tileSize || px > canvas.width  + tileSize) continue;
     if (py < -tileSize || py > canvas.height + tileSize) continue;
@@ -1833,6 +2077,39 @@ function drawPeople() {
   }
 }
 
+function nightOverlayAlpha() {
+  const { hour, minute } = timeOfDay();
+  const h    = hour + minute / 60;
+  const fade = 1; // one in-game hour to fade in or out
+  if (h >= HOUR_DAWN && h < HOUR_DAWN + fade)
+    return 0.55 * (1 - (h - HOUR_DAWN) / fade);        // dawn: fade out
+  if (h >= HOUR_DUSK - fade && h < HOUR_DUSK)
+    return 0.55 * ((h - (HOUR_DUSK - fade)) / fade);   // pre-dusk: fade in
+  if (h < HOUR_DAWN || h >= HOUR_DUSK) return 0.55;    // full night / evening
+  return 0;
+}
+
+function drawDayNight() {
+  const alpha = nightOverlayAlpha();
+  if (alpha > 0) {
+    ctx.fillStyle = `rgba(10,20,60,${alpha.toFixed(2)})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  // Clock: top-right corner of canvas
+  const { hour, minute } = timeOfDay();
+  const h12  = hour % 12 || 12;
+  const ampm = hour < 12 ? 'am' : 'pm';
+  const mm   = String(minute).padStart(2, '0');
+  const label = `${h12}:${mm}${ampm}`;
+  ctx.font = 'bold 13px Monaco,monospace';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(label, canvas.width - 7, 19);
+  ctx.fillStyle = alpha > 0.15 ? '#c8d8ff' : '#ffffff';
+  ctx.fillText(label, canvas.width - 8, 18);
+  ctx.textAlign = 'left';
+}
+
 function render() {
   ctx.fillStyle = '#1a2633';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1857,6 +2134,7 @@ function render() {
 
   drawResourceNodes();
   drawPeople();
+  drawDayNight();
 }
 
 // ── Zoom ──────────────────────────────────────────────────────────────────────
@@ -1900,6 +2178,14 @@ function demolishTile(r, c) {
   if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) {
     for (const [id, h] of Object.entries(houseRegistry)) {
       if (h.r === r && h.c === c) {
+        // Displace residents — try to reassign each to another house with vacancy
+        for (const personId of [...h.residents]) {
+          const p = people.find(q => q.id === personId);
+          if (!p) continue;
+          p.houseId = null;
+          const vacancy = findHouseWithVacancy();
+          if (vacancy) assignHouse(p, vacancy[0], vacancy[1]);
+        }
         delete houseRegistry[id];
         const th = nearestTownHall(r, c);
         if (th) th.popCap = Math.max(1, th.popCap - h.slots);
@@ -1907,6 +2193,8 @@ function demolishTile(r, c) {
       }
     }
   }
+
+  if (WORKER_JOBS.has(t)) unregisterBuilding(r, c);
 
   if (t === TOWN_HALL) {
     const idx = townHalls.findIndex(th => th.r === r && th.c === c);
@@ -2102,8 +2390,8 @@ const SAVE_KEY = 'citybuilder_save';
 
 function saveGame() {
   const data = {
-    v: 1,
-    gold, lifespanLevel, simTick, nextPersonId, nextHouseId, pendingTownHall, lastExploreTick,
+    v: 4,
+    gold, lifespanLevel, simTick, nextPersonId, nextHouseId, lastExploreTick,
     grid:        grid.map(row => [...row]),
     resourceMap: resourceMap.map(row => row.map(cell => cell ? { ...cell } : null)),
     townHalls:   townHalls.map(th => ({
@@ -2111,8 +2399,10 @@ function saveGame() {
       resources: { ...th.resources },
       votes: { ...th.votes },
       popCap: th.popCap,
+      buildTimer: th.buildTimer ?? TH_BUILD_INTERVAL,
     })),
     houseRegistry: JSON.parse(JSON.stringify(houseRegistry)),
+    buildingRegistry: JSON.parse(JSON.stringify(buildingRegistry)),
     people: people.map(p => ({ ...p })),
     discovered: [...discovered],
   };
@@ -2125,14 +2415,13 @@ function loadGame() {
   if (!raw) { showMessage('no save found.'); return false; }
   try {
     const data = JSON.parse(raw);
-    if (data.v !== 1) { showMessage('save version mismatch.'); return false; }
+    if (data.v !== 1 && data.v !== 2 && data.v !== 3 && data.v !== 4) { showMessage('save version mismatch.'); return false; }
 
     gold             = data.gold;
     lifespanLevel    = data.lifespanLevel;
     simTick          = data.simTick;
     nextPersonId     = data.nextPersonId;
     nextHouseId      = data.nextHouseId;
-    pendingTownHall  = data.pendingTownHall ?? false;
     lastExploreTick  = data.lastExploreTick ?? -200;
 
     for (let r = 0; r < MAP_ROWS; r++)
@@ -2141,9 +2430,14 @@ function loadGame() {
         resourceMap[r][c] = data.resourceMap[r][c];
       }
 
-    townHalls    = data.townHalls;
+    townHalls    = data.townHalls.map(th => ({
+      ...th,
+      buildTimer: th.buildTimer ?? TH_BUILD_INTERVAL,
+      // Ensure FARM vote key exists for old saves
+      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0, ...(th.votes || {}) },
+    }));
     houseRegistry = data.houseRegistry;
-    // Migrate old saves that lack the `slots` field
+    // Migrate old saves that lack the `slots` or `residents` fields
     for (const [, h] of Object.entries(houseRegistry)) {
       if (h.slots == null) {
         const t = grid[h.r][h.c];
@@ -2151,15 +2445,77 @@ function loadGame() {
                 : t === ROW_HOUSE ? ROW_HOUSE_POP
                 : HOUSE_POP;
       }
+      if (!Array.isArray(h.residents)) h.residents = [];
     }
+    // Restore buildingRegistry (v2+), or reconstruct from grid for v1 saves
+    buildingRegistry = data.buildingRegistry || {};
+    if (data.v === 1) {
+      buildingRegistry = {};
+      for (let r = 0; r < MAP_ROWS; r++)
+        for (let c = 0; c < MAP_COLS; c++) {
+          const t = grid[r][c];
+          if (WORKER_JOBS.has(t)) buildingRegistry[r + ',' + c] = { r, c, type: t, workers: [] };
+        }
+    }
+
     people       = data.people;
     // Migrate people fields added after initial save
     for (const p of people) {
-      if (p.gatherTarget  === undefined) p.gatherTarget  = null;
-      if (p.exploreWood   === undefined) p.exploreWood   = 0;
-      if (p.exploreStone  === undefined) p.exploreStone  = 0;
-      if (p.exploreTick   === undefined) p.exploreTick   = 0;
-      if (p.mode === 'explore') p.mode = 'build'; // reset any in-flight explorers
+      if (p.gatherTarget        === undefined) p.gatherTarget        = null;
+      if (p.exploreWood         === undefined) p.exploreWood         = 0;
+      if (p.exploreStone        === undefined) p.exploreStone        = 0;
+      if (p.exploreTick         === undefined) p.exploreTick         = 0;
+      if (p.houseId             === undefined) p.houseId             = null;
+      if (p.assignedBuildingKey === undefined) p.assignedBuildingKey = null;
+      if (p.insideBuilding      === undefined) p.insideBuilding      = false;
+      if (p.sleeping            === undefined) p.sleeping            = false;
+      if (p.socialTarget        === undefined) p.socialTarget        = null;
+      if (p.foundTarget         === undefined) p.foundTarget         = null;
+      // Migrate old job/mode values
+      if (p.job  === 'builder') p.job  = 'gatherer';
+      if (p.job  === undefined) p.job  = 'gatherer';
+      if (p.mode === 'build')   p.mode = 'gather';
+      if (p.mode === undefined) p.mode = 'gather';
+      delete p.buildCooldown;
+      // Reset non-standard modes that can't safely resume across loads
+      if (p.mode === 'explore' || p.mode === 'social' || p.mode === 'home' || p.mode === 'found') {
+        p.mode = 'gather';
+        p.foundTarget = null;
+      }
+      // Validate worker links — drop stale references
+      if (p.job === 'worker' && !buildingRegistry[p.assignedBuildingKey]) {
+        p.job = 'gatherer'; p.assignedBuildingKey = null; p.insideBuilding = false;
+      }
+    }
+    // Re-link workers into buildingRegistry.workers arrays
+    for (const p of people) {
+      if (p.job === 'worker' && p.assignedBuildingKey) {
+        const entry = buildingRegistry[p.assignedBuildingKey];
+        if (entry && !entry.workers.includes(p.id)) entry.workers.push(p.id);
+      }
+    }
+    // Re-link people who already have a houseId (saves written after this patch)
+    for (const p of people) {
+      if (p.houseId != null && houseRegistry[p.houseId]) {
+        const h = houseRegistry[p.houseId];
+        if (!h.residents.includes(p.id)) h.residents.push(p.id);
+        // Use walkable tile adjacent to house (house tile itself is impassable)
+        let homeR = h.r, homeC = h.c;
+        for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+          const nr = h.r + dr, nc = h.c + dc;
+          if (!inBounds(nr, nc)) continue;
+          const t = grid[nr][nc];
+          if (t === GRASS || t === ROAD || t === PARK) { homeR = nr; homeC = nc; break; }
+        }
+        p.homeR = homeR; p.homeC = homeC;
+      }
+    }
+    // Assign homeless people to any house with vacancy (old saves)
+    for (const p of people) {
+      if (p.houseId == null) {
+        const vacancy = findHouseWithVacancy();
+        if (vacancy) assignHouse(p, vacancy[0], vacancy[1]);
+      }
     }
     discovered.clear();
     for (const t of data.discovered) discovered.add(t);
