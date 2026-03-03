@@ -680,6 +680,12 @@ for (const song of CANONICAL_SONGS) ALIAS_MAP[song] = [];
 // We'll populate it by running normalizeSong on all MAP keys after normalizeSong is defined.
 // (populated in init below)
 
+// Songs that are subsets of another: searching the sub-song also finds shows with the parent.
+// One-way only: parent search does NOT surface the sub-song.
+const PART_OF = {
+    'piss crowns are trebled': 'behemoth',
+};
+
 function renderSongGrid(filter) {
     const grid = document.getElementById('songGrid');
     grid.innerHTML = '';
@@ -731,9 +737,23 @@ function findShows() {
 
     const scores = {};
     for (const song of query) {
-        for (const idx of (showIndex[song] || [])) {
-            scores[idx] = (scores[idx] || 0) + 1;
+        // Expand: if this song is a part of another, also count shows with the parent
+        const lookupSongs = PART_OF[song] ? [song, PART_OF[song]] : [song];
+        const counted = new Set();
+        for (const lookupSong of lookupSongs) {
+            for (const idx of (showIndex[lookupSong] || [])) {
+                if (!counted.has(idx)) {
+                    counted.add(idx);
+                    scores[idx] = (scores[idx] || 0) + 1;
+                }
+            }
         }
+    }
+
+    // Build highlight set: include parent songs so they highlight in results too
+    const highlightSet = new Set(selected);
+    for (const song of selected) {
+        if (PART_OF[song]) highlightSet.add(PART_OF[song]);
     }
 
     const minScore = mode === 'all' ? query.length : 1;
@@ -750,7 +770,7 @@ function findShows() {
     let html = `<h2>shows ${modeLabel} (${ranked.length} found)</h2>`;
     for (const [idx, score] of ranked) {
         const matchLabel = score === query.length ? `all ${score} songs` : `${score} / ${query.length} songs`;
-        html += renderShowCard(shows[idx], matchLabel, selected);
+        html += renderShowCard(shows[idx], matchLabel, highlightSet);
     }
     resultsDiv.innerHTML = html;
 }
@@ -1023,6 +1043,10 @@ function filterEraShows(id, value) {
         if (canon && ALIAS_MAP[canon]) ALIAS_MAP[canon].push(alias);
     }
 })();
+// piss crowns are trebled is a part of behemoth: searching "piss crowns" also surfaces behemoth tag
+for (const [sub, parent] of Object.entries(PART_OF)) {
+    if (ALIAS_MAP[parent]) ALIAS_MAP[parent].push(sub);
+}
 buildIndex();
 buildAlbumSections();
 renderSongGrid();
