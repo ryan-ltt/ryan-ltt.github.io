@@ -475,11 +475,13 @@
         <!-- ERAS TAB -->
         <div class="tab-panel" id="tab-eras">
             <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 16px 0;">all shows with recordings, grouped by year.</p>
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 16px 0;">recordings that are bolded are highest quality</p>
             <div id="erasContainer"></div>
         </div>
     </main>
 
     <script src="setlists-data.js"></script>
+    <script src="best-recordings.js"></script>
     <script>
 // ─── Canonical songs ───────────────────────────────────────────────────────
 const CANONICAL_SONGS = [
@@ -646,8 +648,9 @@ function renderShowCard(show, labelHtml, highlightSet) {
         ? `<div style="font-family:Monaco;font-size:11px;color:#999;margin-top:6px;">${thanksLines.join('<br>')}</div>`
         : '';
 
+    const bestId = BEST_RECORDINGS[show.date];
     const recHtml = show.recordings && show.recordings.length > 0
-        ? `<div class="recordings"><span class="rec-label">recordings:</span>${show.recordings.map((r, i) => `<a href="${r.url}" target="_blank">[${i + 1}] archive.org</a>`).join('')}</div>`
+        ? `<div class="recordings"><span class="rec-label">recordings:</span>${show.recordings.map((r, i) => `<a href="${r.url}" target="_blank"${bestId === r.id ? ' style="font-weight:bold"' : ''}>[${i + 1}] archive.org</a>`).join('')}</div>`
         : '';
 
     return `<div class="result-show">
@@ -983,7 +986,8 @@ function renderEraShowList(eraShows, filter) {
     const filtered = f ? eraShows.filter(s => s.date.includes(f) || s.venue.toLowerCase().includes(f)) : eraShows;
     if (filtered.length === 0) return '<p style="font-family:Monaco;font-size:12px;color:#555;">no shows match.</p>';
     return filtered.map(s => {
-        const recsHtml = s.recordings.map((r, i) => `<a href="${r.url}" target="_blank">[${i+1}]</a>`).join('');
+        const bestId = BEST_RECORDINGS[s.date];
+        const recsHtml = s.recordings.map((r, i) => `<a href="${r.url}" target="_blank"${bestId === r.id ? ' style="font-weight:bold"' : ''}>[${i+1}]</a>`).join('');
         const mainSongs = [], soundcheckSongs = [];
         for (const song of s.songs) {
             if (/\(soundcheck\)/i.test(song)) soundcheckSongs.push(song);

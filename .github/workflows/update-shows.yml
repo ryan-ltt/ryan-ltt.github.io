@@ -1,0 +1,31 @@
+name: Update shows
+
+on:
+  schedule:
+    - cron: '0 8 * * *'   # daily at 8am UTC
+  workflow_dispatch:       # allow manual trigger from the Actions tab
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Check for new shows and recordings
+        run: python update-shows.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add setlists.json setlists-data.js
+          git diff --staged --quiet && echo "Nothing to commit." || \
+            git commit -m "chore: update shows and recordings [skip ci]"
+          git push
