@@ -9,8 +9,13 @@ const RECOMMENDATIONS = [
         note: "the earliest known recording. only known recording of them playing \"the piece\" live. the recording linked is the master tape which is very high quality."
     },
     {
-        date:"2002-01-25",
+        date: "2002-01-25",
         recordingId: "gybe2002-01-25.T",
         note: "their longest show, in the middle of their insane january 2002 run. includes extended dead metheny, an amazing mf=r, and three encores!!!"
+    },
+    {
+        date:"2003-05-14",
+        recordingId: "gybe2003-05-14.T",
+        note: "the only recording of gamelan pre-hiatus, includes a very strong performance of world police, a 2003 rendition of albanian, and mixed fantastically by Tankhaus in this matrix."
     }
 ];
