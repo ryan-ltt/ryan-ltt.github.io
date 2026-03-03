@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gybe bootleg helper</title>
     <script src="last-update.js"></script>
+    <script src="recommendations.js"></script>
     <link rel="stylesheet" href="projects.css">
     <style>
         .tabs {
@@ -416,6 +417,7 @@
             <button class="tab-btn active" onclick="switchTab('finder')">song finder</button>
             <button class="tab-btn" onclick="switchTab('discover')">discover</button>
             <button class="tab-btn" onclick="switchTab('eras')">shows</button>
+            <button class="tab-btn" onclick="switchTab('picks')">picks</button>
         </div>
 
         <!-- SONG FINDER TAB -->
@@ -473,6 +475,12 @@
                 <button class="clear-btn" onclick="clearDiscover()">clear</button>
             </div>
             <div class="results" id="discoverResults"></div>
+        </div>
+
+        <!-- PICKS TAB -->
+        <div class="tab-panel" id="tab-picks">
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 16px 0;">hand-picked shows worth hearing.</p>
+            <div id="picksContainer"></div>
         </div>
 
         <!-- ERAS TAB -->
@@ -670,7 +678,7 @@ function renderShowCard(show, labelHtml, highlightSet) {
 // ─── Tab switching ─────────────────────────────────────────────────────────
 function switchTab(name) {
     document.querySelectorAll('.tab-btn').forEach((b, i) => {
-        b.classList.toggle('active', ['finder','discover','eras'][i] === name);
+        b.classList.toggle('active', ['finder','discover','eras','picks'][i] === name);
     });
     document.querySelectorAll('.tab-panel').forEach(p => {
         p.classList.toggle('active', p.id === 'tab-' + name);
@@ -1054,10 +1062,50 @@ function filterEraShows(id, value) {
 for (const [sub, parent] of Object.entries(PART_OF)) {
     if (ALIAS_MAP[parent]) ALIAS_MAP[parent].push(sub);
 }
+function renderPicks() {
+    const container = document.getElementById('picksContainer');
+    if (!RECOMMENDATIONS || RECOMMENDATIONS.length === 0) {
+        container.innerHTML = '<p style="font-family:Monaco;font-size:12px;color:#555;">no picks yet.</p>';
+        return;
+    }
+    const showMap = {};
+    for (const s of SETLISTS_DATA) showMap[s.date] = s;
+    container.innerHTML = RECOMMENDATIONS.map(rec => {
+        const show = showMap[rec.date];
+        if (!show) return '';
+        const recId = rec.recordingId || BEST_RECORDINGS[show.date];
+        const setlistHtml = show.songs.join(' &nbsp;·&nbsp; ');
+        const preferredRec = recId && show.recordings
+            ? show.recordings.find(r => r.id === recId)
+            : null;
+        const recsHtml = preferredRec
+            ? `<div class="recordings"><span class="rec-label">preferred recording:</span><a href="${preferredRec.url}" target="_blank">${preferredRec.id}</a></div>`
+            : '';
+        const noteId = 'note-' + show.date.replace(/\W/g, '-');
+        const noteHtml = rec.note
+            ? `<div style="padding:6px 0 2px 0;display:flex;justify-content:space-between;align-items:center;">
+                   <span style="font-family:Monaco;font-size:12px;"><span style="color:#555;">notes</span><span style="color:#bbb;"> (click to expand)</span></span>
+                   <span class="era-show-toggle" id="tgl-${noteId}">+</span>
+               </div>
+               <div class="era-show-setlist" id="${noteId}" style="white-space:pre-wrap;">${rec.note}</div>`
+            : '';
+        const cardClick = rec.note ? `onclick="toggleShowSetlist('${noteId}')" style="cursor:pointer;"` : '';
+        return `<div class="result-show" ${cardClick}>
+            <div class="show-header">
+                <div><span class="show-date">${show.date}</span><span class="show-venue">${show.venue}</span></div>
+            </div>
+            <div class="setlist">${setlistHtml}</div>
+            <div onclick="event.stopPropagation()">${recsHtml}</div>
+            ${noteHtml}
+        </div>`;
+    }).join('');
+}
+
 buildIndex();
 buildAlbumSections();
 renderSongGrid();
 buildEras();
+renderPicks();
     </script>
 </body>
 </html>
