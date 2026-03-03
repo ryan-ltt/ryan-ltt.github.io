@@ -17,5 +17,10 @@ const RECOMMENDATIONS = [
         date:"2003-05-14",
         recordingId: "gybe2003-05-14.T",
         note: "the only recording of gamelan pre-hiatus, includes a very strong performance of world police, a 2003 rendition of albanian, and mixed fantastically by Tankhaus in this matrix."
+    },
+    {
+        date: "2025-05-10",
+        recordingId: "gybe2025-05-10.mtx",
+        note: "the best show of 2025 in my opinion. performances of all of the no title songs are at their peak, and albanian has an amazing outro with aidan going nuts on the kit. i also saw this show in person!"
     }
 ];
