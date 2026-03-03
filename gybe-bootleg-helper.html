@@ -381,6 +381,20 @@
             box-sizing: border-box;
         }
         .era-filter input:focus { outline: none; background: #f5f5ff; }
+        .album-btn {
+            display: inline-block;
+            padding: 4px 12px;
+            font-family: Monaco;
+            font-size: 12px;
+            background: white;
+            border: 2px solid black;
+            cursor: pointer;
+            transition: all 0.1s;
+            white-space: nowrap;
+        }
+        .album-btn:hover { background: #eee; }
+        .album-btn-active { background: #333; color: #fff; border-color: #333; }
+        .album-btn-active:hover { background: #444; }
     </style>
 </head>
 <body>
@@ -404,7 +418,8 @@
         <!-- SONG FINDER TAB -->
         <div class="tab-panel active" id="tab-finder">
             <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 12px 0;">select songs you want to hear, find which shows contain them.</p>
-            <input type="text" class="search-box" id="songSearch" placeholder="filter songs..." oninput="filterSongs()">
+            <div id="albumSections"></div>
+            <input type="text" class="search-box" id="songSearch" placeholder="filter songs..." oninput="filterSongs()" style="margin-top:16px;">
             <div class="song-grid" id="songGrid"></div>
             <div class="selected-list" id="selectedList"></div>
             <div class="opts-row">
@@ -423,28 +438,25 @@
 
         <!-- DISCOVER TAB -->
         <div class="tab-panel" id="tab-discover">
-            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 12px 0;">enter shows you've heard, get recommendations for something different.</p>
+            <p style="font-family:Monaco;font-size:13px;color:#555;margin:0 0 12px 0;">pick a show you've heard, get recommendations for something as different as possible.</p>
 
-            <h2 style="margin-top:0;">seed shows</h2>
-            <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 8px 0;">search for a show or paste a list of dates. recommendations will be as different as possible from your seeds.</p>
+            <h2 style="margin-top:0;">seed show</h2>
+            <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 8px 0;">search for the show you want a different setlist from.</p>
             <div class="show-search-wrap">
                 <input type="text" class="show-search-box" id="showSearch" placeholder="search by date or venue..." oninput="onShowSearch()" onblur="closeDropdown()" autocomplete="off">
                 <div class="show-dropdown" id="showDropdown"></div>
             </div>
-            <div style="margin-top:8px;display:flex;gap:8px;align-items:flex-start;">
-                <textarea id="bulkDates" rows="3" placeholder="paste dates here (one per line, YYYY-MM-DD)..." style="width:100%;max-width:560px;font-family:Monaco;font-size:12px;border:2px solid black;padding:7px 12px;box-sizing:border-box;resize:vertical;"></textarea>
-                <button class="upload-btn" style="white-space:nowrap;margin-top:0;" onclick="addBulkDates()">add dates</button>
-            </div>
-            <div style="font-family:Monaco;font-size:12px;color:#c00;margin:4px 0 8px 0;" id="bulkError"></div>
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <div class="seed-list" id="seedList"></div>
-                <button class="upload-btn" id="clearSeedsBtn" onclick="clearSeeds()" style="display:none;white-space:nowrap;">clear all</button>
-            </div>
+            <div style="margin:8px 0 0 0;" id="seedDisplay"></div>
 
             <div class="listened-section">
                 <h2>listened list</h2>
-                <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 10px 0;">optionally upload a list of shows you've already heard — recommendations will exclude them.<br>file format: one date per line (YYYY-MM-DD), or a JSON array of dates.</p>
-                <button class="upload-btn" onclick="document.getElementById('listenedFile').click()">upload list</button>
+                <p style="font-family:Monaco;font-size:12px;color:#555;margin:0 0 10px 0;">shows to exclude from recommendations. paste dates, or upload a file.</p>
+                <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;">
+                    <textarea id="listenedPaste" rows="3" placeholder="paste dates here (one per line, YYYY-MM-DD)..." style="width:100%;max-width:560px;font-family:Monaco;font-size:12px;border:2px solid black;padding:7px 12px;box-sizing:border-box;resize:vertical;"></textarea>
+                    <button class="upload-btn" style="white-space:nowrap;margin-top:0;" onclick="addListenedDates()">add dates</button>
+                </div>
+                <div style="font-family:Monaco;font-size:12px;color:#c00;margin:0 0 8px 0;" id="listenedPasteError"></div>
+                <button class="upload-btn" onclick="document.getElementById('listenedFile').click()">upload file</button>
                 <input type="file" id="listenedFile" accept=".txt,.json" style="display:none" onchange="loadListened(this)">
                 <span class="listened-count" id="listenedCount"></span>
                 <button class="download-btn" onclick="downloadListened()" id="downloadBtn" style="display:none">download list</button>
@@ -473,15 +485,51 @@
 const CANONICAL_SONGS = [
     '12-28-99', '2 nouveau tower', '3rd part', 'albanian', 'anthem for no state',
     'babys in a thundercloud', 'behemoth', 'blaise bailey finnegan III', 'bosses hang',
-    'broken spires at dead kapital', 'chart #3', 'cliff', 'dead flag blues', 'dead metheny',
+    'broken spires at dead kapital', 'chart #3', 'cliff', 'dead metheny',
     'divorce & fever', 'do you know how to waltz', 'fire at static valley', 'gamelan',
     'gathering storm', 'glacier', 'j.l.h. outro', 'john hughes', 'kicking horse on broken hill',
     "macrimmon's lament", 'monheim', 'motherfucker = redeemer', 'moya',
-    'nothings alright in our lives', 'pale spectator takes photographs', 'piss crowns are trebled',
+    'nothings alrite in our lives', 'pale spectator takes photographs', 'piss crowns are trebled',
     'raindrops cast in lead', 'sad mafioso', 'steve reich', 'sun is a hole sun is vapors',
     'tazer floyd', 'the cowboy', 'the dead flag blues', 'the dead flag blues (outro)',
-    'the sad mafioso', 'world police',
+    'world police',
 ];
+
+// ─── Albums ────────────────────────────────────────────────────────────────
+const ALBUMS = [
+    { name: 'f#a#∞',                        year: '1997', songs: ['the dead flag blues', 'the dead flag blues (outro)', 'the cowboy', 'nothings alrite in our lives', 'sad mafioso', 'divorce & fever', 'dead metheny', 'kicking horse on broken hill', 'j.l.h. outro'] },
+    { name: 'slow riot for new zerø kanada', year: '1999', songs: ['moya', 'blaise bailey finnegan III'] },
+    { name: 'lift your skinny fists',        year: '2000', songs: ['gathering storm', 'chart #3', 'world police', 'monheim', '3rd part', 'john hughes'] },
+    { name: 'yanqui u.x.o.',                 year: '2002', songs: ['12-28-99', 'tazer floyd', 'motherfucker = redeemer'] },
+    { name: "allelujah! don't bend! ascend!",year: '2012', songs: ['albanian', 'gamelan'] },
+    { name: 'asunder, sweet and other distress', year: '2015', songs: ['behemoth'] },
+    { name: 'luciferian towers',             year: '2017', songs: ['bosses hang', 'anthem for no state'] },
+    { name: "g_d's pee at state's end!",     year: '2021', songs: ['glacier', 'cliff', 'fire at static valley'] },
+    { name: 'no title as of 13 february 2024', year: '2024', songs: ['sun is a hole sun is vapors', 'babys in a thundercloud', 'raindrops cast in lead', 'broken spires at dead kapital', 'pale spectator takes photographs'] },
+];
+
+function buildAlbumSections() {
+    const container = document.getElementById('albumSections');
+    const btns = ALBUMS.map(album => {
+        const validSongs = album.songs.filter(s => CANONICAL_SONGS.includes(s));
+        if (validSongs.length === 0) return '';
+        return `<button class="album-btn" onclick='toggleAlbum(${JSON.stringify(validSongs)}, this)'>${album.name} <span style="color:#999;font-size:11px;">(${album.year})</span></button>`;
+    }).join('');
+    container.innerHTML = `<div class="song-grid" style="margin-bottom:0;">${btns}</div>`;
+}
+
+function toggleAlbum(songs, btn) {
+    const allSelected = songs.every(s => selected.has(s));
+    if (allSelected) {
+        for (const song of songs) selected.delete(song);
+        btn.classList.remove('album-btn-active');
+    } else {
+        for (const song of songs) selected.add(song);
+        btn.classList.add('album-btn-active');
+    }
+    renderSongGrid(document.getElementById('songSearch').value);
+    renderSelectedList();
+}
 
 // ─── Normalization ─────────────────────────────────────────────────────────
 function normalizeSong(raw) {
@@ -518,7 +566,7 @@ function normalizeSong(raw) {
         'chart #3': 'chart #3', 'chart #3/steve reich': 'chart #3',
         'steve reich': 'steve reich',
         'cliff': 'cliff',
-        'dead flag blues': 'dead flag blues', 'dead flag blues (outro)': 'dead flag blues',
+        'dead flag blues': 'the dead flag blues', 'dead flag blues (outro)': 'the dead flag blues (outro)',
         'dead metheny': 'dead metheny', 'dead metheny (w/ outro)': 'dead metheny', 'death metheny': 'dead metheny',
         'divorce & fever': 'divorce & fever',
         'do you know how to waltz': 'do you know how to waltz',
@@ -537,12 +585,12 @@ function normalizeSong(raw) {
         'monheim': 'monheim', 'monhiem': 'monheim',
         'motherfucker = redeemer': 'motherfucker = redeemer',
         'moya': 'moya', 'moya (?)': 'moya', 'moya (aborted)': 'moya',
-        'nothings alrite in our life': 'nothings alright in our lives', 'nothings alright in our lives': 'nothings alright in our lives',
+        'nothings alrite in our life': 'nothings alrite in our lives', 'nothings alrite in our lives': 'nothings alrite in our lives',
         'pale spectator takes photographs': 'pale spectator takes photographs',
         'piss crowns are trebled': 'piss crowns are trebled',
         'raindrops cast in lead': 'raindrops cast in lead',
         'sad mafioso': 'sad mafioso', 'sad mafioso (part 2)': 'sad mafioso',
-        'the sad mafioso': 'the sad mafioso', 'the sad mafioso + outro': 'the sad mafioso', 'the sad mafiosos': 'the sad mafioso',
+        'the sad mafioso': 'sad mafioso', 'the sad mafioso + outro': 'sad mafioso', 'the sad mafiosos': 'sad mafioso',
         'sun is a hole': 'sun is a hole / sun is vapors', 'sun is a hole sun is vapors': 'sun is a hole / sun is vapors',
         'tazer floyd': 'tazer floyd',
         'the boy': 'the cowboy', 'the cowboy': 'the cowboy',
@@ -579,13 +627,18 @@ function buildIndex() {
 
 // ─── Shared render helpers ─────────────────────────────────────────────────
 function renderShowCard(show, labelHtml, highlightSet) {
+    const thanksLines = [];
     const setlistHtml = show.songs.map(rawSong => {
+        const thanksM = rawSong.match(/^(.*?)\s+(thanks to\b.*)$/i);
+        const songName = thanksM ? thanksM[1] : rawSong;
+        if (thanksM) thanksLines.push(thanksM[2]);
         const canon = normalizeSong(rawSong);
-        if (canon && highlightSet && highlightSet.has(canon)) {
-            return `<span class="matched">${rawSong}</span>`;
-        }
-        return rawSong;
+        const highlighted = canon && highlightSet && highlightSet.has(canon);
+        return highlighted ? `<span class="matched">${songName}</span>` : songName;
     }).join(' &nbsp;·&nbsp; ');
+    const thanksSuffix = thanksLines.length > 0
+        ? `<div style="font-family:Monaco;font-size:11px;color:#999;margin-top:6px;">${thanksLines.join('<br>')}</div>`
+        : '';
 
     const recHtml = show.recordings && show.recordings.length > 0
         ? `<div class="recordings"><span class="rec-label">recordings:</span>${show.recordings.map((r, i) => `<a href="${r.url}" target="_blank">[${i + 1}] archive.org</a>`).join('')}</div>`
@@ -597,6 +650,7 @@ function renderShowCard(show, labelHtml, highlightSet) {
             <span class="match-count">${labelHtml}</span>
         </div>
         <div class="setlist">${setlistHtml}</div>
+        ${thanksSuffix}
         ${recHtml}
     </div>`;
 }
@@ -688,7 +742,7 @@ function findShows() {
 }
 
 // ─── DISCOVER ─────────────────────────────────────────────────────────────
-let seedIndices = new Set();   // show indices used as seeds
+let seedIdx = null;            // single seed show index
 let listenedDates = new Set(); // dates from uploaded list
 
 function showLabel(show) {
@@ -712,8 +766,8 @@ function onShowSearch() {
     if (matches.length === 0) { dropdown.style.display = 'none'; return; }
 
     dropdown.innerHTML = matches.map(i => {
-        const cls = seedIndices.has(i) ? ' selected-show' : '';
-        return `<div class="show-dropdown-item${cls}" onmousedown="addSeed(${i})">${showLabel(shows[i])}</div>`;
+        const cls = seedIdx === i ? ' selected-show' : '';
+        return `<div class="show-dropdown-item${cls}" onmousedown="setSeed(${i})">${showLabel(shows[i])}</div>`;
     }).join('');
     dropdown.style.display = 'block';
 }
@@ -722,32 +776,22 @@ function closeDropdown() {
     setTimeout(() => { document.getElementById('showDropdown').style.display = 'none'; }, 150);
 }
 
-function addSeed(idx) {
-    if (seedIndices.has(idx)) return;
-    seedIndices.add(idx);
-    renderSeedList();
+function setSeed(idx) {
+    seedIdx = idx;
+    renderSeedDisplay();
     document.getElementById('showSearch').value = '';
     document.getElementById('showDropdown').style.display = 'none';
 }
 
-function removeSeed(idx) {
-    seedIndices.delete(idx);
-    renderSeedList();
+function clearSeed() {
+    seedIdx = null;
+    renderSeedDisplay();
 }
 
-function renderSeedList() {
-    const div = document.getElementById('seedList');
-    const clearBtn = document.getElementById('clearSeedsBtn');
-    if (seedIndices.size === 0) { div.innerHTML = ''; clearBtn.style.display = 'none'; return; }
-    div.innerHTML = [...seedIndices].map(i =>
-        `<div class="seed-tag">${showLabel(shows[i])}<span class="remove" onclick="removeSeed(${i})">×</span></div>`
-    ).join('');
-    clearBtn.style.display = seedIndices.size > 1 ? 'inline-block' : 'none';
-}
-
-function clearSeeds() {
-    seedIndices.clear();
-    renderSeedList();
+function renderSeedDisplay() {
+    const div = document.getElementById('seedDisplay');
+    if (seedIdx === null) { div.innerHTML = ''; return; }
+    div.innerHTML = `<div class="seed-tag">${showLabel(shows[seedIdx])}<span class="remove" onclick="clearSeed()">×</span></div>`;
 }
 
 function loadListened(input) {
@@ -763,13 +807,28 @@ function loadListened(input) {
         } catch {
             dates = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
         }
-        listenedDates = new Set(dates);
-        const countEl = document.getElementById('listenedCount');
-        countEl.textContent = `${listenedDates.size} shows loaded`;
+        dates.forEach(d => listenedDates.add(d));
+        document.getElementById('listenedCount').textContent = `${listenedDates.size} shows`;
         document.getElementById('downloadBtn').style.display = 'inline-block';
     };
     reader.readAsText(file);
     input.value = '';
+}
+
+function addListenedDates() {
+    const raw = document.getElementById('listenedPaste').value;
+    const errEl = document.getElementById('listenedPasteError');
+    const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const notFound = [];
+    for (const line of lines) {
+        const m = line.match(/(\d{4}-\d{2}-\d{2})/);
+        if (!m) { notFound.push(line); continue; }
+        listenedDates.add(m[1]);
+    }
+    document.getElementById('listenedPaste').value = '';
+    document.getElementById('listenedCount').textContent = `${listenedDates.size} shows`;
+    document.getElementById('downloadBtn').style.display = 'inline-block';
+    errEl.textContent = notFound.length ? `not found: ${notFound.join(', ')}` : '';
 }
 
 function downloadListened() {
@@ -780,40 +839,14 @@ function downloadListened() {
     a.click();
 }
 
-// Build a date → show index map for fast lookup
-let dateToIdx = {};
-function buildDateIndex() {
-    for (let i = 0; i < shows.length; i++) {
-        dateToIdx[shows[i].date] = i;
-    }
-}
-
-function addBulkDates() {
-    const raw = document.getElementById('bulkDates').value;
-    const errEl = document.getElementById('bulkError');
-    const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-    const notFound = [];
-    for (const line of lines) {
-        // Accept YYYY-MM-DD anywhere in the line
-        const m = line.match(/(\d{4}-\d{2}-\d{2})/);
-        if (!m) { notFound.push(line); continue; }
-        const date = m[1];
-        const idx = dateToIdx[date];
-        if (idx === undefined) { notFound.push(date); continue; }
-        seedIndices.add(idx);
-    }
-    renderSeedList();
-    document.getElementById('bulkDates').value = '';
-    errEl.textContent = notFound.length ? `not found: ${notFound.join(', ')}` : '';
-}
 
 function clearDiscover() {
-    seedIndices.clear();
+    seedIdx = null;
     listenedDates.clear();
-    renderSeedList();
+    renderSeedDisplay();
     document.getElementById('showSearch').value = '';
-    document.getElementById('bulkDates').value = '';
-    document.getElementById('bulkError').textContent = '';
+    document.getElementById('listenedPaste').value = '';
+    document.getElementById('listenedPasteError').textContent = '';
     document.getElementById('listenedCount').textContent = '';
     document.getElementById('downloadBtn').style.display = 'none';
     document.getElementById('discoverResults').innerHTML = '';
@@ -823,21 +856,15 @@ function discoverShows() {
     const resultsDiv = document.getElementById('discoverResults');
     const recordingsOnly = document.getElementById('discoverRecordingsOnly').checked;
 
-    if (seedIndices.size === 0 && listenedDates.size === 0) {
-        resultsDiv.innerHTML = '<p class="no-results">add at least one seed show or upload a listened list.</p>';
+    if (seedIdx === null && listenedDates.size === 0) {
+        resultsDiv.innerHTML = '<p class="no-results">pick a seed show or upload a listened list.</p>';
         return;
     }
 
-    // Build union of seed song sets
-    const seedSongs = new Set();
-    for (const idx of seedIndices) {
-        for (const song of showSongSets[idx]) seedSongs.add(song);
-    }
+    const seedSongs = seedIdx !== null ? showSongSets[seedIdx] : new Set();
 
-    // Score candidates: dissimilarity = 1 - Jaccard(candidate, seedSongs)
-    // Jaccard = |intersection| / |union|
-    // We want lowest Jaccard (most different), excluding seeds and listened shows
-    const excludeDates = new Set([...listenedDates, ...[...seedIndices].map(i => shows[i].date)]);
+    const excludeDates = new Set(listenedDates);
+    if (seedIdx !== null) excludeDates.add(shows[seedIdx].date);
 
     const candidates = [];
     for (let i = 0; i < shows.length; i++) {
@@ -845,7 +872,6 @@ function discoverShows() {
         if (excludeDates.has(show.date)) continue;
         if (recordingsOnly && show.recordings.length === 0) continue;
 
-        // If no seeds provided, just return all non-listened shows ordered by date
         if (seedSongs.size === 0) {
             candidates.push({ idx: i, jaccard: 0, shared: 0 });
             continue;
@@ -861,7 +887,6 @@ function discoverShows() {
         candidates.push({ idx: i, jaccard, shared: intersection });
     }
 
-    // Sort by jaccard asc (most different first), break ties by date desc
     candidates.sort((a, b) => a.jaccard - b.jaccard || shows[b.idx].date.localeCompare(shows[a.idx].date));
 
     if (candidates.length === 0) {
@@ -869,7 +894,7 @@ function discoverShows() {
         return;
     }
 
-    const prefix = seedSongs.size > 0 ? 'most different from your seeds' : 'shows not in your listened list';
+    const prefix = seedSongs.size > 0 ? 'most different from your seed' : 'shows not in your listened list';
     let html = `<h2>${prefix} (${candidates.length} found)</h2>`;
     for (const { idx, jaccard, shared } of candidates) {
         const pct = Math.round((1 - jaccard) * 100);
@@ -977,7 +1002,7 @@ function filterEraShows(id, value) {
 
 // ─── Init ──────────────────────────────────────────────────────────────────
 buildIndex();
-buildDateIndex();
+buildAlbumSections();
 renderSongGrid();
 buildEras();
     </script>
