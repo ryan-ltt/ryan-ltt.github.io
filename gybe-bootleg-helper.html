@@ -676,13 +676,16 @@ function renderShowCard(show, labelHtml, highlightSet) {
 }
 
 // ─── Tab switching ─────────────────────────────────────────────────────────
+const TABS = ['finder','discover','eras','picks'];
 function switchTab(name) {
+    if (!TABS.includes(name)) name = 'finder';
     document.querySelectorAll('.tab-btn').forEach((b, i) => {
-        b.classList.toggle('active', ['finder','discover','eras','picks'][i] === name);
+        b.classList.toggle('active', TABS[i] === name);
     });
     document.querySelectorAll('.tab-panel').forEach(p => {
         p.classList.toggle('active', p.id === 'tab-' + name);
     });
+    history.replaceState(null, '', '#' + name);
 }
 
 // ─── SONG FINDER ──────────────────────────────────────────────────────────
@@ -1106,6 +1109,7 @@ buildAlbumSections();
 renderSongGrid();
 buildEras();
 renderPicks();
+switchTab(window.location.hash.slice(1) || 'finder');
     </script>
 </body>
 </html>
