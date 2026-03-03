@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gybe bootleg helper</title>
+    <script src="last-update.js"></script>
     <link rel="stylesheet" href="projects.css">
     <style>
         .tabs {
@@ -407,7 +408,9 @@
     </header>
 
     <main>
-        <p>data from <a href="https://gybecc.neocities.org" target="_blank">gybecc.neocities.org</a> · <a href="https://archive.org/details/GodspeedYouBlackEmperor" target="_blank">archive.org</a>.</p>
+        <p>data from <a href="https://gybecc.neocities.org" target="_blank">gybecc.neocities.org</a> · <a href="https://archive.org/details/GodspeedYouBlackEmperor" target="_blank">archive.org</a>.
+        <span id="last-updated-label" style="display:none"> · last updated: <span id="last-updated-date"></span></span></p>
+        <script>if (typeof LAST_UPDATED !== 'undefined') { document.getElementById('last-updated-date').textContent = LAST_UPDATED; document.getElementById('last-updated-label').style.display = ''; }</script>
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('finder')">song finder</button>

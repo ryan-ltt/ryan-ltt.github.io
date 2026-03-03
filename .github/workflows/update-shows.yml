@@ -25,7 +25,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add setlists.json setlists-data.js
+          git add setlists.json setlists-data.js .last-update last-update.js
           git diff --staged --quiet && echo "Nothing to commit." || \
             git commit -m "chore: update shows and recordings [skip ci]"
           git push

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # update-shows.py
 # Incremental updater: reads setlists.json, checks only recent year pages for
-# new shows, fetches only those, then checks archive.org for new recordings,
-# and writes back setlists.json + setlists-data.js.
+# new shows, fetches only those, then checks archive.org for recordings uploaded
+# recently (single query), and writes back setlists.json + setlists-data.js.
 #
 # Usage:
-#   python update-shows.py              # check current year + last year; recent recordings
+#   python update-shows.py              # check current year + last year; recordings from last run
 #   python update-shows.py 25 26        # check specific year suffixes for new shows
 #   python update-shows.py --dry-run    # report changes without writing files
-#   python update-shows.py --all-recordings  # check archive.org for every show, not just recent
+#   python update-shows.py --all-recordings  # fetch all known GYBE recordings from archive.org
 
 import urllib.request
 import urllib.parse
@@ -21,9 +21,12 @@ from datetime import datetime
 
 BASE = 'https://gybecc.neocities.org/gybecc/'
 ARCHIVE_SEARCH = 'https://archive.org/advancedsearch.php'
+ARCHIVE_META = 'https://archive.org/metadata/'
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(SCRIPT_DIR, 'setlists.json')
 DATA_PATH = os.path.join(SCRIPT_DIR, 'setlists-data.js')
+LAST_RUN_PATH = os.path.join(SCRIPT_DIR, '.last-update')
+LAST_UPDATE_JS = os.path.join(SCRIPT_DIR, 'last-update.js')
 
 # ─── Args ────────────────────────────────────────────────────────────────────
 args = sys.argv[1:]
@@ -103,27 +106,81 @@ def parse_show(html, date):
     return {'date': date, 'venue': venue, 'songs': songs, 'recordings': []}
 
 # ─── Archive.org helpers ──────────────────────────────────────────────────────
-def search_archive_recordings(date):
-    """Search archive.org for GYBE live recordings on a specific date."""
-    q = f'creator:"Godspeed You! Black Emperor" date:{date}'
+def fetch_archive_recordings(extra_filter='', rows=500):
+    """Fetch GYBE recordings from archive.org, optionally filtered (e.g. by addeddate)."""
+    q = 'creator:"Godspeed You! Black Emperor"'
+    if extra_filter:
+        q += f' {extra_filter}'
     url = (f'{ARCHIVE_SEARCH}?q={urllib.parse.quote(q)}'
-           f'&fl[]=identifier&fl[]=title&rows=20&output=json')
+           f'&fl[]=identifier&fl[]=title&fl[]=date&rows={rows}&output=json')
     try:
         data = fetch(url)
         results = json.loads(data)
         docs = results.get('response', {}).get('docs', [])
-        return [
-            {
-                'id': doc['identifier'],
-                'url': f'https://archive.org/details/{doc["identifier"]}',
-                'title': doc.get('title', doc['identifier']),
-            }
-            for doc in docs
-            if doc.get('identifier')
-        ]
+        recordings = []
+        for doc in docs:
+            identifier = doc.get('identifier', '')
+            if not identifier:
+                continue
+            # archive.org date field is the concert date; may be YYYY, YYYY-MM, or YYYY-MM-DD
+            raw_date = doc.get('date', '')
+            concert_date = raw_date[:10] if len(raw_date) >= 10 else ''
+            recordings.append({
+                'id': identifier,
+                'url': f'https://archive.org/details/{identifier}',
+                'title': doc.get('title', identifier),
+                'concert_date': concert_date,
+            })
+        return recordings
     except Exception as e:
-        print(f'    archive.org error for {date}: {e}')
+        print(f'  archive.org fetch error: {e}')
         return []
+
+def fetch_archive_setlist(identifier):
+    """Extract a setlist from an archive.org item's track metadata."""
+    try:
+        data = fetch(ARCHIVE_META + identifier)
+        meta = json.loads(data)
+    except Exception as e:
+        print(f'    metadata fetch error: {e}')
+        return []
+
+    # Prefer original audio files that have a title field, sorted by track number
+    audio_formats = {'flac', 'shorten', 'vbr mp3', 'ogg vorbis', '24bit flac', 'mp3', 'wav'}
+    tracks = []
+    for f in meta.get('files', []):
+        if f.get('format', '').lower() not in audio_formats:
+            continue
+        if f.get('source', '') == 'derivative':
+            continue
+        title = f.get('title', '').strip()
+        if not title:
+            continue
+        try:
+            num = int(str(f.get('track', '999')).split('/')[0])
+        except ValueError:
+            num = 999
+        tracks.append((num, title))
+
+    if tracks:
+        tracks.sort()
+        return [t[1] for t in tracks]
+
+    # Fallback: parse setlist from description field
+    desc = meta.get('metadata', {}).get('description', '')
+    if isinstance(desc, list):
+        desc = '\n'.join(desc)
+    if desc:
+        songs = []
+        for line in re.split(r'[\n\r]+|<br\s*/?>', desc):
+            line = re.sub(r'<[^>]+>', '', line)
+            line = re.sub(r'^\d+[\.\)]\s*', '', line).strip()
+            if line and 2 < len(line) < 80:
+                songs.append(line)
+        if songs:
+            return songs
+
+    return []
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 def main():
@@ -135,7 +192,7 @@ def main():
     print(f'Loaded {len(existing)} existing shows.')
     print(f'Checking years: {", ".join(years_to_check)}' + ('  [dry run]' if dry_run else '') + '\n')
 
-    # ── Step 1: New shows from gybecc ────────────────────────────────────────
+    # ── Step 1: New shows from gybecc ─────────────────────────────────────────
     new_shows = []
 
     for yr in years_to_check:
@@ -167,50 +224,111 @@ def main():
 
     print()
 
+    # ── Step 1b: Retry gybecc for shows with pending setlists ────────────────
+    # These are stubs created earlier from archive.org recordings before gybecc had the page.
+    pending = [s for s in existing if s.get('setlist_pending')]
+    resolved = {}  # date → {songs, venue}
+
+    if pending:
+        print(f'Retrying gybecc setlist for {len(pending)} pending show(s)...')
+        for show in pending:
+            date = show['date']
+            # Construct gybecc URL: 2026-02-15 → BASE + 26-02-15.html
+            gybecc_url = BASE + date[2:4] + date[4:] + '.html'
+            print(f'  {date} ... ', end='', flush=True)
+            try:
+                show_html = fetch(gybecc_url)
+                parsed = parse_show(show_html, date)
+                if parsed['songs']:
+                    resolved[date] = {'songs': parsed['songs'], 'venue': parsed['venue']}
+                    print(f'filled ({len(parsed["songs"])} songs)')
+                else:
+                    print('still pending')
+            except Exception as e:
+                print(f'ERROR: {e}')
+            time.sleep(0.15)
+        print()
+
     # ── Step 2: New recordings from archive.org ───────────────────────────────
     if all_recordings:
-        shows_to_check = list(existing)
-        print(f'Checking archive.org recordings for all {len(shows_to_check)} shows...\n')
+        print('Fetching all GYBE recordings from archive.org (single query)...')
+        archive_recs = fetch_archive_recordings()
     else:
-        cutoff_year = datetime.now().year - 3
-        shows_to_check = [
-            s for s in existing
-            if int(s['date'][:4]) >= cutoff_year or not s.get('recordings')
-        ]
-        print(f'Checking archive.org for {len(shows_to_check)} shows '
-              f'(last 3 years + {sum(1 for s in existing if not s.get("recordings"))} with no recordings)')
-        print('(use --all-recordings to check every show)\n')
+        if os.path.exists(LAST_RUN_PATH):
+            with open(LAST_RUN_PATH) as f:
+                cutoff = f.read().strip()
+        else:
+            cutoff = '2026-03-01'
+        print(f'Fetching GYBE recordings added to archive.org since {cutoff}...')
+        archive_recs = fetch_archive_recordings(extra_filter=f'addeddate:[{cutoff} TO *]', rows=100)
+    print(f'  {len(archive_recs)} recording(s) returned\n')
 
-    rec_updates = {}  # date → [new recordings to add]
+    all_known_ids = {
+        r['id']
+        for s in existing
+        for r in s.get('recordings', [])
+    }
+    rec_updates = {}   # date → [new recordings for existing shows]
+    new_stubs = {}     # date → stub show (show not on gybecc yet)
 
-    for show in shows_to_check:
-        date = show['date']
-        known_ids = {r['id'] for r in show.get('recordings', [])}
-        new_recs = search_archive_recordings(date)
-        truly_new = [r for r in new_recs if r['id'] not in known_ids]
-        if truly_new:
-            print(f'  {date}: {len(truly_new)} new recording(s):')
-            for r in truly_new:
-                print(f'    + [{r["id"]}]')
-                print(f'      {r["title"]}')
-            rec_updates[date] = truly_new
-        time.sleep(0.1)
+    for rec in archive_recs:
+        date = rec['concert_date']
+        if not date:
+            continue
+        if rec['id'] in all_known_ids:
+            continue
+        entry = {'id': rec['id'], 'url': rec['url'], 'title': rec['title']}
+
+        if date in show_by_date or date in {s['date'] for s in new_shows}:
+            rec_updates.setdefault(date, []).append(entry)
+        elif date in new_stubs:
+            new_stubs[date]['recordings'].append(entry)
+        else:
+            # Show not on gybecc yet — create a stub from the recording's track list
+            print(f'  {date}: not on gybecc — fetching track list from [{rec["id"]}] ... ', end='', flush=True)
+            songs = fetch_archive_setlist(rec['id'])
+            print(f'{len(songs)} track(s)')
+            new_stubs[date] = {
+                'date': date,
+                'venue': '',
+                'songs': songs,
+                'recordings': [entry],
+                'setlist_pending': True,
+            }
+            time.sleep(0.1)
+
+        all_known_ids.add(rec['id'])
+
+    if new_stubs:
+        print()
+
+    for date, recs in sorted(rec_updates.items()):
+        print(f'  {date}: {len(recs)} new recording(s):')
+        for r in recs:
+            print(f'    + [{r["id"]}]')
+            print(f'      {r["title"]}')
 
     print()
 
     # ── Summary ───────────────────────────────────────────────────────────────
     total_new_recs = sum(len(v) for v in rec_updates.values())
 
-    if not new_shows and not rec_updates:
+    if not new_shows and not new_stubs and not rec_updates and not resolved:
         print('Nothing new found. Everything is up to date.')
         return
 
     if new_shows:
-        print(f'New shows ({len(new_shows)}):')
+        print(f'New shows from gybecc ({len(new_shows)}):')
         for s in new_shows:
             print(f'  {s["date"]}  {s["venue"]}  ({len(s["songs"])} songs)')
+    if new_stubs:
+        print(f'New show stubs from archive.org ({len(new_stubs)}):')
+        for s in new_stubs.values():
+            print(f'  {s["date"]}  ({len(s["songs"])} tracks, setlist pending gybecc)')
     if rec_updates:
         print(f'New recordings: {total_new_recs} across {len(rec_updates)} show(s)')
+    if resolved:
+        print(f'Setlists filled in from gybecc: {len(resolved)} show(s)')
 
     if dry_run:
         print('\n[dry run] No files written.')
@@ -218,9 +336,19 @@ def main():
 
     # Apply recording updates to existing shows
     for date, new_recs in rec_updates.items():
-        show_by_date[date].setdefault('recordings', []).extend(new_recs)
+        target = show_by_date.get(date)
+        if target:
+            target.setdefault('recordings', []).extend(new_recs)
 
-    merged = sorted(existing + new_shows, key=lambda s: s['date'])
+    # Apply resolved setlists to pending stubs
+    for date, update in resolved.items():
+        show = show_by_date[date]
+        show['songs'] = update['songs']
+        if update['venue']:
+            show['venue'] = update['venue']
+        show.pop('setlist_pending', None)
+
+    merged = sorted(existing + new_shows + list(new_stubs.values()), key=lambda s: s['date'])
 
     with open(JSON_PATH, 'w') as f:
         json.dump(merged, f, indent=2)
@@ -230,8 +358,11 @@ def main():
         f.write('const SETLISTS_DATA = ' + json.dumps(merged, indent=2) + ';\n')
     print(f'Wrote setlists-data.js')
 
-    if new_shows:
-        print('\nNote: new shows have empty recordings — any auto-discovered ones above were added.')
+    today = datetime.now().strftime('%Y-%m-%d')
+    with open(LAST_RUN_PATH, 'w') as f:
+        f.write(today)
+    with open(LAST_UPDATE_JS, 'w') as f:
+        f.write(f'const LAST_UPDATED = {json.dumps(today)};\n')
 
 if __name__ == '__main__':
     main()
