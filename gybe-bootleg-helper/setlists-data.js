@@ -1,1 +1,16324 @@
-const SETLISTS_DATA = [{"date": "1997-03-15", "venue": "symptom hall, toronto, on", "songs": ["the piece"], "recordings": []}, {"date": "1997-10-05", "venue": "can-zine festival, symptom hall, toronto, on", "songs": ["nothings alrite in our life", "the dead flag blues", "the cowboy", "sad mafioso", "dead metheny", "j.l.h. (outro)", "kicking horses on brokenhill", "the dead flag blues (outro)"], "recordings": [{"id": "godspeed1997-10-05", "url": "https://archive.org/details/godspeed1997-10-05", "title": "Godspeed You! Black Emperor Live at Symptom Hall on 1997-10-05"}, {"id": "gybe1997-10-05.flac", "url": "https://archive.org/details/gybe1997-10-05.flac", "title": "Godspeed You! Black Emperor Live at Can-Zine Festival on 1997-10-05"}, {"id": "gybe1997-10-05.DAT", "url": "https://archive.org/details/gybe1997-10-05.DAT", "title": "Godspeed You! Black Emperor Live at Can-Zine Festival, Symptom Hall on 1997-10-05"}]}, {"date": "1997-11-12", "venue": "the music of sound, ckut session, montréal, qc", "songs": ["drone", "noise", "blaise bailey finnegan III", "sad mafioso \"The Music of Sound\" radio session presented by Gordon Krieger."], "recordings": [{"id": "gybe1997-11-12", "url": "https://archive.org/details/gybe1997-11-12", "title": "Godspeed You! Black Emperor Live at CKUT FM on 1997-11-12"}]}, {"date": "1998-04-25", "venue": "saw gallery, ottawa, on", "songs": ["the dead flag blues", "the boy", "moya", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe1998-04-25.T", "url": "https://archive.org/details/gybe1998-04-25.T", "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"}, {"id": "gybe1998-04-25.fixed", "url": "https://archive.org/details/gybe1998-04-25.fixed", "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"}, {"id": "gybe1998-04-25", "url": "https://archive.org/details/gybe1998-04-25", "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"}, {"id": "gybe1998-04-25.flac", "url": "https://archive.org/details/gybe1998-04-25.flac", "title": "Godspeed You! Black Emperor Live at Saw Gallery on 1998-04-25"}]}, {"date": "1998-05-10", "venue": "metropolis, montreal, qc", "songs": ["spoken words intro", "the dead flag blues", "moya", "blaise bailey finnegan III", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe1998-05-10", "url": "https://archive.org/details/gybe1998-05-10", "title": "Godspeed You! Black Emperor Live at Metropolis on 1998-05-10"}]}, {"date": "1998-09-10", "venue": "hoel2tango, montreal, qc", "songs": ["moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "1998-09-13", "venue": "khyber pass, philadelphia, pa", "songs": ["the dead flag blues", "moya", "blaise bailey finnegan III", "dead metheny", "sad mafioso [not confirmed]"], "recordings": []}, {"date": "1998-09-15", "venue": "cat's cradle, carrboro, nc", "songs": ["the dead flag blues (soundcheck)", "the dead flag blues", "moya", "blaise bailey finnegan III", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe1998-09-15.cradle_tlr", "url": "https://archive.org/details/gybe1998-09-15.cradle_tlr", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 1998-09-15"}]}, {"date": "1998-10-02", "venue": "tokyo rose, charlottesville, va", "songs": ["the dead flag blues", "moya", "blaise bailey finnegan III", "dead metheny"], "recordings": [{"id": "gybe1998-10-02", "url": "https://archive.org/details/gybe1998-10-02", "title": "Godspeed You! Black Emperor Live at Tokyo Rose on 1998-10-02"}]}, {"date": "1998-10-03", "venue": "the point, atlanta, ga", "songs": ["the dead flag blues", "moya", "blaise bailey finnegan III", "sad mafioso"], "recordings": [{"id": "gybe1998-10-03", "url": "https://archive.org/details/gybe1998-10-03", "title": "Godspeed You! Black Emperor Live at The Point on 1998-10-03"}]}, {"date": "1998-10-10", "venue": "scuba's, chicago, il", "songs": ["soundcheck : sad mafioso", "the dead flag blues", "moya", "blaise bailey finnegan III", "sad mafioso", "[the low set]", "[encore low-godspeed]", "do you know how to waltz"], "recordings": [{"id": "gybe1998-10-10", "url": "https://archive.org/details/gybe1998-10-10", "title": "Godspeed You! Black Emperor Live at Schuba's on 1998-10-10"}, {"id": "ajc01237_gybe1998-10-10_ajcproject", "url": "https://archive.org/details/ajc01237_gybe1998-10-10_ajcproject", "title": "Godspeed You! Black Emperor Live at Schubas Tavern on 1998-10-10"}, {"id": "ajc01237_gybe1998-10-10.ajcproject", "url": "https://archive.org/details/ajc01237_gybe1998-10-10.ajcproject", "title": "Godspeed You! Black Emperor Live at Schubas Tavern on 1998-10-10"}]}, {"date": "1998-10-16", "venue": "montgomery hall, ottawa, on", "songs": ["the dead flag blues", "moya", "blaise bailey finnegan III", "dead metheny", "improvisation", "sad mafioso", "john hughes"], "recordings": [{"id": "gybe1998-10-16", "url": "https://archive.org/details/gybe1998-10-16", "title": "Godspeed You! Black Emperor Live at Montgomery Hall on 1998-10-16"}]}, {"date": "1998-11-13", "venue": "hotel2tango, montreal, qc", "songs": ["moya", "blaise bailey finnegan III", "monheim", "dead metheny", "world police", "sad mafioso"], "recordings": []}, {"date": "1998-11-19", "venue": "stills gallery, edinburgh, uk", "songs": ["moya", "monheim", "world police (part I)"], "recordings": [{"id": "gybe1998-11-19", "url": "https://archive.org/details/gybe1998-11-19", "title": "Godspeed You! Black Emperor Live at Stills Gallery on 1998-11-19"}]}, {"date": "1998-11-22", "venue": "bbc studios, maida vale, london, uk", "songs": ["monheim", "steve reich"], "recordings": [{"id": "gybe1998-11-22.rebroadcast", "url": "https://archive.org/details/gybe1998-11-22.rebroadcast", "title": "Godspeed You! Black Emperor Live at Maida Vale Studio 3 on 1998-11-22"}, {"id": "gybe1998-11-22.bbc", "url": "https://archive.org/details/gybe1998-11-22.bbc", "title": "Godspeed You! Black Emperor Live at Maida Vale Studio 3 on 1998-11-22"}]}, {"date": "1998-11-23", "venue": "highbury garage, highbury, london, uk", "songs": ["j.l.h. outro", "moya", "blaise bailey finnegan III", "world police", "sad mafioso"], "recordings": [{"id": "gybe1998-11-23.flac", "url": "https://archive.org/details/gybe1998-11-23.flac", "title": "Godspeed You! Black Emperor Live at Highbury Garage on 1998-11-23"}]}, {"date": "1998-11-26", "venue": "vpro studio, amsterdam, hol", "songs": ["[interview plus performance of:]", "john hughes", "steve reich", "world police", "moya"], "recordings": [{"id": "gybe1998-11-26", "url": "https://archive.org/details/gybe1998-11-26", "title": "Godspeed You! Black Emperor Live at Studio Amstel (VPRO) on 1998-11-26"}, {"id": "gybe1998-11-26.interview", "url": "https://archive.org/details/gybe1998-11-26.interview", "title": "Godspeed You! Black Emperor Live at VPRO Studio Amsel on 1998-11-26"}, {"id": "gybe1998-11-24", "url": "https://archive.org/details/gybe1998-11-24", "title": "Godspeed You! Black Emperor Live at VPRO Studio on 1998-11-26"}]}, {"date": "1998-11-27", "venue": "cafe trauma, marburg, ger", "songs": ["moya", "monheim", "dead metheny", "world police", "sad mafioso", "john hughes"], "recordings": [{"id": "gybe1998-11-27", "url": "https://archive.org/details/gybe1998-11-27", "title": "Godspeed You! Black Emperor Live at Café Trauma on 1998-11-27"}]}, {"date": "1998-12-17", "venue": "sojus 7, monheim, ger", "songs": ["the dead flag blues", "moya", "world police", "john hughes", "j.l.h. outro jam"], "recordings": [{"id": "gybe1998-12-17.flac16", "url": "https://archive.org/details/gybe1998-12-17.flac16", "title": "Godspeed You! Black Emperor Live at Sojus 7 on 1998-12-17"}]}, {"date": "1998-12-18", "venue": "uni-festsaal, frankfurt, ger", "songs": ["moya", "monheim", "world police", "dead metheny", "john hughes", "sad mafioso", "j.l.h. outro"], "recordings": [{"id": "gybe1998-12-18", "url": "https://archive.org/details/gybe1998-12-18", "title": "Godspeed You! Black Emperor Live at Uni-Festsaal on 1998-12-18"}]}, {"date": "1999-04-16", "venue": "velinx festival, tongeren, bel", "songs": ["moya", "gathering storm (part II)", "world police"], "recordings": [{"id": "gybe1999-04-16.TCD-D8", "url": "https://archive.org/details/gybe1999-04-16.TCD-D8", "title": "Godspeed You! Black Emperor Live at De Velinx on 1999-04-16"}, {"id": "gybe1999-04-16.TCD-D8_remaster", "url": "https://archive.org/details/gybe1999-04-16.TCD-D8_remaster", "title": "Godspeed You! Black Emperor Live at Viva VelinX @ De Velinx on 1999-04-16"}, {"id": "gybe1999-04-16", "url": "https://archive.org/details/gybe1999-04-16", "title": "Godspeed You! Black Emperor Live at Velinx Festival on 1999-04-16"}]}, {"date": "1999-04-19", "venue": "instants chavirés, montreuil, paris, fr", "songs": ["the dead flag blues", "monheim", "j.l.h. outro", "gathering storm", "moya", "john hughes", "dead metheny", "world police", "sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-04-19.MD", "url": "https://archive.org/details/gybe1999-04-19.MD", "title": "Godspeed You! Black Emperor Live at Les Instants Chavirés on 1999-04-19"}, {"id": "gybe1999-04-19", "url": "https://archive.org/details/gybe1999-04-19", "title": "Godspeed You! Black Emperor Live at Les Instants Chavirés on 1999-04-19"}]}, {"date": "1999-04-24", "venue": "nighttown, rotterdam, hol", "songs": ["the dead flag blues", "moya", "monheim", "world police", "sad mafioso", "blaise bailey finnegan III"], "recordings": []}, {"date": "1999-04-25", "venue": "bowlie weekender, camber sands, uk", "songs": ["the dead flag blues", "moya", "monheim", "world police", "sad mafioso"], "recordings": [{"id": "gybe1999-04-25", "url": "https://archive.org/details/gybe1999-04-25", "title": "Godspeed You! Black Emperor Live at Bowlie Festival on 1999-04-25"}]}, {"date": "1999-04-27", "venue": "improv theater, london, uk", "songs": ["the dead flag blues", "moya", "monheim", "j.l.h outro", "death metheny", "world police", "sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-04-27", "url": "https://archive.org/details/gybe1999-04-27", "title": "Godspeed You! Black Emperor Live at London Improv Theatre on 1999-04-27"}]}, {"date": "1999-04-28", "venue": "beursschouwburg, brussels, bel", "songs": ["intro", "the dead flag blues", "moya", "monheim", "j.l.h outro", "death metheny", "john hughes", "world police", "sad mafioso"], "recordings": [{"id": "gybe1999-04-28", "url": "https://archive.org/details/gybe1999-04-28", "title": "Godspeed You! Black Emperor Live at Beursschouwburg on 1999-04-28"}, {"id": "gybe1999-04-28.TCD-D100", "url": "https://archive.org/details/gybe1999-04-28.TCD-D100", "title": "Godspeed You! Black Emperor Live at Beursschouwburg on 1999-04-28"}]}, {"date": "1999-05-24", "venue": "fimav, colisée des bois-francs, victoriaville, qc", "songs": ["noise intro", "moya", "monheim", "dead metheny", "world police", "sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-05-24.flacf", "url": "https://archive.org/details/gybe1999-05-24.flacf", "title": "Godspeed You! Black Emperor Live at 16th Festival de Musique Actuelle de Victoriaville on 1999-05-24"}]}, {"date": "1999-07-12", "venue": "garage 2, glasgow, uk", "songs": ["j.l.h outro"], "recordings": []}, {"date": "1999-07-13", "venue": "hop & grape, manchester, uk", "songs": ["the dead flag blues", "monheim", "gathering storm", "world police", "dead metheny", "moya", "blaise bailey finnegan III", "john hughes"], "recordings": [{"id": "gybe1999-07-13", "url": "https://archive.org/details/gybe1999-07-13", "title": "Godspeed You! Black Emperor Live at Hop & Grape, Manchester University on 1999-07-13"}]}, {"date": "1999-07-14", "venue": "fleece & firkin, bristol, uk", "songs": ["the dead flag blues", "monheim", "gathering storm", "moya", "blaise bailey finnegan III", "john hughes", "world police", "end jam", "sad mafioso"], "recordings": []}, {"date": "1999-07-15", "venue": "union chapel, islington, london, uk", "songs": ["noise intro", "the dead flag blues", "monheim", "world police", "gathering storm", "dead metheny", "john hughes", "moya", "sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-07-15.TCD-D100", "url": "https://archive.org/details/gybe1999-07-15.TCD-D100", "title": "Godspeed You! Black Emperor Live at Islington Union Chapel on 1999-07-15"}, {"id": "gybe1999-07-15", "url": "https://archive.org/details/gybe1999-07-15", "title": "Godspeed You! Black Emperor Live at Union Chapel on 1999-07-15"}]}, {"date": "1999-07-16", "venue": "union chapel, islington, london, uk", "songs": ["[including:]", "the dead flag blues", "monheim", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "1999-07-18", "venue": "dachstock reitschule, bern, swi", "songs": ["the dead flag blues", "monheim", "world police", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III", "j.l.h outro", "the dead flag blues (outro)", "speech"], "recordings": [{"id": "gybe1999-07-18.T", "url": "https://archive.org/details/gybe1999-07-18.T", "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 1999-07-18"}, {"id": "gybe1999-07-18.sbd.flacf", "url": "https://archive.org/details/gybe1999-07-18.sbd.flacf", "title": "Godspeed You! Black Emperor Live at Reitschule on 1999-07-18"}, {"id": "gybe1999-07-18", "url": "https://archive.org/details/gybe1999-07-18", "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 1999-07-18"}]}, {"date": "1999-07-19", "venue": "gaswerk, winterthur, swi", "songs": ["moya", "monheim", "gathering storm", "dead metheny", "world police", "blaise bailey finnegan III", "j.l.h. outro"], "recordings": [{"id": "gybe1999-07-19", "url": "https://archive.org/details/gybe1999-07-19", "title": "Godspeed You! Black Emperor Live at Gaswerk on 1999-07-19"}]}, {"date": "1999-07-28", "venue": "koz, frankfurt, ger", "songs": ["the dead flag blues", "gathering storm", "dead metheny", "monheim", "moya", "john hughes", "sad mafioso", "end jam"], "recordings": [{"id": "gybe1999-07-28", "url": "https://archive.org/details/gybe1999-07-28", "title": "Godspeed You! Black Emperor Live at Goethe Universität on 1999-07-28"}]}, {"date": "1999-07-29", "venue": "gebaede9, \nkoln, ger", "songs": ["dead flag blues", "moya", "gathering storm", "3rd part", "dead metheny", "monheim", "world police", "blaise bailey finnegan III", "john hughes"], "recordings": [{"id": "gybe1999-07-29", "url": "https://archive.org/details/gybe1999-07-29", "title": "Godspeed You! Black Emperor Live at Gebäude 9 on 1999-07-29"}]}, {"date": "1999-07-30", "venue": "koninklijke museum, antwerpen, bel", "songs": ["noise intro", "moya", "monheim", "world police", "john hughes", "gathering storm", "3rd part", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-07-30.mp3", "url": "https://archive.org/details/gybe1999-07-30.mp3", "title": "Godspeed You! Black Emperor Live at Koninklijke Museum on 1999-07-30"}, {"id": "gybe1999-07-30", "url": "https://archive.org/details/gybe1999-07-30", "title": "Godspeed You! Black Emperor Live at De Bunker Koninklijk Museum Voor Schone Kunsten on 1999-07-30"}, {"id": "gybe1999-07-30.TCD-D8", "url": "https://archive.org/details/gybe1999-07-30.TCD-D8", "title": "Godspeed You! Black Emperor Live at Koninklijk Museum voor Schone Kunsten on 1999-07-30"}, {"id": "gybe1999-07-30.flacf", "url": "https://archive.org/details/gybe1999-07-30.flacf", "title": "Godspeed You! Black Emperor Live at Koninklijk Museume voor Schone Kunsten on 1999-07-30"}]}, {"date": "1999-07-31", "venue": "paradiso, amsterdam, hol", "songs": ["moya", "monheim", "gathering strom", "3rd part", "dead metheny", "blaise bailey finnegan III", "john hughes", "world police", "sad mafioso"], "recordings": [{"id": "gybe1999-07-31.YP", "url": "https://archive.org/details/gybe1999-07-31.YP", "title": "Godspeed You! Black Emperor Live at Paradiso on 1999-07-31"}]}, {"date": "1999-08-06", "venue": "emmaboda \nfestival, växjö, swe", "songs": ["j.l.h. outro", "dead metheny", "gathering storm", "world police", "john hughes", "blaise bailey finnegan III", "moya"], "recordings": [{"id": "gybe1999-08-06", "url": "https://archive.org/details/gybe1999-08-06", "title": "Godspeed You! Black Emperor Live at Emmaboda Festival on 1999-08-06"}]}, {"date": "1999-08-08", "venue": "so what!, oslo, nor", "songs": ["the dead flag blues", "monheim", "moya", "gathering storm", "[pause]", "dead metheny", "world police", "sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-08-08.DAT", "url": "https://archive.org/details/gybe1999-08-08.DAT", "title": "Godspeed You! Black Emperor Live at So What! on 1999-08-08"}, {"id": "gybe1999-08-08", "url": "https://archive.org/details/gybe1999-08-08", "title": "Godspeed You! Black Emperor Live at So What on 1999-08-08"}]}, {"date": "1999-08-10", "venue": "vega, copenhagen, den", "songs": ["moya", "monheim", "world police", "dead metheny", "gathering storm", "3rd part", "blaise bailey finnegan III", "(?)"], "recordings": [{"id": "gybe1999-08-10.VHS-Audio", "url": "https://archive.org/details/gybe1999-08-10.VHS-Audio", "title": "Godspeed You! Black Emperor Live at Vega on 1999-08-10"}]}, {"date": "1999-08-14", "venue": "glocksee, \nhannover, ger", "songs": ["moya", "monheim", "gathering storm", "3rd part", "dead metheny", "blaise bailey finnegan III", "john hughes", "world police", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe1999-08-14", "url": "https://archive.org/details/gybe1999-08-14", "title": "Godspeed You! Black Emperor Live at Café Glocksee on 1999-08-14"}]}, {"date": "1999-09-03", "venue": "theater of living arts, philadelphia, pa", "songs": ["3rd part", "moya", "gathering storm", "john hughes", "blaise bailey finnegan III"], "recordings": []}, {"date": "1999-09-04", "venue": "9:30 club, washington, dc", "songs": ["3rd part", "world police", "gathering storm pt. I", "monheim", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-09-04.shn", "url": "https://archive.org/details/gybe1999-09-04.shn", "title": "Godspeed You! Black Emperor Live at Nightclub on 1999-09-04"}, {"id": "gybe1999-09-04.flacf", "url": "https://archive.org/details/gybe1999-09-04.flacf", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 1999-09-04"}]}, {"date": "1999-09-05", "venue": "mercury lounge, new york, ny", "songs": ["3rd part", "monheim", "gathering storm", "john hughes", "blaise bailey finnegan III", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-05", "url": "https://archive.org/details/gybe1999-09-05", "title": "Godspeed You! Black Emperor Live at Mercury Lounge on 1999-09-05"}]}, {"date": "1999-09-08", "venue": "met cafe, providence, ri", "songs": ["3rd part", "monheim", "gathering storm", "john hughes", "blaise bailey finnegan III"], "recordings": []}, {"date": "1999-09-09", "venue": "middle east, cambridge, ma", "songs": ["3rd part", "monheim", "gathering storm pt. I", "dead metheny", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-09-09.DAT", "url": "https://archive.org/details/gybe1999-09-09.DAT", "title": "Godspeed You! Black Emperor Live at Middle East on 1999-09-09"}, {"id": "gybe1999-09-09", "url": "https://archive.org/details/gybe1999-09-09", "title": "Godspeed You! Black Emperor Live at Middle East on 1999-09-09"}]}, {"date": "1999-09-10", "venue": "théâtre l'olympia, montréal, qc", "songs": ["3rd part", "moya", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-10", "url": "https://archive.org/details/gybe1999-09-10", "title": "Godspeed You! Black Emperor Live at Théâtre L'Olympia on 1999-09-10"}]}, {"date": "1999-09-12", "venue": "babylon, ottawa, on", "songs": ["soundcheck : monheim", "3rd part", "monheim", "gathering storm", "john hughes", "dead metheny", "blaise bailey finnegan III", "the sad mafioso thanks to dane mills!"], "recordings": []}, {"date": "1999-09-13", "venue": "lee's palace, toronto, on", "songs": ["3rd part", "monheim", "gathering storm", "moya", "john hughes", "the sad mafioso", "dead metheny"], "recordings": [{"id": "gybe1999-09-13", "url": "https://archive.org/details/gybe1999-09-13", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"}, {"id": "gybe1999-09-13.flac", "url": "https://archive.org/details/gybe1999-09-13.flac", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"}, {"id": "gybe1999-09-13.mix", "url": "https://archive.org/details/gybe1999-09-13.mix", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"}]}, {"date": "1999-09-15", "venue": "speak in tongues, cleveland, oh", "songs": ["j.l.h. outro", "3rd part", "monheim", "gathering storm", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-09-15", "url": "https://archive.org/details/gybe1999-09-15", "title": "Godspeed You! Black Emperor Live at Speak in Tongues on 1999-09-15"}]}, {"date": "1999-09-16", "venue": "lounge ax, chicago, il", "songs": ["3rd part", "moya", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II", "the sad mafioso"], "recordings": [{"id": "ajc02676_gybe1999-09-16.ajcproject", "url": "https://archive.org/details/ajc02676_gybe1999-09-16.ajcproject", "title": "Godspeed You! Black Emperor Live at Lounge Ax on 1999-09-16"}, {"id": "gybe1999-09-16", "url": "https://archive.org/details/gybe1999-09-16", "title": "Godspeed You! Black Emperor Live at Lounge AX on 1999-09-16"}]}, {"date": "1999-09-17", "venue": "400 bar, minneapolis, mn", "songs": ["3rd part", "moya", "gathering storm", "dead metheny", "blaise bailey finnegan II", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-17", "url": "https://archive.org/details/gybe1999-09-17", "title": "Godspeed You! Black Emperor Live at 400 Bar on 1999-09-17"}]}, {"date": "1999-09-20", "venue": "crocodile cafe, seattle, wa", "songs": ["drone intro", "moya", "blaise bailey finnegan II", "monheim", "3rd part", "gathering storm", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-20", "url": "https://archive.org/details/gybe1999-09-20", "title": "Godspeed You! Black Emperor Live at Crocodile Cafe on 1999-09-20"}]}, {"date": "1999-09-21", "venue": "starfish room, vancouver, bc", "songs": ["improvisation", "3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-21", "url": "https://archive.org/details/gybe1999-09-21", "title": "Godspeed You! Black Emperor Live at Starfish Room on 1999-09-21"}, {"id": "gybe1999-09-21.flacf", "url": "https://archive.org/details/gybe1999-09-21.flacf", "title": "Godspeed You! Black Emperor Live at Starfish Ballroom on 1999-09-21"}, {"id": "gybe1999-09-21.mp3", "url": "https://archive.org/details/gybe1999-09-21.mp3", "title": "Godspeed You! Black Emperor Live at Starfish Room on 1999-09-21"}]}, {"date": "1999-09-22", "venue": "crystal ballroom, portland, or", "songs": ["improvisation", "3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II"], "recordings": [{"id": "gybe1999-09-22.flacf", "url": "https://archive.org/details/gybe1999-09-22.flacf", "title": "Godspeed You! Black Emperor Live at Crystal Ballroom on 1999-09-22"}, {"id": "gybe1999-09-22", "url": "https://archive.org/details/gybe1999-09-22", "title": "Godspeed You! Black Emperor Live at Crystal Ballroom on 1999-09-22"}]}, {"date": "1999-09-23", "venue": "great american music hall, san francisco, ca", "songs": ["3rd part", "monheim", "moya", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-23", "url": "https://archive.org/details/gybe1999-09-23", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 1999-09-23"}]}, {"date": "1999-09-24", "venue": "troubadour, west hollywood, los angeles, ca", "songs": ["3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II", "moya"], "recordings": [{"id": "gybe1999-09-24", "url": "https://archive.org/details/gybe1999-09-24", "title": "Godspeed You! Black Emperor Live at Troubadour on 1999-09-24"}]}, {"date": "1999-09-25", "venue": "casbah, san diego, ca", "songs": ["3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan II"], "recordings": [{"id": "gybe1999-09-25", "url": "https://archive.org/details/gybe1999-09-25", "title": "Godspeed You! Black Emperor Live at The Casbah on 1999-09-25"}, {"id": "gybe1999-09-25.flacf", "url": "https://archive.org/details/gybe1999-09-25.flacf", "title": "Godspeed You! Black Emperor Live at Casbah on 1999-09-25"}]}, {"date": "1999-09-26", "venue": "modified, phoenix, az", "songs": ["3rd part", "monheim", "moya", "dead metheny", "john hughes", "the sad mafioso"], "recordings": [{"id": "gybe1999-09-26.shnf", "url": "https://archive.org/details/gybe1999-09-26.shnf", "title": "Godspeed You! Black Emperor Live at Modified on 1999-09-26"}, {"id": "gybe1999-09-26.t", "url": "https://archive.org/details/gybe1999-09-26.t", "title": "Godspeed You! Black Emperor Live at Modified Arts on 1999-09-26"}]}, {"date": "1999-09-28", "venue": "stubb's bbq, austin, tx", "songs": ["3rd part", "monheim", "moya", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III"], "recordings": []}, {"date": "1999-09-30", "venue": "mermaid lounge, new orleans, la", "songs": ["3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-09-30", "url": "https://archive.org/details/gybe1999-09-30", "title": "Godspeed You! Black Emperor Live at Mermaid Lounge on 1999-09-30"}]}, {"date": "1999-10-01", "venue": "echo lounge, atlanta, ga", "songs": ["3rd part", "monheim", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-10-01.flacf", "url": "https://archive.org/details/gybe1999-10-01.flacf", "title": "Godspeed You! Black Emperor Live at Echo Lounge on 1999-10-01"}]}, {"date": "1999-10-02", "venue": "werehouse, winston-salem, nc", "songs": ["3rd part", "monheim", "gathering storm", "john hughes", "dead metheny", "the sad mafioso"], "recordings": []}, {"date": "1999-10-03", "venue": "cat's cradle, chapel hill, nc", "songs": ["3rd part", "monheim", "moya", "gathering storm", "dead metheny", "john hughes", "blaise bailey finnegan III"], "recordings": [{"id": "gybe1999-10-03.cradle_acidjack", "url": "https://archive.org/details/gybe1999-10-03.cradle_acidjack", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 1999-10-03"}]}, {"date": "2000-03-20", "venue": "salle l'x, montreal, qc", "songs": ["3rd part", "monheim", "12-28-99 (w/ outro)", "world police", "gathering storm", "john hughes"], "recordings": [{"id": "gybe2000-03-20", "url": "https://archive.org/details/gybe2000-03-20", "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-20"}]}, {"date": "2000-03-21", "venue": "salle l'x, montreal, qc", "songs": ["monheim", "gathering storm", "john hughes", "12-28-99 (w/ outro)", "3rd part", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2000-03-21", "url": "https://archive.org/details/gybe2000-03-21", "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-21"}]}, {"date": "2000-03-22", "venue": "salle l'x, montreal, qc", "songs": ["monheim", "12-28-99 (w/ outro)", "world police", "gathering storm", "moya", "blaise bailey finnegan III", "3rd part"], "recordings": [{"id": "gybe2000-03-22", "url": "https://archive.org/details/gybe2000-03-22", "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-22"}]}, {"date": "2000-04-02", "venue": "temple bar, dublin, ir", "songs": ["[including:]", "11-28-99 w/ outro", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-04-03", "venue": "royal festival hall, london, uk", "songs": ["speech intro", "drone", "3rd part", "chart #3", "world police", "12-28-99 (w/ outro)", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2000-04-03", "url": "https://archive.org/details/gybe2000-04-03", "title": "Godspeed You! Black Emperor Live at Royal Festival Hall on 2000-04-03"}]}, {"date": "2000-04-04", "venue": "the cockpit, leeds, uk", "songs": ["[including:]", "12-28-99 w/ outro", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-04-05", "venue": "planet k, manchester, uk", "songs": ["3rd part", "monheim", "dead metheny", "12.28.99 (w/ outro)", "world police", "blaise bailey finnegan III", "john hughes"], "recordings": []}, {"date": "2000-04-06", "venue": "bristol university, bristol, uk", "songs": ["moya", "3rd part", "dead metheny", "12-28-99 (w/ outro)", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2000-04-07", "venue": "all tomorrow's parties, pontin's, camber sands, uk", "songs": ["3rd part", "dead metheny", "world police", "12-28-99", "gathering storm", "moya", "blaise bailey finnegan III", "dead flag blues (outro)"], "recordings": [{"id": "gybe2000-04-07.DAT", "url": "https://archive.org/details/gybe2000-04-07.DAT", "title": "Godspeed You! Black Emperor Live at All Tomorrow's Parties @ Pontin's on 2000-04-07"}, {"id": "gybe2000-04-07", "url": "https://archive.org/details/gybe2000-04-07", "title": "Godspeed You! Black Emperor Live at Pontin's Camber Sands on 2000-04-07"}]}, {"date": "2000-04-09", "venue": "ab club, brussels, bel", "songs": ["3rd part", "dead metheny", "chart #3", "world police", "12-28-99 (w/ outro)", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-04-09", "url": "https://archive.org/details/gybe2000-04-09", "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"}, {"id": "gybe2000-04-09.TCD-D100", "url": "https://archive.org/details/gybe2000-04-09.TCD-D100", "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"}, {"id": "gybe2000-04-09.T", "url": "https://archive.org/details/gybe2000-04-09.T", "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"}]}, {"date": "2000-04-14", "venue": "classic village, roma, it", "songs": ["[including] :", "12-28-99 (w/ outro)", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2000-04-18", "venue": "wuk, vienna, au", "songs": ["3rd part", "monheim", "12-28-99 (w/ outro)", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2000-04-21", "venue": "dachstock reitschule, bern, swi", "songs": ["3rd part", "12.28.99 (w/ outro)", "chart #3", "world police", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-04-21.T", "url": "https://archive.org/details/gybe2000-04-21.T", "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2000-04-21"}, {"id": "gybe2000-04-21.YPraw", "url": "https://archive.org/details/gybe2000-04-21.YPraw", "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2000-04-21"}]}, {"date": "2000-04-22", "venue": "tivoli, utrecht, hol", "songs": ["3rd part", "dead metheny", "world police", "gathering storm", "blaise bailey finnegan III", "the sad mafioso"], "recordings": [{"id": "gybe2000-04-22.TCD-D8_remaster", "url": "https://archive.org/details/gybe2000-04-22.TCD-D8_remaster", "title": "Godspeed You! Black Emperor Live at Tivoli on 2000-04-22"}, {"id": "gybe2000-04-22.raw", "url": "https://archive.org/details/gybe2000-04-22.raw", "title": "Godspeed You! Black Emperor Live at Tivoli on 2000-04-22"}]}, {"date": "2000-08-10", "venue": "knitting\nfactory, new york, ny", "songs": ["world police", "tazer floyd", "12-28-99 (w/ outro)", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-08-10.fixed", "url": "https://archive.org/details/gybe2000-08-10.fixed", "title": "Godspeed You! Black Emperor Live at Knitting Factory on 2000-08-10"}]}, {"date": "2000-08-11", "venue": "knitting\nfactory, new york, ny", "songs": ["world police", "tazer floyd", "12-28-99", "gathering storm", "3rd part", "blaise bailey finnegan III", "monheim"], "recordings": [{"id": "gybe2000-08-11.fixed", "url": "https://archive.org/details/gybe2000-08-11.fixed", "title": "Godspeed You! Black Emperor Live at Knitting Factory on 2000-08-11"}]}, {"date": "2000-09-02", "venue": "falconer\nfarm, picton, on", "songs": ["world police", "tazer floyd", "12-28-99 (w/ outro)", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2000-10-05", "venue": "bloor\ncinema, toronto, on", "songs": ["chart #3", "world police", "12-28-99 (w/ outro)", "tazer floyd", "john hughes", "dead metheny", "blaise bailey finnegan III", "gathering storm (part 2)"], "recordings": [{"id": "gybe2000-10-05", "url": "https://archive.org/details/gybe2000-10-05", "title": "Godspeed You! Black Emperor Live at Bloor Cinema on 2000-10-05"}, {"id": "gybe2000-10-05.alt", "url": "https://archive.org/details/gybe2000-10-05.alt", "title": "Godspeed You! Black Emperor Live at Bloor Cinema on 2000-10-05"}]}, {"date": "2000-10-07", "venue": "metro,\nchicago, il", "songs": ["moya", "world police", "12-28-99 (w/ outro)", "gathering storm", "tazer floyd", "blaise bailey finnegan III", "dead metheny", "dead flag blues (outro)"], "recordings": [{"id": "gybe2000-10-07", "url": "https://archive.org/details/gybe2000-10-07", "title": "Godspeed You! Black Emperor Live at Metro on 2000-10-07"}, {"id": "gybe2000-10-07.shn", "url": "https://archive.org/details/gybe2000-10-07.shn", "title": "Godspeed You! Black Emperor Live at Metro on 2000-10-07"}]}, {"date": "2000-10-08", "venue": "dionysus, oberlin, oh", "songs": ["moya", "improvisation", "world police", "tazer floyd", "dead metheny"], "recordings": [{"id": "gybe2000-10-08", "url": "https://archive.org/details/gybe2000-10-08", "title": "Godspeed You! Black Emperor Live at Oberlin College on 2000-10-08"}]}, {"date": "2000-10-09", "venue": "mcconomy auditorium, pittsburgh, pa", "songs": ["monheim", "moya", "tazer floyd", "12-28-99 (w/outro)", "blaise bailey finnegan III", "world police"], "recordings": [{"id": "gybe2000-10-09", "url": "https://archive.org/details/gybe2000-10-09", "title": "Godspeed You! Black Emperor Live at McConomy Auditorium - Carnegie Mellon University on 2000-10-09"}]}, {"date": "2000-10-10", "venue": "4040,\nphiladelphia, pa", "songs": ["moya", "world police", "12-28-99 (w/ outro)", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2000-10-10", "url": "https://archive.org/details/gybe2000-10-10", "title": "Godspeed You! Black Emperor Live at 4040 on 2000-10-10"}]}, {"date": "2000-10-25", "venue": "legends,\nvictoria, bc", "songs": ["moya", "world police", "12-28-99", "gathering storm", "dead metheny", "blaise bailey finnegan III", "tazer floyd"], "recordings": []}, {"date": "2000-10-26", "venue": "vogue\ntheater, vancouver, bc", "songs": ["moya", "chart #3", "world police", "12-28-99", "gathering storm", "dead metheny", "blaise bailey finnegan III", "dead flag blues (outro)"], "recordings": []}, {"date": "2000-10-27", "venue": "crocodile\ncafe, seattle, wa (early show)", "songs": ["improvation", "moya", "monheim", "12-28-99 (w/ outro)", "gathering storm"], "recordings": [{"id": "gybe2000-10-27.early", "url": "https://archive.org/details/gybe2000-10-27.early", "title": "Godspeed You! Black Emperor Live at Crocodile Cafe (early show) on 2000-10-27"}]}, {"date": "2000-10-28", "venue": "aladdin\ntheater, portland, or", "songs": ["world police", "improvisation", "dead metheny", "john hughes", "12-28-99", "tazer floyd", "blaise bailey finnegan IIII", "the dead flag blues outro"], "recordings": [{"id": "gybe2000-10-28", "url": "https://archive.org/details/gybe2000-10-28", "title": "Godspeed You! Black Emperor Live at Aladdin Theater on 2000-10-28"}]}, {"date": "2000-10-30", "venue": "great\namerican music hall, san fransisco, ca", "songs": ["world police", "dead metheny", "12-28-99", "tazer floyd", "monheim", "blaise bailey finnegan IIII", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-10-30.flac16", "url": "https://archive.org/details/gybe2000-10-30.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-30"}]}, {"date": "2000-10-31", "venue": "great\namerican music hall, san fransisco, ca", "songs": ["moya", "world police", "gathering storm", "john hughes", "tazer floyd", "blaise bailey finnegan III", "12.28.99"], "recordings": [{"id": "gybe2000-10-31.gybe2000Matrix", "url": "https://archive.org/details/gybe2000-10-31.gybe2000Matrix", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"}, {"id": "gybe2000-10-31.T", "url": "https://archive.org/details/gybe2000-10-31.T", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"}, {"id": "gybe2000-10-31.flacf", "url": "https://archive.org/details/gybe2000-10-31.flacf", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"}, {"id": "gybe2000-10-31", "url": "https://archive.org/details/gybe2000-10-31", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"}, {"id": "gybe2000-10-31.at825.flac16", "url": "https://archive.org/details/gybe2000-10-31.at825.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"}]}, {"date": "2000-11-01", "venue": "el\nray theater, los angeles, ca", "songs": ["improvisation", "moya", "world police", "12-28-99", "tazer floyd", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-11-01", "url": "https://archive.org/details/gybe2000-11-01", "title": "Godspeed You! Black Emperor Live at El Rey Theater on 2000-11-01"}, {"id": "gybe2000-11-01.sbd-aud-mix", "url": "https://archive.org/details/gybe2000-11-01.sbd-aud-mix", "title": "Godspeed You! Black Emperor Live at El Rey Theatre on 2000-11-01"}, {"id": "gybe2000-12-01", "url": "https://archive.org/details/gybe2000-12-01", "title": "Godspeed You! Black Emperor Live at El Rey Theatre on 2000-11-01"}]}, {"date": "2000-11-05", "venue": "astro hall, shibuya, tokyo, jp", "songs": ["monheim", "tazer floyd", "12-28-99", "dead metheny", "world police", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-11-06", "venue": "astro hall, shibuya, tokyo, jp", "songs": ["monheim", "tazer floyd", "12-28-99 (w/ outro)", "dead metheny", "world police", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-11-06", "url": "https://archive.org/details/gybe2000-11-06", "title": "Godspeed You! Black Emperor Live at Astro Hall on 2000-11-06"}]}, {"date": "2000-11-19", "venue": "scala, king's cross, london, uk", "songs": ["moya", "gathering storm", "dead metheny", "tazer floyd", "improvisation", "12-28-99", "blaise bailey finnegan III", "world police", "the dead flag blues (outro)", "j.l.h. outro"], "recordings": [{"id": "gybe2000-11-19.SBD", "url": "https://archive.org/details/gybe2000-11-19.SBD", "title": "Godspeed You! Black Emperor Live at Kings Cross Scala on 2000-11-19"}, {"id": "gybe2000-11-19.flacf", "url": "https://archive.org/details/gybe2000-11-19.flacf", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"}, {"id": "gybe2000-11-19", "url": "https://archive.org/details/gybe2000-11-19", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"}, {"id": "gybe2000-11-19.T", "url": "https://archive.org/details/gybe2000-11-19.T", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"}]}, {"date": "2000-11-20", "venue": "scala, king's cross, london, uk", "songs": ["12-28-99", "gathering storm", "john hughes", "world police", "tazer floyd", "blaise bailey finnegan III", "3rd part", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-11-20.flacf", "url": "https://archive.org/details/gybe2000-11-20.flacf", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-20"}, {"id": "gybe2000-11-20", "url": "https://archive.org/details/gybe2000-11-20", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-20"}]}, {"date": "2000-11-21", "venue": "scala, king's cross, london, uk", "songs": ["moya", "tazer floyd", "12-28-99", "monheim", "3rd part", "gathering storm", "blaise bailey finnegan III", "john hughes", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-11-22", "venue": "scala, king's cross, london, uk", "songs": ["dead metheny", "tazer floyd", "12-28-99", "gathering storm", "3rd part", "the sad mafioso", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-11-22.flacf", "url": "https://archive.org/details/gybe2000-11-22.flacf", "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-22"}]}, {"date": "2000-12-01", "venue": "somerville theater, somerville, ma", "songs": ["improvisation", "moya", "12-28-99", "gathering storm", "dead metheny", "tazer floyd", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-12-01.somerville", "url": "https://archive.org/details/gybe2000-12-01.somerville", "title": "Godspeed You! Black Emperor Live at Somerville Theater on 2000-12-01"}]}, {"date": "2000-12-02", "venue": "st-john's of baltimore, baltimore, md", "songs": ["moya", "world police", "gathering storm", "tazer floyd", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-12-02.shnf", "url": "https://archive.org/details/gybe2000-12-02.shnf", "title": "Godspeed You! Black Emperor Live at St. John's Church on 2000-12-02"}, {"id": "gybe2000-12-02.flac", "url": "https://archive.org/details/gybe2000-12-02.flac", "title": "Godspeed You! Black Emperor Live at St. John’s United Methodist Church on 2000-12-02"}]}, {"date": "2000-12-03", "venue": "wherehouse, winston-salem, nc", "songs": ["[including:]", "speech intro", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-12-04", "venue": "9:30 club, washington, dc", "songs": ["moya", "gathering storm", "dead metheny", "12-28-99", "tazer floyd", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-12-04", "url": "https://archive.org/details/gybe2000-12-04", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2000-12-04"}]}, {"date": "2000-12-05", "venue": "bowery ballroom, new york, ny", "songs": ["12-28-99", "dead metheny", "world police", "gathering storm", "tazer floyd", "the sad mafioso", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2000-12-05", "url": "https://archive.org/details/gybe2000-12-05", "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2000-12-05"}, {"id": "gybe2000-12-05.tracked", "url": "https://archive.org/details/gybe2000-12-05.tracked", "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2000-12-05"}]}, {"date": "2000-12-06", "venue": "bowery ballroom, new york, ny", "songs": ["moya", "tazer floyd", "john hughes", "dead metheny", "12-28-99", "gathering storm", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-12-07", "venue": "bowery ballroom, new york, ny", "songs": ["john hughes", "tazer floyd", "world police", "dead metheny", "12-28-99", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2000-12-08", "venue": "maxwell's, hoboken, nj", "songs": ["moya", "12-28-99", "world police", "john hughes", "gathering storm", "the sad mafioso"], "recordings": []}, {"date": "2000-12-09", "venue": "bard college, annandale, ny", "songs": ["moya", "world police", "12-28-99", "tazer floyd", "gathering storm"], "recordings": []}, {"date": "2000-12-10", "venue": "théâtre l'olympia, montréal, qc", "songs": ["speech intro", "12-28-99", "tazer floyd", "john hughes", "dead metheny", "gathering storm", "the sad mafioso", "moya", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2000-12-10", "url": "https://archive.org/details/gybe2000-12-10", "title": "Godspeed You! Black Emperor Live at Théâtre Olympia on 2000-12-10"}, {"id": "gybe2000-12-10.matrix", "url": "https://archive.org/details/gybe2000-12-10.matrix", "title": "Godspeed You! Black Emperor Live at Olympia de Montréal on 2000-12-10"}, {"id": "gybe2000-12-10.flac16", "url": "https://archive.org/details/gybe2000-12-10.flac16", "title": "Godspeed You! Black Emperor Live at Théâtre Olympia on 2000-12-10"}, {"id": "gybe2000-12-10.other", "url": "https://archive.org/details/gybe2000-12-10.other", "title": "Godspeed You! Black Emperor Live at Théâtre Olympia on 2000-12-10"}]}, {"date": "2001-09-27", "venue": "opera\nhouse, toronto, on", "songs": ["gathering storm", "12.28.99 (w/ outro)", "tazer floyd", "motherfucker = redeemer", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2001-09-27", "url": "https://archive.org/details/gybe2001-09-27", "title": "Godspeed You! Black Emperor Live at Opera House on 2001-09-27"}, {"id": "gybe2001-09-27.flacf", "url": "https://archive.org/details/gybe2001-09-27.flacf", "title": "Godspeed You! Black Emperor Live at Opera House on 2001-09-27"}]}, {"date": "2001-09-28", "venue": "palais\nroyale, toronto, on", "songs": ["moya", "tazer floyd", "john hughes", "12.28.99 (w/ outro)", "motherfucker = redeemer", "gathering storm"], "recordings": [{"id": "gybe2001-09-28.flac16", "url": "https://archive.org/details/gybe2001-09-28.flac16", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2001-09-28"}, {"id": "gybe2001-09-28.shn", "url": "https://archive.org/details/gybe2001-09-28.shn", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2001-09-28"}]}, {"date": "2001-09-29", "venue": "st.andrews\nhall, detroit, mi", "songs": ["tazer floyd", "moya", "12.28.99 (w/ outro)", "gathering storm", "motherfucker = redeemer", "blaise bailey finnegan III"], "recordings": []}, {"date": "2001-09-30", "venue": "beachland\nballroom, cleveland, oh", "songs": ["tazer floyd", "dead metheny", "12.28.99 (w/ outro)", "gathering storm", "motherfucker = redeemer", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2001-09-30", "url": "https://archive.org/details/gybe2001-09-30", "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2001-09-30"}, {"id": "gybe2001-09-30.alt", "url": "https://archive.org/details/gybe2001-09-30.alt", "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2001-09-30"}]}, {"date": "2001-10-01", "venue": "wexner\nperformance space, columbus, oh", "songs": ["the dead flag blues", "12.28.99 (w/ outro)", "moya", "tazer floyd", "motherfucker = redeemer", "blaise bailey finnegan III"], "recordings": []}, {"date": "2001-10-02", "venue": "centrum\nhall, chicago, il", "songs": ["moya", "tazer floyd", "dead metheny", "12-28-99 (w/ outro)", "gathering storm", "motherfucker = redeemer"], "recordings": [{"id": "ajc02675_gybe2001-10-02.ajcproject", "url": "https://archive.org/details/ajc02675_gybe2001-10-02.ajcproject", "title": "Godspeed You! Black Emperor Live at Centrum Hall on 2001-10-02"}]}, {"date": "2001-10-03", "venue": "miramar\ntheater, milwaukee, wi", "songs": ["moya", "john hughes", "monheim (?)", "motherfucking = redeemer", "blaise bailey finnegan III", "(incomplete)"], "recordings": []}, {"date": "2001-10-29", "venue": "liquid\nroom, shinjuku, tokyo, jp", "songs": ["tazer floyd", "moya", "motherfucking = redeemer", "dead metheny", "12-28-99 (w/ outro)", "gathering storm", "dead flag blues (outro)"], "recordings": []}, {"date": "2001-10-30", "venue": "liquid\nroom, shinjuku, tokyo, jp", "songs": ["12-28-99", "tazer floyd", "gathering storm", "motherfucking = redeemer", "john hughes", "blaise bailey finnegan III", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2001-10-30.VHS-audio", "url": "https://archive.org/details/gybe2001-10-30.VHS-audio", "title": "Godspeed You! Black Emperor Live at Shinjuku Liquid Room on 2001-10-30"}]}, {"date": "2001-11-01", "venue": "club\nquattro, nagoya, jp", "songs": ["tazer floyd", "moya", "motherfucking = redeemer", "12/28/99 (w/ outro)", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2001-11-02", "venue": "club\nquattro, shinsaibashi, osaka, jp", "songs": ["12-28-99", "dead metheny", "motherfucking = redeemer", "john hughes", "tazer floyd", "gathering storm", "moya", "dead flag blues (outro)"], "recordings": [{"id": "gybe2001-11-02", "url": "https://archive.org/details/gybe2001-11-02", "title": "Godspeed You! Black Emperor Live at Shinsaibashi Club Quattro on 2001-11-02"}]}, {"date": "2002-01-13", "venue": "théatre\nla plaza, montréal, qc", "songs": ["gathering storm", "dead metheny (w/ outro)", "monheim", "world police", "motherfucker = redeemer", "tazer floyd", "the cowboy (w/ bruce)"], "recordings": [{"id": "gybe2002-01-13.alt", "url": "https://archive.org/details/gybe2002-01-13.alt", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-13"}, {"id": "gybe2002-01-13", "url": "https://archive.org/details/gybe2002-01-13", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-13"}]}, {"date": "2002-01-14", "venue": "théatre\nla plaza, montréal, qc", "songs": ["tazer floyd", "12.28.99", "dead metheny (w/ outro)", "monheim", "world police", "motherfucker = redeemer", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-01-14", "url": "https://archive.org/details/gybe2002-01-14", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-14"}, {"id": "gybe2002-01-14.alt", "url": "https://archive.org/details/gybe2002-01-14.alt", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-14"}]}, {"date": "2002-01-15", "venue": "théatre\nla plaza, montréal, qc", "songs": ["gathering storm", "dead metheny (w/ outro)", "drone + improvisation", "moya", "world police", "motherfucker = redeemer", "blaise bailey finnegan III", "the cowboy (w/ aidan)"], "recordings": [{"id": "gybe2002-01-15.flacf", "url": "https://archive.org/details/gybe2002-01-15.flacf", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-15"}, {"id": "gybe2002-01-15.alt", "url": "https://archive.org/details/gybe2002-01-15.alt", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-15"}]}, {"date": "2002-01-16", "venue": "théatre\nla plaza, montréal, qc", "songs": ["tazer floyd", "12.28.99", "dead metheny (w/ outro)", "world police", "motherfucker = redeemer", "gathering storm", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-01-16.alt", "url": "https://archive.org/details/gybe2002-01-16.alt", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-16"}, {"id": "gybe2002-01-16.flacf", "url": "https://archive.org/details/gybe2002-01-16.flacf", "title": "Godspeed You! Black Emperor Live at Théâtre Plaza on 2002-01-16"}]}, {"date": "2002-01-20", "venue": "instants chavirés, montreuil, paris, fr", "songs": ["gathering storm", "dead metheny", "tazer floyd", "world police", "motherfucker = redeemer"], "recordings": [{"id": "gybe2002-01-20.TCD-D8", "url": "https://archive.org/details/gybe2002-01-20.TCD-D8", "title": "Godspeed You! Black Emperor Live at Instants Chavirés on 2002-01-20"}]}, {"date": "2002-01-22", "venue": "l'échangeur", "songs": ["gathering storm", "dead metheny (w/ outro)", "12.28.99", "improvisation", "world police", "motherfucker = redeemer", "blaise bailey finnegan III", "the dead flag blues (outro)", "the sad mafioso"], "recordings": [{"id": "gybe2002-01-22.alt", "url": "https://archive.org/details/gybe2002-01-22.alt", "title": "Godspeed You! Black Emperor Live at L'Echangeur on 2002-01-22"}, {"id": "gybe2002-01-22.TCD-D8", "url": "https://archive.org/details/gybe2002-01-22.TCD-D8", "title": "Godspeed You! Black Emperor Live at L'Echangeur on 2002-01-22"}, {"id": "gybe2002-01-22.flac16", "url": "https://archive.org/details/gybe2002-01-22.flac16", "title": "Godspeed You! Black Emperor Live at L'Échangeur (chaviré) on 2002-01-22"}, {"id": "gybe2002-01-22.mtx", "url": "https://archive.org/details/gybe2002-01-22.mtx", "title": "Godspeed You! Black Emperor Live at L'Échangeur on 2002-01-22"}]}, {"date": "2002-01-23", "venue": "l'olympic, nantes, fr", "songs": ["12.28.99", "world police", "monheim", "tazer floyd", "motherfucker = redeemer", "moya", "the dead flag blues (outro)", "the cowboy"], "recordings": [{"id": "gybe2002-01-23.shnf", "url": "https://archive.org/details/gybe2002-01-23.shnf", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"}, {"id": "gybe2002-01-23.TCD-D8", "url": "https://archive.org/details/gybe2002-01-23.TCD-D8", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"}, {"id": "gybe2002-01-23.T", "url": "https://archive.org/details/gybe2002-01-23.T", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"}]}, {"date": "2002-01-24", "venue": "le comfort moderne, poitiers, fr", "songs": ["gathering storm", "death metheny", "12.28.99", "world police", "motherfucker = redeemer", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-01-24.TCD-D8", "url": "https://archive.org/details/gybe2002-01-24.TCD-D8", "title": "Godspeed You! Black Emperor Live at Confort Moderne on 2002-01-24"}, {"id": "gybe2002-01-24.T", "url": "https://archive.org/details/gybe2002-01-24.T", "title": "Godspeed You! Black Emperor Live at Le Confort Moderne on 2002-01-24"}, {"id": "gybe2002-01-24.shnf", "url": "https://archive.org/details/gybe2002-01-24.shnf", "title": "Godspeed You! Black Emperor Live at Le Confort Moderne on 2002-01-24"}]}, {"date": "2002-01-25", "venue": "c.a.t., bordeaux, fr", "songs": ["gathering storm", "dead metheny (w/ outro)", "tazer floyd", "john hughes", "motherfucker = redeemer", "blaise bailey finnegan III", "world police", "the dead flag blues (outro)", "the cowboy"], "recordings": [{"id": "gybe2002-01-25.3cd", "url": "https://archive.org/details/gybe2002-01-25.3cd", "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"}, {"id": "gybe2002-01-25", "url": "https://archive.org/details/gybe2002-01-25", "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"}, {"id": "gybe2002-01-25.2cd", "url": "https://archive.org/details/gybe2002-01-25.2cd", "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"}, {"id": "gybe2002-01-25.mp3f", "url": "https://archive.org/details/gybe2002-01-25.mp3f", "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"}, {"id": "gybe2002-01-25.T", "url": "https://archive.org/details/gybe2002-01-25.T", "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"}]}, {"date": "2002-01-29", "venue": "garage,\nlisboa, por", "songs": ["gathering storm", "dead metheny", "world police", "tazer floyd", "motherfucker=redeemer", "monheim", "moya"], "recordings": []}, {"date": "2002-01-30", "venue": "sala arena, madrid, sp", "songs": ["[including:]", "12.28.99", "dead metheny", "world police", "motherfucking=redeemer"], "recordings": []}, {"date": "2002-02-02", "venue": "sala apolo, barcelona, sp", "songs": ["gathering storm", "dead metheny", "world police", "12.28.99", "tazer floyd", "blaise bailey finnegan III", "the sad mafioso"], "recordings": []}, {"date": "2002-02-03", "venue": "rockstore, montpellier, fr", "songs": ["12.28.99", "dead metheny", "monheim", "world police", "motherfucker=redeemer", "gathering storm", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-02-03", "url": "https://archive.org/details/gybe2002-02-03", "title": "Godspeed You! Black Emperor Live at Rockstore on 2002-02-03"}, {"id": "gybe2002-02-03.LOSSY", "url": "https://archive.org/details/gybe2002-02-03.LOSSY", "title": "Godspeed You! Black Emperor Live at Rockstore, Montpellier, France on 2002-02-03"}]}, {"date": "2002-02-05", "venue": "c.c.o., villeurbanne, fr", "songs": ["gathering storm", "dead metheny", "tazer floyd", "world police", "motherfucker=redeemer", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-02-05.LOSSY", "url": "https://archive.org/details/gybe2002-02-05.LOSSY", "title": "Godspeed You! Black Emperor Live at CCO, Lyon, France on 2002-02-05"}, {"id": "gybe2002-02-05.em8", "url": "https://archive.org/details/gybe2002-02-05.em8", "title": "Godspeed You! Black Emperor Live at Centre Culturel Œcuménique on 2002-02-05"}]}, {"date": "2002-02-06", "venue": "l'usine, genève, swi", "songs": ["tazer floyd", "world police", "gathering storm", "dead metheny", "motherfucker=redeemer", "the cowboy thanks to christophe"], "recordings": []}, {"date": "2002-02-07", "venue": "rote fabrik, zurich, swi", "songs": ["gathering storm", "dead metheny", "moya", "world police", "motherfucker=redeemer", "(?)blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2002-02-08", "venue": "rodon, athens, gr", "songs": ["gathering storm", "dead metheny", "motherfucker=redeemer", "the dead flag blues (outro)", "the sad mafioso"], "recordings": []}, {"date": "2002-02-09", "venue": "mylos, thessaloniki, gr", "songs": ["gathering storm", "moya", "monheim", "world police", "motherfucking=redeemer", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2002-02-13", "venue": "tunnel, milano, it", "songs": ["gathering storm", "dead metheny", "tazer floyd", "world police", "motherfucking=redeemer", "(?)"], "recordings": []}, {"date": "2002-02-17", "venue": "szene, vienna, au", "songs": ["gathering storm", "dead metheny", "tazer floyd", "world police", "motherfucking=redeemer", "the sad mafioso", "moya", "the dead flag blues (outro)"], "recordings": []}, {"date": "2002-03-13", "venue": "íslenska óperan, reykjavík, ic", "songs": ["gathering storm", "dead metheny", "tazer floyd", "motherfucking=redeemer", "world police", "moya"], "recordings": [{"id": "GYBE2002-03-13.GYBE2002-03-13", "url": "https://archive.org/details/GYBE2002-03-13.GYBE2002-03-13", "title": "Godspeed You! Black Emperor Live at Icelandic Opera House on 2002-03-13"}]}, {"date": "2002-03-16", "venue": "corn exchange hall, brighton, uk", "songs": ["gathering storm", "dead metheny", "tazer floyd", "monheim", "motherfucking=redeemer", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-03-16.DAT", "url": "https://archive.org/details/gybe2002-03-16.DAT", "title": "Godspeed You! Black Emperor Live at Corn Exchange on 2002-03-16"}]}, {"date": "2002-03-18", "venue": "ocean club, hackney, london, uk", "songs": ["tazer floyd", "monheim", "gathering storm", "dead metheny", "motherfucking=redeemer", "world police", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-03-18", "url": "https://archive.org/details/gybe2002-03-18", "title": "Godspeed You! Black Emperor Live at Hackney Ocean on 2002-03-18"}]}, {"date": "2002-03-20", "venue": "que club, birmingham, uk", "songs": ["gathering storm", "dead metheny", "12-28-99", "world police", "motherfucking=redeemer", "moya"], "recordings": [{"id": "gybe2002-03-20.MD", "url": "https://archive.org/details/gybe2002-03-20.MD", "title": "Godspeed You! Black Emperor Live at Que Club on 2002-03-20"}]}, {"date": "2002-03-22", "venue": "ambassador, dublin, ir", "songs": ["tazer floyd", "gathering storm", "dead metheny", "monheim", "motherfucker=redeemer", "world police", "moya"], "recordings": []}, {"date": "2002-03-23", "venue": "empire, belfast, ir", "songs": ["gathering storm", "world police", "monheim", "dead metheny", "motherfucking=redeemer", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2002-03-24", "venue": "queen margaret union, glasgow, uk", "songs": ["motherfucking=redeemer", "dead metheny", "tazer floyd", "world police", "gathering storm", "the sad mafioso", "(?)the dead flag blues (outro)"], "recordings": []}, {"date": "2002-03-26", "venue": "st-george hall, bradford, uk", "songs": ["gathering storm", "dead metheny", "tazer floyd", "world police", "motherfucking=redeemer", "blaise bailey finnegan III"], "recordings": []}, {"date": "2002-03-27", "venue": "newcastle university, newcastle, uk", "songs": ["gathering storm", "dead metheny", "monheim", "world police", "motherfucking=redeemer", "moya"], "recordings": [{"id": "gybe2002-03-27.MD", "url": "https://archive.org/details/gybe2002-03-27.MD", "title": "Godspeed You! Black Emperor Live at Newcastle University on 2002-03-27"}]}, {"date": "2002-03-30", "venue": "musikens haus, gotenberg, swe", "songs": ["moya", "blaise bailey finnegan III", "gathering storm", "dead metheny", "motherfucking=redeemer", "world police", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-03-30.at831c.flac16", "url": "https://archive.org/details/gybe2002-03-30.at831c.flac16", "title": "Godspeed You! Black Emperor Live at Musikens Hus on 2002-03-30"}]}, {"date": "2002-03-31", "venue": "rockerfeller, oslo, nor", "songs": ["gathering storm", "dead metheny", "tazer floyd", "john hughes", "motherfucking=redeemer", "moya", "world police"], "recordings": [{"id": "gybe2002-03-31.shn", "url": "https://archive.org/details/gybe2002-03-31.shn", "title": "Godspeed You! Black Emperor Live at Rockerfeller on 2002-03-31"}]}, {"date": "2002-04-01", "venue": "södra teatern, stockholm, swe", "songs": ["moya", "blaise bailey finnegan III", "12-28-99", "dead metheny", "tazer floyd", "gathering storm", "john hughes", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-04-01", "url": "https://archive.org/details/gybe2002-04-01", "title": "Godspeed You! Black Emperor Live at Södra Teatern, Stockholm, Sweden on 2002-04-01"}, {"id": "gybe2002-04-01.mrk", "url": "https://archive.org/details/gybe2002-04-01.mrk", "title": "Godspeed You! Black Emperor Live at Södra Teatern, Stockholm, Sweden on 2002-04-01"}, {"id": "gybe2002-04-01.flacf", "url": "https://archive.org/details/gybe2002-04-01.flacf", "title": "Godspeed You! Black Emperor Live at Södra Teatern on 2002-04-01"}, {"id": "gybe2002-04-01.ij.at831c.flac16", "url": "https://archive.org/details/gybe2002-04-01.ij.at831c.flac16", "title": "Godspeed You! Black Emperor Live at Södra Teatern on 2002-04-01"}]}, {"date": "2002-04-03", "venue": "mejeriet, lund, swe", "songs": ["gathering storm", "12.28.99", "tazer floyd", "world police", "motherfucking=redeemer", "the cowboy", "the sad mafioso"], "recordings": [{"id": "gybe2002-04-03", "url": "https://archive.org/details/gybe2002-04-03", "title": "Godspeed You! Black Emperor Live at Merjeriet on 2002-04-03"}]}, {"date": "2002-04-04", "venue": "vega, kopenhagen, den", "songs": ["gathering storm", "tazer floyd", "dead metheny", "monheim", "motherfucking=redeemer", "improvisation", "world police", "the dead flag blues (outro)"], "recordings": []}, {"date": "2002-04-06", "venue": "markthalle, hamburg, ger", "songs": ["gathering storm", "12-28-99", "dead metheny", "world police", "motherfucker=redeemer", "moya", "the dead flag blues (outro)", "j.l.h. outro"], "recordings": [{"id": "gybe2002-04-06", "url": "https://archive.org/details/gybe2002-04-06", "title": "Godspeed You! Black Emperor Live at Markthalle on 2002-04-06"}]}, {"date": "2002-04-08", "venue": "volksbuhne, berlin, ger", "songs": ["tazer floyd", "gathering storm", "monheim", "world police", "motherfucker=redeemer", "the sad mafioso + outro"], "recordings": [{"id": "gybe2002-04-08.flac16", "url": "https://archive.org/details/gybe2002-04-08.flac16", "title": "Godspeed You! Black Emperor Live at Volksbühne on 2002-04-08"}]}, {"date": "2002-04-09", "venue": "starclub, dresden, ger", "songs": ["moya", "blaise bailey finnegan III", "12-28-99", "dead metheny", "improvisation", "motherfucker=redeemer", "world police"], "recordings": [{"id": "gybe2002-04-09.DAT", "url": "https://archive.org/details/gybe2002-04-09.DAT", "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"}, {"id": "gybe2002-04-09.DAT.channelbalanced", "url": "https://archive.org/details/gybe2002-04-09.DAT.channelbalanced", "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"}, {"id": "gybe2002-04-09.m201tg", "url": "https://archive.org/details/gybe2002-04-09.m201tg", "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"}, {"id": "gybe2002-04-09.mtx", "url": "https://archive.org/details/gybe2002-04-09.mtx", "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"}]}, {"date": "2002-04-11", "venue": "manufaktur, schorndorf, ger", "songs": ["12-28-99", "gathering storm", "dead metheny", "world police", "motherfucker=redeemer", "moya", "j.l.h. outro"], "recordings": []}, {"date": "2002-04-12", "venue": "effenaar, eindhoven, hol", "songs": ["gathering storm", "tazer floyd", "dead metheny", "world police", "motherfucker=redeemer", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2002-04-12.TCD-D8", "url": "https://archive.org/details/gybe2002-04-12.TCD-D8", "title": "Godspeed You! Black Emperor Live at Effenaar on 2002-04-12"}]}, {"date": "2002-04-13", "venue": "gabaede 9, koln, ger", "songs": ["gathering storm", "improvisation", "tazer floyd", "dead metheny", "world police", "improvisation", "motherfucking=redeemer", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-04-13.TCD-D8", "url": "https://archive.org/details/gybe2002-04-13.TCD-D8", "title": "Godspeed You! Black Emperor Live at Gebäude 9 on 2002-04-13"}, {"id": "gybe2002-04-13.flac", "url": "https://archive.org/details/gybe2002-04-13.flac", "title": "Godspeed You! Black Emperor Live at Gabaede 9 on 2002-04-13"}]}, {"date": "2002-04-15", "venue": "mousonturm, frankfurt, ger", "songs": ["12.28.99", "dead metheny", "john hughes", "world police", "motherfucker=redeemer", "gathering storm", "improvisation"], "recordings": [{"id": "gybe2002-04-15.flacf", "url": "https://archive.org/details/gybe2002-04-15.flacf", "title": "Godspeed You! Black Emperor Live at Mousonturm on 2002-04-15"}, {"id": "gybe2002-04-15", "url": "https://archive.org/details/gybe2002-04-15", "title": "Godspeed You! Black Emperor Live at Mouson-Turm on 2002-04-15"}, {"id": "gybe2002-04-15.TCD-D8", "url": "https://archive.org/details/gybe2002-04-15.TCD-D8", "title": "Godspeed You! Black Emperor Live at Theatersaal Mousonturm on 2002-04-15"}]}, {"date": "2002-04-16", "venue": "kulturfabrik, esch-sur-alzette, lu", "songs": ["12.28.99", "dead metheny", "gathering storm", "world police", "motherfucker=redeemer", "moya", "j.l.h. outro"], "recordings": [{"id": "gybe2002-04-16", "url": "https://archive.org/details/gybe2002-04-16", "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2002-04-16"}]}, {"date": "2002-04-17", "venue": "ancienne belgique, brussels, bel", "songs": ["blaise bailey finnegan III", "tazer floyd", "dead metheny", "world police", "motherfucker = redeemer", "gathering storm", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2002-04-17", "url": "https://archive.org/details/gybe2002-04-17", "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2002-04-17"}, {"id": "gybe2002-04-17.YP", "url": "https://archive.org/details/gybe2002-04-17.YP", "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2002-04-17"}]}, {"date": "2002-04-18", "venue": "paradiso, amsterdam, hol", "songs": ["tazer floyd", "gathering storm", "dead metheny", "world police", "motherfucker=redeemer", "the sad mafioso", "j.l.h. outro"], "recordings": [{"id": "gybe2002-04-18.T", "url": "https://archive.org/details/gybe2002-04-18.T", "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"}, {"id": "gybe2002-04-18.YP", "url": "https://archive.org/details/gybe2002-04-18.YP", "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"}, {"id": "gybe2002-04-18.audience", "url": "https://archive.org/details/gybe2002-04-18.audience", "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"}, {"id": "gybe2002-04-18", "url": "https://archive.org/details/gybe2002-04-18", "title": "Godspeed You! Black Emperor Live at Paradiso, Amsterdam NL on 2002-04-18"}]}, {"date": "2002-04-20", "venue": "all tomorrow's parties, pontin's, camber sands, uk", "songs": ["gathering storm", "tazer floyd", "dead metheny", "world police", "the sad mafioso"], "recordings": [{"id": "gybe2002-04-20", "url": "https://archive.org/details/gybe2002-04-20", "title": "Godspeed You! Black Emperor Live at All Tomorrow's Parties Festival on 2002-04-20"}]}, {"date": "2003-03-02", "venue": "greenwall auditorium, bennington, vt", "songs": ["gathering storm", "tazer floyd", "albanian", "death metheny", "motherfucker = redeemer", "world police thanks to rian"], "recordings": [{"id": "gybe2003-03-02.trackedflac16", "url": "https://archive.org/details/gybe2003-03-02.trackedflac16", "title": "Godspeed You! Black Emperor Live at Lester Martin Theater on 2003-03-02"}]}, {"date": "2003-03-03", "venue": "starlight ballroom, phidelphia, pa", "songs": ["gathering storm", "world police", "monheim", "albanian", "motherfucker = redeemer thanks to mark, adam"], "recordings": []}, {"date": "2003-03-04", "venue": "9:30 club, washington, dc", "songs": ["tazer floyd", "dead metheny", "world police", "albanian", "motherfucker = redeemer", "blaise bailey finnegan IIIthanks to derek, chris"], "recordings": [{"id": "gybe2003-03-04", "url": "https://archive.org/details/gybe2003-03-04", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"}, {"id": "gybe2003-03-04.dpa", "url": "https://archive.org/details/gybe2003-03-04.dpa", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"}, {"id": "gybe2003-03-04.shn", "url": "https://archive.org/details/gybe2003-03-04.shn", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"}]}, {"date": "2003-03-05", "venue": "temple of free masonry, baltimore, md", "songs": ["gathering storm", "monheim", "world police", "albanian", "motherfucker = redeemer"], "recordings": [{"id": "gybe2003-03-05.shn", "url": "https://archive.org/details/gybe2003-03-05.shn", "title": "Godspeed You! Black Emperor Live at Temple Of Free Masonry on 2003-03-05"}, {"id": "gybe2003-03-05.dpa", "url": "https://archive.org/details/gybe2003-03-05.dpa", "title": "Godspeed You! Black Emperor Live at Temple of Free Masonry on 2003-03-05"}, {"id": "gybe2003-03-05.ccm4", "url": "https://archive.org/details/gybe2003-03-05.ccm4", "title": "Godspeed You! Black Emperor Live at Temple of Free Masonry on 2003-03-05"}, {"id": "gybe2003-03-05.mbho.flac16", "url": "https://archive.org/details/gybe2003-03-05.mbho.flac16", "title": "Godspeed You! Black Emperor Live at Scottish Rite Temple of Freemasonry on 2003-03-05"}]}, {"date": "2003-03-06", "venue": "cat's cradle, chapel hill, nc", "songs": ["tazer floyd", "dead metheny", "monheim", "world police", "gathering storm", "blaise bailey finnegan III", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-03-06.ccm4", "url": "https://archive.org/details/gybe2003-03-06.ccm4", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"}, {"id": "gybe2003-03-06.dpa", "url": "https://archive.org/details/gybe2003-03-06.dpa", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"}, {"id": "gybe2003-03-06", "url": "https://archive.org/details/gybe2003-03-06", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"}]}, {"date": "2003-03-07", "venue": "orange peel, asheville, nc", "songs": ["albanian", "12-28-99", "dead metheny", "tazer floyd", "motherfucker=redeemer", "world policethanks to todd"], "recordings": [{"id": "gybe2003-03-07", "url": "https://archive.org/details/gybe2003-03-07", "title": "Godspeed You! Black Emperor Live at Orange Peel on 2003-03-07"}, {"id": "gybe2003-03-07.dpa", "url": "https://archive.org/details/gybe2003-03-07.dpa", "title": "Godspeed You! Black Emperor Live at Orange Peel on 2003-03-07"}]}, {"date": "2003-03-08", "venue": "40 watt, athens, ga", "songs": ["tazer floyd", "dead metheny", "12-28-99", "albanian", "world police", "blaise bailey finnegan III", "moyathanks to alexander"], "recordings": [{"id": "gybe2003-03-08.flac", "url": "https://archive.org/details/gybe2003-03-08.flac", "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2003-03-08"}, {"id": "gybe2003-03-08_AT853c.shnf", "url": "https://archive.org/details/gybe2003-03-08_AT853c.shnf", "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2003-03-08"}]}, {"date": "2003-03-09", "venue": "variety playhouse, atlanta, ga", "songs": ["gathering storm", "monheim", "world police", "albanian", "motherfucker=redeemer", "the sad mafiosothanks to daniel"], "recordings": [{"id": "gybe2003-03-09.dpa", "url": "https://archive.org/details/gybe2003-03-09.dpa", "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2003-03-09"}, {"id": "gybe2003-03-09.ccm4", "url": "https://archive.org/details/gybe2003-03-09.ccm4", "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2003-03-09"}]}, {"date": "2003-03-11", "venue": "twiropa tchoupitoulas room, new orleans, la", "songs": ["albanian", "12-28-99", "tazer floyd", "world police", "dead metheny", "blaise bailey finnegan III", "moyathanks to mike"], "recordings": [{"id": "gybe2003-03-11", "url": "https://archive.org/details/gybe2003-03-11", "title": "Godspeed You! Black Emperor Live at TwiRoPa on 2003-03-11"}]}, {"date": "2003-03-12", "venue": "engine room, houston, tx", "songs": ["gathering storm", "dead metheny", "world police", "albanian", "motherfucker=redeemer", "the dead flag blues (outro)"], "recordings": []}, {"date": "2003-03-13", "venue": "union ballroom, austin, tx", "songs": ["tazer floyd", "dead metheny", "12-28-99", "world police", "gathering storm", "blaise bailey finnegan III", "the sad mafioso thanks to j"], "recordings": [{"id": "gybe2003-03-13", "url": "https://archive.org/details/gybe2003-03-13", "title": "Godspeed You! Black Emperor Live at Texas Union Ballroom on 2003-03-13"}]}, {"date": "2003-03-14", "venue": "ridglea theater, forth worth, tx", "songs": ["albanian", "12-28-99", "tazer floyd", "monheim", "motherfucker=redeemer", "world police thanks to tim and will akers"], "recordings": []}, {"date": "2003-03-16", "venue": "mississippi nights, st-louis, mo", "songs": ["monheim", "tazer floyd", "dead metheny", "12-28-99", "albanian", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2003-03-16.shn", "url": "https://archive.org/details/gybe2003-03-16.shn", "title": "Godspeed You! Black Emperor Live at Mississippi Nights on 2003-03-16"}, {"id": "gybe2003-03-16.flac16", "url": "https://archive.org/details/gybe2003-03-16.flac16", "title": "Godspeed You! Black Emperor Live at Mississippi Nights on 2003-03-16"}]}, {"date": "2003-03-17", "venue": "blue note, columbia, mo", "songs": ["moya", "tazer floyd", "gathering storm", "world police", "motherfucker=redeemer", "blaise bailey finnegan III"], "recordings": []}, {"date": "2003-03-18", "venue": "music box, omaha, ne", "songs": ["albanian", "12-28-99", "gathering storm", "monheim", "tazer floyd", "dead metheny", "blaise bailey finnegan III thanks to adam"], "recordings": []}, {"date": "2003-03-19", "venue": "first avenue, minneapolis, mn", "songs": ["tazer floyd", "12-28-99", "monheim", "world police", "dead metheny", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": []}, {"date": "2003-03-20", "venue": "abbey pub, chicago, il", "songs": ["gathering storm", "albanian", "tazer floyd", "world police", "motherfucker=redeemer", "moya"], "recordings": [{"id": "gybe2003-03-20.flac", "url": "https://archive.org/details/gybe2003-03-20.flac", "title": "Godspeed You! Black Emperor Live at Abbey Pub on 2003-03-20"}]}, {"date": "2003-03-21", "venue": "abbey pub, chicago, il", "songs": ["albanian", "12-28-99", "monheim", "tazer floyd", "dead metheny", "gathering storm", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2003-03-21.flac", "url": "https://archive.org/details/gybe2003-03-21.flac", "title": "Godspeed You! Black Emperor Live at Abbey Pub on 2003-03-21"}]}, {"date": "2003-03-22", "venue": "abbey pub, chicago, il", "songs": ["gathering storm", "tazer floyd", "moya", "motherfucker=redeemer", "monheim", "world police", "dead metheny"], "recordings": []}, {"date": "2003-03-24", "venue": "southgate house, newport, ky", "songs": ["gathering storm", "monheim", "world police", "tazer floyd", "motherfucker=redeemer", "moya thanks to matthew"], "recordings": []}, {"date": "2003-03-25", "venue": "beachland ballroom, cleveland, oh", "songs": ["tazer floyd", "dead metheny", "12-28-99", "albanian", "world police", "blaise bailey finnegan III", "the sad mafioso", "the dead flag blues (outro) thanks to zack, brett"], "recordings": [{"id": "gybe2003-03-25", "url": "https://archive.org/details/gybe2003-03-25", "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2003-03-25"}]}, {"date": "2003-03-26", "venue": "st-andrew's hall, detroit, mi", "songs": ["monheim", "gathering storm", "world police", "albanian", "motherfucker=redeemer", "tazer floyd"], "recordings": [{"id": "gybe2003-03-26.flac", "url": "https://archive.org/details/gybe2003-03-26.flac", "title": "Godspeed You! Black Emperor Live at Saint Andrew's Hall on 2003-03-26"}, {"id": "gybe2003-03-26.shn", "url": "https://archive.org/details/gybe2003-03-26.shn", "title": "Godspeed You! Black Emperor Live at St-Andrew's Hall on 2003-03-26"}]}, {"date": "2003-03-27", "venue": "palais royale, toronto, on", "songs": ["albanian", "gathering storm", "tazer floyd", "12-28-99", "dead metheny", "world police", "the sad mafioso"], "recordings": [{"id": "gybe2003-03-27.ccm4", "url": "https://archive.org/details/gybe2003-03-27.ccm4", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"}, {"id": "gybe2003-03-27.flac16", "url": "https://archive.org/details/gybe2003-03-27.flac16", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"}, {"id": "gybe2003-03-27.matrix", "url": "https://archive.org/details/gybe2003-03-27.matrix", "title": "Godspeed You! Black Emperor Live at Palais Theatre on 2003-03-27"}, {"id": "gybe2003-03-27.shn", "url": "https://archive.org/details/gybe2003-03-27.shn", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"}]}, {"date": "2003-03-28", "venue": "palais royale, toronto, on", "songs": ["monheim", "tazer floyd", "moya", "albanian", "motherfucking=redeemer", "blaise bailey finnegan III thanks to ren, pierre"], "recordings": [{"id": "gybe2003-03-28.flac16", "url": "https://archive.org/details/gybe2003-03-28.flac16", "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-28"}]}, {"date": "2003-03-29", "venue": "tivoli theater, hamilton, on", "songs": ["monheim", "12-28-99", "albanian", "world police", "dead metheny"], "recordings": [{"id": "gybe2003-03-29", "url": "https://archive.org/details/gybe2003-03-29", "title": "Godspeed You! Black Emperor Live at Tivoli Theater on 2003-03-29"}]}, {"date": "2003-03-31", "venue": "rango's auditorium, pittsburgh, pa", "songs": ["monheim", "tazer floyd", "dead metheny", "world police", "motherfucker=redeemer"], "recordings": []}, {"date": "2003-04-01", "venue": "bowery ballroom, new york, ny", "songs": ["gathering storm", "albanian", "12-28-99", "tazer floyd", "moya", "world police", "the sad mafioso"], "recordings": []}, {"date": "2003-04-02", "venue": "bowery ballroom, new york, ny", "songs": ["monheim", "albanian", "world police", "dead metheny", "motherfucker=redeemer", "blaise bailey finnegan IIIthanks to jonathan"], "recordings": [{"id": "gybe2003-04-02", "url": "https://archive.org/details/gybe2003-04-02", "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2003-04-02"}]}, {"date": "2003-04-03", "venue": "warsaw, brooklyn, ny", "songs": ["gathering storm", "12-28-99", "albanian", "dead metheny", "world police", "tazer floyd"], "recordings": [{"id": "gybe2003-04-03.dmf", "url": "https://archive.org/details/gybe2003-04-03.dmf", "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-03"}, {"id": "gybe2003-04-03.flac16", "url": "https://archive.org/details/gybe2003-04-03.flac16", "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-03"}]}, {"date": "2003-04-04", "venue": "warsaw, brooklyn, ny", "songs": ["monheim", "tazer floyd", "albanian", "12-28-99", "motherfucker=redeemer"], "recordings": [{"id": "gybe2003-04-04.flac", "url": "https://archive.org/details/gybe2003-04-04.flac", "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-04"}]}, {"date": "2003-04-05", "venue": "cole chapel, norton, ma", "songs": ["improvisation", "monheim", "gathering storm", "albanian", "world police"], "recordings": [{"id": "gybe2003-04-05.shn", "url": "https://archive.org/details/gybe2003-04-05.shn", "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"}, {"id": "gybe2003-04-05.shnf", "url": "https://archive.org/details/gybe2003-04-05.shnf", "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"}, {"id": "gybe2003-04-05.flac", "url": "https://archive.org/details/gybe2003-04-05.flac", "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"}]}, {"date": "2003-04-06", "venue": "the roxy, boston, ma", "songs": ["tazer floyd", "dead metheny", "albanian", "world police", "motherfucker=redeemer", "blaise bailey finnegan IIIthanks to dave"], "recordings": [{"id": "gybe2003-04-06.shn", "url": "https://archive.org/details/gybe2003-04-06.shn", "title": "Godspeed You! Black Emperor Live at The Roxy on 2003-04-06"}, {"id": "gybe2003-04-06.flac", "url": "https://archive.org/details/gybe2003-04-06.flac", "title": "Godspeed You! Black Emperor Live at Roxy on 2003-04-06"}]}, {"date": "2003-04-09", "venue": "the marquee, halifax, ns", "songs": ["gathering storm", "monheim", "albanian", "world police", "motherfucker=redeemer"], "recordings": [{"id": "GSYBE2003-04-09", "url": "https://archive.org/details/GSYBE2003-04-09", "title": "Godspeed You! Black Emperor Live at The Marquee on 2003-04-09"}, {"id": "gybe2003-04-09.flac", "url": "https://archive.org/details/gybe2003-04-09.flac", "title": "Godspeed You! Black Emperor Live at Marquee Club on 2003-04-09"}]}, {"date": "2003-04-10", "venue": "oxygen night club, moncton, nb", "songs": ["monheim", "....", "albanian", "world police", "moya (?)", "blaise bailey finnegan III"], "recordings": []}, {"date": "2003-04-11", "venue": "dugald blue auditorium, fredericton, nb", "songs": ["gathering storm", "dead metheny", "monheim", "albanian"], "recordings": []}, {"date": "2003-04-12", "venue": "église st-roch, québec, qc", "songs": ["intro + monheim", "impro + 12-28-99", "world police", "albanian", "tazer floyd", "dead metheny", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-04-12.flac16", "url": "https://archive.org/details/gybe2003-04-12.flac16", "title": "Godspeed You! Black Emperor Live at Eglise St-Rock on 2003-04-12"}]}, {"date": "2003-04-13", "venue": "théâtre rialto, montréal, qc", "songs": ["gathering storm", "albanian", "intro + monheim", "tazer floyd", "world police", "dead metheny", "moya"], "recordings": [{"id": "gybe2003-04-13.flacf", "url": "https://archive.org/details/gybe2003-04-13.flacf", "title": "Godspeed You! Black Emperor Live at Théâtre Rialto on 2003-04-13"}, {"id": "gybe2003-04-13", "url": "https://archive.org/details/gybe2003-04-13", "title": "Godspeed You! Black Emperor Live at Théâtre Rialto on 2003-04-13"}]}, {"date": "2003-04-14", "venue": "théâtre rialto, montréal, qc", "songs": ["12-28-99", "tazer floyd", "albanian", "world police", "motherfucker=redeemer", "the sad mafioso"], "recordings": [{"id": "gybe2003-04-14.shn", "url": "https://archive.org/details/gybe2003-04-14.shn", "title": "Godspeed You! Black Emperor Live at Theatre Rialto on 2003-04-14"}, {"id": "gybe2003-04-14", "url": "https://archive.org/details/gybe2003-04-14", "title": "Godspeed You! Black Emperor Live at Théâtre Rialto on 2003-04-14"}]}, {"date": "2003-04-15", "venue": "théâtre rialto, montréal, qc", "songs": ["moya", "tazer floyd", "dead metheny", "albanian", "gathering storm", "world police", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-04-15", "url": "https://archive.org/details/gybe2003-04-15", "title": "Godspeed You! Black Emperor Live at Théâtre Rialto on 2003-04-15"}, {"id": "gybe2003-04-15.shn", "url": "https://archive.org/details/gybe2003-04-15.shn", "title": "Godspeed You! Black Emperor Live at Theatre Rialto on 2003-04-15"}]}, {"date": "2003-05-08", "venue": "terminal export, nancy, fr", "songs": ["gathering storm", "tazer floyd", "dead metheny", "albanian", "world police", "monheim", "the dead flag blues (outro) thanks to yannick"], "recordings": [{"id": "gybe2003-05-08.YP", "url": "https://archive.org/details/gybe2003-05-08.YP", "title": "Godspeed You! Black Emperor Live at Terminal Export on 2003-05-08"}]}, {"date": "2003-05-09", "venue": "centre des congrès, reims, fr", "songs": ["intro + monheim", "albanian", "world police", "motherfucker=redeemer", "the sad mafioso", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-05-09.YP", "url": "https://archive.org/details/gybe2003-05-09.YP", "title": "Godspeed You! Black Emperor Live at Palais des Congrès on 2003-05-09"}]}, {"date": "2003-05-10", "venue": "le grand mix, tourcoing, fr", "songs": ["soundcheck : gamelan", "moya", "12-28-99", "tazer floyd", "albanian", "dead metheny", "gathering storm", "blaise bailey finnegan III", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-05-10", "url": "https://archive.org/details/gybe2003-05-10", "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2003-05-10"}, {"id": "gybe2003-05-10.TCD-D8", "url": "https://archive.org/details/gybe2003-05-10.TCD-D8", "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2003-05-10"}]}, {"date": "2003-05-12", "venue": "le cabaret sauvage, paris, fr", "songs": ["tazer floyd", "monheim", "albanian", "improvisation", "world police", "dead metheny", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2003-05-12.flacf", "url": "https://archive.org/details/gybe2003-05-12.flacf", "title": "Godspeed You! Black Emperor Live at Le Cabaret Sauvage on 2003-05-12"}, {"id": "gybe2003-05-12", "url": "https://archive.org/details/gybe2003-05-12", "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-12"}]}, {"date": "2003-05-13", "venue": "le cabaret sauvage, paris, fr", "songs": ["gathering storm", "albanian", "12.28.99", "tazer floyd", "motherfucker=redeemer", "sad mafioso"], "recordings": [{"id": "gybe2003-05-13.TCD-D8", "url": "https://archive.org/details/gybe2003-05-13.TCD-D8", "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"}, {"id": "gybe2003-05-13.radio", "url": "https://archive.org/details/gybe2003-05-13.radio", "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"}, {"id": "gybe2003-05-13", "url": "https://archive.org/details/gybe2003-05-13", "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"}]}, {"date": "2003-05-14", "venue": "l'olympic, nantes, fr", "songs": ["monheim", "albanian", "dead metheny", "gamelan", "world police", "tazer floyd", "moya", "the dead flag blues (outro)"], "recordings": [{"id": "gybe2003-05-14", "url": "https://archive.org/details/gybe2003-05-14", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"}, {"id": "gybe2003-05-14.T", "url": "https://archive.org/details/gybe2003-05-14.T", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"}, {"id": "gybe2003-05-14.flacf", "url": "https://archive.org/details/gybe2003-05-14.flacf", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"}, {"id": "gybe2003-05-14.shnf", "url": "https://archive.org/details/gybe2003-05-14.shnf", "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"}]}, {"date": "2003-05-15", "venue": "la coopérative de mai, clermont-ferrand, fr", "songs": ["gathering storm", "12-28-99", "albanian", "motherfucker=redeemer", "wold police", "the dead flag blues (outro) thanks to yannick"], "recordings": [{"id": "gybe2003-05-15.TCD-D8", "url": "https://archive.org/details/gybe2003-05-15.TCD-D8", "title": "Godspeed You! Black Emperor Live at La Coopérative de Mai on 2003-05-15"}]}, {"date": "2003-05-16", "venue": "ninkasi kao, lyon, fr", "songs": ["moya", "albanian", "dead metheny", "wold police", "motherfucker=redeemer", "tazer floyd thanks to yannick"], "recordings": [{"id": "gybe2003-05-16.TCD-D8", "url": "https://archive.org/details/gybe2003-05-16.TCD-D8", "title": "Godspeed You! Black Emperor Live at Ninkasi Kao on 2003-05-16"}, {"id": "gybe2003-05-16.flac", "url": "https://archive.org/details/gybe2003-05-16.flac", "title": "Godspeed You! Black Emperor Live at Ninkasi Kao on 2003-05-16"}]}, {"date": "2003-05-17", "venue": "la nef, angoulême, fr", "songs": ["gathering storm", "monheim", "gamelan", "albanian", "world police", "blaise bailey finnegan III", "outro"], "recordings": []}, {"date": "2003-05-20", "venue": "théâtre barbie, bordeaux, fr", "songs": ["moya", "tazer floyd", "12-28-99", "world police", "motherfucker=redeemer", "the sad mafioso", "the dead flag blues (outro) thanks to christophe"], "recordings": []}, {"date": "2003-05-23", "venue": "roxy, valencia, sp", "songs": ["gamelan", "(incomplete)"], "recordings": []}, {"date": "2003-05-24", "venue": "theatre central, sevilla, sp", "songs": ["monheim", "albanian", "12-28-99", "tazer floyd", "motherfucking=redeemer", "the sad mafioso"], "recordings": [{"id": "gybe2003-05-24", "url": "https://archive.org/details/gybe2003-05-24", "title": "Godspeed You! Black Emperor Live at Theatre Central on 2003-05-24"}]}, {"date": "2003-05-26", "venue": "arena, madrid, sp", "songs": ["gathering storm", "tazer floyd", "12.28.99", "albanian", "world police", "blaise bailey finnegan III thanks to manuel"], "recordings": []}, {"date": "2003-05-28", "venue": "teatro são luíz, lisboa, por", "songs": ["monheim", "moya", "albanian", "dead metheny", "motherfucker=redeemer", "the dead flag blues (outro) thanks to diogo"], "recordings": []}, {"date": "2003-05-29", "venue": "teatro sá da bandeira, oporto, por", "songs": ["gathering storm", "john hughes", "tazer floyd", "12-28-99", "albanian", "world police", "the sad mafioso", "the dead flag blues (outro)"], "recordings": []}, {"date": "2003-05-30", "venue": "cine teatro salesianos, vigo, sp", "songs": ["monheim", "albanian", "moya", "dead metheny", "motherfucker=redeemer", "blaise bailey finnegan III thanks to luis, javi"], "recordings": []}, {"date": "2003-06-03", "venue": "gagarin, athens, gr", "songs": ["monheim", "12-28-99", "tazer floyd", "albanian", "dead metheny", "the sad mafioso thanks to costas"], "recordings": []}, {"date": "2003-06-04", "venue": "gagarin, athens, gr", "songs": ["gathering storm", "gamelan", "moya", "motherfucker=redeemer", "world police", "blaise bailey finnegan III thanks to costas"], "recordings": []}, {"date": "2010-12-03", "venue": "all tomorrow's parties, butlin's, minehead, uk", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2010-12-03.dpa4061.rob.flac16", "url": "https://archive.org/details/gybe2010-12-03.dpa4061.rob.flac16", "title": "Godspeed You! Black Emperor Live at ATP Festival, Butlins on 2010-12-03"}, {"id": "gybe2010-12-03.dpa4061.flac16", "url": "https://archive.org/details/gybe2010-12-03.dpa4061.flac16", "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-03"}]}, {"date": "2010-12-04", "venue": "all tomorrow's parties, butlin's, minehead, uk", "songs": ["intro", "albanian", "gathering storm", "moya", "gamelan", "tazer floyd", "the cowboy", "the sad mafioso"], "recordings": [{"id": "gybe2010-12-04", "url": "https://archive.org/details/gybe2010-12-04", "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-04"}, {"id": "gybe2010-12-04.flac24", "url": "https://archive.org/details/gybe2010-12-04.flac24", "title": "Godspeed You! Black Emperor Live at Butlins Holiday Resort (ATP Nightmare Before Christmas) on 2010-12-04"}]}, {"date": "2010-12-05", "venue": "all tomorrow's parties, butlin's, minehead, uk", "songs": ["intro", "the dead flag blues", "dead metheny", "chart #3", "world police", "albanian", "john hughes", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2010-12-05.mtx", "url": "https://archive.org/details/gybe2010-12-05.mtx", "title": "Godspeed You! Black Emperor Live at Butlins Holiday Resort (ATP Nightmare Before Christmas) on 2010-12-05"}, {"id": "gybe2010-12-05.dpa4061.rob.flac16", "url": "https://archive.org/details/gybe2010-12-05.dpa4061.rob.flac16", "title": "Godspeed You! Black Emperor Live at ATP Festival, Butlins on 2010-12-05"}, {"id": "gybe2010-12-05", "url": "https://archive.org/details/gybe2010-12-05", "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-05"}]}, {"date": "2010-12-07", "venue": "manchester academy, manchester, uk", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "GYBE2010-12-07.GYBE", "url": "https://archive.org/details/GYBE2010-12-07.GYBE", "title": "Godspeed You! Black Emperor Live at Manchester Academy 1 on 2010-12-07"}]}, {"date": "2010-12-08", "venue": "barrowland, glasgow, uk", "songs": ["intro", "albanian", "gathering storm", "moya", "chart #3", "world police", "tazer floyd", "the cowboy", "the sad mafioso"], "recordings": [{"id": "gybe2010-12-08", "url": "https://archive.org/details/gybe2010-12-08", "title": "Godspeed You! Black Emperor Live at Barrowland on 2010-12-08"}, {"id": "gybe2010-12-08.mix", "url": "https://archive.org/details/gybe2010-12-08.mix", "title": "Godspeed You! Black Emperor Live at Barrowlands Ballroom on 2010-12-08"}]}, {"date": "2010-12-10", "venue": "tripod, dublin, ir", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "moya", "blaise bailey finnegan III", "tazer floyd"], "recordings": [{"id": "gybe2010-12-10.r09.flac16", "url": "https://archive.org/details/gybe2010-12-10.r09.flac16", "title": "Godspeed You! Black Emperor Live at Tripod on 2010-12-10"}]}, {"date": "2010-12-12", "venue": "anson rooms, bristol, uk", "songs": ["intro", "albanian", "gathering storm", "moya", "dead metheny", "tazer floyd", "chart #3", "world police", "the sad mafioso"], "recordings": [{"id": "gybe2010-12-12", "url": "https://archive.org/details/gybe2010-12-12", "title": "Godspeed You! Black Emperor Live at Anson Rooms on 2010-12-12"}]}, {"date": "2010-12-13", "venue": "troxy, london, uk", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": []}, {"date": "2010-12-14", "venue": "troxy, london, uk", "songs": ["intro", "albanian", "gathering storm", "moya", "gamelan", "tazer floyd", "the cowboy", "the sad mafioso"], "recordings": [{"id": "gybe2010-12-14.aud.flac16", "url": "https://archive.org/details/gybe2010-12-14.aud.flac16", "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-14"}, {"id": "gybe2010-12-14.ca-11.remastered.flac16", "url": "https://archive.org/details/gybe2010-12-14.ca-11.remastered.flac16", "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-14"}]}, {"date": "2010-12-15", "venue": "troxy, london, uk", "songs": ["intro", "the dead flag blues", "dead metheny", "chart #3", "world police", "monheim", "albanian", "john hughes", "blaise bailey finnegan III", "12-28-99 (outro)"], "recordings": [{"id": "gybe2010-12-15.ca-11.flac16", "url": "https://archive.org/details/gybe2010-12-15.ca-11.flac16", "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-15"}, {"id": "gybe2010-12-15.ca-11.remastered.flac16", "url": "https://archive.org/details/gybe2010-12-15.ca-11.remastered.flac16", "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-15"}]}, {"date": "2010-12-17", "venue": "gagarin, athens, gr", "songs": ["intro", "moya", "albanian", "tazer floyd", "gathering storm", "monheim", "chart #3", "world police", "the sad mafioso"], "recordings": [{"id": "gybe2010-12-17.gybe2010-12-17remastered.flac24", "url": "https://archive.org/details/gybe2010-12-17.gybe2010-12-17remastered.flac24", "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-17"}, {"id": "gybe2010-12-17", "url": "https://archive.org/details/gybe2010-12-17", "title": "Godspeed You! Black Emperor Live at Gagarin on 2010-12-17"}]}, {"date": "2010-12-18", "venue": "gagarin, athens, gr", "songs": ["intro", "albanian", "dead metheny", "gamelan", "chart #3", "world police", "the cowboy", "john hughes", "blaise bailey finnegan III", "12-28-99 (outro)"], "recordings": [{"id": "gybe2010-12-18.flacf", "url": "https://archive.org/details/gybe2010-12-18.flacf", "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-18"}, {"id": "gybe2010-12-18", "url": "https://archive.org/details/gybe2010-12-18", "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-18"}]}, {"date": "2011-01-14", "venue": "grande halle de la villette, paris, fr", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-01-14.24bits", "url": "https://archive.org/details/gybe2011-01-14.24bits", "title": "Godspeed You! Black Emperor Live at Grande Halle De La Villette, Salle Charlie Parker on 2011-01-14"}]}, {"date": "2011-01-15", "venue": "cirque royal, brussels, bel", "songs": ["intro", "gathering storm", "moya (aborted)", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "the sad mafioso"], "recordings": [{"id": "gybe2011-01-15", "url": "https://archive.org/details/gybe2011-01-15", "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-01-15"}, {"id": "gybe2011-01-15.ca-11.remastered.flac16", "url": "https://archive.org/details/gybe2011-01-15.ca-11.remastered.flac16", "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-01-15"}, {"id": "GYBE2012-11-07.aiff", "url": "https://archive.org/details/GYBE2012-11-07.aiff", "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-15-01"}]}, {"date": "2011-01-17", "venue": "kulttuuritalo, helsinki, fin", "songs": ["intro", "gathering storm", "moya", "albanian", "chart #3", "world police", "blaise bailey finnegan III", "dead metheny", "the sad mafioso"], "recordings": [{"id": "gybe2011-01-17", "url": "https://archive.org/details/gybe2011-01-17", "title": "Godspeed You! Black Emperor Live at Kulttuuritalo on 2011-01-17"}]}, {"date": "2011-01-19", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "albanian", "monheim", "gathering storm", "moya", "chart #3", "world police", "tazer floyd", "the cowboy", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-01-19.r-09.remastered.flac24", "url": "https://archive.org/details/gybe2011-01-19.r-09.remastered.flac24", "title": "Godspeed You! Black Emperor Live at Paradiso on 2011-01-19"}, {"id": "gybe2011-01-19.ca-11.remastered.flac16", "url": "https://archive.org/details/gybe2011-01-19.ca-11.remastered.flac16", "title": "Godspeed You! Black Emperor Live at Paradiso on 2011-01-19"}]}, {"date": "2011-01-20", "venue": "astra, berlin, ger", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "the cowboy", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-01-20", "url": "https://archive.org/details/gybe2011-01-20", "title": "Godspeed You! Black Emperor Live at Astra on 2011-01-20"}]}, {"date": "2011-01-22", "venue": "klub eskulap, poznań, pol", "songs": ["intro", "moya", "albanian", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "the sad mafioso"], "recordings": []}, {"date": "2011-01-23", "venue": "palác akropolis, prague, cze", "songs": ["intro", "moya", "albanian", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-01-25", "venue": "arena, vienna, aut", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-01-25.cos11s.flac16", "url": "https://archive.org/details/gybe2011-01-25.cos11s.flac16", "title": "Godspeed You! Black Emperor Live at Arena on 2011-01-25"}]}, {"date": "2011-01-26", "venue": "estragon, bologna, it", "songs": ["intro", "albanian", "gathering storm", "moya", "gamelan", "chart #3", "world police", "monheim", "the sad mafioso"], "recordings": []}, {"date": "2011-01-27", "venue": "live club, trezzo sull'adda, it", "songs": ["intro", "moya", "albanian", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "the sad mafioso"], "recordings": [{"id": "gybe2011-01-27", "url": "https://archive.org/details/gybe2011-01-27", "title": "Godspeed You! Black Emperor Live at Trezzo sull'Adda on 2011-01-27"}]}, {"date": "2011-01-28", "venue": "l'espace julien, marseille, fr", "songs": ["intro", "moya", "albanian", "monheim", "chart #3", "world police", "john hughes", "tazer floyd", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-01-28", "url": "https://archive.org/details/gybe2011-01-28", "title": "Godspeed You! Black Emperor Live at L'Espace Julien on 2011-01-28"}]}, {"date": "2011-01-29", "venue": "apolo, barcelona, sp", "songs": ["intro", "moya", "albanian", "gathering storm", "gamelan", "chart #3", "world police", "dead metheny", "the sad mafioso"], "recordings": [{"id": "gybe2011-01-29", "url": "https://archive.org/details/gybe2011-01-29", "title": "Godspeed You! Black Emperor Live at Apolo on 2011-01-29"}]}, {"date": "2011-01-30", "venue": "la riviera, madrid, sp", "songs": ["intro", "albanian", "monheim", "gathering storm", "12-28-99 (outro)", "chart #3", "world police", "tazer floyd", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-02-01", "venue": "le bikini, toulouse, fr", "songs": ["intro", "moya", "albanian", "chart #3", "world police", "gamelan", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-02-02", "venue": "4ad, diksmuide, bel", "songs": ["intro", "gathering storm", "monheim", "albanian", "12-28-99 (outro)", "chart #3", "world police", "dead metheny", "tazer floyd", "the sad mafioso"], "recordings": []}, {"date": "2011-02-16", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-02-16.dpa4061.flac", "url": "https://archive.org/details/gybe2011-02-16.dpa4061.flac", "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2011-02-16"}]}, {"date": "2011-02-17", "venue": "the showbox, seattle, wa", "songs": ["intro", "gathering storm", "monheim", "chart #3", "world police", "albanian", "moya", "tazer floyd", "the sad mafioso"], "recordings": []}, {"date": "2011-02-18", "venue": "crystal ballroom, portland, or", "songs": ["intro", "moya", "albanian", "monheim", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-02-19", "venue": "the warfield, san francisco, ca", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-02-19", "url": "https://archive.org/details/gybe2011-02-19", "title": "Godspeed You! Black Emperor Live at Warfield Theater on 2011-02-19"}]}, {"date": "2011-02-20", "venue": "great american music hall, san francisco, ca", "songs": ["intro -> j.l.h. outro", "moya", "albanian", "monheim", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "the sad mafioso"], "recordings": [{"id": "gybe2011-02-20.m300.flac16", "url": "https://archive.org/details/gybe2011-02-20.m300.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-20"}]}, {"date": "2011-02-21", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "gathering storm", "moya", "gamelan", "12-28-99 (outro)", "chart #3", "world police", "the cowboy", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-02-21", "url": "https://archive.org/details/gybe2011-02-21", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"}, {"id": "gybe2011-02-21.m300.flac16", "url": "https://archive.org/details/gybe2011-02-21.m300.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"}, {"id": "gybe2011-02-21.mtx", "url": "https://archive.org/details/gybe2011-02-21.mtx", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"}]}, {"date": "2011-02-22", "venue": "fox theater, pomona, ca", "songs": ["intro", "moya", "albanian", "monheim", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "gathering storm", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-02-23", "venue": "the fonda, hollywood, los angeles, ca", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "the sad mafioso"], "recordings": []}, {"date": "2011-02-27", "venue": "studio coast, shinkiba, tokyo, jp", "songs": ["intro", "moya", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-02-28", "venue": "duo music exchange, shibuya, tokyo, jp", "songs": ["intro", "gathering storm", "albanian", "moya", "12-28-99 (outro)", "chart #3", "world police", "tazer floyd", "the cowboy", "the sad mafioso"], "recordings": []}, {"date": "2011-03-14", "venue": "terminal 5, new york, ny", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-14", "url": "https://archive.org/details/gybe2011-03-14", "title": "Godspeed You! Black Emperor Live at Terminal 5 on 2011-03-14"}]}, {"date": "2011-03-15", "venue": "brooklyn masonic temple, brooklyn, ny", "songs": ["intro", "moya", "albanian", "gathering storm", "12-28-99 (outro)", "chart #3", "world police", "the cowboy", "tazer floyd", "the sad mafioso"], "recordings": [{"id": "gybe2011-03-15.bmt_acidjack", "url": "https://archive.org/details/gybe2011-03-15.bmt_acidjack", "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-15"}, {"id": "gybe2011-03-15.dpa4060", "url": "https://archive.org/details/gybe2011-03-15.dpa4060", "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-15"}]}, {"date": "2011-03-16", "venue": "brooklyn masonic temple, brooklyn, ny", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "tazer floyd", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-16.bmt_acidjack", "url": "https://archive.org/details/gybe2011-03-16.bmt_acidjack", "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-16"}, {"id": "gybe2011-03-16.dpa4060", "url": "https://archive.org/details/gybe2011-03-16.dpa4060", "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-16"}]}, {"date": "2011-03-17", "venue": "the church of st-paul the apostle, new york, ny", "songs": ["intro", "gathering storm", "monheim", "albanian", "moya", "12-28-99 (outro)", "chart #3", "world police", "the cowboy", "the sad mafioso"], "recordings": [{"id": "gybe2011-03-17.dpa4060", "url": "https://archive.org/details/gybe2011-03-17.dpa4060", "title": "Godspeed You! Black Emperor Live at The Church of St-Paul the Apostle on 2011-03-17"}, {"id": "gybe2011-03-17", "url": "https://archive.org/details/gybe2011-03-17", "title": "Godspeed You! Black Emperor Live at The Church of St. Paul The Apostle on 2011-03-17"}]}, {"date": "2011-03-18", "venue": "the church of st-paul the apostle, new york, ny", "songs": ["intro", "moya", "dead metheny", "gathering storm", "12-28-99 (outro)", "chart #3", "world police", "the cowboy", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-18", "url": "https://archive.org/details/gybe2011-03-18", "title": "Godspeed You! Black Emperor Live at The Church of St. Paul The Apostle on 2011-03-18"}, {"id": "gybe2011-03-18.dpa4060", "url": "https://archive.org/details/gybe2011-03-18.dpa4060", "title": "Godspeed You! Black Emperor Live at The Church of St-Paul the Apostle on 2011-03-18"}]}, {"date": "2011-03-19", "venue": "the trocadero, philadelphia, pa", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-19", "url": "https://archive.org/details/gybe2011-03-19", "title": "Godspeed You! Black Emperor Live at The Trocadero on 2011-03-19"}]}, {"date": "2011-03-20", "venue": "9:30 club, washington, dc", "songs": ["intro", "moya", "albanian", "gathering storm", "12-28-99 (outro)", "chart #3", "world police", "tazer floyd", "the sad mafioso"], "recordings": [{"id": "gybe2011-03-20.gybe2011-03-20", "url": "https://archive.org/details/gybe2011-03-20.gybe2011-03-20", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2011-03-20"}, {"id": "gybe2011-03-20", "url": "https://archive.org/details/gybe2011-03-20", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2011-03-20"}]}, {"date": "2011-03-22", "venue": "40 watt club, athens, ga", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "the cowboy", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-22.flac16", "url": "https://archive.org/details/gybe2011-03-22.flac16", "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2011-03-22"}]}, {"date": "2011-03-24", "venue": "cannery ballroom, nashville, tn", "songs": ["intro", "moya", "gathering storm", "albanian", "12-28-99 (outro)", "chart #3", "world police", "dead metheny", "the sad mafioso"], "recordings": [{"id": "gybe2011-03-24", "url": "https://archive.org/details/gybe2011-03-24", "title": "Godspeed You! Black Emperor Live at Cannery Ballroom on 2011-03-24"}]}, {"date": "2011-03-26", "venue": "metro, chicago, il", "songs": ["intro", "gathering storm", "monheim", "albanian", "dead metheny", "tazer floyd", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-26.ca14.flac24", "url": "https://archive.org/details/gybe2011-03-26.ca14.flac24", "title": "Godspeed You! Black Emperor Live at The Metro on 2011-03-26"}]}, {"date": "2011-03-27", "venue": "metro, chicago, il", "songs": ["intro -> j.l.h. outro", "moya", "albanian", "12-28-99 (outro)", "chart #3", "world police", "dead metheny", "gathering storm", "the sad mafiosos"], "recordings": [{"id": "gybe2011-03-27.mk41.flac24_115", "url": "https://archive.org/details/gybe2011-03-27.mk41.flac24_115", "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"}, {"id": "gybe2011-03-27.ca14.omni.flac24", "url": "https://archive.org/details/gybe2011-03-27.ca14.omni.flac24", "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"}, {"id": "gybe2011-03-27.ca14.omni.flac16", "url": "https://archive.org/details/gybe2011-03-27.ca14.omni.flac16", "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"}, {"id": "gybe2011-03-27.mtx", "url": "https://archive.org/details/gybe2011-03-27.mtx", "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"}, {"id": "gybe2011-03-27.mk41.flac16", "url": "https://archive.org/details/gybe2011-03-27.mk41.flac16", "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"}, {"id": "gybe2011-03-27.ca14.cards.flac24", "url": "https://archive.org/details/gybe2011-03-27.ca14.cards.flac24", "title": "Godspeed You! Black Emperor Live at The Metro on 2011-03-27"}]}, {"date": "2011-03-28", "venue": "vic theatre, chicago, il", "songs": ["intro", "gathering storm", "monhiem", "albanian", "chart #3", "world police", "the cowboy", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-03-28.mk41.flac24", "url": "https://archive.org/details/gybe2011-03-28.mk41.flac24", "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"}, {"id": "gybe2011-03-28", "url": "https://archive.org/details/gybe2011-03-28", "title": "Godspeed You! Black Emperor Live at The Vic on 2011-03-28"}, {"id": "gybe2011-03-28.mk41.flac16", "url": "https://archive.org/details/gybe2011-03-28.mk41.flac16", "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"}, {"id": "gybe2011-03-28.flac16.ca-14", "url": "https://archive.org/details/gybe2011-03-28.flac16.ca-14", "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"}]}, {"date": "2011-03-29", "venue": "majestic theatre, detroit, mi", "songs": ["intro", "moya", "gathering storm", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "albanian", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-04-22", "venue": "lee's palace, toronto, on", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-04-22.flac16", "url": "https://archive.org/details/gybe2011-04-22.flac16", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-22"}, {"id": "gybe2011-04-22", "url": "https://archive.org/details/gybe2011-04-22", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-22"}]}, {"date": "2011-04-23", "venue": "lee's palace, toronto, on", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-04-23", "url": "https://archive.org/details/gybe2011-04-23", "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-23"}]}, {"date": "2011-04-24", "venue": "lee's palace, toronto, on (early show)", "songs": ["intro", "moya", "albanian", "dead metheny", "chart #3", "world police", "the cowboy", "gathering storm", "sad mafioso"], "recordings": [{"id": "gybe2011-04-24.early", "url": "https://archive.org/details/gybe2011-04-24.early", "title": "Godspeed You! Black Emperor Live at Lee's Palace (early show) on 2011-04-24"}]}, {"date": "2011-04-24b", "venue": "lee's palace, toronto, on (late show)", "songs": ["intro -> j.l.h. outro", "moya", "albanian", "monheim", "chart #3", "world police", "the cowboy", "gathering storm", "sad mafioso"], "recordings": [{"id": "gybe2011-04-24.late", "url": "https://archive.org/details/gybe2011-04-24.late", "title": "Godspeed You! Black Emperor Live at Lee's Palace (late show) on 2011-04-24"}]}, {"date": "2011-04-26", "venue": "centre communautaire de rupert, la pêche, qc", "songs": ["intro", "gathering storm", "monheim", "albanian", "the cowboy", "chart #3", "world police", "moya", "the sad mafioso"], "recordings": [{"id": "gybe2011-04-26.flacf", "url": "https://archive.org/details/gybe2011-04-26.flacf", "title": "Godspeed You! Black Emperor Live at Centre Communautaire de Rupert on 2011-04-26"}]}, {"date": "2011-04-27", "venue": "théâtre corona, montréal, qc", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-04-27.dpa.flac", "url": "https://archive.org/details/gybe2011-04-27.dpa.flac", "title": "Godspeed You! Black Emperor Live at Théâtre Corona on 2011-04-27"}]}, {"date": "2011-04-28", "venue": "théâtre corona, montréal, qc", "songs": ["intro", "moya", "albanian", "gathering storm", "12-28-99 (outro)", "chart #3", "world police", "john hughes", "tazer floyd", "sad mafioso"], "recordings": [{"id": "gybe2011-04-28.dpa.flac", "url": "https://archive.org/details/gybe2011-04-28.dpa.flac", "title": "Godspeed You! Black Emperor Live at Théâtre Corona on 2011-04-28"}, {"id": "gybe2011-04-28.flac16", "url": "https://archive.org/details/gybe2011-04-28.flac16", "title": "Godspeed You! Black Emperor Live at Theatre Corona on 2011-04-28"}]}, {"date": "2011-04-29", "venue": "théâtre corona, montréal, qc", "songs": ["intro", "dead metheny", "gathering storm", "tazer floyd", "chart #3", "world police", "albanian", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-04-29.mtx", "url": "https://archive.org/details/gybe2011-04-29.mtx", "title": "Godspeed You! Black Emperor Live at Théâtre Corona on 2011-04-29"}, {"id": "gybe2011-04-29.dpa.flac", "url": "https://archive.org/details/gybe2011-04-29.dpa.flac", "title": "Godspeed You! Black Emperor Live at Théâtre Corona on 2011-04-29"}, {"id": "gybe2011-04-29.flac", "url": "https://archive.org/details/gybe2011-04-29.flac", "title": "Godspeed You! Black Emperor Live at Theatre Corona on 2011-04-29"}]}, {"date": "2011-05-01", "venue": "théâtre l'olympia, montréal, qc", "songs": ["intro", "john hughes", "gathering storm", "albanian", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-05-01.flac", "url": "https://archive.org/details/gybe2011-05-01.flac", "title": "Godspeed You! Black Emperor Live at Théâtre Olympia on 2011-05-01"}]}, {"date": "2011-05-02", "venue": "théâtre l'olympia, montréal, qc", "songs": ["intro", "gathering storm", "monheim", "albanian", "chart #3", "world police", "dead metheny", "tazer floyd", "sad mafioso"], "recordings": [{"id": "gybe2011-05-02.dpa.flac", "url": "https://archive.org/details/gybe2011-05-02.dpa.flac", "title": "Godspeed You! Black Emperor Live at Théâtre Olympia on 2011-05-02"}]}, {"date": "2011-07-22", "venue": "the arches, glasgow, uk", "songs": ["intro", "gathering storm", "dead metheny", "monheim", "albanian", "tazer floyd", "chart #3", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "2011-07-23", "venue": "the lcr, norwich, uk", "songs": ["intro", "albanian", "tazer floyd", "moya", "dead metheny", "chart #3", "world police", "gathering storm", "sad mafioso"], "recordings": []}, {"date": "2011-07-24", "venue": "atp i'll be your mirror festival, alexandra palace, london, uk", "songs": ["intro", "albanian", "moya", "dead metheny", "chart #3", "world police", "gathering storm", "sad mafioso"], "recordings": [{"id": "gybe2011-07-24", "url": "https://archive.org/details/gybe2011-07-24", "title": "Godspeed You! Black Emperor Live at Alexandra Palace on 2011-07-24"}]}, {"date": "2011-07-25", "venue": "leeds metropolitan university, leeds, uk", "songs": ["intro", "albanian", "moya", "dead metheny", "chart #3", "world police", "gathering storm", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2011-07-25", "url": "https://archive.org/details/gybe2011-07-25", "title": "Godspeed You! Black Emperor Live at Leeds Metropolitan University on 2011-07-25"}]}, {"date": "2012-04-14", "venue": "coachella festival, empire polo club, indio, ca", "songs": ["intro", "albanian", "gathering storm", "chart #3", "world police"], "recordings": [{"id": "gybe2012-04-14.aud.flac16", "url": "https://archive.org/details/gybe2012-04-14.aud.flac16", "title": "Godspeed You! Black Emperor Live at Coachella Festival on 2012-04-14"}]}, {"date": "2012-04-15", "venue": "fernwood campground, big sur, ca", "songs": ["intro", "albanian", "chart #3", "world police", "gathering storm", "tazer floyd", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-04-15", "url": "https://archive.org/details/gybe2012-04-15", "title": "Godspeed You! Black Emperor Live at Fernwood Campground on 2012-04-15"}]}, {"date": "2012-04-16", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "monheim", "dead metheny", "chart #3", "world police", "tazer floyd", "the sad mafioso"], "recordings": [{"id": "gybe2012-04-16.m300.flac16", "url": "https://archive.org/details/gybe2012-04-16.m300.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"}, {"id": "gybe2012-04-16.ak40", "url": "https://archive.org/details/gybe2012-04-16.ak40", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"}, {"id": "gybe2012-04-16", "url": "https://archive.org/details/gybe2012-04-16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"}]}, {"date": "2012-04-17", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "gathering storm", "chart #3", "world police", "tazer floyd", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-04-17", "url": "https://archive.org/details/gybe2012-04-17", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-17"}]}, {"date": "2012-04-18", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "moya", "albanian", "monheim", "dead metheny", "chart #3", "world police", "the sad mafioso"], "recordings": [{"id": "gybe2012-04-18.ak40", "url": "https://archive.org/details/gybe2012-04-18.ak40", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-18"}, {"id": "gybe2012-04-18", "url": "https://archive.org/details/gybe2012-04-18", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-18"}]}, {"date": "2012-04-19", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "gathering storm", "monheim", "tazer floyd", "12-28-99 (outro)", "chart #3", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-04-19.mk4cmr", "url": "https://archive.org/details/gybe2012-04-19.mk4cmr", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-19"}]}, {"date": "2012-04-20", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "gathering storm", "dead metheny", "12-28-99 (outro)", "chart #3", "world police", "moya", "the sad mafioso"], "recordings": [{"id": "gybe2012-04-20.m300.flac16", "url": "https://archive.org/details/gybe2012-04-20.m300.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-20"}]}, {"date": "2012-04-21", "venue": "coachella festival, empire polo club, indio, ca", "songs": ["intro", "albanian", "tazer floyd", "world police"], "recordings": [{"id": "gybe2012-04-21.aud", "url": "https://archive.org/details/gybe2012-04-21.aud", "title": "Godspeed You! Black Emperor Live at Coachella Valley Music and Arts Festival on 2012-04-21"}]}, {"date": "2012-07-14", "venue": "pitchfork festival, union park, chicago, il", "songs": ["intro", "albanian (w/ aidan)", "gathering storm", "world police", "behemoth"], "recordings": [{"id": "gybe2012-07-14", "url": "https://archive.org/details/gybe2012-07-14", "title": "Godspeed You! Black Emperor Live at Union Park on 2012-07-14"}]}, {"date": "2012-09-20", "venue": "basilica hudson, hudson, ny", "songs": ["intro", "albanian", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-09-20.H4", "url": "https://archive.org/details/gybe2012-09-20.H4", "title": "Godspeed You! Black Emperor Live at Basilica Hudson on 2012-09-20"}]}, {"date": "2012-09-23", "venue": "atp i'll be your mirror festival, pier 36, new york, ny", "songs": ["intro", "albanian", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-01", "venue": "orpheum theater, boston, ma", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-10-01", "url": "https://archive.org/details/gybe2012-10-01", "title": "Godspeed You! Black Emperor Live at Orpheum Theater on 2012-10-01"}]}, {"date": "2012-10-02", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": [{"id": "gybe2012-10-02", "url": "https://archive.org/details/gybe2012-10-02", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2012-10-02"}]}, {"date": "2012-10-03", "venue": "ram's head live, baltimore, md", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-04", "venue": "cat's cradle, chapel hill, nc", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-05", "venue": "buckhead theater, atlanta, ga", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": []}, {"date": "2012-10-06", "venue": "cafe bottletree, birmingham, al", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-07", "venue": "tipitina's, new orleans, la", "songs": ["intro", "albanian", "(?)", "behemoth", "(?)"], "recordings": []}, {"date": "2012-10-09", "venue": "mohawk, austin, tx", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-10-09.flac16", "url": "https://archive.org/details/gybe2012-10-09.flac16", "title": "Godspeed You! Black Emperor Live at Mohawk on 2012-10-09"}]}, {"date": "2012-10-10", "venue": "mohawk, austin, tx", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-11", "venue": "granada theater, dallas, tx", "songs": ["intro", "albanian", "12-28-99 (outro)", "chart #3", "world police", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-12", "venue": "cannery ballroom, nashville, tn", "songs": ["intro", "albanian", "moya", "behemoth", "gathering storm"], "recordings": []}, {"date": "2012-10-13", "venue": "headliners music hall, louisville, ky", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-14", "venue": "majestic theatre, detroit, mi", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-15", "venue": "town ballroom, buffalo, ny", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-10-15", "url": "https://archive.org/details/gybe2012-10-15", "title": "Godspeed You! Black Emperor Live at Town Ballroom on 2012-10-15"}]}, {"date": "2012-10-28", "venue": "hard club, oporto, por", "songs": ["intro", "albanian", "monheim", "behemoth", "improvisation"], "recordings": []}, {"date": "2012-10-30", "venue": "kapital, madrid, sp", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-10-31", "venue": "apolo, barcelona, sp", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": []}, {"date": "2012-11-01", "venue": "le rocher de palmer, cenon, fr", "songs": ["intro", "albanian", "moya", "behemoth", "blaise bailey finnegan III"], "recordings": []}, {"date": "2012-11-02", "venue": "le lieu unique, nantes, fr", "songs": ["intro", "albanian", "moya", "behemoth", "blaise bailey finnegan III"], "recordings": []}, {"date": "2012-11-03", "venue": "la condition publique, roubaix, fr", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-11-04.OKMIIr.flac16", "url": "https://archive.org/details/gybe2012-11-04.OKMIIr.flac16", "title": "Godspeed You! Black Emperor Live at la Condition Publique on 2012-11-03"}, {"id": "gybe2012-11-03.dpa", "url": "https://archive.org/details/gybe2012-11-03.dpa", "title": "Godspeed You! Black Emperor Live at La Condition Publique on 2012-11-03"}]}, {"date": "2012-11-04", "venue": "kentish town forum, camden, london, uk", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-11-04.dpa", "url": "https://archive.org/details/gybe2012-11-04.dpa", "title": "Godspeed You! Black Emperor Live at Kentish Forum on 2012-11-04"}]}, {"date": "2012-11-05", "venue": "kentish town forum, camden, london, uk", "songs": ["intro", "albanian", "moya", "behemoth", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-11-05.ca-11.London.flac16", "url": "https://archive.org/details/gybe2012-11-05.ca-11.London.flac16", "title": "Godspeed You! Black Emperor Live at HMV Forum on 2012-11-05"}, {"id": "gybe2012-11-05.dpa", "url": "https://archive.org/details/gybe2012-11-05.dpa", "title": "Godspeed You! Black Emperor Live at Kentish Forum on 2012-11-05"}]}, {"date": "2012-11-07", "venue": "cirque royal, brussels, bel", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-11-07.ca14", "url": "https://archive.org/details/gybe2012-11-07.ca14", "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2012-11-07"}, {"id": "gybe2012-11-07.ca-11.Brussels.flac16", "url": "https://archive.org/details/gybe2012-11-07.ca-11.Brussels.flac16", "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2012-11-07"}]}, {"date": "2012-11-08", "venue": "so36, berlin, ger", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": [{"id": "gybe2012-11-08.dpa", "url": "https://archive.org/details/gybe2012-11-08.dpa", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"}, {"id": "gybe2012-11-08.ca-11", "url": "https://archive.org/details/gybe2012-11-08.ca-11", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"}, {"id": "gybe2012-11-08.mtx2", "url": "https://archive.org/details/gybe2012-11-08.mtx2", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"}, {"id": "gybe2012-11-08.mtx", "url": "https://archive.org/details/gybe2012-11-08.mtx", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"}]}, {"date": "2012-11-09", "venue": "so36, berlin, ger", "songs": ["intro", "albanian", "moya", "behemoth", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-11-09.ca-11", "url": "https://archive.org/details/gybe2012-11-09.ca-11", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-09"}, {"id": "gybe2012-11-09.dpa", "url": "https://archive.org/details/gybe2012-11-09.dpa", "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-09"}]}, {"date": "2012-11-10", "venue": "reithalle, dresden, ger", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-11-10", "url": "https://archive.org/details/gybe2012-11-10", "title": "Godspeed You! Black Emperor Live at Reithalle on 2012-11-10"}]}, {"date": "2012-11-11", "venue": "lucerna, prague, cze", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": [{"id": "gybe2012-11-11", "url": "https://archive.org/details/gybe2012-11-11", "title": "Godspeed You! Black Emperor Live at Lucerna on 2012-11-11"}]}, {"date": "2012-11-12", "venue": "arena, vienna, aut", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2012-11-12.cos11s.flac16", "url": "https://archive.org/details/gybe2012-11-12.cos11s.flac16", "title": "Godspeed You! Black Emperor Live at Arena on 2012-11-12"}]}, {"date": "2012-11-14", "venue": "kino šiška, ljubljana, slo", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2012-11-15", "venue": "rote fabrik, zürich, swi", "songs": ["intro", "albanian", "12-28-99 (outro)", "chart #3", "world police", "behemoth", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2012-11-15.DPA4060", "url": "https://archive.org/details/gybe2012-11-15.DPA4060", "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2012-11-15"}, {"id": "gybe2012-11-15", "url": "https://archive.org/details/gybe2012-11-15", "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2012-11-15"}]}, {"date": "2012-11-16", "venue": "dachstock reitschule, bern, swi", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": [{"id": "gybe2012-11-16", "url": "https://archive.org/details/gybe2012-11-16", "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2012-11-16"}]}, {"date": "2013-02-08", "venue": "king's arms, auckland, nz", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2013-02-09", "venue": "hunter's lounge, wellington, nz", "songs": ["intro", "albanian", "moya", "chart #3", "world police", "behemoth"], "recordings": []}, {"date": "2013-02-11", "venue": "chevron festival gardens, perth, aus", "songs": ["intro", "albanian", "moya", "chart #3", "world police", "behemoth"], "recordings": []}, {"date": "2013-02-13", "venue": "tivoli, brisbane, aus", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2013-02-14", "venue": "enmore theatre, sydney, aus", "songs": ["intro", "albanian", "moya", "monheim", "chart #3", "world police", "behemoth"], "recordings": [{"id": "gybe2013-02-14.aud", "url": "https://archive.org/details/gybe2013-02-14.aud", "title": "Godspeed You! Black Emperor Live at Enmore Theatre on 2013-02-14"}, {"id": "gybe2013-02-14.crankingamps", "url": "https://archive.org/details/gybe2013-02-14.crankingamps", "title": "Godspeed You! Black Emperor Live at Enmore Theatre on 2013-02-14"}]}, {"date": "2013-02-15", "venue": "forum, melbourne, aus", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-02-15.aud", "url": "https://archive.org/details/gybe2013-02-15.aud", "title": "Godspeed You! Black Emperor Live at The Forum on 2013-02-15"}, {"id": "gybe2013-02-15.crankingamps", "url": "https://archive.org/details/gybe2013-02-15.crankingamps", "title": "Godspeed You! Black Emperor Live at The Forum on 2013-02-15"}]}, {"date": "2013-02-16", "venue": "atp i'll be your mirror festival, westgate entertainment centre, melbourne, aus", "songs": ["intro", "albanian", "moya", "chart #3", "world police", "behemoth"], "recordings": [{"id": "gybe2013-02-16.brendan.flac24", "url": "https://archive.org/details/gybe2013-02-16.brendan.flac24", "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"}, {"id": "gybe2013-02-16.aud", "url": "https://archive.org/details/gybe2013-02-16.aud", "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"}, {"id": "gybe2013-02-16.brendan.flac16", "url": "https://archive.org/details/gybe2013-02-16.brendan.flac16", "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"}, {"id": "gybe2013-02-16.crankingamps", "url": "https://archive.org/details/gybe2013-02-16.crankingamps", "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"}]}, {"date": "2013-04-09", "venue": "liquid room, tokyo, jp", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2013-04-10", "venue": "liquid room, tokyo, jp", "songs": ["intro", "albanian", "chart #3", "world police", "behemoth", "blaise bailey finnegan III"], "recordings": []}, {"date": "2013-04-12", "venue": "tango, beijing, chi", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-04-12.matrix", "url": "https://archive.org/details/gybe2013-04-12.matrix", "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"}, {"id": "gybe2013-04-12.D50", "url": "https://archive.org/details/gybe2013-04-12.D50", "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"}, {"id": "gybe2013-04-12.hitlike", "url": "https://archive.org/details/gybe2013-04-12.hitlike", "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"}, {"id": "gybe2013-04-12", "url": "https://archive.org/details/gybe2013-04-12", "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"}]}, {"date": "2013-04-13", "venue": "q.s.w. culture centre, shanghai, chi", "songs": ["intro", "albanian", "gathering storm", "behemoth", "chart #3", "world police"], "recordings": [{"id": "gybe2013-04-13", "url": "https://archive.org/details/gybe2013-04-13", "title": "Godspeed You! Black Emperor Live at QSW Culture Centre on 2013-04-13"}]}, {"date": "2013-04-15", "venue": "the vine centre, wan chai, hong kong", "songs": ["intro", "albanian", "gathering storm", "behemoth", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2013-04-15", "url": "https://archive.org/details/gybe2013-04-15", "title": "Godspeed You! Black Emperor Live at The Vine Centre on 2013-04-15"}]}, {"date": "2013-04-18", "venue": "kl live, kuala lumpur, ml", "songs": ["intro", "albanian", "moya", "behemoth", "chart #3", "world police"], "recordings": []}, {"date": "2013-04-20", "venue": "ntu sports center, taipei, tai", "songs": ["intro", "albanian", "moya", "behemoth", "chart #3", "sad mafioso"], "recordings": []}, {"date": "2013-08-03", "venue": "off festival, dolina trzech stawów, katowice, pol", "songs": ["intro", "albanian", "moya", "behemoth"], "recordings": [{"id": "gybe2013-08-03", "url": "https://archive.org/details/gybe2013-08-03", "title": "Godspeed You! Black Emperor Live at Dolina Trzech Stawów on 2013-08-03"}]}, {"date": "2013-08-05", "venue": "ut connewitz, leipzig, ger", "songs": ["intro", "albanian", "monheim", "behemoth", "chart #3", "world police", "the cowboy (w/ tim)"], "recordings": [{"id": "gybe2013-08-05", "url": "https://archive.org/details/gybe2013-08-05", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"}, {"id": "gybe2013-08-05.leipzig1.ca-11.flac16", "url": "https://archive.org/details/gybe2013-08-05.leipzig1.ca-11.flac16", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"}, {"id": "gybe2013-08-05.leipzig1.ca-11.flac24", "url": "https://archive.org/details/gybe2013-08-05.leipzig1.ca-11.flac24", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"}, {"id": "gybe2013-08-05.matrix", "url": "https://archive.org/details/gybe2013-08-05.matrix", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"}]}, {"date": "2013-08-06", "venue": "ut connewitz, leipzig, ger", "songs": ["intro", "moya", "dead metheny", "behemoth", "sad mafioso", "the cowboy"], "recordings": [{"id": "gybe2013-08-06.leipzig2.ca-11.flac16", "url": "https://archive.org/details/gybe2013-08-06.leipzig2.ca-11.flac16", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"}, {"id": "gybe2013-08-06", "url": "https://archive.org/details/gybe2013-08-06", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"}, {"id": "gybe2013-08-06.leipzig2.ca-11.flac24", "url": "https://archive.org/details/gybe2013-08-06.leipzig2.ca-11.flac24", "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"}]}, {"date": "2013-08-07", "venue": "tivolis koncertsal, copenhagen, den", "songs": ["intro", "albanian", "dead metheny", "behemoth", "the cowboy"], "recordings": [{"id": "gybe2013-08-07.dpa4061.flac24", "url": "https://archive.org/details/gybe2013-08-07.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at Tivolis Koncertsal on 2013-08-07"}, {"id": "gybe2013-08-07.copenhagen.ca-11.flac24", "url": "https://archive.org/details/gybe2013-08-07.copenhagen.ca-11.flac24", "title": "Godspeed You! Black Emperor Live at Tivolis koncertsal on 2013-08-07"}, {"id": "gybe2013-08-07.copenhagen.ca-11.flac16", "url": "https://archive.org/details/gybe2013-08-07.copenhagen.ca-11.flac16", "title": "Godspeed You! Black Emperor Live at Tivolis koncertsal on 2013-08-07"}]}, {"date": "2013-08-08", "venue": "øyafestivalen, middelalderparken, oslo, nor", "songs": ["intro", "albanian", "behemoth", "blaise bailey finnegan III"], "recordings": []}, {"date": "2013-08-09", "venue": "way out west festival, slottsskogen, göteborg, swe", "songs": ["intro", "albanian", "behemoth", "chart #3", "world police"], "recordings": []}, {"date": "2013-08-11", "venue": "flow festival, suvilahti, helsinki, fin", "songs": ["intro", "albanian", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2013-08-14", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "albanian", "dead metheny", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-08-14.Amsterdam.Matrix.flac24", "url": "https://archive.org/details/gybe2013-08-14.Amsterdam.Matrix.flac24", "title": "Godspeed You! Black Emperor Live at Paradso on 2013-08-14"}, {"id": "gybe2013-08-14.amsterdam.ca-11.flac16", "url": "https://archive.org/details/gybe2013-08-14.amsterdam.ca-11.flac16", "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"}, {"id": "gybe2013-08-14.ca14", "url": "https://archive.org/details/gybe2013-08-14.ca14", "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"}, {"id": "gybe2013-08-14.amsterdam.ca-11.flac24", "url": "https://archive.org/details/gybe2013-08-14.amsterdam.ca-11.flac24", "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"}]}, {"date": "2013-08-15", "venue": "pukkelpop, domein kiewit, hasselt, bel", "songs": ["intro", "albanian", "behemoth", "blaise bailey finnegan III"], "recordings": []}, {"date": "2013-08-16", "venue": "la route du rock, fort de saint-père, st-malo, fr", "songs": ["intro", "albanian", "behemoth", "chart #3", "world police"], "recordings": []}, {"date": "2013-08-18", "venue": "le trianon, paris, fr", "songs": ["intro", "albanian", "monheim", "behemoth", "sad mafioso", "moya"], "recordings": [{"id": "gybe2013-08-18", "url": "https://archive.org/details/gybe2013-08-18", "title": "Godspeed You! Black Emperor Live at Le Trianon on 2013-08-18"}, {"id": "gybe2013-08-18.flacf", "url": "https://archive.org/details/gybe2013-08-18.flacf", "title": "Godspeed You! Black Emperor Live at Le Trianon on 2013-08-18"}]}, {"date": "2013-09-04", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "albanian", "monheim", "behemoth", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe2013-09-04.aud.flac16", "url": "https://archive.org/details/gybe2013-09-04.aud.flac16", "title": "Godspeed You! Black Emperor Live at The Vogue Theatre on 2013-09-04"}]}, {"date": "2013-09-05", "venue": "showbox, seattle, wa", "songs": ["intro", "albanian", "behemoth", "chart #3", "world police", "sad mafioso"], "recordings": []}, {"date": "2013-09-06", "venue": "roseland theater, portland, or", "songs": ["intro", "albanian", "gathering storm", "dead metheny", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2013-09-09", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth"], "recordings": [{"id": "gybe2013-09-09.m300.flac16", "url": "https://archive.org/details/gybe2013-09-09.m300.flac16", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-09"}, {"id": "gybe2013-09-09", "url": "https://archive.org/details/gybe2013-09-09", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-09"}]}, {"date": "2013-09-10", "venue": "great american music hall, san francisco, ca", "songs": ["intro", "albanian", "monheim", "dead metheny", "behemoth"], "recordings": [{"id": "gybe2013-09-10", "url": "https://archive.org/details/gybe2013-09-10", "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-10"}]}, {"date": "2013-09-12", "venue": "the fonda, los angeles, ca", "songs": ["intro", "albanian", "chart #3", "world police", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-09-12.dab.flac24", "url": "https://archive.org/details/gybe2013-09-12.dab.flac24", "title": "Godspeed You! Black Emperor Live at Henry Fonda Theater on 2013-09-12"}, {"id": "GYBE2013-09-12.audflac16", "url": "https://archive.org/details/GYBE2013-09-12.audflac16", "title": "Godspeed You! Black Emperor Live at The Fonda Theatre on 2013-09-12"}]}, {"date": "2013-09-14", "venue": "fox theater, pomona, ca", "songs": ["intro", "albanian", "gatheering storm", "behemoth", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2013-09-14.dab.flac24", "url": "https://archive.org/details/gybe2013-09-14.dab.flac24", "title": "Godspeed You! Black Emperor Live at The Fox Theater on 2013-09-14"}, {"id": "GYBE2013-09-14.audflac16", "url": "https://archive.org/details/GYBE2013-09-14.audflac16", "title": "Godspeed You! Black Emperor Live at The Fox Theatre on 2013-09-14"}]}, {"date": "2013-09-15", "venue": "belly up tavern, solana beach, ca", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-09-15.dab.flac24", "url": "https://archive.org/details/gybe2013-09-15.dab.flac24", "title": "Godspeed You! Black Emperor Live at Belly Up Tavern on 2013-09-15"}]}, {"date": "2013-09-16", "venue": "rialto theater, tucson, az", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-09-16", "url": "https://archive.org/details/gybe2013-09-16", "title": "Godspeed You! Black Emperor Live at Rialto Theatre on 2013-09-16"}]}, {"date": "2013-10-11", "venue": "td garden, boston, ma", "songs": ["intro", "behemoth"], "recordings": [{"id": "gybe2013-10-11", "url": "https://archive.org/details/gybe2013-10-11", "title": "Godspeed You! Black Emperor Live at TD Garden on 2013-10-11"}]}, {"date": "2013-10-12", "venue": "mohegan sun arena, uncasville, ct", "songs": ["intro", "behemoth"], "recordings": [{"id": "gybe2013-10-12", "url": "https://archive.org/details/gybe2013-10-12", "title": "Godspeed You! Black Emperor Live at Mohgen Sun Arena on 2013-10-12"}]}, {"date": "2013-10-14", "venue": "barclays center, brooklyn, ny", "songs": ["intro", "behemoth"], "recordings": [{"id": "gybe2013-10-14", "url": "https://archive.org/details/gybe2013-10-14", "title": "Godspeed You! Black Emperor Live at Barclays Center on 2013-10-14"}]}, {"date": "2013-10-15", "venue": "prudential center, newark, nj", "songs": ["intro", "albanian", "sad mafioso"], "recordings": [{"id": "gybe2013-10-15.flacf", "url": "https://archive.org/details/gybe2013-10-15.flacf", "title": "Godspeed You! Black Emperor Live at Prudential Center on 2013-10-15"}]}, {"date": "2013-10-16", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth"], "recordings": [{"id": "gybe2013-10-16", "url": "https://archive.org/details/gybe2013-10-16", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2013-10-16"}]}, {"date": "2013-10-18", "venue": "verizon center, washington, dc", "songs": ["intro", "behemoth"], "recordings": [{"id": "gybe2013-10-18", "url": "https://archive.org/details/gybe2013-10-18", "title": "Godspeed You! Black Emperor Live at Verizon Center on 2013-10-18"}]}, {"date": "2013-10-19", "venue": "bryce jordan center, university park, pa", "songs": ["intro", "behemoth"], "recordings": [{"id": "gybe2013-10-19.dpa", "url": "https://archive.org/details/gybe2013-10-19.dpa", "title": "Godspeed You! Black Emperor Live at Bryce Jordan Center @ Penn State University on 2013-10-19"}, {"id": "gybe2013-10-19.heb", "url": "https://archive.org/details/gybe2013-10-19.heb", "title": "Godspeed You! Black Emperor Live at Bryce Jordan Center on 2013-10-19"}]}, {"date": "2013-10-20", "venue": "jefferson theater, charlottesville, va", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth"], "recordings": []}, {"date": "2013-10-21", "venue": "pnc arena, raleigh, nc", "songs": ["intro", "behemoth"], "recordings": []}, {"date": "2013-10-22", "venue": "bridgestone arena, nashville, tn", "songs": ["intro", "behemoth"], "recordings": []}, {"date": "2013-10-24", "venue": "philips arena, atlanta, ga", "songs": ["intro", "behemoth"], "recordings": []}, {"date": "2013-10-26", "venue": "mountain oasis festival, u.s. cellular center, asheville, nc", "songs": ["intro", "albanian", "moya", "chart #3", "world police", "sad mafioso"], "recordings": []}, {"date": "2013-11-21", "venue": "o2 academy brixton, london, uk", "songs": ["intro", "albanian", "moya", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2013-11-21.flacf", "url": "https://archive.org/details/gybe2013-11-21.flacf", "title": "Godspeed You! Black Emperor Live at O2 Academy Brixton on 2013-11-21"}]}, {"date": "2013-11-23", "venue": "atp the end of an era festival, pontins, camber sand, uk", "songs": ["intro", "albanian", "gathering storm", "chart #3", "world police", "behemoth"], "recordings": []}, {"date": "2014-01-18", "venue": "metropolis, montréal, qc", "songs": ["intro", "albanian", "gathering storm", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2014-01-18", "url": "https://archive.org/details/gybe2014-01-18", "title": "Godspeed You! Black Emperor Live at Metropolis on 2014-01-18"}]}, {"date": "2014-01-19", "venue": "metropolis, montréal, qc", "songs": ["intro", "albanian", "monheim", "behemoth", "moya", "chart #3", "world police"], "recordings": [{"id": "gybe2014-01-19", "url": "https://archive.org/details/gybe2014-01-19", "title": "Godspeed You! Black Emperor Live at Metropolis on 2014-01-19"}]}, {"date": "2014-05-31", "venue": "primavera festival, parc del fòrum, barcelona, sp", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth"], "recordings": []}, {"date": "2014-06-06", "venue": "primavera festival, parque da cidade, oporto, por", "songs": ["intro", "albanian", "gathering storm", "moya", "behemoth"], "recordings": [{"id": "gybe2014-06-06.gybe2014-06-06.flac16", "url": "https://archive.org/details/gybe2014-06-06.gybe2014-06-06.flac16", "title": "Godspeed You! Black Emperor Live at Parque da Cidade do Porto (Primavera Sound 2014) on 2014-06-06"}]}, {"date": "2014-11-25", "venue": "théâtre granada, sherbrooke, qc", "songs": ["intro", "albanian", "behemoth", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2014-11-26", "venue": "théâtre l'impérial, québec, qc", "songs": ["intro", "albanian", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-04-07", "venue": "markthalle, hamburg, ger", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": [{"id": "gybe2015-04-07.aud.flac24", "url": "https://archive.org/details/gybe2015-04-07.aud.flac24", "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"}, {"id": "gybe2015-04-07.ca-11", "url": "https://archive.org/details/gybe2015-04-07.ca-11", "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"}, {"id": "gybe2015-04-07.mtx", "url": "https://archive.org/details/gybe2015-04-07.mtx", "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"}]}, {"date": "2015-04-08", "venue": "weststadthalle, essen, ger", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": [{"id": "gybe2015-04-08.dpa", "url": "https://archive.org/details/gybe2015-04-08.dpa", "title": "Godspeed You! Black Emperor Live at Weststadthalle on 2015-04-08"}, {"id": "gybe2015-04-08.essen.ca-14.flac16", "url": "https://archive.org/details/gybe2015-04-08.essen.ca-14.flac16", "title": "Godspeed You! Black Emperor Live at Weststadthalle on 2015-04-08"}]}, {"date": "2015-04-09", "venue": "freiheiz, munich, ger", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "tazer floyd (w/ tim)", "behemoth"], "recordings": [{"id": "gybe2015-04-09", "url": "https://archive.org/details/gybe2015-04-09", "title": "Godspeed You! Black Emperor Live at Freiheiz on 2015-04-09"}]}, {"date": "2015-04-10", "venue": "live club, trezzo sull'adda, it", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-11", "venue": "estragon, bologna, it", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-12", "venue": "les docks, lausanne, swi", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-04-15", "venue": "le transbordeur, villeurbanne, fr", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-16", "venue": "l'aéronef, lille, fr", "songs": ["intro", "bosses hang", "albanian", "moya", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-17", "venue": "albert hall, manchester, uk", "songs": ["intro", "bosses hang", "albanian", "moya", "anthem for no state", "behemoth"], "recordings": [{"id": "gybe2015-04-17.dpa4061.rob.flac24", "url": "https://archive.org/details/gybe2015-04-17.dpa4061.rob.flac24", "title": "Godspeed You! Black Emperor Live at Albert Hall on 2015-04-17"}]}, {"date": "2015-04-18", "venue": "vicar street, dublin, ir", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-04-19", "venue": "abc, glasgow, uk", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-20", "venue": "shepherd's bush empire, london, uk", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-04-22", "venue": "bataclan, paris, fr", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "moya"], "recordings": [{"id": "gybe2015-04-22", "url": "https://archive.org/details/gybe2015-04-22", "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-22"}, {"id": "gybe2015-04-22.alt", "url": "https://archive.org/details/gybe2015-04-22.alt", "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-22"}]}, {"date": "2015-04-23", "venue": "bataclan, paris, fr", "songs": ["intro", "bosses hang", "tazer floyd", "anthem for no state", "behemoth", "moya"], "recordings": [{"id": "gybe2015-04-23", "url": "https://archive.org/details/gybe2015-04-23", "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-23"}]}, {"date": "2015-04-24", "venue": "la vapeur, dijon, fr", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2015-04-24", "url": "https://archive.org/details/gybe2015-04-24", "title": "Godspeed You! Black Emperor Live at La Vapeur on 2015-04-24"}]}, {"date": "2015-04-25", "venue": "salzhaus, winterthur, swi", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": [{"id": "gybe2015-04-25", "url": "https://archive.org/details/gybe2015-04-25", "title": "Godspeed You! Black Emperor Live at Salzhaus on 2015-04-25"}]}, {"date": "2015-04-26", "venue": "messegelände, krems, aut", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-04-28", "venue": "la laiterie, strasbourg, fr", "songs": ["intro", "bosses hang", "albanian", "moya", "anthem for no state", "behemoth"], "recordings": [{"id": "gybe2015-04-28", "url": "https://archive.org/details/gybe2015-04-28", "title": "Godspeed You! Black Emperor Live at La Laiterie on 2015-04-28"}]}, {"date": "2015-04-29", "venue": "cirque royal, brussels, bel", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-04-30", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "tazer floyd", "behemoth"], "recordings": [{"id": "gybe2015-04-30.dpa", "url": "https://archive.org/details/gybe2015-04-30.dpa", "title": "Godspeed You! Black Emperor Live at Paradiso on 2015-04-30"}, {"id": "gybe2015-04-30.ls5", "url": "https://archive.org/details/gybe2015-04-30.ls5", "title": "Godspeed You! Black Emperor Live at Paradiso on 2015-04-30"}]}, {"date": "2015-05-01", "venue": "paard van troje, den haag, hol", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "moya", "behemoth"], "recordings": [{"id": "gybe2015-05-01", "url": "https://archive.org/details/gybe2015-05-01", "title": "Godspeed You! Black Emperor Live at Paard van Troje on 2015-05-01"}]}, {"date": "2015-06-25", "venue": "sled island, central united church, calgary, ab", "songs": ["intro", "bosses hang", "albanian", "anthem for no state", "behemoth"], "recordings": []}, {"date": "2015-06-26", "venue": "sled island, central united church, calgary, ab", "songs": ["intro", "behemoth", "bosses hang", "anthem for no state", "moya", "sad mafioso"], "recordings": []}, {"date": "2015-06-30", "venue": "roundhouse, camden, london, uk", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "sad mafioso"], "recordings": [{"id": "gybe2015-06-30", "url": "https://archive.org/details/gybe2015-06-30", "title": "Godspeed You! Black Emperor Live at Roundhouse on 2015-06-30"}]}, {"date": "2015-07-03", "venue": "all tomorrow's parties, ásbrú, keflavík, ic", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2015-07-17", "venue": "bennicàsim festival, recinto de festivales, benicàssim, sp", "songs": ["intro", "behemoth", "bosses hang", "albanian", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2015-07-19", "venue": "zanne festival, parco gioeni, catania, it", "songs": ["intro", "behemoth", "bosses hang", "moya", "albanian", "sad mafioso"], "recordings": []}, {"date": "2015-09-08", "venue": "basilica hudson, hudson, ny", "songs": ["intro", "behemoth", "bosses hang", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2015-09-09", "venue": "9:30 club, washington, dc", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "sad mafioso"], "recordings": [{"id": "gybe2015-09-09", "url": "https://archive.org/details/gybe2015-09-09", "title": "Godspeed You! Black Emperor Live at 9:30 Club on"}]}, {"date": "2015-09-10", "venue": "hopscotch music festival, city plaza, raleigh, nc", "songs": ["intro", "behemoth", "bosses hang", "moya", "sad mafioso"], "recordings": [{"id": "gsybe2015-09-10.hopscotch_acidjack", "url": "https://archive.org/details/gsybe2015-09-10.hopscotch_acidjack", "title": "Godspeed You! Black Emperor Live at Hopscotch Music Festival, City Plaza on 2015-09-10"}]}, {"date": "2015-09-11", "venue": "variety playhouse, atlanta, ga", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "albanian"], "recordings": [{"id": "godspeedyoublackemperor2015-09-11.flac16", "url": "https://archive.org/details/godspeedyoublackemperor2015-09-11.flac16", "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2015-09-11"}]}, {"date": "2015-09-12", "venue": "joy theater, new olreans, la", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "gathering storm", "albanian"], "recordings": []}, {"date": "2015-09-14", "venue": "mohawk, austin, tx", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2015-09-15", "venue": "mohawk, austin, tx", "songs": ["intro", "behemoth", "[bosses hang ?]", "gathering storm", "albanian", "moya"], "recordings": []}, {"date": "2015-09-16", "venue": "warehouse live, houston, tx", "songs": ["intro", "behemoth", "bosses hang", "gathering storm", "albanian"], "recordings": [{"id": "gybe2015-9-16-warehouseliveset", "url": "https://archive.org/details/gybe2015-9-16-warehouseliveset", "title": "Godspeed You! Black Emperor Live at Warehouse Live on 2015-09-16"}]}, {"date": "2015-09-17", "venue": "trees, dallas, tx", "songs": ["intro", "behemoth", "bosses hang", "moya", "anthem for no state", "albanian"], "recordings": [{"id": "gybe2015-09-17", "url": "https://archive.org/details/gybe2015-09-17", "title": "Godspeed You! Black Emperor Live at Trees on 2015-09-17"}]}, {"date": "2015-09-18", "venue": "minglewood hall, memphis, tn", "songs": ["intro", "behemoth", "bosses hang", "gathering storm", "anthem for no state", "albanian"], "recordings": []}, {"date": "2015-09-19", "venue": "marathon music works, nashville, tn", "songs": ["intro", "behemoth", "bosses hang", "moya", "sad mafioso"], "recordings": []}, {"date": "2015-09-21", "venue": "bluebird nightclub, bloomington, in", "songs": ["intro", "behemoth", "gathering storm", "anthem for no state", "albanian"], "recordings": [{"id": "gybe2015-09-21", "url": "https://archive.org/details/gybe2015-09-21", "title": "Godspeed You! Black Emperor Live at Bluebird Nightclub on 2015-09-21"}]}, {"date": "2015-09-22", "venue": "beachland ballroom, cleveland, oh", "songs": ["intro", "gathering storm", "behemoth", "anthem for no state", "albanian"], "recordings": [{"id": "gybe2015-09-22", "url": "https://archive.org/details/gybe2015-09-22", "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2015-09-22"}]}, {"date": "2015-09-23", "venue": "carnegie music hall of homestead, munhall, pa", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-09-23", "url": "https://archive.org/details/gybe2015-09-23", "title": "Godspeed You! Black Emperor Live at Carnegie Music Hall of Homestead on 2015-09-23"}]}, {"date": "2015-09-25", "venue": "danforth music hall, toronto, on", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-09-26", "venue": "danforth music hall, toronto, on", "songs": ["intro", "gathering storm", "behemoth", "moya", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2015-09-27", "venue": "paradise rock club, boston, ma", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "albanian"], "recordings": []}, {"date": "2015-09-28", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "gathering storm", "behemoth", "moya", "anthem for no state", "sad mafioso"], "recordings": [{"id": "gybe2015-09-28", "url": "https://archive.org/details/gybe2015-09-28", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2015-09-28"}]}, {"date": "2015-09-29", "venue": "terminal 5, new york, ny", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "albanian"], "recordings": []}, {"date": "2015-09-30", "venue": "music hall of williamsburg, brooklyn, ny", "songs": ["intro", "gathering storm", "behemoth", "moya", "anthem for no state", "sad mafioso"], "recordings": [{"id": "GYBE2015-09-30.nyctaper", "url": "https://archive.org/details/GYBE2015-09-30.nyctaper", "title": "Godspeed You! Black Emperor Live at Music Hall of Williamsburg on 2015-09-30"}]}, {"date": "2015-10-01", "venue": "warsaw, brooklyn, ny", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "albanian"], "recordings": []}, {"date": "2015-10-22", "venue": "warwick arts centre, coventry, uk", "songs": ["intro", "gathering storm", "behemoth", "albanian", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-10-22", "url": "https://archive.org/details/gybe2015-10-22", "title": "Godspeed You! Black Emperor Live at Warwick Arts Centre on 2015-10-22"}]}, {"date": "2015-10-23", "venue": "colston hall, bristol, uk", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-10-23", "url": "https://archive.org/details/gybe2015-10-23", "title": "Godspeed You! Black Emperor Live at Colston Hall on 2015-10-23"}]}, {"date": "2015-10-24", "venue": "sage gateshead, gateshead, uk", "songs": ["intro", "albanian", "behemoth", "moya", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-10-25", "venue": "liquid room, edinburgh, uk", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-10-27", "venue": "camp and furnace, liverpool, uk", "songs": ["intro", "gathering storm", "behemoth", "albanian", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-10-28", "venue": "brighton dome, brighton, uk", "songs": ["intro", "albanian", "behemoth", "monheim", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-10-29", "venue": "pitchfork festival, grande halle de la villette, paris, fr", "songs": ["intro", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-10-29", "url": "https://archive.org/details/gybe2015-10-29", "title": "Godspeed You! Black Emperor Live at Grande Halle de la Villette on 2015-10-29"}]}, {"date": "2015-10-30", "venue": "trix, antwerpen, bel", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-10-31", "venue": "de oosterpoort, groningen, nl", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-11-02", "venue": "den grå hal, københavn, den", "songs": ["intro", "gathering storm", "behemoth", "chart #3", "world police", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-11-02.aud.flac24", "url": "https://archive.org/details/gybe2015-11-02.aud.flac24", "title": "Godspeed You! Black Emperor Live at Den Graa Hal on 2015-11-02"}]}, {"date": "2015-11-03", "venue": "kb, malmö, swe", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2015-11-03.audix.flac16", "url": "https://archive.org/details/gybe2015-11-03.audix.flac16", "title": "Godspeed You! Black Emperor Live at KB on 2015-11-03"}, {"id": "gybe2015-11-03.dpa4061.flac24", "url": "https://archive.org/details/gybe2015-11-03.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at KB on 2015-11-03"}]}, {"date": "2015-11-04", "venue": "debaser medis, stockholm, swe", "songs": ["intro", "albanian", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-11-05", "venue": "debaser medis, stockholm, swe", "songs": ["intro", "gathering storm", "behemoth", "chart #3", "world police", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-11-06", "venue": "rockefeller, oslo, nor", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-11-08", "venue": "progresja, warsaw, pol", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-11-11", "venue": "huxleys neue welt, berlin, ger", "songs": ["intro", "gatherng storm", "behemoth", "monheim", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-11-12", "venue": "rote fabrik, zürich, swi", "songs": ["intro", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2015-11-13", "venue": "teatro della concordia, venaria reale, it", "songs": ["intro", "gathering storm", "behemoth", "chart #3", "world police", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2015-11-14", "venue": "c.s.o. rivolta, venice, it", "songs": ["intro", "gathering storm", "behemoth", "moya", "bosses hang", "albanian"], "recordings": []}, {"date": "2015-11-15", "venue": "atlantico live, rome, it", "songs": ["intro", "gathering storm", "behemoth", "monheim", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2015-11-17", "venue": "zorlu center p.s.m., istanbul, tur", "songs": ["intro", "moya", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2015-11-17", "url": "https://archive.org/details/gybe2015-11-17", "title": "Godspeed You! Black Emperor Live at Zorlu Center PSM on 2015-11-17"}]}, {"date": "2016-01-29", "venue": "neumos, seattle, wa", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2016-01-30", "venue": "neumos, seattle, wa", "songs": ["intro", "moya", "behemoth", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-01-31", "venue": "wonder ballroom, portland, or", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-01-31", "url": "https://archive.org/details/gybe2016-01-31", "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2016-01-31"}]}, {"date": "2016-02-03", "venue": "fox theater, oakland, ca", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-02-03", "url": "https://archive.org/details/gybe2016-02-03", "title": "Godspeed You! Black Emperor Live at Fox Theater on 2016-02-03"}]}, {"date": "2016-02-04", "venue": "immanuel presbyterian church, los angeles, ca", "songs": ["intro", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-02-04", "url": "https://archive.org/details/gybe2016-02-04", "title": "Godspeed You! Black Emperor Live at The Cathedral Sanctuary at Immanuel Presbyterian Church on 2016-02-04"}]}, {"date": "2016-02-05", "venue": "warner grand theater, san pedro, ca", "songs": ["intro", "anthem for no state", "behemoth", "monheim", "albanian"], "recordings": [{"id": "gybe2016-02-05.dpa", "url": "https://archive.org/details/gybe2016-02-05.dpa", "title": "Godspeed You! Black Emperor Live at Warner Grand Theater on 2016-02-05"}]}, {"date": "2016-02-06", "venue": "crescent ballroom, phoenix, az", "songs": ["intro", "behemoth", "dead metheny", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2016-02-08", "venue": "ogden theater, denver, co", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-02-10", "venue": "slowdown, omaha, ne", "songs": ["intro", "albanian", "behemoth", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2016-02-11", "venue": "first avenue, minneapolis, mn", "songs": ["intro", "behemoth", "bosses hang", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-02-12", "venue": "turner hall ballroom, milwaukee, wi", "songs": ["intro", "albanian", "behemoth", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-02-13", "venue": "rockefeller memorial chapel, chicago, il", "songs": ["intro", "gathering storm", "behemoth", "moya", "sad mafioso"], "recordings": []}, {"date": "2016-02-14", "venue": "thalia hall, chicago, il", "songs": ["intro", "albanian", "behemoth", "chart #3", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2016-02-14.tracked", "url": "https://archive.org/details/gybe2016-02-14.tracked", "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2016-02-14"}, {"id": "STE003_201602", "url": "https://archive.org/details/STE003_201602", "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2016-02-14"}]}, {"date": "2016-03-05", "venue": "adelaide festival centre, adelaide, aus", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2016-03-06", "venue": "thebarton theatre, adelaide, aus", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2016-03-07", "venue": "elisabeth murdoch hall, melbourne, aus", "songs": ["intro", "albanian", "behemoth", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2016-03-07.crankingamps", "url": "https://archive.org/details/gybe2016-03-07.crankingamps", "title": "Godspeed You! Black Emperor Live at Elisabeth Murdoch Hall, Melbourne Recital Centre on 2016-03-07"}]}, {"date": "2016-03-08", "venue": "the domain, sydney, aus", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-03-08", "url": "https://archive.org/details/gybe2016-03-08", "title": "Godspeed You! Black Emperor Live at The Domain on 2016-03-08"}]}, {"date": "2016-03-11", "venue": "macpherson stadium, yau tsim mong, hong kong", "songs": ["intro", "bosses hang", "behemoth", "chart #3", "world police", "albanian", "kicking horse on broken hill"], "recordings": []}, {"date": "2016-03-12", "venue": "q.s.w. culture centre, shanghai, chi", "songs": ["intro", "moya", "behemoth", "bosses hang", "sad mafioso", "chart #3", "world police"], "recordings": []}, {"date": "2016-03-14", "venue": "tango, beijing, chi", "songs": ["intro", "gathering storm", "behemoth", "monheim", "blaise bailey finnegan III", "sad mafioso"], "recordings": [{"id": "gybe2016-03-14", "url": "https://archive.org/details/gybe2016-03-14", "title": "Godspeed You! Black Emperor Live at Tango on 2016-03-14"}, {"id": "gybe2016-03-14.alt", "url": "https://archive.org/details/gybe2016-03-14.alt", "title": "Godspeed You! Black Emperor Live at Tango on 2016-03-14"}]}, {"date": "2016-03-16", "venue": "duo music exchange, tokyo, jp", "songs": ["intro", "gathering storm", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-03-16", "url": "https://archive.org/details/gybe2016-03-16", "title": "Godspeed You! Black Emperor Live at Tokyo Duo Music Exchange on 2016-03-16"}]}, {"date": "2016-03-17", "venue": "duo music exchange, tokyo, jp", "songs": ["intro", "moya", "behemoth", "monheim", "blaise bailey finnegan III", "kicking horse on broken hill"], "recordings": [{"id": "gybe2016-03-17", "url": "https://archive.org/details/gybe2016-03-17", "title": "Godspeed You! Black Emperor Live at Tokyo Duo Music Exchange on 2016-03-17"}]}, {"date": "2016-04-11", "venue": "théâtre maisonneuve, montréal, qc", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2016-04-12", "venue": "théâtre maisonneuve, montréal, qc", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2016-04-15", "venue": "grand théâtre, québec, qc", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2016-06-14", "venue": "hearn generating station, toronto, on", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2016-06-14", "url": "https://archive.org/details/gybe2016-06-14", "title": "Godspeed You! Black Emperor Live at Hearn Generating Station on 2016-06-14"}]}, {"date": "2016-06-15", "venue": "hearn generating station, toronto, on", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2016-08-08", "venue": "playhouse, edinburgh, uk", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2016-08-08", "url": "https://archive.org/details/gybe2016-08-08", "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-08"}]}, {"date": "2016-08-09", "venue": "playhouse, edinburgh, uk", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2016-08-09", "url": "https://archive.org/details/gybe2016-08-09", "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-09"}]}, {"date": "2016-08-10", "venue": "playhouse, edinburgh, uk", "songs": ["intro", "gathering storm", "bosses hang", "behemoth", "sad mafioso"], "recordings": [{"id": "gybe2016-08-10", "url": "https://archive.org/details/gybe2016-08-10", "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-10"}]}, {"date": "2016-08-12", "venue": "patinoire, le locle, swi", "songs": ["intro", "albanian", "behemoth", "sad mafioso"], "recordings": []}, {"date": "2016-08-13", "venue": "gloria, köln, ger", "songs": ["intro", "albanian", "behemoth", "bosses hang", "dead metheny"], "recordings": [{"id": "gybe2016-08-13", "url": "https://archive.org/details/gybe2016-08-13", "title": "Godspeed You! Black Emperor Live at Gloria on 2016-08-13"}, {"id": "gybe2016-08-13.remaster", "url": "https://archive.org/details/gybe2016-08-13.remaster", "title": "Godspeed You! Black Emperor Live at Gloria on 2016-08-13"}]}, {"date": "2016-08-15", "venue": "kampnagel k6, hamburg, ger", "songs": ["intro", "behemoth", "moya", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2016-08-16", "venue": "poppodium 013, tilburg, hol", "songs": ["intro", "albanian", "behemoth", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-08-17", "venue": "le trianon, paris, fr", "songs": ["intro", "albanian", "behemoth", "bosses hang", "blaise bailey finnegan III", "moya"], "recordings": []}, {"date": "2016-08-18", "venue": "coronet theatre, notting hill, london, uk", "songs": ["intro", "behemoth", "dead metheny", "bosses hang", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2016-08-18", "url": "https://archive.org/details/gybe2016-08-18", "title": "Godspeed You! Black Emperor Live at Coronet Theater on 2016-08-18"}]}, {"date": "2016-08-19", "venue": "arctangent festival, fernhill farm, compton martin, uk", "songs": ["intro", "behemoth", "moya", "blaise bailey finnegan III", "albanian"], "recordings": [{"id": "gybe2016-08-19.dpa4061.rob.flac24", "url": "https://archive.org/details/gybe2016-08-19.dpa4061.rob.flac24", "title": "Godspeed You! Black Emperor Live at ArcTanGent Festival, Fernhill Farm on 2016-08-19"}]}, {"date": "2016-08-21", "venue": "vicar street, dublin, ir", "songs": ["intro", "moya", "behemoth", "bosses hang", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2016-08-21", "url": "https://archive.org/details/gybe2016-08-21", "title": "Godspeed You! Black Emperor Live at Vicar Street on 2016-08-21"}]}, {"date": "2016-09-19", "venue": "théâtre paradoxe, montréal, qc", "songs": ["intro", "albanian", "behemoth", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2016-09-19", "url": "https://archive.org/details/gybe2016-09-19", "title": "Godspeed You! Black Emperor Live at Theatre Paradoxe on 2016-09-19"}]}, {"date": "2016-09-20", "venue": "théâtre paradoxe, montréal, qc", "songs": ["intro", "gathering storm", "behemoth", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-09-21", "venue": "théâtre paradoxe, montréal, qc", "songs": ["intro", "behemoth", "kicking horse on broken hill", "monheim", "bosses hang", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2016-09-21", "url": "https://archive.org/details/gybe2016-09-21", "title": "Godspeed You! Black Emperor Live at Theatre Paradoxe on 2016-09-21"}]}, {"date": "2016-09-22", "venue": "théâtre paradoxe, montréal, qc", "songs": ["intro", "behemoth", "dead metheny", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2016-10-15", "venue": "desert daze festival, institute of mentalphysics, joshua tree, ca", "songs": ["intro", "albanian", "behemoth", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2017-10-14", "venue": "auditorium conciliazione, rome, it", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": []}, {"date": "2017-10-15", "venue": "fri-son, fribourg, swi", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-16", "venue": "le bikini, toulouse, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-17", "venue": "krakatoa, mérignac, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-18", "venue": "théâtre national de bretagne, rennes, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-19", "venue": "le 106, rouen, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-20", "venue": "le toboggan, décines-charpieu, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-21", "venue": "la laiterie, strasbourg, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-22", "venue": "la condition publique, roubaix, fr", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "2 nouveau tower", "sad mafioso"], "recordings": []}, {"date": "2017-10-23", "venue": "brighton dome, brighton, uk", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-25", "venue": "boiler shop, newcastle, uk", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-27", "venue": "abc, glasgow, uk", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-28", "venue": "albert hall, manchester, uk", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-10-30", "venue": "motion, bristol, uk", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2017-10-30", "url": "https://archive.org/details/gybe2017-10-30", "title": "Godspeed You! Black Emperor Live at Motion on 2017-10-30"}]}, {"date": "2017-10-31", "venue": "troxy, london, uk", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2017-10-31", "url": "https://archive.org/details/gybe2017-10-31", "title": "Godspeed You! Black Emperor Live at Troxy on 2017-10-31"}]}, {"date": "2017-11-01", "venue": "vorst nationaal, brussels, bel", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2017-11-01.brussel.ca-14.flac16", "url": "https://archive.org/details/gybe2017-11-01.brussel.ca-14.flac16", "title": "Godspeed You! Black Emperor Live at Vorst Nationaal on 2017-11-01"}]}, {"date": "2017-11-02", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2017-11-02", "url": "https://archive.org/details/gybe2017-11-02", "title": "Godspeed You! Black Emperor Live at Paradiso on 2017-11-02"}, {"id": "gybe2017-11-02.amsterdam.ca-14.flac16", "url": "https://archive.org/details/gybe2017-11-02.amsterdam.ca-14.flac16", "title": "Godspeed You! Black Emperor Live at Paradiso on 2017-11-02"}]}, {"date": "2017-11-03", "venue": "festsaal kreuzberg, berlin, ger", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-11-05", "venue": "glocksee, hannover, ger", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-11-07", "venue": "élysée montmartre, paris, fr", "songs": ["intro", "sad mafioso", "bosses hang", "anthem for no state", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2017-11-07", "url": "https://archive.org/details/gybe2017-11-07", "title": "Godspeed You! Black Emperor Live at Élysée Montmartre on 2017-11-07"}]}, {"date": "2017-12-13", "venue": "sala corona, ciudad de méxico, mx", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-12-14", "venue": "c3 stage, guadalajara, mx", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-12-16", "venue": "paper tiger, san antonio, tx", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2017-12-17", "venue": "day for night festival, barbara jordan post office, houston, tx", "songs": ["intro", "bosses hang", "anthem for no state", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-01-13", "venue": "princess theatre, launceston, aus", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2018-01-13.crankingamps", "url": "https://archive.org/details/gybe2018-01-13.crankingamps", "title": "Godspeed You! Black Emperor Live at Princess Theatre on 2018-01-13"}]}, {"date": "2018-01-16", "venue": "metro, sydney, aus", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-01-16", "url": "https://archive.org/details/gybe2018-01-16", "title": "Godspeed You! Black Emperor Live at The Metro on 2018-01-16"}]}, {"date": "2018-01-19", "venue": "mona, hobart, aus", "songs": ["intro", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-01-19.crankingamps", "url": "https://archive.org/details/gybe2018-01-19.crankingamps", "title": "Godspeed You! Black Emperor Live at MONA on 2018-01-19"}]}, {"date": "2018-01-22", "venue": "elisabeth murdoch hall, melbourne, aus", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "sad mafioso"], "recordings": []}, {"date": "2018-03-05", "venue": "higher ground, burlington, vt", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-06", "venue": "port city music hall, portland, me", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "sad mafioso"], "recordings": [{"id": "gybe2018-03-06.Zoom.flac16", "url": "https://archive.org/details/gybe2018-03-06.Zoom.flac16", "title": "Godspeed You! Black Emperor Live at Portcity Music Hall on 2018-03-06"}]}, {"date": "2018-03-07", "venue": "the sinclair, cambridge, ma", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-08", "venue": "sanders theater, cambridge, ma", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "sad mafioso"], "recordings": []}, {"date": "2018-03-09", "venue": "columbus theater, providence, ri", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-10", "venue": "mass moca, north adams, ma", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-12", "venue": "brooklyn steel, brooklyn, ny", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-13", "venue": "brooklyn steel, brooklyn, ny", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-14", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-03-14", "url": "https://archive.org/details/gybe2018-03-14", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2018-03-14"}]}, {"date": "2018-03-15", "venue": "athenaeum theater, columbus, oh", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-16", "venue": "majestic theatre, madison, wi", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-03-16", "url": "https://archive.org/details/gybe2018-03-16", "title": "Godspeed You! Black Emperor Live at Majestic Theatre on 2018-03-16"}]}, {"date": "2018-03-17", "venue": "first avenue, minneapolis, mn", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-18", "venue": "metro, chicago, il", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-03-18.CM3.flac1644", "url": "https://archive.org/details/gybe2018-03-18.CM3.flac1644", "title": "Godspeed You! Black Emperor Live at Metro on 2018-03-18"}, {"id": "gybe2018-03-18.AT853.flac1644", "url": "https://archive.org/details/gybe2018-03-18.AT853.flac1644", "title": "Godspeed You! Black Emperor Live at Metro on 2018-03-18"}]}, {"date": "2018-03-19", "venue": "metro, chicago, il", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-20", "venue": "st-andrew's hall, detroit, mi", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-22", "venue": "big ears music festival, the mill and mine, knoxville, tn", "songs": ["intro", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "GYBE2018-03-22", "url": "https://archive.org/details/GYBE2018-03-22", "title": "Godspeed You! Black Emperor Live at The Mill & Mine on 2018-03-22"}]}, {"date": "2018-03-23", "venue": "haw river ballroom, saxapahaw, nc", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-03-24", "venue": "9:30 club, washington, dc", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-03-24", "url": "https://archive.org/details/gybe2018-03-24", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2018-03-24"}]}, {"date": "2018-03-25", "venue": "college street music hall, new haven, ct", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-10", "venue": "the circus, helsinki, fin", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-11", "venue": "vasateatern, stockholm, swe", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-12", "venue": "pustervik, göteborg, swe", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-13", "venue": "rockefeller, oslo, nor", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-04-13.LS-14", "url": "https://archive.org/details/gybe2018-04-13.LS-14", "title": "Godspeed You! Black Emperor Live at Rockefeller on 2018-04-13"}, {"id": "gybe2018-04-13", "url": "https://archive.org/details/gybe2018-04-13", "title": "Godspeed You! Black Emperor Live at Rockefeller on 2018-04-13"}]}, {"date": "2018-04-14", "venue": "slagthuset, malmö, swe", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-04-14.dpa4061.flac24", "url": "https://archive.org/details/gybe2018-04-14.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at Slagthuset on 2018-04-14"}]}, {"date": "2018-04-15", "venue": "vega, københavn, den", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-17", "venue": "tama, poznań, pol", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-18", "venue": "palladium, warsaw, pol", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "sad mafioso"], "recordings": []}, {"date": "2018-04-19", "venue": "divadlo archa, prague, cze", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-20", "venue": "festspielhaus hellerau, dresden, ger", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-21", "venue": "roadburn festival, poppodium 013, tilburg, hol", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-04-21.dpa4061.rob.flac24", "url": "https://archive.org/details/gybe2018-04-21.dpa4061.rob.flac24", "title": "Godspeed You! Black Emperor Live at Roadburn Festival, 013 on 2018-04-21"}]}, {"date": "2018-04-22", "venue": "roadburn festival, poppodium 013, tilburg, hol", "songs": ["intro", "albanian", "monheim", "2 nouveau tower", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe2018-04-22.dpa4061.rob.flac24", "url": "https://archive.org/details/gybe2018-04-22.dpa4061.rob.flac24", "title": "Godspeed You! Black Emperor Live at Roadburn Festival, 013 on 2018-04-22"}]}, {"date": "2018-04-24", "venue": "batschkapp, frankfurt, ger", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-25", "venue": "salzhaus, winterthur, swi", "songs": ["intro", "bosses hang", "monheim", "2 nouveau tower", "dead metheny", "sad mafioso"], "recordings": []}, {"date": "2018-04-26", "venue": "estragon, bologna, it", "songs": ["intro", "albanian", "bosses hang", "monheim", "2 nouveau tower", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-04-27", "venue": "stadtsaal, krems, aut", "songs": ["intro", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-04-27.cos11d", "url": "https://archive.org/details/gybe2018-04-27.cos11d", "title": "Godspeed You! Black Emperor Live at Stadtsaal on 2018-04-27"}]}, {"date": "2018-04-29", "venue": "gazi music hall, athens, gr", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "sad mafioso", "moya"], "recordings": [{"id": "gybe2018-04-29", "url": "https://archive.org/details/gybe2018-04-29", "title": "Godspeed You! Black Emperor Live at Gazi Music Hall on 2018-04-29"}]}, {"date": "2018-05-16", "venue": "mr. smalls theater, millvale, pa", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-17", "venue": "headliners, louisville, ky", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-18", "venue": "record bar, kansas city, mo", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-19", "venue": "ogden theater, denver, co", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-05-19.AT853sc", "url": "https://archive.org/details/gybe2018-05-19.AT853sc", "title": "Godspeed You! Black Emperor Live at Ogden Theatre on 2018-05-19"}, {"id": "gybe2018-05-19.AT4031", "url": "https://archive.org/details/gybe2018-05-19.AT4031", "title": "Godspeed You! Black Emperor Live at Ogden Theatre on 2018-05-19"}]}, {"date": "2018-05-21", "venue": "van buren, phoenix, az", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-22", "venue": "observatory north park, san diego, ca", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-23", "venue": "wiltern, los angeles, ca", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": [{"id": "GYBE2018-05-23.losangeles.aud.flac24", "url": "https://archive.org/details/GYBE2018-05-23.losangeles.aud.flac24", "title": "Godspeed You! Black Emperor Live at The Wiltern on 2018-05-23"}, {"id": "GYBE2018-05-23.losangeles.aud.flac16", "url": "https://archive.org/details/GYBE2018-05-23.losangeles.aud.flac16", "title": "Godspeed You! Black Emperor Live at The Wiltern on 2018-05-23"}]}, {"date": "2018-05-24", "venue": "observatory, santa ana, ca", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "monheim", "sad mafioso"], "recordings": []}, {"date": "2018-05-25", "venue": "pappy and harriets, pioneertown, ca", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-05-25.flac24", "url": "https://archive.org/details/gybe2018-05-25.flac24", "title": "Godspeed You! Black Emperor Live at Pappy & Harriet's on 2018-05-25"}]}, {"date": "2018-05-26", "venue": "bandit town, north fork, ca", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "monheim", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-05-26", "url": "https://archive.org/details/gybe2018-05-26", "title": "Godspeed You! Black Emperor Live at Bandit Town USA on 2018-05-26"}]}, {"date": "2018-05-28", "venue": "rio theater, santa cruz, ca", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-05-29", "venue": "fox theater, oakland, ca", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-05-29.mk4.48khz.flac16", "url": "https://archive.org/details/gybe2018-05-29.mk4.48khz.flac16", "title": "Godspeed You! Black Emperor Live at Fox Theatre on 2018-05-29"}, {"id": "gybe2018-05-29.at825.flac16", "url": "https://archive.org/details/gybe2018-05-29.at825.flac16", "title": "Godspeed You! Black Emperor Live at Fox Theater on 2018-05-29"}]}, {"date": "2018-05-31", "venue": "wonder ballroom, portland, or", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-06-01", "venue": "wonder ballroom, portland, or", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "sad mafioso"], "recordings": []}, {"date": "2018-06-02", "venue": "visual arts collective, garden city, id", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-06-03", "venue": "neptune theater, seattle, wa", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-06-04", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-07-04", "venue": "parco di villa ada, rome, it", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-07-05", "venue": "circolo magnolia, segrate, it", "songs": ["intro", "albanian", "bosses hang", "anthem for no state", "2 nouveau tower", "sad mafioso"], "recordings": []}, {"date": "2018-07-07", "venue": "pointu festival, île du gaou, six-fours-les-plages, fr", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "sad mafioso"], "recordings": []}, {"date": "2018-07-09", "venue": "openluchttheater rivierenhof, antwerpen, bel", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "sad mafioso"], "recordings": [{"id": "gybe2018-07-09.flacf", "url": "https://archive.org/details/gybe2018-07-09.flacf", "title": "Godspeed You! Black Emperor Live at Openluchttheater Rivierenhof on 2018-07-09"}]}, {"date": "2018-07-13", "venue": "barbican, london, uk", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2018-07-13", "url": "https://archive.org/details/gybe2018-07-13", "title": "Godspeed You! Black Emperor Live at Barbican on 2018-07-13"}]}, {"date": "2018-07-14", "venue": "barbican, london, uk", "songs": ["anthem for no state (part 1)", "untitled", "kicking horse on broken hill", "divorce & fever", "bosses hang (section)", "dead metheny", "untitled", "sad mafioso (part 2)", "behemoth (part 2)", "the dead flag blues (tape)"], "recordings": [{"id": "gybe2018-07-14", "url": "https://archive.org/details/gybe2018-07-14", "title": "Godspeed You! Black Emperor Live at Barbican on 2018-07-14"}]}, {"date": "2018-08-06", "venue": "phoenix, toronto, on", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-08-07", "venue": "phoenix, toronto, on", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "sad mafioso"], "recordings": [{"id": "gybe2018-08-07", "url": "https://archive.org/details/gybe2018-08-07", "title": "Godspeed You! Black Emperor Live at The Phoenix Concert Theatre on 2018-08-07"}]}, {"date": "2018-08-08", "venue": "asbury hall, buffalo, ny", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-08-09", "venue": "basilica hudson, hudson, ny", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-08-10", "venue": "prospect park, brooklyn, ny", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "monheim", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-08-10", "url": "https://archive.org/details/gybe2018-08-10", "title": "Godspeed You! Black Emperor Live at Prospect Park on 2018-08-10"}]}, {"date": "2018-08-11", "venue": "baltimore soundstage, baltimore, md", "songs": ["intro", "bosses hang", "anthem for no state", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2018-08-12", "venue": "house of independents, asbury park, nj", "songs": ["intro", "albanian", "bosses hang", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2018-08-12.mp3", "url": "https://archive.org/details/gybe2018-08-12.mp3", "title": "Godspeed You! Black Emperor Live at House of Independents on 2018-08-12"}]}, {"date": "2019-02-17", "venue": "III points, mana wynwood convention center, miami, fl", "songs": ["intro", "albanian", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-08", "venue": "the basement east, nashville, tn", "songs": ["intro", "glacier", "albanian", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-09", "venue": "orange peel, asheville, nc", "songs": ["intro", "glacier", "albanian", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-10", "venue": "variety playhouse, atlanta, ga", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2019-08-10", "url": "https://archive.org/details/gybe2019-08-10", "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2019-08-10"}]}, {"date": "2019-08-11", "venue": "joy theater, new orleans, la", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-13", "venue": "mohawk, austin, tx", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-14", "venue": "lowbrow palace, el paso, tx", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-15", "venue": "rialto theater, tucson, az", "songs": ["intro", "glacier", "albanian", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-16", "venue": "psycho las vegas, mandalay bay events center, las vegas, nv", "songs": ["intro", "albanian", "bosses hang", "glacier", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-17", "venue": "the theatre at ace hotel, los angeles, ca", "songs": ["macrimmon's lament", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2019-08-17", "url": "https://archive.org/details/gybe2019-08-17", "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"}, {"id": "gybe2019-08-17.flac16", "url": "https://archive.org/details/gybe2019-08-17.flac16", "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"}, {"id": "gybe2019-08-17.flac24", "url": "https://archive.org/details/gybe2019-08-17.flac24", "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"}]}, {"date": "2019-08-18", "venue": "castro theater, san francisco, ca", "songs": ["intro", "albanian", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-08-18", "url": "https://archive.org/details/gybe2019-08-18", "title": "Godspeed You! Black Emperor Live at Castro Theatre on 2019-08-18"}]}, {"date": "2019-08-20", "venue": "ace of spades, sacramento,  ca", "songs": ["intro", "albanian", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-08-21", "venue": "mcdonald theater, eugene, or", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-08-22", "venue": "revolution hall, portland, or", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-08-23", "venue": "spanish ballroom, tacoma, wa", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-08-24", "venue": "commodore ballroom, vancouver, bc", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-08-26", "venue": "palace theatre, calgary, ab", "songs": ["intro", "albanian", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-08-26", "url": "https://archive.org/details/gybe2019-08-26", "title": "Godspeed You! Black Emperor Live at The Palace Theatre, Calgary, Alberta on 2019-08-26"}]}, {"date": "2019-08-27", "venue": "starlite, edmonton, ab", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-08-27", "url": "https://archive.org/details/gybe2019-08-27", "title": "Godspeed You! Black Emperor Live at The StarLite Room on 2019-08-27"}]}, {"date": "2019-08-28", "venue": "broadway theatre, saskatoon, sk", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-08-29", "venue": "burton cummings theatre, winnipeg, mb", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-11-03", "venue": "la tulipe, montréal, qc", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-11-03", "url": "https://archive.org/details/gybe2019-11-03", "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-03"}]}, {"date": "2019-11-04", "venue": "la tulipe, montréal, qc", "songs": ["intro", "glacier", "2 nouveau tower", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2019-11-04", "url": "https://archive.org/details/gybe2019-11-04", "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-04"}]}, {"date": "2019-11-05", "venue": "la tulipe, montréal, qc", "songs": ["intro", "anthem for no state", "glacier", "2 nouveau tower", "cliff", "albanian"], "recordings": [{"id": "gybe2019-11-05", "url": "https://archive.org/details/gybe2019-11-05", "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-05"}]}, {"date": "2019-11-09", "venue": "lisboa ao vivo, lisboa, por", "songs": ["intro", "bosses hang", "glacier", "anthem for no state", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2019-11-09.Lisbon-LAV", "url": "https://archive.org/details/gybe2019-11-09.Lisbon-LAV", "title": "Godspeed You! Black Emperor Live at Lisboa ao Vivo on 2019-11-09"}, {"id": "GYBE2019-11-09", "url": "https://archive.org/details/GYBE2019-11-09", "title": "Godspeed You! Black Emperor Live at Lisboa ao Vivo on 2019-11-09"}]}, {"date": "2019-11-10", "venue": "hard club, oporto, por", "songs": ["intro", "albanian", "glacier", "anthem for no state", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-11-11", "venue": "capitol, santiago de compostela, sp", "songs": ["intro", "bosses hang", "glacier", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-12", "venue": "but, madrid, sp", "songs": ["intro", "bosses hang", "glacier", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-13", "venue": "kafe antzokia, bilbao, sp", "songs": ["intro", "moya", "glacier", "anthem for no state", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-11-14", "venue": "apolo, barcelona, sp", "songs": ["intro", "bosses hang", "glacier", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-16", "venue": "atabal, biarritz, fr", "songs": ["intro", "moya", "glacier", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-17", "venue": "paloma, nîmes, fr", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-11-17", "url": "https://archive.org/details/gybe2019-11-17", "title": "Godspeed You! Black Emperor Live at Paloma on 2019-11-17"}]}, {"date": "2019-11-18", "venue": "magazini generali, milan, it", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "sad mafioso"], "recordings": []}, {"date": "2019-11-19", "venue": "hall, padova, it", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-20", "venue": "kino šiška, ljubljana, slo", "songs": ["intro", "albanian", "glacier", "2 nouveau tower", "cliff", "blaise bailey finnegan III"], "recordings": []}, {"date": "2019-11-22", "venue": "tvornica kulture, zagreb, cro", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": []}, {"date": "2019-11-23", "venue": "dom im berg, graz, aut", "songs": ["intro", "glacier", "anthem for no state", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-11-23.cos11d", "url": "https://archive.org/details/gybe2019-11-23.cos11d", "title": "Godspeed You! Black Emperor Live at Dom im Berg on 2019-11-23"}]}, {"date": "2019-11-24", "venue": "technikum, munich, ger", "songs": ["intro", "glacier", "anthem for no state", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-11-24", "url": "https://archive.org/details/gybe2019-11-24", "title": "Godspeed You! Black Emperor Live at Technikum on 2019-11-24"}]}, {"date": "2019-11-25", "venue": "arena, vienna, aut", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "albanian"], "recordings": [{"id": "gybe2019-11-25.ca11", "url": "https://archive.org/details/gybe2019-11-25.ca11", "title": "Godspeed You! Black Emperor Live at Arena on 2019-11-25"}, {"id": "gybe2019-11-25.cos11d", "url": "https://archive.org/details/gybe2019-11-25.cos11d", "title": "Godspeed You! Black Emperor Live at Arena on 2019-11-25"}]}, {"date": "2019-11-27", "venue": "aurora, st-petersburg, ru", "songs": ["intro", "glacier", "2 nouveau tower", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2019-11-27.xyms", "url": "https://archive.org/details/gybe2019-11-27.xyms", "title": "Godspeed You! Black Emperor Live at Aurora Concert Hall on 2019-11-27"}, {"id": "gybe2019-11-27.vit", "url": "https://archive.org/details/gybe2019-11-27.vit", "title": "Godspeed You Black Emperor! Live at Aurora Concert Hall on 2019-11-27"}]}, {"date": "2019-11-28", "venue": "1930, moscow, ru", "songs": ["intro", "bosses hang", "glacier", "2 nouveau tower", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2019-11-28.flac16", "url": "https://archive.org/details/gybe2019-11-28.flac16", "title": "Godspeed You! Black Emperor Live at 1930 Moscow on 2019-11-28"}]}, {"date": "2022-02-25", "venue": "gothic theater, englewood, co", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff"], "recordings": [{"id": "gybe2022-02-25.aud.flac16", "url": "https://archive.org/details/gybe2022-02-25.aud.flac16", "title": "Godspeed You! Black Emperor Live at Gothic Theater on 2022-02-25"}, {"id": "gybe2022-02-25.remaster", "url": "https://archive.org/details/gybe2022-02-25.remaster", "title": "Godspeed You! Black Emperor Live at Gothic Theatre on 2022-02-25"}, {"id": "gybe2022-02-25.aud.flac24", "url": "https://archive.org/details/gybe2022-02-25.aud.flac24", "title": "Godspeed You! Black Emperor Live at Gothic Theatre on 2022-02-25"}]}, {"date": "2022-02-26", "venue": "boulder theater, boulder, co", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2022-02-26", "url": "https://archive.org/details/gybe2022-02-26", "title": "Godspeed You! Black Emperor Live at Boulder Theater on 2022-02-26"}]}, {"date": "2022-02-27", "venue": "meow wolf, santa fe, nm", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff"], "recordings": []}, {"date": "2022-03-01", "venue": "crystal ballroom, phoenix, az", "songs": ["intro", "glacier", "anthem for no state", "cliff", "moya", "blaise bailey finnegan III thanks to izeaid"], "recordings": []}, {"date": "2022-03-02", "venue": "music box, san diego, ca", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff thanks to woody, gus, and jessica"], "recordings": [{"id": "gybe2022-03-02.iQ7", "url": "https://archive.org/details/gybe2022-03-02.iQ7", "title": "Godspeed You! Black Emperor Live at Music Box on 2022-03-02"}, {"id": "gybe2022-03-02", "url": "https://archive.org/details/gybe2022-03-02", "title": "Godspeed You! Black Emperor Live at Music Box on 2022-03-02"}]}, {"date": "2022-03-03", "venue": "belasco, los angeles, ca", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to erik and jessica"], "recordings": [{"id": "gybe2022-03-03", "url": "https://archive.org/details/gybe2022-03-03", "title": "Godspeed You! Black Emperor Live at The Belasco, Los Angeles, CA on 2022-03-03"}, {"id": "gybe2022-03-03.flac24", "url": "https://archive.org/details/gybe2022-03-03.flac24", "title": "Godspeed You! Black Emperor Live at The Belasco Theatre on 2022-03-03"}]}, {"date": "2022-03-04", "venue": "uc theatre, berkeley, ca", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "sad mafioso thanks to sumerian, lucas, tankhaus, bowen, and jessica"], "recordings": [{"id": "gybe2022-03-04", "url": "https://archive.org/details/gybe2022-03-04", "title": "Godspeed You! Black Emperor Live at UC Theatre on 2022-03-04"}, {"id": "gybe2022-03-04.matrix", "url": "https://archive.org/details/gybe2022-03-04.matrix", "title": "Godspeed You! Black Emperor Live at The UC Theatre on 2022-03-04"}]}, {"date": "2022-03-05", "venue": "regency ballroom, san francisco, ca", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "cliff"], "recordings": [{"id": "gybe2022-03-05", "url": "https://archive.org/details/gybe2022-03-05", "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"}, {"id": "gybe2022-03-05.matrix", "url": "https://archive.org/details/gybe2022-03-05.matrix", "title": "Godspeed You! Black Emperor Live at The Regency Ballroom on 2022-03-05"}, {"id": "gybe2022-03-05.loughney", "url": "https://archive.org/details/gybe2022-03-05.loughney", "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"}, {"id": "gybe2022-03-05.m300.flac16", "url": "https://archive.org/details/gybe2022-03-05.m300.flac16", "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"}, {"id": "gybe2002-03-05", "url": "https://archive.org/details/gybe2002-03-05", "title": "Godspeed You! Black Emperor Live at The Regency Ballroom on 2022-03-05"}]}, {"date": "2022-03-06", "venue": "phoenix theater, petaluma, ca", "songs": ["intro", "moya", "glacier", "cliff", "monheim", "albanian thanks to lieutzip, bowen, and jessica"], "recordings": [{"id": "gybe2022-03-06", "url": "https://archive.org/details/gybe2022-03-06", "title": "Godspeed You! Black Emperor Live at The Phoenix Theater, Petaluma, CA on 2022-03-06"}]}, {"date": "2022-03-08", "venue": "showbox, seattle, wa", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff thanks to jonathan"], "recordings": [{"id": "gybe2022-03-08", "url": "https://archive.org/details/gybe2022-03-08", "title": "Godspeed You! Black Emperor Live at The Showbox on 2022-03-08"}]}, {"date": "2022-03-09", "venue": "roseland theater, portland, or", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III thanks to sumerian"], "recordings": [{"id": "gybe2022-03-09", "url": "https://archive.org/details/gybe2022-03-09", "title": "Godspeed You! Black Emperor Live at Roseland Theatre on 2022-03-09"}, {"id": "gybe2022-03-09.mastered", "url": "https://archive.org/details/gybe2022-03-09.mastered", "title": "Godspeed You! Black Emperor Live at Roseland Theater on 2022-03-09"}]}, {"date": "2022-03-10", "venue": "capital ballroom, victoria, bc", "songs": ["intro", "glaicer", "bosses hang", "anthem for no state", "moya", "cliff"], "recordings": [{"id": "gybe2022-03-10.Victoria", "url": "https://archive.org/details/gybe2022-03-10.Victoria", "title": "Godspeed You! Black Emperor Live at Capital Ballroom on 2022-03-10"}]}, {"date": "2022-03-11", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff thanks to jon and leif"], "recordings": [{"id": "gybe2022-03-11.Vancouver", "url": "https://archive.org/details/gybe2022-03-11.Vancouver", "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2022-03-11"}, {"id": "gybe2022-03-11.leifh", "url": "https://archive.org/details/gybe2022-03-11.leifh", "title": "Godspeed You Black Emperor! Live at Vogue Theatre on 2022-03-11"}]}, {"date": "2022-03-12", "venue": "community theatre, kelowna, bc", "songs": ["intro", "glacier", "monheim", "cliff", "anthem for no state", "blaise bailey finnegan III thanks to jon"], "recordings": [{"id": "gybe2022-03-12.Kelowna", "url": "https://archive.org/details/gybe2022-03-12.Kelowna", "title": "Godspeed You! Black Emperor Live at Kelowna Community Theatre on 2022-03-12"}]}, {"date": "2022-03-14", "venue": "palace theatre, calgary, ab", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "anthem for no state", "cliff thanks to jon and sharon"], "recordings": [{"id": "gybe2022-03-14.Calgary", "url": "https://archive.org/details/gybe2022-03-14.Calgary", "title": "Godspeed You! Black Emperor Live at Palace Theatre on 2022-03-14"}, {"id": "gybe2022-03-14.sharon", "url": "https://archive.org/details/gybe2022-03-14.sharon", "title": "Godspeed You! Black Emperor Live at Palace Theatre on 2022-03-14"}]}, {"date": "2022-03-15", "venue": "union hall, edmonton, ab", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to jon"], "recordings": [{"id": "gybe2022-03-15.Edmonton", "url": "https://archive.org/details/gybe2022-03-15.Edmonton", "title": "Godspeed You! Black Emperor Live at Union Hall on 2022-03-15"}]}, {"date": "2022-03-16", "venue": "broadway theatre, saskatoon, sk", "songs": ["intro", "glacier", "anthem for no state", "cliff", "monheim", "sad mafioso"], "recordings": [{"id": "gybe2022-03-16", "url": "https://archive.org/details/gybe2022-03-16", "title": "Godspeed You! Black Emperor Live at Broadway Theatre on 2022-03-16"}]}, {"date": "2022-03-17", "venue": "park theatre, winnipeg, mb", "songs": ["intro", "glacier", "bosses hang", "gathering storm", "albanian", "cliff"], "recordings": []}, {"date": "2022-03-18", "venue": "first avenue, minneapolis, mn", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III thanks to roffels"], "recordings": [{"id": "gybe2022-03-18.AUD", "url": "https://archive.org/details/gybe2022-03-18.AUD", "title": "Godspeed You! Black Emperor Live at First Avenue, Minneapolis MN on 2022-03-18"}]}, {"date": "2022-03-19", "venue": "thalia hall, chicago, il", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "sad mafioso thanks to bob and nei"], "recordings": [{"id": "gybe2022-03-19.mv88", "url": "https://archive.org/details/gybe2022-03-19.mv88", "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2022-03-19"}, {"id": "gybe2022-03-19.ecm", "url": "https://archive.org/details/gybe2022-03-19.ecm", "title": "Godspeed You Black Emperor! Live at Thalia Hall on 2022-03-19"}]}, {"date": "2022-03-20", "venue": "thalia hall, chicago, il", "songs": ["intro", "glacier", "monheim", "cliff", "moya", "blaise bailey finnegan III thanks to bob and nei"], "recordings": []}, {"date": "2022-04-15", "venue": "levon helm studios, woodstock, ny", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-04-15", "url": "https://archive.org/details/gybe2022-04-15", "title": "Godspeed You! Black Emperor Live at Levon Helm Studios on 2022-04-15"}, {"id": "gybe2022-04-15.tracked", "url": "https://archive.org/details/gybe2022-04-15.tracked", "title": "Godspeed You! Black Emperor Live at Levon Helm Studios on 2022-04-15"}]}, {"date": "2022-04-16", "venue": "academy of music, northampton, ma", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "sad mafioso"], "recordings": []}, {"date": "2022-04-17", "venue": "columbus theater, providence, ri", "songs": ["intro", "glacier", "bosses hang", "cliff", "monheim", "blaise bailey finnegan III thanks to frog"], "recordings": [{"id": "gybe2022-04-17.frog", "url": "https://archive.org/details/gybe2022-04-17.frog", "title": "Godspeed You! Black Emperor Live at Columbus Theatre on 2022-04-17"}, {"id": "gybe2022-04-17", "url": "https://archive.org/details/gybe2022-04-17", "title": "Godspeed You! Black Emperor Live at Columbus Theatre, Providence, Rhode Island on 2022-04-17"}]}, {"date": "2022-04-18", "venue": "fairfield theater company, fairfield, ct", "songs": ["intro", "glacier", "anthem for no state", "cliff", "gathering storm", "albanian"], "recordings": []}, {"date": "2022-04-19", "venue": "paradise rock club, boston, ma", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to nick"], "recordings": [{"id": "gybe2022-04-19.tascam", "url": "https://archive.org/details/gybe2022-04-19.tascam", "title": "Godspeed You! Black Emperor Live at Paradise Rock Club on 2022-04-19"}]}, {"date": "2022-04-21", "venue": "webster hall, new york, ny", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III thanks to nick, j.mart, and nihar"], "recordings": [{"id": "gybe2022-04-21.dpa4061.flac24", "url": "https://archive.org/details/gybe2022-04-21.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at Webster Hall on 2022-04-21"}]}, {"date": "2022-04-22", "venue": "white eagle hall, jersey city, nj", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "sad mafioso thanks to j.mart"], "recordings": [{"id": "gybe2022-04-22.dpa4061.flac24", "url": "https://archive.org/details/gybe2022-04-22.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at White Eagle Hall on 2022-04-22"}]}, {"date": "2022-04-23", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III thanks to \"big muff pi\""], "recordings": [{"id": "gybe2022-04-23.tascam16", "url": "https://archive.org/details/gybe2022-04-23.tascam16", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2022-04-23"}, {"id": "gybe2022-04-23.tascam24", "url": "https://archive.org/details/gybe2022-04-23.tascam24", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2022-04-23"}]}, {"date": "2022-04-24", "venue": "9:30 club, washington, dc", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to echtoplasm"], "recordings": [{"id": "gybe2022-04-24.samsung", "url": "https://archive.org/details/gybe2022-04-24.samsung", "title": "Godspeed You! Black Emperor Live at 9.30 Club on 2022-04-24"}]}, {"date": "2022-04-25", "venue": "the national, richmond, va", "songs": ["intro", "glacier", "bosses hang", "cliff", "monheim", "albanian"], "recordings": [{"id": "gybe2022-04-25.tracked", "url": "https://archive.org/details/gybe2022-04-25.tracked", "title": "Godspeed You! Black Emperor Live at National on 2022-04-25"}, {"id": "gybe2022-04-25", "url": "https://archive.org/details/gybe2022-04-25", "title": "Godspeed You! Black Emperor Live at The National, Richmond, VA on 2022-04-25"}]}, {"date": "2022-04-26", "venue": "cat's cradle, chapel hill, nc", "songs": ["intro", "glacier", "bosses hang", "cliff", "monheim", "albanian thanks to hazel and subsume"], "recordings": [{"id": "gybe2022-04-26.h1n", "url": "https://archive.org/details/gybe2022-04-26.h1n", "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2022-04-26"}]}, {"date": "2022-04-28", "venue": "beacham, orlando, fl", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-04-28", "url": "https://archive.org/details/gybe2022-04-28", "title": "Godspeed You! Black Emperor Live at The Beacham on 2022-04-28"}]}, {"date": "2022-04-29", "venue": "shaky knees festival, central park, atlanta, ga", "songs": ["intro", "glacier", "bosses hang", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-04-30", "venue": "caverns, pelham, tn", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "sad mafioso thanks to subsume"], "recordings": [{"id": "gybe2022-04-30", "url": "https://archive.org/details/gybe2022-04-30", "title": "Godspeed You! Black Emperor Live at Caverns, Pelham Tennessee on 2022-04-30"}]}, {"date": "2022-05-01", "venue": "saturn, birmingham, al", "songs": ["intro", "glacier", "bosses hang", "cliff", "monheim", "blaise bailey finnegan II"], "recordings": []}, {"date": "2022-05-03", "venue": "vogue, indianapolis, in", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-05-04", "venue": "beachland ballroom, cleveland, oh", "songs": ["intro", "glaicer", "bosses hang", "cliff", "monheim", "sad mafioso"], "recordings": []}, {"date": "2022-05-05", "venue": "phoenix, toronto, on", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "sad mafioso thanks to ren"], "recordings": [{"id": "gybe2022-05-05.ecm", "url": "https://archive.org/details/gybe2022-05-05.ecm", "title": "Godspeed You! Black Emperor Live at Phoenix Concert Theatre on 2022-05-05"}]}, {"date": "2022-05-06", "venue": "bridgeworks, hamilton, on", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-05-06", "url": "https://archive.org/details/gybe2022-05-06", "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2022-05-06"}]}, {"date": "2022-05-07", "venue": "bronson centre, ottawa, on", "songs": ["intro", "glacier", "bosses hang", "anthem for no state", "cliff", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-05-07.aud.flac24", "url": "https://archive.org/details/gybe2022-05-07.aud.flac24", "title": "Godspeed You Black Emperor! Live at Bronson Centre on 2022-05-07"}]}, {"date": "2022-07-13", "venue": "harbiye open air theatre, istanbul, tu", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-07-15", "venue": "acropolis, athens, gr", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to vomvos"], "recordings": [{"id": "gybe2022-07-15", "url": "https://archive.org/details/gybe2022-07-15", "title": "Godspeed You! Black Emperor Live at Odeon of Herodes Atticus on 2022-07-15"}]}, {"date": "2022-08-28", "venue": "this ain't no picnic, brookside park, pasadena, ca", "songs": ["glacier", "cliff", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-08-28.flac24", "url": "https://archive.org/details/gybe2022-08-28.flac24", "title": "Godspeed You! Black Emperor Live at This Ain't No Picnic Festival on 2022-08-28"}]}, {"date": "2022-09-17", "venue": "empire, coventry, uk", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-09-17.emmanuel", "url": "https://archive.org/details/gybe2022-09-17.emmanuel", "title": "Godspeed You! Black Emperor Live at Empire on 2022-09-17"}]}, {"date": "2022-09-18", "venue": "barrowland, glasgow, uk", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "sad mafioso"], "recordings": []}, {"date": "2022-09-19", "venue": "marble factory, bristol, uk", "songs": ["soundcheck: tazer floyd", "intro", "glacier", "bosses hang", "cliff", "tazer floyd", "world police"], "recordings": [{"id": "gybe2022-09-19.tascam", "url": "https://archive.org/details/gybe2022-09-19.tascam", "title": "Godspeed You! Black Emperor Live at Marble Factory on 2022-09-19"}]}, {"date": "2022-09-20", "venue": "electric ballroom, camden town, london, uk", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "blaise bailey finnegan III thanks to emmanuel, emily, markus"], "recordings": [{"id": "gybe2022-09-20.DPA4060", "url": "https://archive.org/details/gybe2022-09-20.DPA4060", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-20"}, {"id": "gybe2022-09-20", "url": "https://archive.org/details/gybe2022-09-20", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-20"}]}, {"date": "2022-09-21", "venue": "electric ballroom, camden town, london, uk", "songs": ["intro", "glacier", "tazer floyd", "cliff", "anthem for no state", "sad mafioso thanks to emmanuel, emily, markus"], "recordings": [{"id": "gybe2022-09-21.DPA4060", "url": "https://archive.org/details/gybe2022-09-21.DPA4060", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-21"}, {"id": "gybe2022-09-21", "url": "https://archive.org/details/gybe2022-09-21", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-21"}]}, {"date": "2022-09-22", "venue": "electric ballroom, camden town, london, uk", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to emmanuel, emily, markus"], "recordings": [{"id": "gybe2022-09-22", "url": "https://archive.org/details/gybe2022-09-22", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-22"}, {"id": "gybe2022-09-22.DPA4060", "url": "https://archive.org/details/gybe2022-09-22.DPA4060", "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-22"}]}, {"date": "2022-09-23", "venue": "manchester academy, manchester, uk", "songs": ["intro", "sad mafioso", "glacier", "world police", "moya", "blaise bailey finnegan III thanks to emmanuel, emily, oscar"], "recordings": []}, {"date": "2022-09-25", "venue": "élysée montmartre, paris, fr", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "sad mafioso"], "recordings": []}, {"date": "2022-09-26", "venue": "scène parc botanique, brussels, bel", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-09-26.dpa4061", "url": "https://archive.org/details/gybe2022-09-26.dpa4061", "title": "Godspeed You! Black Emperor Live at Scène Parc Botanique on 2022-09-26"}, {"id": "gybe2022-09-26.at943", "url": "https://archive.org/details/gybe2022-09-26.at943", "title": "Godspeed You! Black Emperor Live at Scène Parc Botanique on 2022-09-26"}]}, {"date": "2022-09-27", "venue": "felsenkeller, leipzig, ger", "songs": ["intro", "glacier", "bosses hang", "cliff", "tazer floyd", "sad mafioso"], "recordings": [{"id": "gybe2022-09-27.pcmm10", "url": "https://archive.org/details/gybe2022-09-27.pcmm10", "title": "Godspeed You! Black Emperor Live at Felsenkeller on 2022-09-27"}]}, {"date": "2022-09-28", "venue": "astra kulturhaus, berlin, ger", "songs": ["intro", "glacier", "anthem for no state", "cliff", "world police", "sad mafioso thanks to laura"], "recordings": [{"id": "gybe2022-09-28.okm", "url": "https://archive.org/details/gybe2022-09-28.okm", "title": "Godspeed You! Black Emperor Live at Astra on 2022-09-28"}]}, {"date": "2022-09-29", "venue": "muffathalle, münich, ger", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-09-30", "venue": "rote fabrik, zürich, swi", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "sad mafioso"], "recordings": [{"id": "gybe2022-09-30", "url": "https://archive.org/details/gybe2022-09-30", "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2022-09-30"}]}, {"date": "2022-10-01", "venue": "estragon, bologna, it", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-10-03", "venue": "largo venue, rome, it", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2022-10-04", "venue": "alcatraz, milan, it", "songs": ["intro", "glacier", "bosses hang", "cliff", "tazer floyd", "fire at static valley", "world police"], "recordings": []}, {"date": "2022-10-05", "venue": "la coopérative de mai, clermont-ferrand, fr", "songs": ["intro", "glacier", "anthem for no state", "cliff", "tazer floyd", "fire at static valley", "world police"], "recordings": []}, {"date": "2022-10-06", "venue": "krakatoa, mérignac, fr", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "fire at static valley", "world police"], "recordings": []}, {"date": "2022-10-08", "venue": "le bikini, toulouse, fr", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-10-09", "venue": "am fest, la farga, barcelona, sp", "songs": ["intro", "glacier", "bosses hang", "cliff", "sad mafioso"], "recordings": []}, {"date": "2022-10-10", "venue": "zaragoza fest, jardín de invierno, zaragoza, sp", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-10-11", "venue": "repvblicca, valencia, sp", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "sad mafioso"], "recordings": []}, {"date": "2022-10-12", "venue": "sala but, madrid, sp", "songs": ["intro", "glacier", "anthem for no state", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-10-13", "venue": "santana 27, bilbao, sp", "songs": ["intro", "glacier", "cliff", "tazer floyd", "(incomplete / out of order)"], "recordings": []}, {"date": "2022-10-15", "venue": "amplifest, hard club, oporto, por", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "sad mafioso"], "recordings": []}, {"date": "2022-10-28", "venue": "levitation festival, empire, austin, tx", "songs": ["intro", "glacier", "bosses hang", "cliff", "sad mafioso thanks to will akers."], "recordings": [{"id": "gybe2022-10-28", "url": "https://archive.org/details/gybe2022-10-28", "title": "Godspeed You! Black Emperor Live at Levitation Festival on 2022-10-28"}]}, {"date": "2022-10-29", "venue": "white oak music hall, houston, tx", "songs": ["intro", "glacier", "anthem for no state", "cliff", "moya", "blaise bailey finnegan III thanks to will akers."], "recordings": [{"id": "gybe2022-10-29", "url": "https://archive.org/details/gybe2022-10-29", "title": "Godspeed You! Black Emperor Live at White Oak Music Hall on 2022-10-29"}]}, {"date": "2022-10-30", "venue": "chelsea's live, baton rouge, la", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "sad mafioso"], "recordings": []}, {"date": "2022-10-31", "venue": "texas theater, dallas, tx", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "blaise bailey finnegan III thanks to will akers, tollbooths, eve, and spnii"], "recordings": [{"id": "gybe2022-10-31", "url": "https://archive.org/details/gybe2022-10-31", "title": "Godspeed You! Black Emperor Live at Texas Theatre on 2022-10-31"}]}, {"date": "2022-11-01", "venue": "tower theater, oklahoma city, ok", "songs": ["intro", "glacier", "anthem for no state", "cliff", "monheim", "fire at static valley", "sad mafioso thanks to coleson"], "recordings": [{"id": "gybe2022-11-01", "url": "https://archive.org/details/gybe2022-11-01", "title": "Godspeed You! Black Emperor Live at Tower Theater on 2022-11-01"}, {"id": "gybe2022-11-01.mv88.remaster", "url": "https://archive.org/details/gybe2022-11-01.mv88.remaster", "title": "Godspeed You! Black Emperor Live at Tower Theater on 2022-11-01"}]}, {"date": "2022-11-03", "venue": "delmar hall, st. louis, mo", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "sad mafioso thanks to nick and dave."], "recordings": [{"id": "gybe2022-11-03.matrix", "url": "https://archive.org/details/gybe2022-11-03.matrix", "title": "Godspeed You! Black Emperor Live at Delmar Hall on 2022-11-03"}, {"id": "gybe2022-11-03.ZoomH2NFlac24", "url": "https://archive.org/details/gybe2022-11-03.ZoomH2NFlac24", "title": "Godspeed You! Black Emperor Live at Delmar Hall St. Louis MO. on 2022-11-03"}, {"id": "gybe2022-11-03.DPA4061remaster", "url": "https://archive.org/details/gybe2022-11-03.DPA4061remaster", "title": "Godspeed You! Black Emperor Live at Delmar Hall on 2022-11-03"}]}, {"date": "2022-11-04", "venue": "admiral theater, omaha, ne", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-11-05", "venue": "englert theater, iowa city, ia", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "sad mafioso thanks to bob and jessica"], "recordings": [{"id": "gybe2022-11-05", "url": "https://archive.org/details/gybe2022-11-05", "title": "Godspeed You! Black Emperor Live at Englert Theater on 2022-11-05"}]}, {"date": "2022-11-06", "venue": "blue note, columbia, mo", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "fire at static valley", "world police thanks to neff and dave"], "recordings": [{"id": "gybe2022-11-06.mtx", "url": "https://archive.org/details/gybe2022-11-06.mtx", "title": "Godspeed You! Black Emperor Live at Blue Note on 2022-11-06"}]}, {"date": "2022-11-07", "venue": "pabst theater, milwaukee, wi", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "sad mafioso thanks to jessica"], "recordings": [{"id": "gybe2022-11-07.MV88", "url": "https://archive.org/details/gybe2022-11-07.MV88", "title": "Godspeed You Black Emperor! Live at Pabst Theater on 2022-11-07"}]}, {"date": "2022-11-08", "venue": "majestic theater, detroit, mi", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2022-11-10", "venue": "variety playhouse, atlanta, ga", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "sad mafioso"], "recordings": [{"id": "gybe2022-11-10", "url": "https://archive.org/details/gybe2022-11-10", "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2022-11-10"}]}, {"date": "2022-11-11", "venue": "orange peel, asheville, nc", "songs": ["intro", "glacier", "bosses hang", "cliff", "albanian", "blaise bailey finnegan III thanks to hazel, gabe, and subsume"], "recordings": []}, {"date": "2022-11-12", "venue": "stuart's opera house, nelsonville, oh", "songs": ["intro", "glacier", "tazer floyd", "anthem for no state", "cliff", "sad mafioso"], "recordings": []}, {"date": "2022-11-13", "venue": "roxian theater, mckees rocks, pa", "songs": ["intro", "glacier", "tazer floyd", "anthem for no state", "cliff", "albanian thanks to reid"], "recordings": [{"id": "gybe2022-11-13.2024.remaster", "url": "https://archive.org/details/gybe2022-11-13.2024.remaster", "title": "Godspeed You! Black Emperor Live at Roxian Theater on 2022-11-13"}, {"id": "gybe2022-11-13", "url": "https://archive.org/details/gybe2022-11-13", "title": "Godspeed You! Black Emperor Live at Roxian Theater on 2022-11-13"}]}, {"date": "2022-11-15", "venue": "town ballroom, buffalo, ny", "songs": ["intro", "glacier", "bosses hang", "tazer floyd", "cliff", "albanian thanks to klaypersonne"], "recordings": []}, {"date": "2022-11-16", "venue": "elsewhere, brooklyn, ny", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "sad mafioso"], "recordings": []}, {"date": "2022-11-17", "venue": "elsewhere, brooklyn, ny", "songs": ["intro", "glacier", "bosses hang", "tazer floyd", "cliff", "albanian thanks to simplicial"], "recordings": [{"id": "gybe2022-11-17", "url": "https://archive.org/details/gybe2022-11-17", "title": "Godspeed You! Black Emperor Live at Elsewhere on 2022-11-17"}]}, {"date": "2022-11-18", "venue": "state theater, portland, me", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2022-11-18.flac16", "url": "https://archive.org/details/gybe2022-11-18.flac16", "title": "Godspeed You Black Emperor! Live at The State Theater on 2022-11-18"}]}, {"date": "2022-11-19", "venue": "higher ground, burlington, vt", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "sad mafioso"], "recordings": []}, {"date": "2023-03-08", "venue": "mtelus, montréal, qc", "songs": ["intro", "glacier", "bosses hang", "cliff", "albanian", "anthem for no state", "blaise bailey finnegan III thanks to luke"], "recordings": []}, {"date": "2023-03-09", "venue": "mtelus, montréal, qc", "songs": ["intro", "gathering storm", "glacier", "fire at static valley", "world police", "john hughes", "sad mafioso thanks to joel"], "recordings": []}, {"date": "2023-03-13", "venue": "the chapel, san francisco, ca", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state"], "recordings": [{"id": "gybe2023-02-13", "url": "https://archive.org/details/gybe2023-02-13", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-13"}]}, {"date": "2023-03-14", "venue": "the chapel, san francisco, ca", "songs": ["intro", "gathering storm", "glacier", "cliff", "moya", "sad mafioso"], "recordings": [{"id": "gybe2023-03-14.dr40x_ux570", "url": "https://archive.org/details/gybe2023-03-14.dr40x_ux570", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-14"}, {"id": "gybe2023-03-14", "url": "https://archive.org/details/gybe2023-03-14", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-14"}]}, {"date": "2023-03-15", "venue": "the chapel, san francisco, ca", "songs": ["intro", "glacier", "dead metheny", "cliff", "monheim", "albanian"], "recordings": [{"id": "gybe2023-03-15.DR40X", "url": "https://archive.org/details/gybe2023-03-15.DR40X", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-15"}, {"id": "gybe2023-03-15.MC59W", "url": "https://archive.org/details/gybe2023-03-15.MC59W", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-15"}]}, {"date": "2023-03-16", "venue": "the chapel, san francisco, ca", "songs": ["intro", "john hughes", "glacier", "bosses hang", "cliff", "fire at static valley"], "recordings": [{"id": "gybe2023-03-16", "url": "https://archive.org/details/gybe2023-03-16", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-16"}, {"id": "gybe2023-03-16.H6_UX570", "url": "https://archive.org/details/gybe2023-03-16.H6_UX570", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-16"}]}, {"date": "2023-03-17", "venue": "the chapel, san francisco, ca", "songs": ["intro", "glacier", "anthem for no state", "cliff", "tazer floyd"], "recordings": [{"id": "gybe2023-03-17.MC59W", "url": "https://archive.org/details/gybe2023-03-17.MC59W", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-17"}, {"id": "gybe2023-03-17.cm4.flac16", "url": "https://archive.org/details/gybe2023-03-17.cm4.flac16", "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-17"}]}, {"date": "2023-03-18", "venue": "pappy and harriet's, pioneertown, ca", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III thanks to jessica, gus, woody"], "recordings": [{"id": "gybe2023-03-18", "url": "https://archive.org/details/gybe2023-03-18", "title": "Godspeed You! Black Emperor Live at Pappy & Harriet's on 2023-03-18"}]}, {"date": "2023-03-19", "venue": "garden amp, garden grove, ca", "songs": ["intro", "glacier", "anthem for no state", "cliff", "bosses hang", "sad mafioso"], "recordings": [{"id": "gybe2023-03-19", "url": "https://archive.org/details/gybe2023-03-19", "title": "Godspeed You! Black Emperor Live at Garden Amphitheatre on 2023-03-19"}, {"id": "gybe2023-03-19.dpa4081.flac24", "url": "https://archive.org/details/gybe2023-03-19.dpa4081.flac24", "title": "Godspeed You! Black Emperor Live at Garden Amp on 2023-03-19"}]}, {"date": "2023-03-21", "venue": "washington's, ft. collins, co", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2023-03-21", "url": "https://archive.org/details/gybe2023-03-21", "title": "Godspeed You! Black Emperor Live at Washington's on 2023-03-21"}]}, {"date": "2023-03-22", "venue": "the depot, salt lake city, ut", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "albanian"], "recordings": []}, {"date": "2023-03-23", "venue": "treefort festival, egyptian theater, boise, id", "songs": ["intro", "glacier", "bosses hang", "cliff", "gathering storm", "sad mafioso"], "recordings": []}, {"date": "2023-04-08", "venue": "rewire festival, paard van troje, den haag, hol", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III thanks to jan-willem"], "recordings": []}, {"date": "2023-04-09", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "sad mafioso"], "recordings": []}, {"date": "2023-04-10", "venue": "4ad, diksmuide, bel", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "monheim", "sad mafioso"], "recordings": []}, {"date": "2023-04-11", "venue": "l'aéronef, lille, fr", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "albanian thanks to oscar"], "recordings": [{"id": "gybe2023-04-11.H2n", "url": "https://archive.org/details/gybe2023-04-11.H2n", "title": "Godspeed You! Black Emperor Live at L'Aéronef on 2023-04-11"}]}, {"date": "2023-04-12", "venue": "l'antipode, rennes, fr", "songs": ["intro", "glacier", "bosses hang", "cliff", "gathering storm", "sad mafioso thanks to brocco"], "recordings": []}, {"date": "2023-04-14", "venue": "le transbordeur, villeurbanne, fr", "songs": ["intro", "glacier", "anthem for no state", "cliff", "gathering storm", "sad mafioso"], "recordings": []}, {"date": "2023-04-15", "venue": "dachstock reitschule, bern, swi", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2023-04-16", "venue": "l'usine, genève, swi", "songs": ["intro", "glacier", "anthem for no state", "cliff", "monheim", "sad mafioso thanks to lucas"], "recordings": [{"id": "gybe2023-04-16.dpa", "url": "https://archive.org/details/gybe2023-04-16.dpa", "title": "Godspeed You! Black Emperor Live at PTR on 2023-04-16"}]}, {"date": "2023-04-17", "venue": "substage, karlsruhe, ger", "songs": ["intro", "glacier", "bosses hang", "cliff", "dead metheny", "blaise bailey finnegan III"], "recordings": []}, {"date": "2023-04-18", "venue": "kantine, köln, ger", "songs": ["intro", "glacier", "fire at static valley", "world police", "cliff", "dead metheny", "sad mafioso"], "recordings": [{"id": "gybe2023-04-18.edirol", "url": "https://archive.org/details/gybe2023-04-18.edirol", "title": "Godspeed You! Black Emperor Live at Kantine on 2023-04-18"}]}, {"date": "2023-04-19", "venue": "uebel und gefährlich, hamburg, ger", "songs": ["intro", "glacier", "bosses hang", "cliff", "gathering storm", "sad mafioso"], "recordings": [{"id": "gybe2023-04-19.ecm717", "url": "https://archive.org/details/gybe2023-04-19.ecm717", "title": "Godspeed You! Black Emperor Live at Uebel & Gefährlich on 2023-04-19"}, {"id": "gybe2023-04-19.spcmc8", "url": "https://archive.org/details/gybe2023-04-19.spcmc8", "title": "Godspeed You! Black Emperor Live at Uebel & Gefährlich on 2023-04-19"}]}, {"date": "2023-04-21", "venue": "vega, københavn, den", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2023-04-22", "venue": "vox hall, århus, den", "songs": ["intro", "glacier", "anthem for no state", "cliff", "gathering storm", "sad mafioso"], "recordings": []}, {"date": "2023-04-23", "venue": "pustervik, göteborg, swe", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III"], "recordings": []}, {"date": "2023-04-24", "venue": "berns, stockholm, swe", "songs": ["intro", "glacier", "anthem for no state", "cliff", "monheim", "sad mafioso"], "recordings": []}, {"date": "2023-04-25", "venue": "sentrum scene, oslo, nor", "songs": ["intro", "glacier", "bosses hang", "cliff", "dead metheny", "blaise bailey finnegan III thanks to markus"], "recordings": [{"id": "gybe2023-04-25", "url": "https://archive.org/details/gybe2023-04-25", "title": "Godspeed You! Black Emperor Live at Sentrum Scene on 2023-04-25"}]}, {"date": "2023-04-27", "venue": "røkeriet, bergen, nor", "songs": ["intro", "glacier", "anthem for no state", "cliff", "dead metheny", "sad mafioso thanks to askil"], "recordings": [{"id": "gybe2023-04-27", "url": "https://archive.org/details/gybe2023-04-27", "title": "Godspeed You! Black Emperor Live at USF Veftet on 2023-04-27"}]}, {"date": "2023-04-28", "venue": "folken, stavanger, nor", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "albanian thanks to nora"], "recordings": [{"id": "gybe2023-04-28", "url": "https://archive.org/details/gybe2023-04-28", "title": "Godspeed You Black Emperor! Live at Folken on 2023-04-28"}]}, {"date": "2023-04-29", "venue": "aladdin scene, kristiansand, nor", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "sad mafioso thanks to markus"], "recordings": [{"id": "gybe2023-04-29", "url": "https://archive.org/details/gybe2023-04-29", "title": "Godspeed You! Black Emperor Live at Aladdin Scene on 2023-04-29"}]}, {"date": "2023-09-09", "venue": "basilica hudson, hudson, ny", "songs": ["intro", "glacier", "bosses hang", "cliff", "world police", "blaise bailey finnegan III thanks to joel, nick, will akers"], "recordings": [{"id": "gybe2023-09-09.dr-40", "url": "https://archive.org/details/gybe2023-09-09.dr-40", "title": "Godspeed You! Black Emperor Live at Basilica Hudson on 2023-09-09"}]}, {"date": "2023-09-10", "venue": "palladium, worcester, ma", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "sad mafioso thanks to will akers, maya, keenan"], "recordings": [{"id": "gybe2023-09-10.ZoomH1n", "url": "https://archive.org/details/gybe2023-09-10.ZoomH1n", "title": "Godspeed You! Black Emperor Live at Palladium on 2023-09-10"}]}, {"date": "2023-09-11", "venue": "music hall, portsmouth, nh", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III thanks to keenan"], "recordings": [{"id": "gybe2023-09-11.Spire", "url": "https://archive.org/details/gybe2023-09-11.Spire", "title": "Godspeed You Black Emperor! Live at Music Hall on 2023-09-11"}]}, {"date": "2023-09-13", "venue": "anchor rock club, atlantic city, nj", "songs": ["intro", "glacier", "bosses hang", "cliff", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2023-09-14", "venue": "athenaeum, columbus, oh", "songs": ["intro", "glacier", "bosses hang", "cliff", "fire at static valley", "world police", "sad mafioso thanks to luke"], "recordings": []}, {"date": "2023-09-15", "venue": "burl, lexington, ky", "songs": ["intro", "glacier", "bosses hang", "cliff", "anthem for no state", "blaise bailey finnegan III thanks to luke"], "recordings": []}, {"date": "2023-09-16", "venue": "bottom lounge, chicago, il", "songs": ["intro", "glacier", "anthem for no state", "cliff", "fire at static valley", "world police", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2023-09-16.H1n", "url": "https://archive.org/details/gybe2023-09-16.H1n", "title": "Godspeed You! Black Emperor Live at Bottom Lounge on 2023-09-16"}, {"id": "gybe2023-09-16.ECM-DS70P", "url": "https://archive.org/details/gybe2023-09-16.ECM-DS70P", "title": "Godspeed You Black Emperor! Live at Bottom Lounge on 2023-09-16"}]}, {"date": "2023-09-17", "venue": "riot fest, douglass park, chicago, il", "songs": ["glacier", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2024-02-24", "venue": "knockdown center, queens, ny", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "raindrops cast in lead thanks to j.mart, will akers, and sam"], "recordings": [{"id": "gybe2024-02-24.dpa4061.flac24", "url": "https://archive.org/details/gybe2024-02-24.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at Knockdown Center on 2024-02-24"}]}, {"date": "2024-02-25", "venue": "gild hall, arden, de", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "raindrops cast in lead thanks to brandon and alex"], "recordings": []}, {"date": "2024-02-26", "venue": "center for the arts, homer, ny", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "raindrops cast in lead thanks to brett"], "recordings": [{"id": "gybe2024-02-26.H1n", "url": "https://archive.org/details/gybe2024-02-26.H1n", "title": "Godspeed You! Black Emperor Live at Homer Center for the Arts on 2024-02-26"}]}, {"date": "2024-02-27", "venue": "biltmore theatre, oshawa, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "raindrops cast in lead thanks to joel, tankhaus, simplicial, and sunny"], "recordings": [{"id": "gybe2024-02-27.H1n", "url": "https://archive.org/details/gybe2024-02-27.H1n", "title": "Godspeed You! Black Emperor Live at Biltmore Theatre on 2024-02-27"}]}, {"date": "2024-02-28", "venue": "grand theatre, kingston, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "raindrops cast in lead thanks to joel and simplicial"], "recordings": [{"id": "gybe2024-02-28.CA14_H4n", "url": "https://archive.org/details/gybe2024-02-28.CA14_H4n", "title": "Godspeed You! Black Emperor Live at Kingston Grand Theatre on 2024-02-28"}]}, {"date": "2024-03-07", "venue": "pitchfork fest, frontón bucareli, mexico city, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "sad mafioso thanks to jos"], "recordings": [{"id": "gybe2024-03-07.DR-05", "url": "https://archive.org/details/gybe2024-03-07.DR-05", "title": "Godspeed You! Black Emperor Live at Frontón Bucareli on 2024-03-07"}]}, {"date": "2024-04-10", "venue": "pakkahuone, tampere, fin", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "sad mafioso thanks to ciika, ele"], "recordings": [{"id": "gybe2024-04-10.Spire", "url": "https://archive.org/details/gybe2024-04-10.Spire", "title": "Godspeed You! Black Emperor Live at Pakkahuone on 2024-04-10"}]}, {"date": "2024-04-11", "venue": "kultuurivabrik, tallinn, est", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2024-04-12", "venue": "hanzas perons, riga, lv", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "raindrops cast in lead", "sad mafioso thanks to darren webb"], "recordings": [{"id": "gybe2024-04-12.Xiaomi", "url": "https://archive.org/details/gybe2024-04-12.Xiaomi", "title": "Godspeed You! Black Emperor Live at Hanzas Perons on 2024-04-12"}]}, {"date": "2024-04-13", "venue": "loftas, vilnius, lt", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "world police", "bosses hang", "broken spires at dead kapital", "pale spectator takes photographs", "raindrops cast in lead", "sad mafioso thanks to gvid"], "recordings": [{"id": "gybe2024-04-13.vilnius.flac16f", "url": "https://archive.org/details/gybe2024-04-13.vilnius.flac16f", "title": "Godspeed You! Black Emperor Live at Loftas on 2024-04-13"}, {"id": "gybe2024-04-13.vilnius.flac16f.remaster1", "url": "https://archive.org/details/gybe2024-04-13.vilnius.flac16f.remaster1", "title": "Godspeed You! Black Emperor Live at Loftas on 2024-04-13"}]}, {"date": "2024-04-14", "venue": "progresja, warsaw, pol", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "raindrops cast in lead", "world police", "sad mafioso", "moya thanks to xpietrex"], "recordings": [{"id": "gybe2024-04-14.H1n", "url": "https://archive.org/details/gybe2024-04-14.H1n", "title": "Godspeed You! Black Emperor Live at Progresja on 2024-04-14"}]}, {"date": "2024-04-16", "venue": "b90, gdańsk, pol", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "bosses hang", "world police", "sad mafioso"], "recordings": []}, {"date": "2024-04-17", "venue": "kamienna 12, kraków, pol", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya"], "recordings": []}, {"date": "2024-04-18", "venue": "majestic music club, bratislava, svk", "songs": ["intro", "sun is a hole", "babys in a thundercloud", "glacier", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya", "sad mafioso"], "recordings": []}, {"date": "2024-04-19", "venue": "meet factory, prague, cze", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya", "sad mafioso Order not confirmed."], "recordings": []}, {"date": "2024-04-20", "venue": "arena, wien, au", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "sad mafioso thanks to fizzletree"], "recordings": [{"id": "gybe2024-04-20.H1n", "url": "https://archive.org/details/gybe2024-04-20.H1n", "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"}, {"id": "gybe2024-04-20.mtx", "url": "https://archive.org/details/gybe2024-04-20.mtx", "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"}, {"id": "gybe2024-04-20.cos11d", "url": "https://archive.org/details/gybe2024-04-20.cos11d", "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"}]}, {"date": "2024-04-21", "venue": "dürer kert, budapest, hu", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya", "blaise bailey finnegan III thanks to satordweller"], "recordings": [{"id": "gybe2024-04-21.Vomvos", "url": "https://archive.org/details/gybe2024-04-21.Vomvos", "title": "Godspeed You! Black Emperor Live at Durer Kert on 2024-04-21"}]}, {"date": "2024-04-23", "venue": "tvornica kulture, zagreb, cr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya", "albanian thanks to mata, tim"], "recordings": []}, {"date": "2024-04-24", "venue": "orpheum, graz, au", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "glacier", "sad mafioso"], "recordings": []}, {"date": "2024-04-25", "venue": "kino šiška, ljubljana, sl", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "broken spires at dead kapital", "pale spectator takes photographs", "world police", "moya", "albanian thanks to alison"], "recordings": []}, {"date": "2024-09-27", "venue": "national stadium, dublin, ir", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso"], "recordings": [{"id": "gybe2024-09-27.H2n", "url": "https://archive.org/details/gybe2024-09-27.H2n", "title": "Godspeed You! Black Emperor Live at National Stadium on 2024-09-27"}, {"id": "gybe2024-09-27.A10", "url": "https://archive.org/details/gybe2024-09-27.A10", "title": "Godspeed You! Black Emperor Live at National Stadium on 2024-09-27"}]}, {"date": "2024-09-29", "venue": "troxy, london, uk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "fire at static valley", "pale spectator takes photographs", "glacier", "piss crowns are trebled", "sad mafioso"], "recordings": [{"id": "gybe2024-09-29.DPA4060s", "url": "https://archive.org/details/gybe2024-09-29.DPA4060s", "title": "Godspeed You Black Emperor! Live at Troxy on 2024-09-29"}]}, {"date": "2024-09-30", "venue": "barrowlands, glasgow, uk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "fire at static valley", "pale spectator takes photographs", "glacier", "piss crowns are trebled", "sad mafioso"], "recordings": []}, {"date": "2024-10-01", "venue": "o2 ritz, manchester, uk", "songs": ["intro", "babys in a thundercloud", "fire at static valley", "pale spectator takes photographs", "raindrops cast in lead", "piss crowns are trebled", "moya", "blaise bailey finnegan III thanks to emily"], "recordings": [{"id": "gybe2024-10-01.SP-CMC-8", "url": "https://archive.org/details/gybe2024-10-01.SP-CMC-8", "title": "Godspeed You! Black Emperor Live at O2 Ritz on 2024-10-01"}]}, {"date": "2024-10-02", "venue": "marble factory, bristol, uk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "fire at static valley", "pale spectator takes photographs", "glacier", "piss crowns are trebled", "sad mafioso thanks to emmanuel"], "recordings": [{"id": "gybe2024-10-02", "url": "https://archive.org/details/gybe2024-10-02", "title": "Godspeed You Black Emperor! Live at The Marble Factory on 2024-10-02"}]}, {"date": "2024-10-03", "venue": "empire, coventry, uk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "fire at static valley", "pale spectator takes photographs", "glacier", "piss crowns are trebled", "blaise bailey finnegan III thanks to emmanuel"], "recordings": [{"id": "gybe2024-10-04.DPA4060s", "url": "https://archive.org/details/gybe2024-10-04.DPA4060s", "title": "Godspeed You! Black Emperor Live at Empire on 2024-10-03"}]}, {"date": "2024-10-04", "venue": "le grand mix, tourcoing, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "chart #3", "world police"], "recordings": [{"id": "gybe2024-10-04.mix", "url": "https://archive.org/details/gybe2024-10-04.mix", "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2024-10-04"}]}, {"date": "2024-10-05", "venue": "kulturfabrik, esch-sur-alzette, lu", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "chart #3", "world police"], "recordings": [{"id": "gybe2024-10-05.2", "url": "https://archive.org/details/gybe2024-10-05.2", "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2024-10-05"}, {"id": "gybe2024-10-05.gvid", "url": "https://archive.org/details/gybe2024-10-05.gvid", "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2024-10-05"}]}, {"date": "2024-10-06", "venue": "le trianon, paris, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "chart #3", "world police thanks to abibeur"], "recordings": [{"id": "gybe2024-10-06.Samsung", "url": "https://archive.org/details/gybe2024-10-06.Samsung", "title": "Godspeed You Black Emperor! Live at Le Trianon on 2024-10-06"}]}, {"date": "2024-10-08", "venue": "stereolux, nantes, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "piss crowns are trebled thanks to abibeur, zmlopez"], "recordings": [{"id": "gybe2024-10-08.H4n", "url": "https://archive.org/details/gybe2024-10-08.H4n", "title": "Godspeed You! Black Emperor Live at Stereolux on 2024-10-08"}, {"id": "gybe2024-10-08.Samsung", "url": "https://archive.org/details/gybe2024-10-08.Samsung", "title": "Godspeed You! Black Emperor Live at Stereolux on 2024-10-08"}]}, {"date": "2024-10-09", "venue": "jazz pulsations, l'autre canal, nancy, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "chart #3", "world police thanks to yannick"], "recordings": []}, {"date": "2024-10-10", "venue": "volkshaus, zürich, swi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "chart #3", "world police unconfirmed setlist.fm entry"], "recordings": []}, {"date": "2024-10-11", "venue": "les docks, lausanne, swi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "sad mafioso thanks to alison, lucas"], "recordings": [{"id": "gybe2024-10-11.H4n", "url": "https://archive.org/details/gybe2024-10-11.H4n", "title": "Godspeed You! Black Emperor Live at Les Docks on 2024-10-11"}]}, {"date": "2024-10-12", "venue": "zoom, frankfurt, ger", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "sad mafioso thanks to bart"], "recordings": [{"id": "gybe2024-10-12.T", "url": "https://archive.org/details/gybe2024-10-12.T", "title": "Godspeed You! Black Emperor Live at Zoom on 2024-10-12"}]}, {"date": "2024-10-14", "venue": "huxleys neue welt, berlin, ger", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "chart #3", "world police thanks to xpietrex"], "recordings": [{"id": "gybe2024-10-14.dpa", "url": "https://archive.org/details/gybe2024-10-14.dpa", "title": "Godspeed You Black Emperor! Live at Huxleys Neue Welt on 2024-10-14"}, {"id": "gybe2024-10-14.H1n", "url": "https://archive.org/details/gybe2024-10-14.H1n", "title": "Godspeed You! Black Emperor Live at Huxleys Neue Welt on 2024-10-14"}]}, {"date": "2024-10-15", "venue": "paradiso, amsterdam, hol", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso"], "recordings": [{"id": "gybe2024-10-15.dpa", "url": "https://archive.org/details/gybe2024-10-15.dpa", "title": "Godspeed You! Black Emperor Live at Paradiso on 2024-10-15"}]}, {"date": "2024-10-16", "venue": "ancienne belgique, bruxelles, bel", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "chart #3", "world police"], "recordings": [{"id": "gybe2024-10-16.AT943", "url": "https://archive.org/details/gybe2024-10-16.AT943", "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2024-10-16"}, {"id": "gybe2024-10-16.TM-10LB", "url": "https://archive.org/details/gybe2024-10-16.TM-10LB", "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2024-10-16"}]}, {"date": "2024-10-18", "venue": "floyd, athens, gr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso"], "recordings": [{"id": "gybe2024-10-18.mixdown", "url": "https://archive.org/details/gybe2024-10-18.mixdown", "title": "Godspeed You! Black Emperor Live at Floyd on 2024-10-18"}, {"id": "gybe2024-10-18.H1n", "url": "https://archive.org/details/gybe2024-10-18.H1n", "title": "Godspeed You! Black Emperor Live at Floyd on 2024-10-18"}]}, {"date": "2024-11-03", "venue": "bridgeworks, hamilton, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "sad mafioso"], "recordings": [{"id": "gybe2024-11-03.mtx", "url": "https://archive.org/details/gybe2024-11-03.mtx", "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2024-11-03"}]}, {"date": "2024-11-04", "venue": "bridgeworks, hamilton, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "chart #3", "world police"], "recordings": [{"id": "gybe2024-11-04.mtx", "url": "https://archive.org/details/gybe2024-11-04.mtx", "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2024-11-04"}]}, {"date": "2024-11-05", "venue": "history, toronto, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static vallley", "pale spectator takes photographs", "glacier", "piss crowns are trebled"], "recordings": [{"id": "gybe2024-11-05.mtx", "url": "https://archive.org/details/gybe2024-11-05.mtx", "title": "Godspeed You! Black Emperor Live at History on 2024-11-05"}]}, {"date": "2024-11-06", "venue": "london music hall, london, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "albanian"], "recordings": [{"id": "gybe2024-11-06.mtx", "url": "https://archive.org/details/gybe2024-11-06.mtx", "title": "Godspeed You! Black Emperor Live at London Music Hall on 2024-11-06"}]}, {"date": "2024-11-07", "venue": "elevation, grand rapids, mi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso"], "recordings": []}, {"date": "2024-11-08", "venue": "salt shed, chicago, il", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2024-11-08.ECM-DS70P", "url": "https://archive.org/details/gybe2024-11-08.ECM-DS70P", "title": "Godspeed You! Black Emperor Live at Salt Shed on 2024-11-08"}]}, {"date": "2024-11-09", "venue": "palace theater, st-paul, mn", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "piss crowns are trebled"], "recordings": []}, {"date": "2024-11-11", "venue": "liberty hall, lawrence, ks", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "sad mafioso"], "recordings": [{"id": "gybe2024-11-11.mtx", "url": "https://archive.org/details/gybe2024-11-11.mtx", "title": "Godspeed You! Black Emperor Live at Liberty Hall on 2024-11-11"}, {"id": "gybe2024-11-11.DR-07X", "url": "https://archive.org/details/gybe2024-11-11.DR-07X", "title": "Godspeed You! Black Emperor Live at Liberty Hall on 2024-11-11"}]}, {"date": "2024-11-12", "venue": "george's majestic lounge, fayetteville, ar", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "john hughes", "piss crowns are trebled"], "recordings": [{"id": "gybe2024-11-12.H6", "url": "https://archive.org/details/gybe2024-11-12.H6", "title": "Godspeed You! Black Emperor Live at George's Majestic Lounge on 2024-11-12"}]}, {"date": "2024-11-16", "venue": "music farm, charleston, sc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2024-11-16.H1n", "url": "https://archive.org/details/gybe2024-11-16.H1n", "title": "Godspeed You! Black Emperor Live at Music Farm on 2024-11-16"}]}, {"date": "2024-11-25", "venue": "mtelus, montréal, qc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "piss crowns are trebled"], "recordings": [{"id": "gybe2024-11-25.mtx", "url": "https://archive.org/details/gybe2024-11-25.mtx", "title": "Godspeed You! Black Emperor Live at MTELUS on 2024-11-25"}]}, {"date": "2024-11-26", "venue": "mtelus, montréal, qc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "john hughes", "sad mafioso"], "recordings": [{"id": "gybe2024-11-26.mtx", "url": "https://archive.org/details/gybe2024-11-26.mtx", "title": "Godspeed You! Black Emperor Live at MTELUS on 2024-11-26"}]}, {"date": "2025-03-01", "venue": "music station, lisboa, por", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "glacier", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to bart"], "recordings": [{"id": "gybe2025-03-01.DPA4060", "url": "https://archive.org/details/gybe2025-03-01.DPA4060", "title": "Godspeed You! Black Emperor Live at Music Station on 2025-03-01"}, {"id": "gybe2025-03-01.dpa4060.remaster", "url": "https://archive.org/details/gybe2025-03-01.dpa4060.remaster", "title": "Godspeed You! Black Emperor Live at Music Station on 2025-03-01"}]}, {"date": "2025-03-02", "venue": "casa de música, porto, por", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "(?)", "fire at static valley", "pale spectator takes photographs", "(?)", "blaise bailey finnegan III only the confirmed songs are listed"], "recordings": []}, {"date": "2025-03-03", "venue": "la riviera, madrid, sp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "bosses hang", "fire at static valley", "pale spectator takes photographs", "sad mafioso"], "recordings": [{"id": "gybe2025-03-03", "url": "https://archive.org/details/gybe2025-03-03", "title": "Godspeed You! Black Emperor Live at Sala La Riviera on 2025-03-03"}]}, {"date": "2025-03-04", "venue": "kafe antzokia, bilbao, sp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "chart #3", "world police unconfirmed setlist sourced from setlist.fm"], "recordings": []}, {"date": "2025-03-05", "venue": "sala apolo, barcelona, sp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2025-03-07", "venue": "l'espace julien, marseille, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "glacier", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police thanks to abibeur"], "recordings": [{"id": "gybe2025-03-07.Samsung", "url": "https://archive.org/details/gybe2025-03-07.Samsung", "title": "Godspeed You Black Emperor! Live at L'Espace Julien on 2025-03-07"}]}, {"date": "2025-03-08", "venue": "o.g.r., torino, it", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to alison"], "recordings": [{"id": "gybe2025-03-08.dr05x", "url": "https://archive.org/details/gybe2025-03-08.dr05x", "title": "Godspeed You! Black Emperor Live at OGR on 2025-03-08"}]}, {"date": "2025-03-10", "venue": "teatro comunale, vicenza, it", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso thanks to alison and xpietrex"], "recordings": [{"id": "gybe2025-03-10.mtx", "url": "https://archive.org/details/gybe2025-03-10.mtx", "title": "Godspeed You! Black Emperor Live at Teatro Comunale Città di Vicenza on 2025-03-10"}]}, {"date": "2025-03-11", "venue": "estragon, bologna, it", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to alison and xpietrex"], "recordings": [{"id": "gybe2025-03-11.mtx", "url": "https://archive.org/details/gybe2025-03-11.mtx", "title": "Godspeed You! Black Emperor Live at Estragon on 2025-03-11"}]}, {"date": "2025-03-12", "venue": "c.c.o., villeurbanne, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "piss crowns are trebled thanks to bestan"], "recordings": [{"id": "gybe2025-03-12.phone", "url": "https://archive.org/details/gybe2025-03-12.phone", "title": "Godspeed You! Black Emperor Live at La Rayonne on 2025-03-12"}]}, {"date": "2025-03-13", "venue": "le 106, rouen, fr", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "sad mafioso thanks to bart, bestan, abibeur"], "recordings": [{"id": "gybe2025-03-13.dpa4061.nt45o", "url": "https://archive.org/details/gybe2025-03-13.dpa4061.nt45o", "title": "Godspeed You! Black Emperor Live at Le 106 on 2025-03-13"}, {"id": "gybe2025-03-13.samsung", "url": "https://archive.org/details/gybe2025-03-13.samsung", "title": "Godspeed You! Black Emperor Live at Le 106 on 2025-03-13"}]}, {"date": "2025-03-14", "venue": "tollhaus, karlsruhe, ger", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to bart"], "recordings": [{"id": "gybe2025-03-14.mtx", "url": "https://archive.org/details/gybe2025-03-14.mtx", "title": "Godspeed You! Black Emperor Live at Tollhaus on 2025-03-14"}]}, {"date": "2025-03-16", "venue": "vooruit, gent, bel", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "sad mafioso thanks to bart"], "recordings": [{"id": "gybe2025-03-16.mtx", "url": "https://archive.org/details/gybe2025-03-16.mtx", "title": "Godspeed You! Black Emperor Live at Vooruit on 2025-03-16"}]}, {"date": "2025-03-17", "venue": "paard, den haag, hol", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "piss crowns are trebled thanks to bart"], "recordings": [{"id": "gybe2025-03-17.dpa4061", "url": "https://archive.org/details/gybe2025-03-17.dpa4061", "title": "Godspeed You! Black Emperor Live at 't Paard on 2025-03-17"}]}, {"date": "2025-03-18", "venue": "vega, københavn, den", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to zand"], "recordings": [{"id": "gybe2025-03-18.at853.flac24", "url": "https://archive.org/details/gybe2025-03-18.at853.flac24", "title": "Godspeed You! Black Emperor Live at Vega on 2025-03-18"}]}, {"date": "2025-03-19", "venue": "fållan, stockholm, swe", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "piss crowns are trebled thanks to rolfe"], "recordings": []}, {"date": "2025-03-20", "venue": "pustervik, göteborg, swe", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "sad mafioso thanks to rolfe"], "recordings": []}, {"date": "2025-03-21", "venue": "sentrum scene, oslo, nor", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to gvid"], "recordings": [{"id": "gybe2025-03-21.diy", "url": "https://archive.org/details/gybe2025-03-21.diy", "title": "Godspeed You! Black Emperor Live at Sentrum Scene on 2025-03-21"}]}, {"date": "2025-04-25", "venue": "austin psych fest, far out lounge, austin, tx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs"], "recordings": []}, {"date": "2025-04-26", "venue": "granada theater, dallas, tx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "sad mafioso thanks to coleson"], "recordings": [{"id": "gybe2025-04-26.mv88", "url": "https://archive.org/details/gybe2025-04-26.mv88", "title": "Godspeed You! Black Emperor Live at Granada Theater on 2025-04-26"}]}, {"date": "2025-04-28", "venue": "ogden theater, denver, co", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "glacier", "chart #3", "world police"], "recordings": [{"id": "gybe2025-04-28", "url": "https://archive.org/details/gybe2025-04-28", "title": "Godspeed You Black Emperor! Live at The Ogden Theatre on 2025-04-28"}]}, {"date": "2025-04-30", "venue": "bellwether, los angeles, ca", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to trowftd"], "recordings": [{"id": "gybe2025-04-30.dpa", "url": "https://archive.org/details/gybe2025-04-30.dpa", "title": "Godspeed You! Black Emperor Live at Bellwether on 2025-04-30"}]}, {"date": "2025-05-01", "venue": "observatory, santa ana, ca", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to trowftd"], "recordings": [{"id": "gybe2025-05-01.ambeo", "url": "https://archive.org/details/gybe2025-05-01.ambeo", "title": "Godspeed You! Black Emperor Live at Observatory on 2025-05-01"}, {"id": "gybe2025-05-01.dpa4081", "url": "https://archive.org/details/gybe2025-05-01.dpa4081", "title": "Godspeed You! Black Emperor Live at Observatory on 2025-05-01"}]}, {"date": "2025-05-02", "venue": "crescent ballroom, phoenix, az", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2025-05-03", "venue": "ventura music hall, ventura, ca", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "albanian", "sad mafioso thanks to trowftd"], "recordings": [{"id": "gybe2025-05-03.mp3", "url": "https://archive.org/details/gybe2025-05-03.mp3", "title": "Godspeed You! Black Emperor Live at Ventura Music Hall on 2025-05-03"}, {"id": "gybe2025-05-03.H1n", "url": "https://archive.org/details/gybe2025-05-03.H1n", "title": "Godspeed You! Black Emperor Live at Ventura Music Hall on 2025-05-03"}]}, {"date": "2025-05-04", "venue": "fox theater, oakland, ca", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "blaise bailey finnegan III thanks to trowftd, zb"], "recordings": [{"id": "gybe2025-05-04.flac16", "url": "https://archive.org/details/gybe2025-05-04.flac16", "title": "Godspeed You! Black Emperor Live at Fox Theater on 2025-05-04"}, {"id": "gybe2025-05-04.4ch-mix", "url": "https://archive.org/details/gybe2025-05-04.4ch-mix", "title": "Godspeed You! Black Emperor Live at The Fox Theater on 2025-05-04"}]}, {"date": "2025-05-06", "venue": "wonder ballroom, portland, or", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "blaise bailey finnegan III thanks to trowftd, sage"], "recordings": [{"id": "gybe2025-05-06.H1n", "url": "https://archive.org/details/gybe2025-05-06.H1n", "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-06"}, {"id": "gybe2025-05-06", "url": "https://archive.org/details/gybe2025-05-06", "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-06"}]}, {"date": "2025-05-07", "venue": "wonder ballroom, portland, or", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "cliff", "sad mafioso thanks to trowftd, sage"], "recordings": [{"id": "gybe2025-05-07.H1n", "url": "https://archive.org/details/gybe2025-05-07.H1n", "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-07"}, {"id": "gybe2025-05-07", "url": "https://archive.org/details/gybe2025-05-07", "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-07"}]}, {"date": "2025-05-08", "venue": "neptune theater, seattle, wa", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "cliff", "chart #3", "world police thanks to j.mart"], "recordings": [{"id": "gybe2025-05-08.dpa4061.flac24", "url": "https://archive.org/details/gybe2025-05-08.dpa4061.flac24", "title": "Godspeed You Black Emperor! Live at Neptune Theatre on 2025-05-08"}, {"id": "gybe2025-05-08", "url": "https://archive.org/details/gybe2025-05-08", "title": "Godspeed You! Black Emperor Live at Neptune Theater on 2025-05-08"}]}, {"date": "2025-05-09", "venue": "neptune theater, seattle, wa", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to j.mart"], "recordings": [{"id": "gybe2025-05-09", "url": "https://archive.org/details/gybe2025-05-09", "title": "Godspeed You! Black Emperor Live at Neptune Theater on 2025-05-09"}, {"id": "gybe2025-05-09.dpa4061.flac24", "url": "https://archive.org/details/gybe2025-05-09.dpa4061.flac24", "title": "Godspeed You! Black Emperor Live at Neptune Theatre on 2025-05-09"}]}, {"date": "2025-05-10", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "cliff", "albanian thanks to joel, ryan"], "recordings": [{"id": "gybe2025-05-10.mtx", "url": "https://archive.org/details/gybe2025-05-10.mtx", "title": "Godspeed You Black Emperor! Live at Vogue Theatre on 2025-05-10"}]}, {"date": "2025-05-11", "venue": "vogue theatre, vancouver, bc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to joel"], "recordings": [{"id": "gybe2025-05-11.mtx", "url": "https://archive.org/details/gybe2025-05-11.mtx", "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2025-05-11"}]}, {"date": "2025-05-12", "venue": "revelry, kelowna, bc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to joel"], "recordings": [{"id": "gybe2025-05-12.mtx", "url": "https://archive.org/details/gybe2025-05-12.mtx", "title": "Godspeed You! Black Emperor Live at Revelry on 2025-05-12"}]}, {"date": "2025-05-13", "venue": "palace theatre, calgary, ab", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso thanks to pr0leyyc"], "recordings": [{"id": "gybe2025-05-13", "url": "https://archive.org/details/gybe2025-05-13", "title": "Godspeed You! Black Emperor Live at The Palace Theatre, Calgary, Alberta, Canada on 2025-05-13"}]}, {"date": "2025-05-14", "venue": "midway, edmonton, ab", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to pr0leyyc"], "recordings": [{"id": "gybe2025-05-14", "url": "https://archive.org/details/gybe2025-05-14", "title": "Godspeed You! Black Emperor Live at Midway Music Hall, Edmonton, Alberta, Canada on 2025-05-14"}]}, {"date": "2025-06-21", "venue": "masquerade, atlanta, ga", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to jayden and \"192 kHz\""], "recordings": [{"id": "gybe2025-06-21.h4n", "url": "https://archive.org/details/gybe2025-06-21.h4n", "title": "Godspeed You! Black Emperor Live at Heaven @ Masquerade on 2025-06-21"}]}, {"date": "2025-06-22", "venue": "haw river ballroom, saxapahaw, nc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "blaise bailey finnegan III"], "recordings": []}, {"date": "2025-06-23", "venue": "9:30 club, washington, dc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to DB and TF"], "recordings": [{"id": "gybe2025-06-23.diy", "url": "https://archive.org/details/gybe2025-06-23.diy", "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2025-06-23"}]}, {"date": "2025-06-24", "venue": "union transfer, philadelphia, pa", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso thanks to kalki"], "recordings": [{"id": "gybe2025-06-24.mtx", "url": "https://archive.org/details/gybe2025-06-24.mtx", "title": "Godspeed You! Black Emperor Live at Union Transfer on 2025-06-24"}]}, {"date": "2025-06-25", "venue": "pioneer works, brooklyn, ny", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "blaise bailey finnegan III thanks to kalki"], "recordings": [{"id": "gybe2025-06-25.mtx", "url": "https://archive.org/details/gybe2025-06-25.mtx", "title": "Godspeed You! Black Emperor Live at Pioneer Works on 2025-06-25"}]}, {"date": "2025-06-26", "venue": "pioneer works, brooklyn, ny", "songs": ["soundcheck:", "babys in a thundercloud", "sun is a hole sun is vapors", "glacier", "monheim", "intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso thanks to kalki"], "recordings": [{"id": "gybe2025-06-26", "url": "https://archive.org/details/gybe2025-06-26", "title": "Godspeed You! Black Emperor Live at Pioneer Works on 2025-06-26"}]}, {"date": "2025-06-27", "venue": "district music hall, norwalk, ct", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "piss crowns are trebled", "sad mafioso thanks to rnvt33"], "recordings": []}, {"date": "2025-06-28", "venue": "roadrunner, boston, ma", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "bosses hang", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2025-06-58", "url": "https://archive.org/details/gybe2025-06-58", "title": "Godspeed You! Black Emperor Live at Roadrunner on 2025-06-28"}]}, {"date": "2025-08-14", "venue": "arctangent, fernhill farm, compton martin, uk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "moya", "blaise bailey finnegan III thanks to bart, emmanuel"], "recordings": [{"id": "gybe2025-08-14.mtx", "url": "https://archive.org/details/gybe2025-08-14.mtx", "title": "Godspeed You! Black Emperor Live at Fernhill Farm on 2025-08-14"}, {"id": "gybe2025-08-14.DPA", "url": "https://archive.org/details/gybe2025-08-14.DPA", "title": "Godspeed You! Black Emperor Live at Fernhill Farm on 2025-08-14"}]}, {"date": "2025-09-05", "venue": "hopscotch festival, moore square, raleigh, nc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso"], "recordings": []}, {"date": "2025-09-06", "venue": "pisgah brewing, black mountain, nc", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso"], "recordings": [{"id": "gybe2025-09-06.dpa4061", "url": "https://archive.org/details/gybe2025-09-06.dpa4061", "title": "Godspeed You! Black Emperor Live at Pisgah Brewing Company on 2025-09-06"}]}, {"date": "2025-09-07", "venue": "basement east, nashville, tn", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2025-09-12", "venue": "supercrawl, james street north, hamilton, on", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "sad mafioso"], "recordings": [{"id": "gybe2025-09-12.H1e", "url": "https://archive.org/details/gybe2025-09-12.H1e", "title": "Godspeed You! Black Emperor Live at Supercrawl @ James Street North on 2025-09-12"}]}, {"date": "2025-09-13", "venue": "assembly, kingston, ny", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "chart #3", "world police"], "recordings": [{"id": "gybe2025-09-13", "url": "https://archive.org/details/gybe2025-09-13", "title": "Godspeed You! Black Emperor Live at Assembly, Kingston on 2025-09-13"}]}, {"date": "2025-09-14", "venue": "state theater, portland, me", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "(?) fire at static valley", "pale spectator takes photographs", "(?)", "sad mafioso"], "recordings": []}, {"date": "2025-09-15", "venue": "treehouse brewing summerstage, deerfield, ma", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": [{"id": "gybe2025-09-15.H1", "url": "https://archive.org/details/gybe2025-09-15.H1", "title": "Godspeed You! Black Emperor Live at Treehouse Brewing Summerstage on 2025-09-15"}]}, {"date": "2025-09-26", "venue": "russell industrial center, detroit, mi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "chart #3", "world police"], "recordings": [{"id": "gybe2025-09-26.A10", "url": "https://archive.org/details/gybe2025-09-26.A10", "title": "Godspeed You! Black Emperor Live at Russell Industrial Center on 2025-09-26"}]}, {"date": "2025-09-27", "venue": "bohemian national cemetery, chicago, il", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "chart #3", "world police"], "recordings": [{"id": "gybe2025-09-27.ecm-ds70p", "url": "https://archive.org/details/gybe2025-09-27.ecm-ds70p", "title": "Godspeed You! Black Emperor Live at Bohemian National Cemetery on 2025-09-27"}]}, {"date": "2025-09-28", "venue": "globe iron, cleveland, oh", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2025-12-03", "venue": "gonggam centre, seoul, sk", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "gathering storm"], "recordings": [{"id": "gybe2025-12-03.128cbr", "url": "https://archive.org/details/gybe2025-12-03.128cbr", "title": "Godspeed You! Black Emperor Live at Gonggam Centre on 2025-12-03"}]}, {"date": "2025-12-05", "venue": "legacy taipei, taipei, tai", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "gathering storm"], "recordings": [{"id": "gybe2025-12-05.227cbr.aacf", "url": "https://archive.org/details/gybe2025-12-05.227cbr.aacf", "title": "Godspeed You! Black Emperor Live at Legacy Taipei on 2025-12-05"}]}, {"date": "2025-12-07", "venue": "clockenflap festival, central harbourfront, hong kong", "songs": ["intro", "babys in a thundercloud", "raindrops cast in lead", "world police", "gathering storm"], "recordings": [{"id": "gybe2025-12-07.H4e", "url": "https://archive.org/details/gybe2025-12-07.H4e", "title": "Godspeed You! Black Emperor Live at Clockenflap Festival @ Central Harbourfront on 2025-12-07"}]}, {"date": "2025-12-09", "venue": "bandai namco, shanghai, chi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "gathering storm", "moya"], "recordings": []}, {"date": "2025-12-10", "venue": "bandai namco, shanghai, chi", "songs": ["intro", "sun is a hole sun is vapors", "glacier", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "sad mafioso", "the cowboy"], "recordings": [{"id": "gybe2025-12-10.aac.vbr", "url": "https://archive.org/details/gybe2025-12-10.aac.vbr", "title": "Godspeed You! Black Emperor Live at Bandai Namco on 2025-12-10"}, {"id": "gybe2025-12-10.aacf", "url": "https://archive.org/details/gybe2025-12-10.aacf", "title": "Godspeed You! Black Emperor Live at Bandai Namco on 2025-12-10"}, {"id": "gybe2025-12-10.aactoflac16", "url": "https://archive.org/details/gybe2025-12-10.aactoflac16", "title": "Godspeed You! Black Emperor Live at Bandai Namco Dream Hall on 2025-12-10"}]}, {"date": "2025-12-12", "venue": "fullof livehouse, beijing, chi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "world police", "gathering storm", "the cowboy"], "recordings": [{"id": "gybe2025-12-12.flac16", "url": "https://archive.org/details/gybe2025-12-12.flac16", "title": "Godspeed You! Black Emperor Live at Fullof Livehouse on 2025-12-12"}, {"id": "gybe2025-12-12.original", "url": "https://archive.org/details/gybe2025-12-12.original", "title": "Godspeed You! Black Emperor, 12 December 2025, Live At Full Of, Beijing"}]}, {"date": "2025-12-13", "venue": "fullof livehouse, beijing, chi", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "piss crowns are trebled", "monheim", "pale spectator takes photographs", "moya", "blaise bailey finnegan III", "the cowboy"], "recordings": [{"id": "gybe2025-12-13.flac24", "url": "https://archive.org/details/gybe2025-12-13.flac24", "title": "Godspeed You! Black Emperor Live at Fullof Livehouse on 2025-12-13"}, {"id": "gybe2025-12-13.flac16", "url": "https://archive.org/details/gybe2025-12-13.flac16", "title": "Godspeed You Black Emperor! Live at Fullof Livehouse on 2025-12-13"}]}, {"date": "2025-12-15", "venue": "yogibo meta valley, osaka, jp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "gathering storm"], "recordings": [{"id": "gybe2025-12-15.RM-ATZ19", "url": "https://archive.org/details/gybe2025-12-15.RM-ATZ19", "title": "Godspeed You! Black Emperor Live at Yogibo Meta Valley on 2025-12-15"}, {"id": "gybe2025-12-15", "url": "https://archive.org/details/gybe2025-12-15", "title": "Godspeed You! Black Emperor Live at YOGIBO META VALLEY, Osaka, Japan on 2025-12-15"}]}, {"date": "2025-12-16", "venue": "kanda square hall, tokyo, jp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "sad mafioso"], "recordings": []}, {"date": "2025-12-17", "venue": "kanda square hall, tokyo, jp", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "bosses hang", "gathering storm"], "recordings": [{"id": "gybe2025-12-17", "url": "https://archive.org/details/gybe2025-12-17", "title": "Godspeed You! Black Emperor Live at Kanda Square, Tokyo on 2025-12-17"}]}, {"date": "2026-01-23", "venue": "foro arpa, querétaro, qro, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "world police", "gathering storm"], "recordings": [{"id": "gybe2026-01-23", "url": "https://archive.org/details/gybe2026-01-23", "title": "Godspeed You! Black Emperor Live at Foro Arpa on 2026-01-23"}]}, {"date": "2026-01-24", "venue": "c4, guadalajara, jal, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "bosses hang", "sad mafioso"], "recordings": []}, {"date": "2026-01-27", "venue": "foro indie rocks!, mexico city, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "world police", "sad mafioso"], "recordings": []}, {"date": "2026-01-28", "venue": "foro indie rocks!, mexico city, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "bosses hang", "gathering storm"], "recordings": []}, {"date": "2026-01-31", "venue": "cine bujazan, tijuana, bc, mx", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "moya", "blaise bailey finnegan III"], "recordings": []}, {"date": "2026-03-01", "venue": "tavara-asema, tampere, fin", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "fire at static valley", "pale spectator takes photographs", "chart #3", "world police", "gathering storm"], "recordings": [{"id": "gybe2026-03-01.H4n", "url": "https://archive.org/details/gybe2026-03-01.H4n", "title": "Godspeed You! Black Emperor Live at Tavara-Asema on 2026-03-01"}]}, {"date": "2026-03-02", "venue": "kultuurivabrik, tallinn, est", "songs": ["intro", "sun is a hole sun is vapors", "babys in a thundercloud", "raindrops cast in lead", "monheim", "pale spectator takes photographs", "moya", "sad mafioso"], "recordings": []}];
+const SETLISTS_DATA = [
+  {
+    "date": "1997-03-15",
+    "venue": "symptom hall, toronto, on",
+    "songs": [
+      "the piece"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1997-10-05",
+    "venue": "can-zine festival, symptom hall, toronto, on",
+    "songs": [
+      "nothings alrite in our life",
+      "the dead flag blues",
+      "the cowboy",
+      "sad mafioso",
+      "dead metheny",
+      "j.l.h. (outro)",
+      "kicking horses on brokenhill",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "godspeed1997-10-05",
+        "url": "https://archive.org/details/godspeed1997-10-05",
+        "title": "Godspeed You! Black Emperor Live at Symptom Hall on 1997-10-05"
+      },
+      {
+        "id": "gybe1997-10-05.flac",
+        "url": "https://archive.org/details/gybe1997-10-05.flac",
+        "title": "Godspeed You! Black Emperor Live at Can-Zine Festival on 1997-10-05"
+      },
+      {
+        "id": "gybe1997-10-05.DAT",
+        "url": "https://archive.org/details/gybe1997-10-05.DAT",
+        "title": "Godspeed You! Black Emperor Live at Can-Zine Festival, Symptom Hall on 1997-10-05"
+      }
+    ]
+  },
+  {
+    "date": "1997-11-12",
+    "venue": "the music of sound, ckut session, montr\u00e9al, qc",
+    "songs": [
+      "drone",
+      "noise",
+      "blaise bailey finnegan III",
+      "sad mafioso \"The Music of Sound\" radio session presented by Gordon Krieger."
+    ],
+    "recordings": [
+      {
+        "id": "gybe1997-11-12",
+        "url": "https://archive.org/details/gybe1997-11-12",
+        "title": "Godspeed You! Black Emperor Live at CKUT FM on 1997-11-12"
+      }
+    ]
+  },
+  {
+    "date": "1998-04-25",
+    "venue": "saw gallery, ottawa, on",
+    "songs": [
+      "the dead flag blues",
+      "the boy",
+      "moya",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-04-25.T",
+        "url": "https://archive.org/details/gybe1998-04-25.T",
+        "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"
+      },
+      {
+        "id": "gybe1998-04-25.fixed",
+        "url": "https://archive.org/details/gybe1998-04-25.fixed",
+        "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"
+      },
+      {
+        "id": "gybe1998-04-25",
+        "url": "https://archive.org/details/gybe1998-04-25",
+        "title": "Godspeed You! Black Emperor Live at SAW Gallery on 1998-04-25"
+      },
+      {
+        "id": "gybe1998-04-25.flac",
+        "url": "https://archive.org/details/gybe1998-04-25.flac",
+        "title": "Godspeed You! Black Emperor Live at Saw Gallery on 1998-04-25"
+      }
+    ]
+  },
+  {
+    "date": "1998-05-10",
+    "venue": "metropolis, montreal, qc",
+    "songs": [
+      "spoken words intro",
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-05-10",
+        "url": "https://archive.org/details/gybe1998-05-10",
+        "title": "Godspeed You! Black Emperor Live at Metropolis on 1998-05-10"
+      }
+    ]
+  },
+  {
+    "date": "1998-09-10",
+    "venue": "hoel2tango, montreal, qc",
+    "songs": [
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1998-09-13",
+    "venue": "khyber pass, philadelphia, pa",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "sad mafioso [not confirmed]"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1998-09-15",
+    "venue": "cat's cradle, carrboro, nc",
+    "songs": [
+      "the dead flag blues (soundcheck)",
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-09-15.cradle_tlr",
+        "url": "https://archive.org/details/gybe1998-09-15.cradle_tlr",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 1998-09-15"
+      }
+    ]
+  },
+  {
+    "date": "1998-10-02",
+    "venue": "tokyo rose, charlottesville, va",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead metheny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-10-02",
+        "url": "https://archive.org/details/gybe1998-10-02",
+        "title": "Godspeed You! Black Emperor Live at Tokyo Rose on 1998-10-02"
+      }
+    ]
+  },
+  {
+    "date": "1998-10-03",
+    "venue": "the point, atlanta, ga",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-10-03",
+        "url": "https://archive.org/details/gybe1998-10-03",
+        "title": "Godspeed You! Black Emperor Live at The Point on 1998-10-03"
+      }
+    ]
+  },
+  {
+    "date": "1998-10-10",
+    "venue": "scuba's, chicago, il",
+    "songs": [
+      "soundcheck : sad mafioso",
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "sad mafioso",
+      "[the low set]",
+      "[encore low-godspeed]",
+      "do you know how to waltz"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-10-10",
+        "url": "https://archive.org/details/gybe1998-10-10",
+        "title": "Godspeed You! Black Emperor Live at Schuba's on 1998-10-10"
+      },
+      {
+        "id": "ajc01237_gybe1998-10-10_ajcproject",
+        "url": "https://archive.org/details/ajc01237_gybe1998-10-10_ajcproject",
+        "title": "Godspeed You! Black Emperor Live at Schubas Tavern on 1998-10-10"
+      },
+      {
+        "id": "ajc01237_gybe1998-10-10.ajcproject",
+        "url": "https://archive.org/details/ajc01237_gybe1998-10-10.ajcproject",
+        "title": "Godspeed You! Black Emperor Live at Schubas Tavern on 1998-10-10"
+      }
+    ]
+  },
+  {
+    "date": "1998-10-16",
+    "venue": "montgomery hall, ottawa, on",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "improvisation",
+      "sad mafioso",
+      "john hughes"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-10-16",
+        "url": "https://archive.org/details/gybe1998-10-16",
+        "title": "Godspeed You! Black Emperor Live at Montgomery Hall on 1998-10-16"
+      }
+    ]
+  },
+  {
+    "date": "1998-11-13",
+    "venue": "hotel2tango, montreal, qc",
+    "songs": [
+      "moya",
+      "blaise bailey finnegan III",
+      "monheim",
+      "dead metheny",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1998-11-19",
+    "venue": "stills gallery, edinburgh, uk",
+    "songs": [
+      "moya",
+      "monheim",
+      "world police (part I)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-11-19",
+        "url": "https://archive.org/details/gybe1998-11-19",
+        "title": "Godspeed You! Black Emperor Live at Stills Gallery on 1998-11-19"
+      }
+    ]
+  },
+  {
+    "date": "1998-11-22",
+    "venue": "bbc studios, maida vale, london, uk",
+    "songs": [
+      "monheim",
+      "steve reich"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-11-22.rebroadcast",
+        "url": "https://archive.org/details/gybe1998-11-22.rebroadcast",
+        "title": "Godspeed You! Black Emperor Live at Maida Vale Studio 3 on 1998-11-22"
+      },
+      {
+        "id": "gybe1998-11-22.bbc",
+        "url": "https://archive.org/details/gybe1998-11-22.bbc",
+        "title": "Godspeed You! Black Emperor Live at Maida Vale Studio 3 on 1998-11-22"
+      }
+    ]
+  },
+  {
+    "date": "1998-11-23",
+    "venue": "highbury garage, highbury, london, uk",
+    "songs": [
+      "j.l.h. outro",
+      "moya",
+      "blaise bailey finnegan III",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-11-23.flac",
+        "url": "https://archive.org/details/gybe1998-11-23.flac",
+        "title": "Godspeed You! Black Emperor Live at Highbury Garage on 1998-11-23"
+      }
+    ]
+  },
+  {
+    "date": "1998-11-26",
+    "venue": "vpro studio, amsterdam, hol",
+    "songs": [
+      "[interview plus performance of:]",
+      "john hughes",
+      "steve reich",
+      "world police",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-11-26",
+        "url": "https://archive.org/details/gybe1998-11-26",
+        "title": "Godspeed You! Black Emperor Live at Studio Amstel (VPRO) on 1998-11-26"
+      },
+      {
+        "id": "gybe1998-11-26.interview",
+        "url": "https://archive.org/details/gybe1998-11-26.interview",
+        "title": "Godspeed You! Black Emperor Live at VPRO Studio Amsel on 1998-11-26"
+      },
+      {
+        "id": "gybe1998-11-24",
+        "url": "https://archive.org/details/gybe1998-11-24",
+        "title": "Godspeed You! Black Emperor Live at VPRO Studio on 1998-11-26"
+      }
+    ]
+  },
+  {
+    "date": "1998-11-27",
+    "venue": "cafe trauma, marburg, ger",
+    "songs": [
+      "moya",
+      "monheim",
+      "dead metheny",
+      "world police",
+      "sad mafioso",
+      "john hughes"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-11-27",
+        "url": "https://archive.org/details/gybe1998-11-27",
+        "title": "Godspeed You! Black Emperor Live at Caf\u00e9 Trauma on 1998-11-27"
+      }
+    ]
+  },
+  {
+    "date": "1998-12-17",
+    "venue": "sojus 7, monheim, ger",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "world police",
+      "john hughes",
+      "j.l.h. outro jam"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-12-17.flac16",
+        "url": "https://archive.org/details/gybe1998-12-17.flac16",
+        "title": "Godspeed You! Black Emperor Live at Sojus 7 on 1998-12-17"
+      }
+    ]
+  },
+  {
+    "date": "1998-12-18",
+    "venue": "uni-festsaal, frankfurt, ger",
+    "songs": [
+      "moya",
+      "monheim",
+      "world police",
+      "dead metheny",
+      "john hughes",
+      "sad mafioso",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1998-12-18",
+        "url": "https://archive.org/details/gybe1998-12-18",
+        "title": "Godspeed You! Black Emperor Live at Uni-Festsaal on 1998-12-18"
+      }
+    ]
+  },
+  {
+    "date": "1999-04-16",
+    "venue": "velinx festival, tongeren, bel",
+    "songs": [
+      "moya",
+      "gathering storm (part II)",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-04-16.TCD-D8",
+        "url": "https://archive.org/details/gybe1999-04-16.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at De Velinx on 1999-04-16"
+      },
+      {
+        "id": "gybe1999-04-16.TCD-D8_remaster",
+        "url": "https://archive.org/details/gybe1999-04-16.TCD-D8_remaster",
+        "title": "Godspeed You! Black Emperor Live at Viva VelinX @ De Velinx on 1999-04-16"
+      },
+      {
+        "id": "gybe1999-04-16",
+        "url": "https://archive.org/details/gybe1999-04-16",
+        "title": "Godspeed You! Black Emperor Live at Velinx Festival on 1999-04-16"
+      }
+    ]
+  },
+  {
+    "date": "1999-04-19",
+    "venue": "instants chavir\u00e9s, montreuil, paris, fr",
+    "songs": [
+      "the dead flag blues",
+      "monheim",
+      "j.l.h. outro",
+      "gathering storm",
+      "moya",
+      "john hughes",
+      "dead metheny",
+      "world police",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-04-19.MD",
+        "url": "https://archive.org/details/gybe1999-04-19.MD",
+        "title": "Godspeed You! Black Emperor Live at Les Instants Chavir\u00e9s on 1999-04-19"
+      },
+      {
+        "id": "gybe1999-04-19",
+        "url": "https://archive.org/details/gybe1999-04-19",
+        "title": "Godspeed You! Black Emperor Live at Les Instants Chavir\u00e9s on 1999-04-19"
+      }
+    ]
+  },
+  {
+    "date": "1999-04-24",
+    "venue": "nighttown, rotterdam, hol",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "monheim",
+      "world police",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-04-25",
+    "venue": "bowlie weekender, camber sands, uk",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "monheim",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-04-25",
+        "url": "https://archive.org/details/gybe1999-04-25",
+        "title": "Godspeed You! Black Emperor Live at Bowlie Festival on 1999-04-25"
+      }
+    ]
+  },
+  {
+    "date": "1999-04-27",
+    "venue": "improv theater, london, uk",
+    "songs": [
+      "the dead flag blues",
+      "moya",
+      "monheim",
+      "j.l.h outro",
+      "death metheny",
+      "world police",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-04-27",
+        "url": "https://archive.org/details/gybe1999-04-27",
+        "title": "Godspeed You! Black Emperor Live at London Improv Theatre on 1999-04-27"
+      }
+    ]
+  },
+  {
+    "date": "1999-04-28",
+    "venue": "beursschouwburg, brussels, bel",
+    "songs": [
+      "intro",
+      "the dead flag blues",
+      "moya",
+      "monheim",
+      "j.l.h outro",
+      "death metheny",
+      "john hughes",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-04-28",
+        "url": "https://archive.org/details/gybe1999-04-28",
+        "title": "Godspeed You! Black Emperor Live at Beursschouwburg on 1999-04-28"
+      },
+      {
+        "id": "gybe1999-04-28.TCD-D100",
+        "url": "https://archive.org/details/gybe1999-04-28.TCD-D100",
+        "title": "Godspeed You! Black Emperor Live at Beursschouwburg on 1999-04-28"
+      }
+    ]
+  },
+  {
+    "date": "1999-05-24",
+    "venue": "fimav, colis\u00e9e des bois-francs, victoriaville, qc",
+    "songs": [
+      "noise intro",
+      "moya",
+      "monheim",
+      "dead metheny",
+      "world police",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-05-24.flacf",
+        "url": "https://archive.org/details/gybe1999-05-24.flacf",
+        "title": "Godspeed You! Black Emperor Live at 16th Festival de Musique Actuelle de Victoriaville on 1999-05-24"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-12",
+    "venue": "garage 2, glasgow, uk",
+    "songs": [
+      "j.l.h outro"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-07-13",
+    "venue": "hop & grape, manchester, uk",
+    "songs": [
+      "the dead flag blues",
+      "monheim",
+      "gathering storm",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III",
+      "john hughes"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-13",
+        "url": "https://archive.org/details/gybe1999-07-13",
+        "title": "Godspeed You! Black Emperor Live at Hop & Grape, Manchester University on 1999-07-13"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-14",
+    "venue": "fleece & firkin, bristol, uk",
+    "songs": [
+      "the dead flag blues",
+      "monheim",
+      "gathering storm",
+      "moya",
+      "blaise bailey finnegan III",
+      "john hughes",
+      "world police",
+      "end jam",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-07-15",
+    "venue": "union chapel, islington, london, uk",
+    "songs": [
+      "noise intro",
+      "the dead flag blues",
+      "monheim",
+      "world police",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "moya",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-15.TCD-D100",
+        "url": "https://archive.org/details/gybe1999-07-15.TCD-D100",
+        "title": "Godspeed You! Black Emperor Live at Islington Union Chapel on 1999-07-15"
+      },
+      {
+        "id": "gybe1999-07-15",
+        "url": "https://archive.org/details/gybe1999-07-15",
+        "title": "Godspeed You! Black Emperor Live at Union Chapel on 1999-07-15"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-16",
+    "venue": "union chapel, islington, london, uk",
+    "songs": [
+      "[including:]",
+      "the dead flag blues",
+      "monheim",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-07-18",
+    "venue": "dachstock reitschule, bern, swi",
+    "songs": [
+      "the dead flag blues",
+      "monheim",
+      "world police",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "j.l.h outro",
+      "the dead flag blues (outro)",
+      "speech"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-18.T",
+        "url": "https://archive.org/details/gybe1999-07-18.T",
+        "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 1999-07-18"
+      },
+      {
+        "id": "gybe1999-07-18.sbd.flacf",
+        "url": "https://archive.org/details/gybe1999-07-18.sbd.flacf",
+        "title": "Godspeed You! Black Emperor Live at Reitschule on 1999-07-18"
+      },
+      {
+        "id": "gybe1999-07-18",
+        "url": "https://archive.org/details/gybe1999-07-18",
+        "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 1999-07-18"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-19",
+    "venue": "gaswerk, winterthur, swi",
+    "songs": [
+      "moya",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "blaise bailey finnegan III",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-19",
+        "url": "https://archive.org/details/gybe1999-07-19",
+        "title": "Godspeed You! Black Emperor Live at Gaswerk on 1999-07-19"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-28",
+    "venue": "koz, frankfurt, ger",
+    "songs": [
+      "the dead flag blues",
+      "gathering storm",
+      "dead metheny",
+      "monheim",
+      "moya",
+      "john hughes",
+      "sad mafioso",
+      "end jam"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-28",
+        "url": "https://archive.org/details/gybe1999-07-28",
+        "title": "Godspeed You! Black Emperor Live at Goethe Universit\u00e4t on 1999-07-28"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-29",
+    "venue": "gebaede9, \nkoln, ger",
+    "songs": [
+      "dead flag blues",
+      "moya",
+      "gathering storm",
+      "3rd part",
+      "dead metheny",
+      "monheim",
+      "world police",
+      "blaise bailey finnegan III",
+      "john hughes"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-29",
+        "url": "https://archive.org/details/gybe1999-07-29",
+        "title": "Godspeed You! Black Emperor Live at Geb\u00e4ude 9 on 1999-07-29"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-30",
+    "venue": "koninklijke museum, antwerpen, bel",
+    "songs": [
+      "noise intro",
+      "moya",
+      "monheim",
+      "world police",
+      "john hughes",
+      "gathering storm",
+      "3rd part",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-30.mp3",
+        "url": "https://archive.org/details/gybe1999-07-30.mp3",
+        "title": "Godspeed You! Black Emperor Live at Koninklijke Museum on 1999-07-30"
+      },
+      {
+        "id": "gybe1999-07-30",
+        "url": "https://archive.org/details/gybe1999-07-30",
+        "title": "Godspeed You! Black Emperor Live at De Bunker Koninklijk Museum Voor Schone Kunsten on 1999-07-30"
+      },
+      {
+        "id": "gybe1999-07-30.TCD-D8",
+        "url": "https://archive.org/details/gybe1999-07-30.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Koninklijk Museum voor Schone Kunsten on 1999-07-30"
+      },
+      {
+        "id": "gybe1999-07-30.flacf",
+        "url": "https://archive.org/details/gybe1999-07-30.flacf",
+        "title": "Godspeed You! Black Emperor Live at Koninklijk Museume voor Schone Kunsten on 1999-07-30"
+      }
+    ]
+  },
+  {
+    "date": "1999-07-31",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "moya",
+      "monheim",
+      "gathering strom",
+      "3rd part",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "john hughes",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-07-31.YP",
+        "url": "https://archive.org/details/gybe1999-07-31.YP",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 1999-07-31"
+      }
+    ]
+  },
+  {
+    "date": "1999-08-06",
+    "venue": "emmaboda \nfestival, v\u00e4xj\u00f6, swe",
+    "songs": [
+      "j.l.h. outro",
+      "dead metheny",
+      "gathering storm",
+      "world police",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-08-06",
+        "url": "https://archive.org/details/gybe1999-08-06",
+        "title": "Godspeed You! Black Emperor Live at Emmaboda Festival on 1999-08-06"
+      }
+    ]
+  },
+  {
+    "date": "1999-08-08",
+    "venue": "so what!, oslo, nor",
+    "songs": [
+      "the dead flag blues",
+      "monheim",
+      "moya",
+      "gathering storm",
+      "[pause]",
+      "dead metheny",
+      "world police",
+      "sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-08-08.DAT",
+        "url": "https://archive.org/details/gybe1999-08-08.DAT",
+        "title": "Godspeed You! Black Emperor Live at So What! on 1999-08-08"
+      },
+      {
+        "id": "gybe1999-08-08",
+        "url": "https://archive.org/details/gybe1999-08-08",
+        "title": "Godspeed You! Black Emperor Live at So What on 1999-08-08"
+      }
+    ]
+  },
+  {
+    "date": "1999-08-10",
+    "venue": "vega, copenhagen, den",
+    "songs": [
+      "moya",
+      "monheim",
+      "world police",
+      "dead metheny",
+      "gathering storm",
+      "3rd part",
+      "blaise bailey finnegan III",
+      "(?)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-08-10.VHS-Audio",
+        "url": "https://archive.org/details/gybe1999-08-10.VHS-Audio",
+        "title": "Godspeed You! Black Emperor Live at Vega on 1999-08-10"
+      }
+    ]
+  },
+  {
+    "date": "1999-08-14",
+    "venue": "glocksee, \nhannover, ger",
+    "songs": [
+      "moya",
+      "monheim",
+      "gathering storm",
+      "3rd part",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "john hughes",
+      "world police",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-08-14",
+        "url": "https://archive.org/details/gybe1999-08-14",
+        "title": "Godspeed You! Black Emperor Live at Caf\u00e9 Glocksee on 1999-08-14"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-03",
+    "venue": "theater of living arts, philadelphia, pa",
+    "songs": [
+      "3rd part",
+      "moya",
+      "gathering storm",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-09-04",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "3rd part",
+      "world police",
+      "gathering storm pt. I",
+      "monheim",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-04.shn",
+        "url": "https://archive.org/details/gybe1999-09-04.shn",
+        "title": "Godspeed You! Black Emperor Live at Nightclub on 1999-09-04"
+      },
+      {
+        "id": "gybe1999-09-04.flacf",
+        "url": "https://archive.org/details/gybe1999-09-04.flacf",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 1999-09-04"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-05",
+    "venue": "mercury lounge, new york, ny",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-05",
+        "url": "https://archive.org/details/gybe1999-09-05",
+        "title": "Godspeed You! Black Emperor Live at Mercury Lounge on 1999-09-05"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-08",
+    "venue": "met cafe, providence, ri",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-09-09",
+    "venue": "middle east, cambridge, ma",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm pt. I",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-09.DAT",
+        "url": "https://archive.org/details/gybe1999-09-09.DAT",
+        "title": "Godspeed You! Black Emperor Live at Middle East on 1999-09-09"
+      },
+      {
+        "id": "gybe1999-09-09",
+        "url": "https://archive.org/details/gybe1999-09-09",
+        "title": "Godspeed You! Black Emperor Live at Middle East on 1999-09-09"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-10",
+    "venue": "th\u00e9\u00e2tre l'olympia, montr\u00e9al, qc",
+    "songs": [
+      "3rd part",
+      "moya",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-10",
+        "url": "https://archive.org/details/gybe1999-09-10",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre L'Olympia on 1999-09-10"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-12",
+    "venue": "babylon, ottawa, on",
+    "songs": [
+      "soundcheck : monheim",
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "the sad mafioso thanks to dane mills!"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-09-13",
+    "venue": "lee's palace, toronto, on",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "moya",
+      "john hughes",
+      "the sad mafioso",
+      "dead metheny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-13",
+        "url": "https://archive.org/details/gybe1999-09-13",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"
+      },
+      {
+        "id": "gybe1999-09-13.flac",
+        "url": "https://archive.org/details/gybe1999-09-13.flac",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"
+      },
+      {
+        "id": "gybe1999-09-13.mix",
+        "url": "https://archive.org/details/gybe1999-09-13.mix",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 1999-09-13"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-15",
+    "venue": "speak in tongues, cleveland, oh",
+    "songs": [
+      "j.l.h. outro",
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-15",
+        "url": "https://archive.org/details/gybe1999-09-15",
+        "title": "Godspeed You! Black Emperor Live at Speak in Tongues on 1999-09-15"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-16",
+    "venue": "lounge ax, chicago, il",
+    "songs": [
+      "3rd part",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "ajc02676_gybe1999-09-16.ajcproject",
+        "url": "https://archive.org/details/ajc02676_gybe1999-09-16.ajcproject",
+        "title": "Godspeed You! Black Emperor Live at Lounge Ax on 1999-09-16"
+      },
+      {
+        "id": "gybe1999-09-16",
+        "url": "https://archive.org/details/gybe1999-09-16",
+        "title": "Godspeed You! Black Emperor Live at Lounge AX on 1999-09-16"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-17",
+    "venue": "400 bar, minneapolis, mn",
+    "songs": [
+      "3rd part",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "blaise bailey finnegan II",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-17",
+        "url": "https://archive.org/details/gybe1999-09-17",
+        "title": "Godspeed You! Black Emperor Live at 400 Bar on 1999-09-17"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-20",
+    "venue": "crocodile cafe, seattle, wa",
+    "songs": [
+      "drone intro",
+      "moya",
+      "blaise bailey finnegan II",
+      "monheim",
+      "3rd part",
+      "gathering storm",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-20",
+        "url": "https://archive.org/details/gybe1999-09-20",
+        "title": "Godspeed You! Black Emperor Live at Crocodile Cafe on 1999-09-20"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-21",
+    "venue": "starfish room, vancouver, bc",
+    "songs": [
+      "improvisation",
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-21",
+        "url": "https://archive.org/details/gybe1999-09-21",
+        "title": "Godspeed You! Black Emperor Live at Starfish Room on 1999-09-21"
+      },
+      {
+        "id": "gybe1999-09-21.flacf",
+        "url": "https://archive.org/details/gybe1999-09-21.flacf",
+        "title": "Godspeed You! Black Emperor Live at Starfish Ballroom on 1999-09-21"
+      },
+      {
+        "id": "gybe1999-09-21.mp3",
+        "url": "https://archive.org/details/gybe1999-09-21.mp3",
+        "title": "Godspeed You! Black Emperor Live at Starfish Room on 1999-09-21"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-22",
+    "venue": "crystal ballroom, portland, or",
+    "songs": [
+      "improvisation",
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-22.flacf",
+        "url": "https://archive.org/details/gybe1999-09-22.flacf",
+        "title": "Godspeed You! Black Emperor Live at Crystal Ballroom on 1999-09-22"
+      },
+      {
+        "id": "gybe1999-09-22",
+        "url": "https://archive.org/details/gybe1999-09-22",
+        "title": "Godspeed You! Black Emperor Live at Crystal Ballroom on 1999-09-22"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-23",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-23",
+        "url": "https://archive.org/details/gybe1999-09-23",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 1999-09-23"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-24",
+    "venue": "troubadour, west hollywood, los angeles, ca",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-24",
+        "url": "https://archive.org/details/gybe1999-09-24",
+        "title": "Godspeed You! Black Emperor Live at Troubadour on 1999-09-24"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-25",
+    "venue": "casbah, san diego, ca",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan II"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-25",
+        "url": "https://archive.org/details/gybe1999-09-25",
+        "title": "Godspeed You! Black Emperor Live at The Casbah on 1999-09-25"
+      },
+      {
+        "id": "gybe1999-09-25.flacf",
+        "url": "https://archive.org/details/gybe1999-09-25.flacf",
+        "title": "Godspeed You! Black Emperor Live at Casbah on 1999-09-25"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-26",
+    "venue": "modified, phoenix, az",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "moya",
+      "dead metheny",
+      "john hughes",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-26.shnf",
+        "url": "https://archive.org/details/gybe1999-09-26.shnf",
+        "title": "Godspeed You! Black Emperor Live at Modified on 1999-09-26"
+      },
+      {
+        "id": "gybe1999-09-26.t",
+        "url": "https://archive.org/details/gybe1999-09-26.t",
+        "title": "Godspeed You! Black Emperor Live at Modified Arts on 1999-09-26"
+      }
+    ]
+  },
+  {
+    "date": "1999-09-28",
+    "venue": "stubb's bbq, austin, tx",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-09-30",
+    "venue": "mermaid lounge, new orleans, la",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-09-30",
+        "url": "https://archive.org/details/gybe1999-09-30",
+        "title": "Godspeed You! Black Emperor Live at Mermaid Lounge on 1999-09-30"
+      }
+    ]
+  },
+  {
+    "date": "1999-10-01",
+    "venue": "echo lounge, atlanta, ga",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-10-01.flacf",
+        "url": "https://archive.org/details/gybe1999-10-01.flacf",
+        "title": "Godspeed You! Black Emperor Live at Echo Lounge on 1999-10-01"
+      }
+    ]
+  },
+  {
+    "date": "1999-10-02",
+    "venue": "werehouse, winston-salem, nc",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "dead metheny",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "1999-10-03",
+    "venue": "cat's cradle, chapel hill, nc",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "john hughes",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe1999-10-03.cradle_acidjack",
+        "url": "https://archive.org/details/gybe1999-10-03.cradle_acidjack",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 1999-10-03"
+      }
+    ]
+  },
+  {
+    "date": "2000-03-20",
+    "venue": "salle l'x, montreal, qc",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "12-28-99 (w/ outro)",
+      "world police",
+      "gathering storm",
+      "john hughes"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-03-20",
+        "url": "https://archive.org/details/gybe2000-03-20",
+        "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-20"
+      }
+    ]
+  },
+  {
+    "date": "2000-03-21",
+    "venue": "salle l'x, montreal, qc",
+    "songs": [
+      "monheim",
+      "gathering storm",
+      "john hughes",
+      "12-28-99 (w/ outro)",
+      "3rd part",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-03-21",
+        "url": "https://archive.org/details/gybe2000-03-21",
+        "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-21"
+      }
+    ]
+  },
+  {
+    "date": "2000-03-22",
+    "venue": "salle l'x, montreal, qc",
+    "songs": [
+      "monheim",
+      "12-28-99 (w/ outro)",
+      "world police",
+      "gathering storm",
+      "moya",
+      "blaise bailey finnegan III",
+      "3rd part"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-03-22",
+        "url": "https://archive.org/details/gybe2000-03-22",
+        "title": "Godspeed You! Black Emperor Live at Salle L'X on 2000-03-22"
+      }
+    ]
+  },
+  {
+    "date": "2000-04-02",
+    "venue": "temple bar, dublin, ir",
+    "songs": [
+      "[including:]",
+      "11-28-99 w/ outro",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-03",
+    "venue": "royal festival hall, london, uk",
+    "songs": [
+      "speech intro",
+      "drone",
+      "3rd part",
+      "chart #3",
+      "world police",
+      "12-28-99 (w/ outro)",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-04-03",
+        "url": "https://archive.org/details/gybe2000-04-03",
+        "title": "Godspeed You! Black Emperor Live at Royal Festival Hall on 2000-04-03"
+      }
+    ]
+  },
+  {
+    "date": "2000-04-04",
+    "venue": "the cockpit, leeds, uk",
+    "songs": [
+      "[including:]",
+      "12-28-99 w/ outro",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-05",
+    "venue": "planet k, manchester, uk",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "dead metheny",
+      "12.28.99 (w/ outro)",
+      "world police",
+      "blaise bailey finnegan III",
+      "john hughes"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-06",
+    "venue": "bristol university, bristol, uk",
+    "songs": [
+      "moya",
+      "3rd part",
+      "dead metheny",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-07",
+    "venue": "all tomorrow's parties, pontin's, camber sands, uk",
+    "songs": [
+      "3rd part",
+      "dead metheny",
+      "world police",
+      "12-28-99",
+      "gathering storm",
+      "moya",
+      "blaise bailey finnegan III",
+      "dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-04-07.DAT",
+        "url": "https://archive.org/details/gybe2000-04-07.DAT",
+        "title": "Godspeed You! Black Emperor Live at All Tomorrow's Parties @ Pontin's on 2000-04-07"
+      },
+      {
+        "id": "gybe2000-04-07",
+        "url": "https://archive.org/details/gybe2000-04-07",
+        "title": "Godspeed You! Black Emperor Live at Pontin's Camber Sands on 2000-04-07"
+      }
+    ]
+  },
+  {
+    "date": "2000-04-09",
+    "venue": "ab club, brussels, bel",
+    "songs": [
+      "3rd part",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "12-28-99 (w/ outro)",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-04-09",
+        "url": "https://archive.org/details/gybe2000-04-09",
+        "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"
+      },
+      {
+        "id": "gybe2000-04-09.TCD-D100",
+        "url": "https://archive.org/details/gybe2000-04-09.TCD-D100",
+        "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"
+      },
+      {
+        "id": "gybe2000-04-09.T",
+        "url": "https://archive.org/details/gybe2000-04-09.T",
+        "title": "Godspeed You! Black Emperor Live at AB Club on 2000-04-09"
+      }
+    ]
+  },
+  {
+    "date": "2000-04-14",
+    "venue": "classic village, roma, it",
+    "songs": [
+      "[including] :",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-18",
+    "venue": "wuk, vienna, au",
+    "songs": [
+      "3rd part",
+      "monheim",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-04-21",
+    "venue": "dachstock reitschule, bern, swi",
+    "songs": [
+      "3rd part",
+      "12.28.99 (w/ outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-04-21.T",
+        "url": "https://archive.org/details/gybe2000-04-21.T",
+        "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2000-04-21"
+      },
+      {
+        "id": "gybe2000-04-21.YPraw",
+        "url": "https://archive.org/details/gybe2000-04-21.YPraw",
+        "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2000-04-21"
+      }
+    ]
+  },
+  {
+    "date": "2000-04-22",
+    "venue": "tivoli, utrecht, hol",
+    "songs": [
+      "3rd part",
+      "dead metheny",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-04-22.TCD-D8_remaster",
+        "url": "https://archive.org/details/gybe2000-04-22.TCD-D8_remaster",
+        "title": "Godspeed You! Black Emperor Live at Tivoli on 2000-04-22"
+      },
+      {
+        "id": "gybe2000-04-22.raw",
+        "url": "https://archive.org/details/gybe2000-04-22.raw",
+        "title": "Godspeed You! Black Emperor Live at Tivoli on 2000-04-22"
+      }
+    ]
+  },
+  {
+    "date": "2000-08-10",
+    "venue": "knitting\nfactory, new york, ny",
+    "songs": [
+      "world police",
+      "tazer floyd",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-08-10.fixed",
+        "url": "https://archive.org/details/gybe2000-08-10.fixed",
+        "title": "Godspeed You! Black Emperor Live at Knitting Factory on 2000-08-10"
+      }
+    ]
+  },
+  {
+    "date": "2000-08-11",
+    "venue": "knitting\nfactory, new york, ny",
+    "songs": [
+      "world police",
+      "tazer floyd",
+      "12-28-99",
+      "gathering storm",
+      "3rd part",
+      "blaise bailey finnegan III",
+      "monheim"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-08-11.fixed",
+        "url": "https://archive.org/details/gybe2000-08-11.fixed",
+        "title": "Godspeed You! Black Emperor Live at Knitting Factory on 2000-08-11"
+      }
+    ]
+  },
+  {
+    "date": "2000-09-02",
+    "venue": "falconer\nfarm, picton, on",
+    "songs": [
+      "world police",
+      "tazer floyd",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-10-05",
+    "venue": "bloor\ncinema, toronto, on",
+    "songs": [
+      "chart #3",
+      "world police",
+      "12-28-99 (w/ outro)",
+      "tazer floyd",
+      "john hughes",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "gathering storm (part 2)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-05",
+        "url": "https://archive.org/details/gybe2000-10-05",
+        "title": "Godspeed You! Black Emperor Live at Bloor Cinema on 2000-10-05"
+      },
+      {
+        "id": "gybe2000-10-05.alt",
+        "url": "https://archive.org/details/gybe2000-10-05.alt",
+        "title": "Godspeed You! Black Emperor Live at Bloor Cinema on 2000-10-05"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-07",
+    "venue": "metro,\nchicago, il",
+    "songs": [
+      "moya",
+      "world police",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-07",
+        "url": "https://archive.org/details/gybe2000-10-07",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2000-10-07"
+      },
+      {
+        "id": "gybe2000-10-07.shn",
+        "url": "https://archive.org/details/gybe2000-10-07.shn",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2000-10-07"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-08",
+    "venue": "dionysus, oberlin, oh",
+    "songs": [
+      "moya",
+      "improvisation",
+      "world police",
+      "tazer floyd",
+      "dead metheny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-08",
+        "url": "https://archive.org/details/gybe2000-10-08",
+        "title": "Godspeed You! Black Emperor Live at Oberlin College on 2000-10-08"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-09",
+    "venue": "mcconomy auditorium, pittsburgh, pa",
+    "songs": [
+      "monheim",
+      "moya",
+      "tazer floyd",
+      "12-28-99 (w/outro)",
+      "blaise bailey finnegan III",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-09",
+        "url": "https://archive.org/details/gybe2000-10-09",
+        "title": "Godspeed You! Black Emperor Live at McConomy Auditorium - Carnegie Mellon University on 2000-10-09"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-10",
+    "venue": "4040,\nphiladelphia, pa",
+    "songs": [
+      "moya",
+      "world police",
+      "12-28-99 (w/ outro)",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-10",
+        "url": "https://archive.org/details/gybe2000-10-10",
+        "title": "Godspeed You! Black Emperor Live at 4040 on 2000-10-10"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-25",
+    "venue": "legends,\nvictoria, bc",
+    "songs": [
+      "moya",
+      "world police",
+      "12-28-99",
+      "gathering storm",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "tazer floyd"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-10-26",
+    "venue": "vogue\ntheater, vancouver, bc",
+    "songs": [
+      "moya",
+      "chart #3",
+      "world police",
+      "12-28-99",
+      "gathering storm",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-10-27",
+    "venue": "crocodile\ncafe, seattle, wa (early show)",
+    "songs": [
+      "improvation",
+      "moya",
+      "monheim",
+      "12-28-99 (w/ outro)",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-27.early",
+        "url": "https://archive.org/details/gybe2000-10-27.early",
+        "title": "Godspeed You! Black Emperor Live at Crocodile Cafe (early show) on 2000-10-27"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-28",
+    "venue": "aladdin\ntheater, portland, or",
+    "songs": [
+      "world police",
+      "improvisation",
+      "dead metheny",
+      "john hughes",
+      "12-28-99",
+      "tazer floyd",
+      "blaise bailey finnegan IIII",
+      "the dead flag blues outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-28",
+        "url": "https://archive.org/details/gybe2000-10-28",
+        "title": "Godspeed You! Black Emperor Live at Aladdin Theater on 2000-10-28"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-30",
+    "venue": "great\namerican music hall, san fransisco, ca",
+    "songs": [
+      "world police",
+      "dead metheny",
+      "12-28-99",
+      "tazer floyd",
+      "monheim",
+      "blaise bailey finnegan IIII",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-30.flac16",
+        "url": "https://archive.org/details/gybe2000-10-30.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-30"
+      }
+    ]
+  },
+  {
+    "date": "2000-10-31",
+    "venue": "great\namerican music hall, san fransisco, ca",
+    "songs": [
+      "moya",
+      "world police",
+      "gathering storm",
+      "john hughes",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "12.28.99"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-31.gybe2000Matrix",
+        "url": "https://archive.org/details/gybe2000-10-31.gybe2000Matrix",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"
+      },
+      {
+        "id": "gybe2000-10-31.T",
+        "url": "https://archive.org/details/gybe2000-10-31.T",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"
+      },
+      {
+        "id": "gybe2000-10-31.flacf",
+        "url": "https://archive.org/details/gybe2000-10-31.flacf",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"
+      },
+      {
+        "id": "gybe2000-10-31",
+        "url": "https://archive.org/details/gybe2000-10-31",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"
+      },
+      {
+        "id": "gybe2000-10-31.at825.flac16",
+        "url": "https://archive.org/details/gybe2000-10-31.at825.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2000-10-31"
+      }
+    ]
+  },
+  {
+    "date": "2000-11-01",
+    "venue": "el\nray theater, los angeles, ca",
+    "songs": [
+      "improvisation",
+      "moya",
+      "world police",
+      "12-28-99",
+      "tazer floyd",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-11-01",
+        "url": "https://archive.org/details/gybe2000-11-01",
+        "title": "Godspeed You! Black Emperor Live at El Rey Theater on 2000-11-01"
+      },
+      {
+        "id": "gybe2000-11-01.sbd-aud-mix",
+        "url": "https://archive.org/details/gybe2000-11-01.sbd-aud-mix",
+        "title": "Godspeed You! Black Emperor Live at El Rey Theatre on 2000-11-01"
+      },
+      {
+        "id": "gybe2000-12-01",
+        "url": "https://archive.org/details/gybe2000-12-01",
+        "title": "Godspeed You! Black Emperor Live at El Rey Theatre on 2000-11-01"
+      }
+    ]
+  },
+  {
+    "date": "2000-11-05",
+    "venue": "astro hall, shibuya, tokyo, jp",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "12-28-99",
+      "dead metheny",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-11-06",
+    "venue": "astro hall, shibuya, tokyo, jp",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "12-28-99 (w/ outro)",
+      "dead metheny",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-11-06",
+        "url": "https://archive.org/details/gybe2000-11-06",
+        "title": "Godspeed You! Black Emperor Live at Astro Hall on 2000-11-06"
+      }
+    ]
+  },
+  {
+    "date": "2000-11-19",
+    "venue": "scala, king's cross, london, uk",
+    "songs": [
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "improvisation",
+      "12-28-99",
+      "blaise bailey finnegan III",
+      "world police",
+      "the dead flag blues (outro)",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-11-19.SBD",
+        "url": "https://archive.org/details/gybe2000-11-19.SBD",
+        "title": "Godspeed You! Black Emperor Live at Kings Cross Scala on 2000-11-19"
+      },
+      {
+        "id": "gybe2000-11-19.flacf",
+        "url": "https://archive.org/details/gybe2000-11-19.flacf",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"
+      },
+      {
+        "id": "gybe2000-11-19",
+        "url": "https://archive.org/details/gybe2000-11-19",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"
+      },
+      {
+        "id": "gybe2000-11-19.T",
+        "url": "https://archive.org/details/gybe2000-11-19.T",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-19"
+      }
+    ]
+  },
+  {
+    "date": "2000-11-20",
+    "venue": "scala, king's cross, london, uk",
+    "songs": [
+      "12-28-99",
+      "gathering storm",
+      "john hughes",
+      "world police",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "3rd part",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-11-20.flacf",
+        "url": "https://archive.org/details/gybe2000-11-20.flacf",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-20"
+      },
+      {
+        "id": "gybe2000-11-20",
+        "url": "https://archive.org/details/gybe2000-11-20",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-20"
+      }
+    ]
+  },
+  {
+    "date": "2000-11-21",
+    "venue": "scala, king's cross, london, uk",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "12-28-99",
+      "monheim",
+      "3rd part",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "john hughes",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-11-22",
+    "venue": "scala, king's cross, london, uk",
+    "songs": [
+      "dead metheny",
+      "tazer floyd",
+      "12-28-99",
+      "gathering storm",
+      "3rd part",
+      "the sad mafioso",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-11-22.flacf",
+        "url": "https://archive.org/details/gybe2000-11-22.flacf",
+        "title": "Godspeed You! Black Emperor Live at Scala on 2000-11-22"
+      }
+    ]
+  },
+  {
+    "date": "2000-12-01",
+    "venue": "somerville theater, somerville, ma",
+    "songs": [
+      "improvisation",
+      "moya",
+      "12-28-99",
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-12-01.somerville",
+        "url": "https://archive.org/details/gybe2000-12-01.somerville",
+        "title": "Godspeed You! Black Emperor Live at Somerville Theater on 2000-12-01"
+      }
+    ]
+  },
+  {
+    "date": "2000-12-02",
+    "venue": "st-john's of baltimore, baltimore, md",
+    "songs": [
+      "moya",
+      "world police",
+      "gathering storm",
+      "tazer floyd",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-12-02.shnf",
+        "url": "https://archive.org/details/gybe2000-12-02.shnf",
+        "title": "Godspeed You! Black Emperor Live at St. John's Church on 2000-12-02"
+      },
+      {
+        "id": "gybe2000-12-02.flac",
+        "url": "https://archive.org/details/gybe2000-12-02.flac",
+        "title": "Godspeed You! Black Emperor Live at St. John\u2019s United Methodist Church on 2000-12-02"
+      }
+    ]
+  },
+  {
+    "date": "2000-12-03",
+    "venue": "wherehouse, winston-salem, nc",
+    "songs": [
+      "[including:]",
+      "speech intro",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-12-04",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "12-28-99",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-12-04",
+        "url": "https://archive.org/details/gybe2000-12-04",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2000-12-04"
+      }
+    ]
+  },
+  {
+    "date": "2000-12-05",
+    "venue": "bowery ballroom, new york, ny",
+    "songs": [
+      "12-28-99",
+      "dead metheny",
+      "world police",
+      "gathering storm",
+      "tazer floyd",
+      "the sad mafioso",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-12-05",
+        "url": "https://archive.org/details/gybe2000-12-05",
+        "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2000-12-05"
+      },
+      {
+        "id": "gybe2000-12-05.tracked",
+        "url": "https://archive.org/details/gybe2000-12-05.tracked",
+        "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2000-12-05"
+      }
+    ]
+  },
+  {
+    "date": "2000-12-06",
+    "venue": "bowery ballroom, new york, ny",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "john hughes",
+      "dead metheny",
+      "12-28-99",
+      "gathering storm",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-12-07",
+    "venue": "bowery ballroom, new york, ny",
+    "songs": [
+      "john hughes",
+      "tazer floyd",
+      "world police",
+      "dead metheny",
+      "12-28-99",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-12-08",
+    "venue": "maxwell's, hoboken, nj",
+    "songs": [
+      "moya",
+      "12-28-99",
+      "world police",
+      "john hughes",
+      "gathering storm",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-12-09",
+    "venue": "bard college, annandale, ny",
+    "songs": [
+      "moya",
+      "world police",
+      "12-28-99",
+      "tazer floyd",
+      "gathering storm"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2000-12-10",
+    "venue": "th\u00e9\u00e2tre l'olympia, montr\u00e9al, qc",
+    "songs": [
+      "speech intro",
+      "12-28-99",
+      "tazer floyd",
+      "john hughes",
+      "dead metheny",
+      "gathering storm",
+      "the sad mafioso",
+      "moya",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-12-10",
+        "url": "https://archive.org/details/gybe2000-12-10",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Olympia on 2000-12-10"
+      },
+      {
+        "id": "gybe2000-12-10.matrix",
+        "url": "https://archive.org/details/gybe2000-12-10.matrix",
+        "title": "Godspeed You! Black Emperor Live at Olympia de Montr\u00e9al on 2000-12-10"
+      },
+      {
+        "id": "gybe2000-12-10.flac16",
+        "url": "https://archive.org/details/gybe2000-12-10.flac16",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Olympia on 2000-12-10"
+      },
+      {
+        "id": "gybe2000-12-10.other",
+        "url": "https://archive.org/details/gybe2000-12-10.other",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Olympia on 2000-12-10"
+      }
+    ]
+  },
+  {
+    "date": "2001-09-27",
+    "venue": "opera\nhouse, toronto, on",
+    "songs": [
+      "gathering storm",
+      "12.28.99 (w/ outro)",
+      "tazer floyd",
+      "motherfucker = redeemer",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2001-09-27",
+        "url": "https://archive.org/details/gybe2001-09-27",
+        "title": "Godspeed You! Black Emperor Live at Opera House on 2001-09-27"
+      },
+      {
+        "id": "gybe2001-09-27.flacf",
+        "url": "https://archive.org/details/gybe2001-09-27.flacf",
+        "title": "Godspeed You! Black Emperor Live at Opera House on 2001-09-27"
+      }
+    ]
+  },
+  {
+    "date": "2001-09-28",
+    "venue": "palais\nroyale, toronto, on",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "john hughes",
+      "12.28.99 (w/ outro)",
+      "motherfucker = redeemer",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2001-09-28.flac16",
+        "url": "https://archive.org/details/gybe2001-09-28.flac16",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2001-09-28"
+      },
+      {
+        "id": "gybe2001-09-28.shn",
+        "url": "https://archive.org/details/gybe2001-09-28.shn",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2001-09-28"
+      }
+    ]
+  },
+  {
+    "date": "2001-09-29",
+    "venue": "st.andrews\nhall, detroit, mi",
+    "songs": [
+      "tazer floyd",
+      "moya",
+      "12.28.99 (w/ outro)",
+      "gathering storm",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2001-09-30",
+    "venue": "beachland\nballroom, cleveland, oh",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "12.28.99 (w/ outro)",
+      "gathering storm",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2001-09-30",
+        "url": "https://archive.org/details/gybe2001-09-30",
+        "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2001-09-30"
+      },
+      {
+        "id": "gybe2001-09-30.alt",
+        "url": "https://archive.org/details/gybe2001-09-30.alt",
+        "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2001-09-30"
+      }
+    ]
+  },
+  {
+    "date": "2001-10-01",
+    "venue": "wexner\nperformance space, columbus, oh",
+    "songs": [
+      "the dead flag blues",
+      "12.28.99 (w/ outro)",
+      "moya",
+      "tazer floyd",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2001-10-02",
+    "venue": "centrum\nhall, chicago, il",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "dead metheny",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "motherfucker = redeemer"
+    ],
+    "recordings": [
+      {
+        "id": "ajc02675_gybe2001-10-02.ajcproject",
+        "url": "https://archive.org/details/ajc02675_gybe2001-10-02.ajcproject",
+        "title": "Godspeed You! Black Emperor Live at Centrum Hall on 2001-10-02"
+      }
+    ]
+  },
+  {
+    "date": "2001-10-03",
+    "venue": "miramar\ntheater, milwaukee, wi",
+    "songs": [
+      "moya",
+      "john hughes",
+      "monheim (?)",
+      "motherfucking = redeemer",
+      "blaise bailey finnegan III",
+      "(incomplete)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2001-10-29",
+    "venue": "liquid\nroom, shinjuku, tokyo, jp",
+    "songs": [
+      "tazer floyd",
+      "moya",
+      "motherfucking = redeemer",
+      "dead metheny",
+      "12-28-99 (w/ outro)",
+      "gathering storm",
+      "dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2001-10-30",
+    "venue": "liquid\nroom, shinjuku, tokyo, jp",
+    "songs": [
+      "12-28-99",
+      "tazer floyd",
+      "gathering storm",
+      "motherfucking = redeemer",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2001-10-30.VHS-audio",
+        "url": "https://archive.org/details/gybe2001-10-30.VHS-audio",
+        "title": "Godspeed You! Black Emperor Live at Shinjuku Liquid Room on 2001-10-30"
+      }
+    ]
+  },
+  {
+    "date": "2001-11-01",
+    "venue": "club\nquattro, nagoya, jp",
+    "songs": [
+      "tazer floyd",
+      "moya",
+      "motherfucking = redeemer",
+      "12/28/99 (w/ outro)",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2001-11-02",
+    "venue": "club\nquattro, shinsaibashi, osaka, jp",
+    "songs": [
+      "12-28-99",
+      "dead metheny",
+      "motherfucking = redeemer",
+      "john hughes",
+      "tazer floyd",
+      "gathering storm",
+      "moya",
+      "dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2001-11-02",
+        "url": "https://archive.org/details/gybe2001-11-02",
+        "title": "Godspeed You! Black Emperor Live at Shinsaibashi Club Quattro on 2001-11-02"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-13",
+    "venue": "th\u00e9atre\nla plaza, montr\u00e9al, qc",
+    "songs": [
+      "gathering storm",
+      "dead metheny (w/ outro)",
+      "monheim",
+      "world police",
+      "motherfucker = redeemer",
+      "tazer floyd",
+      "the cowboy (w/ bruce)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-13.alt",
+        "url": "https://archive.org/details/gybe2002-01-13.alt",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-13"
+      },
+      {
+        "id": "gybe2002-01-13",
+        "url": "https://archive.org/details/gybe2002-01-13",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-13"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-14",
+    "venue": "th\u00e9atre\nla plaza, montr\u00e9al, qc",
+    "songs": [
+      "tazer floyd",
+      "12.28.99",
+      "dead metheny (w/ outro)",
+      "monheim",
+      "world police",
+      "motherfucker = redeemer",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-14",
+        "url": "https://archive.org/details/gybe2002-01-14",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-14"
+      },
+      {
+        "id": "gybe2002-01-14.alt",
+        "url": "https://archive.org/details/gybe2002-01-14.alt",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-14"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-15",
+    "venue": "th\u00e9atre\nla plaza, montr\u00e9al, qc",
+    "songs": [
+      "gathering storm",
+      "dead metheny (w/ outro)",
+      "drone + improvisation",
+      "moya",
+      "world police",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III",
+      "the cowboy (w/ aidan)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-15.flacf",
+        "url": "https://archive.org/details/gybe2002-01-15.flacf",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-15"
+      },
+      {
+        "id": "gybe2002-01-15.alt",
+        "url": "https://archive.org/details/gybe2002-01-15.alt",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-15"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-16",
+    "venue": "th\u00e9atre\nla plaza, montr\u00e9al, qc",
+    "songs": [
+      "tazer floyd",
+      "12.28.99",
+      "dead metheny (w/ outro)",
+      "world police",
+      "motherfucker = redeemer",
+      "gathering storm",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-16.alt",
+        "url": "https://archive.org/details/gybe2002-01-16.alt",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-16"
+      },
+      {
+        "id": "gybe2002-01-16.flacf",
+        "url": "https://archive.org/details/gybe2002-01-16.flacf",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Plaza on 2002-01-16"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-20",
+    "venue": "instants chavir\u00e9s, montreuil, paris, fr",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "motherfucker = redeemer"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-20.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-01-20.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Instants Chavir\u00e9s on 2002-01-20"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-22",
+    "venue": "l'\u00e9changeur",
+    "songs": [
+      "gathering storm",
+      "dead metheny (w/ outro)",
+      "12.28.99",
+      "improvisation",
+      "world police",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-22.alt",
+        "url": "https://archive.org/details/gybe2002-01-22.alt",
+        "title": "Godspeed You! Black Emperor Live at L'Echangeur on 2002-01-22"
+      },
+      {
+        "id": "gybe2002-01-22.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-01-22.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at L'Echangeur on 2002-01-22"
+      },
+      {
+        "id": "gybe2002-01-22.flac16",
+        "url": "https://archive.org/details/gybe2002-01-22.flac16",
+        "title": "Godspeed You! Black Emperor Live at L'\u00c9changeur (chavir\u00e9) on 2002-01-22"
+      },
+      {
+        "id": "gybe2002-01-22.mtx",
+        "url": "https://archive.org/details/gybe2002-01-22.mtx",
+        "title": "Godspeed You! Black Emperor Live at L'\u00c9changeur on 2002-01-22"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-23",
+    "venue": "l'olympic, nantes, fr",
+    "songs": [
+      "12.28.99",
+      "world police",
+      "monheim",
+      "tazer floyd",
+      "motherfucker = redeemer",
+      "moya",
+      "the dead flag blues (outro)",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-23.shnf",
+        "url": "https://archive.org/details/gybe2002-01-23.shnf",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"
+      },
+      {
+        "id": "gybe2002-01-23.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-01-23.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"
+      },
+      {
+        "id": "gybe2002-01-23.T",
+        "url": "https://archive.org/details/gybe2002-01-23.T",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2002-01-23"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-24",
+    "venue": "le comfort moderne, poitiers, fr",
+    "songs": [
+      "gathering storm",
+      "death metheny",
+      "12.28.99",
+      "world police",
+      "motherfucker = redeemer",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-24.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-01-24.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Confort Moderne on 2002-01-24"
+      },
+      {
+        "id": "gybe2002-01-24.T",
+        "url": "https://archive.org/details/gybe2002-01-24.T",
+        "title": "Godspeed You! Black Emperor Live at Le Confort Moderne on 2002-01-24"
+      },
+      {
+        "id": "gybe2002-01-24.shnf",
+        "url": "https://archive.org/details/gybe2002-01-24.shnf",
+        "title": "Godspeed You! Black Emperor Live at Le Confort Moderne on 2002-01-24"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-25",
+    "venue": "c.a.t., bordeaux, fr",
+    "songs": [
+      "gathering storm",
+      "dead metheny (w/ outro)",
+      "tazer floyd",
+      "john hughes",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan III",
+      "world police",
+      "the dead flag blues (outro)",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-01-25.3cd",
+        "url": "https://archive.org/details/gybe2002-01-25.3cd",
+        "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"
+      },
+      {
+        "id": "gybe2002-01-25",
+        "url": "https://archive.org/details/gybe2002-01-25",
+        "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"
+      },
+      {
+        "id": "gybe2002-01-25.2cd",
+        "url": "https://archive.org/details/gybe2002-01-25.2cd",
+        "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"
+      },
+      {
+        "id": "gybe2002-01-25.mp3f",
+        "url": "https://archive.org/details/gybe2002-01-25.mp3f",
+        "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"
+      },
+      {
+        "id": "gybe2002-01-25.T",
+        "url": "https://archive.org/details/gybe2002-01-25.T",
+        "title": "Godspeed You! Black Emperor Live at CAT on 2002-01-25"
+      }
+    ]
+  },
+  {
+    "date": "2002-01-29",
+    "venue": "garage,\nlisboa, por",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "tazer floyd",
+      "motherfucker=redeemer",
+      "monheim",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-01-30",
+    "venue": "sala arena, madrid, sp",
+    "songs": [
+      "[including:]",
+      "12.28.99",
+      "dead metheny",
+      "world police",
+      "motherfucking=redeemer"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-02",
+    "venue": "sala apolo, barcelona, sp",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "12.28.99",
+      "tazer floyd",
+      "blaise bailey finnegan III",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-03",
+    "venue": "rockstore, montpellier, fr",
+    "songs": [
+      "12.28.99",
+      "dead metheny",
+      "monheim",
+      "world police",
+      "motherfucker=redeemer",
+      "gathering storm",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-02-03",
+        "url": "https://archive.org/details/gybe2002-02-03",
+        "title": "Godspeed You! Black Emperor Live at Rockstore on 2002-02-03"
+      },
+      {
+        "id": "gybe2002-02-03.LOSSY",
+        "url": "https://archive.org/details/gybe2002-02-03.LOSSY",
+        "title": "Godspeed You! Black Emperor Live at Rockstore, Montpellier, France on 2002-02-03"
+      }
+    ]
+  },
+  {
+    "date": "2002-02-05",
+    "venue": "c.c.o., villeurbanne, fr",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "motherfucker=redeemer",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-02-05.LOSSY",
+        "url": "https://archive.org/details/gybe2002-02-05.LOSSY",
+        "title": "Godspeed You! Black Emperor Live at CCO, Lyon, France on 2002-02-05"
+      },
+      {
+        "id": "gybe2002-02-05.em8",
+        "url": "https://archive.org/details/gybe2002-02-05.em8",
+        "title": "Godspeed You! Black Emperor Live at Centre Culturel \u0152cum\u00e9nique on 2002-02-05"
+      }
+    ]
+  },
+  {
+    "date": "2002-02-06",
+    "venue": "l'usine, gen\u00e8ve, swi",
+    "songs": [
+      "tazer floyd",
+      "world police",
+      "gathering storm",
+      "dead metheny",
+      "motherfucker=redeemer",
+      "the cowboy thanks to christophe"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-07",
+    "venue": "rote fabrik, zurich, swi",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "moya",
+      "world police",
+      "motherfucker=redeemer",
+      "(?)blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-08",
+    "venue": "rodon, athens, gr",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "motherfucker=redeemer",
+      "the dead flag blues (outro)",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-09",
+    "venue": "mylos, thessaloniki, gr",
+    "songs": [
+      "gathering storm",
+      "moya",
+      "monheim",
+      "world police",
+      "motherfucking=redeemer",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-13",
+    "venue": "tunnel, milano, it",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "motherfucking=redeemer",
+      "(?)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-02-17",
+    "venue": "szene, vienna, au",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "motherfucking=redeemer",
+      "the sad mafioso",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-03-13",
+    "venue": "\u00edslenska \u00f3peran, reykjav\u00edk, ic",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "motherfucking=redeemer",
+      "world police",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "GYBE2002-03-13.GYBE2002-03-13",
+        "url": "https://archive.org/details/GYBE2002-03-13.GYBE2002-03-13",
+        "title": "Godspeed You! Black Emperor Live at Icelandic Opera House on 2002-03-13"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-16",
+    "venue": "corn exchange hall, brighton, uk",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "monheim",
+      "motherfucking=redeemer",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-16.DAT",
+        "url": "https://archive.org/details/gybe2002-03-16.DAT",
+        "title": "Godspeed You! Black Emperor Live at Corn Exchange on 2002-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-18",
+    "venue": "ocean club, hackney, london, uk",
+    "songs": [
+      "tazer floyd",
+      "monheim",
+      "gathering storm",
+      "dead metheny",
+      "motherfucking=redeemer",
+      "world police",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-18",
+        "url": "https://archive.org/details/gybe2002-03-18",
+        "title": "Godspeed You! Black Emperor Live at Hackney Ocean on 2002-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-20",
+    "venue": "que club, birmingham, uk",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "12-28-99",
+      "world police",
+      "motherfucking=redeemer",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-20.MD",
+        "url": "https://archive.org/details/gybe2002-03-20.MD",
+        "title": "Godspeed You! Black Emperor Live at Que Club on 2002-03-20"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-22",
+    "venue": "ambassador, dublin, ir",
+    "songs": [
+      "tazer floyd",
+      "gathering storm",
+      "dead metheny",
+      "monheim",
+      "motherfucker=redeemer",
+      "world police",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-03-23",
+    "venue": "empire, belfast, ir",
+    "songs": [
+      "gathering storm",
+      "world police",
+      "monheim",
+      "dead metheny",
+      "motherfucking=redeemer",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-03-24",
+    "venue": "queen margaret union, glasgow, uk",
+    "songs": [
+      "motherfucking=redeemer",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "gathering storm",
+      "the sad mafioso",
+      "(?)the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-03-26",
+    "venue": "st-george hall, bradford, uk",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "world police",
+      "motherfucking=redeemer",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-03-27",
+    "venue": "newcastle university, newcastle, uk",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "monheim",
+      "world police",
+      "motherfucking=redeemer",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-27.MD",
+        "url": "https://archive.org/details/gybe2002-03-27.MD",
+        "title": "Godspeed You! Black Emperor Live at Newcastle University on 2002-03-27"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-30",
+    "venue": "musikens haus, gotenberg, swe",
+    "songs": [
+      "moya",
+      "blaise bailey finnegan III",
+      "gathering storm",
+      "dead metheny",
+      "motherfucking=redeemer",
+      "world police",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-30.at831c.flac16",
+        "url": "https://archive.org/details/gybe2002-03-30.at831c.flac16",
+        "title": "Godspeed You! Black Emperor Live at Musikens Hus on 2002-03-30"
+      }
+    ]
+  },
+  {
+    "date": "2002-03-31",
+    "venue": "rockerfeller, oslo, nor",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "tazer floyd",
+      "john hughes",
+      "motherfucking=redeemer",
+      "moya",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-03-31.shn",
+        "url": "https://archive.org/details/gybe2002-03-31.shn",
+        "title": "Godspeed You! Black Emperor Live at Rockerfeller on 2002-03-31"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-01",
+    "venue": "s\u00f6dra teatern, stockholm, swe",
+    "songs": [
+      "moya",
+      "blaise bailey finnegan III",
+      "12-28-99",
+      "dead metheny",
+      "tazer floyd",
+      "gathering storm",
+      "john hughes",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-01",
+        "url": "https://archive.org/details/gybe2002-04-01",
+        "title": "Godspeed You! Black Emperor Live at S\u00f6dra Teatern, Stockholm, Sweden on 2002-04-01"
+      },
+      {
+        "id": "gybe2002-04-01.mrk",
+        "url": "https://archive.org/details/gybe2002-04-01.mrk",
+        "title": "Godspeed You! Black Emperor Live at S\u00f6dra Teatern, Stockholm, Sweden on 2002-04-01"
+      },
+      {
+        "id": "gybe2002-04-01.flacf",
+        "url": "https://archive.org/details/gybe2002-04-01.flacf",
+        "title": "Godspeed You! Black Emperor Live at S\u00f6dra Teatern on 2002-04-01"
+      },
+      {
+        "id": "gybe2002-04-01.ij.at831c.flac16",
+        "url": "https://archive.org/details/gybe2002-04-01.ij.at831c.flac16",
+        "title": "Godspeed You! Black Emperor Live at S\u00f6dra Teatern on 2002-04-01"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-03",
+    "venue": "mejeriet, lund, swe",
+    "songs": [
+      "gathering storm",
+      "12.28.99",
+      "tazer floyd",
+      "world police",
+      "motherfucking=redeemer",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-03",
+        "url": "https://archive.org/details/gybe2002-04-03",
+        "title": "Godspeed You! Black Emperor Live at Merjeriet on 2002-04-03"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-04",
+    "venue": "vega, kopenhagen, den",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "dead metheny",
+      "monheim",
+      "motherfucking=redeemer",
+      "improvisation",
+      "world police",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-04-06",
+    "venue": "markthalle, hamburg, ger",
+    "songs": [
+      "gathering storm",
+      "12-28-99",
+      "dead metheny",
+      "world police",
+      "motherfucker=redeemer",
+      "moya",
+      "the dead flag blues (outro)",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-06",
+        "url": "https://archive.org/details/gybe2002-04-06",
+        "title": "Godspeed You! Black Emperor Live at Markthalle on 2002-04-06"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-08",
+    "venue": "volksbuhne, berlin, ger",
+    "songs": [
+      "tazer floyd",
+      "gathering storm",
+      "monheim",
+      "world police",
+      "motherfucker=redeemer",
+      "the sad mafioso + outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-08.flac16",
+        "url": "https://archive.org/details/gybe2002-04-08.flac16",
+        "title": "Godspeed You! Black Emperor Live at Volksb\u00fchne on 2002-04-08"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-09",
+    "venue": "starclub, dresden, ger",
+    "songs": [
+      "moya",
+      "blaise bailey finnegan III",
+      "12-28-99",
+      "dead metheny",
+      "improvisation",
+      "motherfucker=redeemer",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-09.DAT",
+        "url": "https://archive.org/details/gybe2002-04-09.DAT",
+        "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"
+      },
+      {
+        "id": "gybe2002-04-09.DAT.channelbalanced",
+        "url": "https://archive.org/details/gybe2002-04-09.DAT.channelbalanced",
+        "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"
+      },
+      {
+        "id": "gybe2002-04-09.m201tg",
+        "url": "https://archive.org/details/gybe2002-04-09.m201tg",
+        "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"
+      },
+      {
+        "id": "gybe2002-04-09.mtx",
+        "url": "https://archive.org/details/gybe2002-04-09.mtx",
+        "title": "Godspeed You! Black Emperor Live at Starclub on 2002-04-09"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-11",
+    "venue": "manufaktur, schorndorf, ger",
+    "songs": [
+      "12-28-99",
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "motherfucker=redeemer",
+      "moya",
+      "j.l.h. outro"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2002-04-12",
+    "venue": "effenaar, eindhoven, hol",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "motherfucker=redeemer",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-12.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-04-12.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Effenaar on 2002-04-12"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-13",
+    "venue": "gabaede 9, koln, ger",
+    "songs": [
+      "gathering storm",
+      "improvisation",
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "improvisation",
+      "motherfucking=redeemer",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-13.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-04-13.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Geb\u00e4ude 9 on 2002-04-13"
+      },
+      {
+        "id": "gybe2002-04-13.flac",
+        "url": "https://archive.org/details/gybe2002-04-13.flac",
+        "title": "Godspeed You! Black Emperor Live at Gabaede 9 on 2002-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-15",
+    "venue": "mousonturm, frankfurt, ger",
+    "songs": [
+      "12.28.99",
+      "dead metheny",
+      "john hughes",
+      "world police",
+      "motherfucker=redeemer",
+      "gathering storm",
+      "improvisation"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-15.flacf",
+        "url": "https://archive.org/details/gybe2002-04-15.flacf",
+        "title": "Godspeed You! Black Emperor Live at Mousonturm on 2002-04-15"
+      },
+      {
+        "id": "gybe2002-04-15",
+        "url": "https://archive.org/details/gybe2002-04-15",
+        "title": "Godspeed You! Black Emperor Live at Mouson-Turm on 2002-04-15"
+      },
+      {
+        "id": "gybe2002-04-15.TCD-D8",
+        "url": "https://archive.org/details/gybe2002-04-15.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Theatersaal Mousonturm on 2002-04-15"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-16",
+    "venue": "kulturfabrik, esch-sur-alzette, lu",
+    "songs": [
+      "12.28.99",
+      "dead metheny",
+      "gathering storm",
+      "world police",
+      "motherfucker=redeemer",
+      "moya",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-16",
+        "url": "https://archive.org/details/gybe2002-04-16",
+        "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2002-04-16"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-17",
+    "venue": "ancienne belgique, brussels, bel",
+    "songs": [
+      "blaise bailey finnegan III",
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "motherfucker = redeemer",
+      "gathering storm",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-17",
+        "url": "https://archive.org/details/gybe2002-04-17",
+        "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2002-04-17"
+      },
+      {
+        "id": "gybe2002-04-17.YP",
+        "url": "https://archive.org/details/gybe2002-04-17.YP",
+        "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2002-04-17"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-18",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "tazer floyd",
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "motherfucker=redeemer",
+      "the sad mafioso",
+      "j.l.h. outro"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-18.T",
+        "url": "https://archive.org/details/gybe2002-04-18.T",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"
+      },
+      {
+        "id": "gybe2002-04-18.YP",
+        "url": "https://archive.org/details/gybe2002-04-18.YP",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"
+      },
+      {
+        "id": "gybe2002-04-18.audience",
+        "url": "https://archive.org/details/gybe2002-04-18.audience",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2002-04-18"
+      },
+      {
+        "id": "gybe2002-04-18",
+        "url": "https://archive.org/details/gybe2002-04-18",
+        "title": "Godspeed You! Black Emperor Live at Paradiso, Amsterdam NL on 2002-04-18"
+      }
+    ]
+  },
+  {
+    "date": "2002-04-20",
+    "venue": "all tomorrow's parties, pontin's, camber sands, uk",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2002-04-20",
+        "url": "https://archive.org/details/gybe2002-04-20",
+        "title": "Godspeed You! Black Emperor Live at All Tomorrow's Parties Festival on 2002-04-20"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-02",
+    "venue": "greenwall auditorium, bennington, vt",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "albanian",
+      "death metheny",
+      "motherfucker = redeemer",
+      "world police thanks to rian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-02.trackedflac16",
+        "url": "https://archive.org/details/gybe2003-03-02.trackedflac16",
+        "title": "Godspeed You! Black Emperor Live at Lester Martin Theater on 2003-03-02"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-03",
+    "venue": "starlight ballroom, phidelphia, pa",
+    "songs": [
+      "gathering storm",
+      "world police",
+      "monheim",
+      "albanian",
+      "motherfucker = redeemer thanks to mark, adam"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-04",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "albanian",
+      "motherfucker = redeemer",
+      "blaise bailey finnegan IIIthanks to derek, chris"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-04",
+        "url": "https://archive.org/details/gybe2003-03-04",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"
+      },
+      {
+        "id": "gybe2003-03-04.dpa",
+        "url": "https://archive.org/details/gybe2003-03-04.dpa",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"
+      },
+      {
+        "id": "gybe2003-03-04.shn",
+        "url": "https://archive.org/details/gybe2003-03-04.shn",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2003-03-04"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-05",
+    "venue": "temple of free masonry, baltimore, md",
+    "songs": [
+      "gathering storm",
+      "monheim",
+      "world police",
+      "albanian",
+      "motherfucker = redeemer"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-05.shn",
+        "url": "https://archive.org/details/gybe2003-03-05.shn",
+        "title": "Godspeed You! Black Emperor Live at Temple Of Free Masonry on 2003-03-05"
+      },
+      {
+        "id": "gybe2003-03-05.dpa",
+        "url": "https://archive.org/details/gybe2003-03-05.dpa",
+        "title": "Godspeed You! Black Emperor Live at Temple of Free Masonry on 2003-03-05"
+      },
+      {
+        "id": "gybe2003-03-05.ccm4",
+        "url": "https://archive.org/details/gybe2003-03-05.ccm4",
+        "title": "Godspeed You! Black Emperor Live at Temple of Free Masonry on 2003-03-05"
+      },
+      {
+        "id": "gybe2003-03-05.mbho.flac16",
+        "url": "https://archive.org/details/gybe2003-03-05.mbho.flac16",
+        "title": "Godspeed You! Black Emperor Live at Scottish Rite Temple of Freemasonry on 2003-03-05"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-06",
+    "venue": "cat's cradle, chapel hill, nc",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "monheim",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-06.ccm4",
+        "url": "https://archive.org/details/gybe2003-03-06.ccm4",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"
+      },
+      {
+        "id": "gybe2003-03-06.dpa",
+        "url": "https://archive.org/details/gybe2003-03-06.dpa",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"
+      },
+      {
+        "id": "gybe2003-03-06",
+        "url": "https://archive.org/details/gybe2003-03-06",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2003-03-06"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-07",
+    "venue": "orange peel, asheville, nc",
+    "songs": [
+      "albanian",
+      "12-28-99",
+      "dead metheny",
+      "tazer floyd",
+      "motherfucker=redeemer",
+      "world policethanks to todd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-07",
+        "url": "https://archive.org/details/gybe2003-03-07",
+        "title": "Godspeed You! Black Emperor Live at Orange Peel on 2003-03-07"
+      },
+      {
+        "id": "gybe2003-03-07.dpa",
+        "url": "https://archive.org/details/gybe2003-03-07.dpa",
+        "title": "Godspeed You! Black Emperor Live at Orange Peel on 2003-03-07"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-08",
+    "venue": "40 watt, athens, ga",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "12-28-99",
+      "albanian",
+      "world police",
+      "blaise bailey finnegan III",
+      "moyathanks to alexander"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-08.flac",
+        "url": "https://archive.org/details/gybe2003-03-08.flac",
+        "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2003-03-08"
+      },
+      {
+        "id": "gybe2003-03-08_AT853c.shnf",
+        "url": "https://archive.org/details/gybe2003-03-08_AT853c.shnf",
+        "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2003-03-08"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-09",
+    "venue": "variety playhouse, atlanta, ga",
+    "songs": [
+      "gathering storm",
+      "monheim",
+      "world police",
+      "albanian",
+      "motherfucker=redeemer",
+      "the sad mafiosothanks to daniel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-09.dpa",
+        "url": "https://archive.org/details/gybe2003-03-09.dpa",
+        "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2003-03-09"
+      },
+      {
+        "id": "gybe2003-03-09.ccm4",
+        "url": "https://archive.org/details/gybe2003-03-09.ccm4",
+        "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2003-03-09"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-11",
+    "venue": "twiropa tchoupitoulas room, new orleans, la",
+    "songs": [
+      "albanian",
+      "12-28-99",
+      "tazer floyd",
+      "world police",
+      "dead metheny",
+      "blaise bailey finnegan III",
+      "moyathanks to mike"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-11",
+        "url": "https://archive.org/details/gybe2003-03-11",
+        "title": "Godspeed You! Black Emperor Live at TwiRoPa on 2003-03-11"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-12",
+    "venue": "engine room, houston, tx",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "world police",
+      "albanian",
+      "motherfucker=redeemer",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-13",
+    "venue": "union ballroom, austin, tx",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "12-28-99",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the sad mafioso thanks to j"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-13",
+        "url": "https://archive.org/details/gybe2003-03-13",
+        "title": "Godspeed You! Black Emperor Live at Texas Union Ballroom on 2003-03-13"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-14",
+    "venue": "ridglea theater, forth worth, tx",
+    "songs": [
+      "albanian",
+      "12-28-99",
+      "tazer floyd",
+      "monheim",
+      "motherfucker=redeemer",
+      "world police thanks to tim and will akers"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-16",
+    "venue": "mississippi nights, st-louis, mo",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "dead metheny",
+      "12-28-99",
+      "albanian",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-16.shn",
+        "url": "https://archive.org/details/gybe2003-03-16.shn",
+        "title": "Godspeed You! Black Emperor Live at Mississippi Nights on 2003-03-16"
+      },
+      {
+        "id": "gybe2003-03-16.flac16",
+        "url": "https://archive.org/details/gybe2003-03-16.flac16",
+        "title": "Godspeed You! Black Emperor Live at Mississippi Nights on 2003-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-17",
+    "venue": "blue note, columbia, mo",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "gathering storm",
+      "world police",
+      "motherfucker=redeemer",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-18",
+    "venue": "music box, omaha, ne",
+    "songs": [
+      "albanian",
+      "12-28-99",
+      "gathering storm",
+      "monheim",
+      "tazer floyd",
+      "dead metheny",
+      "blaise bailey finnegan III thanks to adam"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-19",
+    "venue": "first avenue, minneapolis, mn",
+    "songs": [
+      "tazer floyd",
+      "12-28-99",
+      "monheim",
+      "world police",
+      "dead metheny",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-20",
+    "venue": "abbey pub, chicago, il",
+    "songs": [
+      "gathering storm",
+      "albanian",
+      "tazer floyd",
+      "world police",
+      "motherfucker=redeemer",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-20.flac",
+        "url": "https://archive.org/details/gybe2003-03-20.flac",
+        "title": "Godspeed You! Black Emperor Live at Abbey Pub on 2003-03-20"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-21",
+    "venue": "abbey pub, chicago, il",
+    "songs": [
+      "albanian",
+      "12-28-99",
+      "monheim",
+      "tazer floyd",
+      "dead metheny",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-21.flac",
+        "url": "https://archive.org/details/gybe2003-03-21.flac",
+        "title": "Godspeed You! Black Emperor Live at Abbey Pub on 2003-03-21"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-22",
+    "venue": "abbey pub, chicago, il",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "moya",
+      "motherfucker=redeemer",
+      "monheim",
+      "world police",
+      "dead metheny"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-24",
+    "venue": "southgate house, newport, ky",
+    "songs": [
+      "gathering storm",
+      "monheim",
+      "world police",
+      "tazer floyd",
+      "motherfucker=redeemer",
+      "moya thanks to matthew"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-03-25",
+    "venue": "beachland ballroom, cleveland, oh",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "12-28-99",
+      "albanian",
+      "world police",
+      "blaise bailey finnegan III",
+      "the sad mafioso",
+      "the dead flag blues (outro) thanks to zack, brett"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-25",
+        "url": "https://archive.org/details/gybe2003-03-25",
+        "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2003-03-25"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-26",
+    "venue": "st-andrew's hall, detroit, mi",
+    "songs": [
+      "monheim",
+      "gathering storm",
+      "world police",
+      "albanian",
+      "motherfucker=redeemer",
+      "tazer floyd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-26.flac",
+        "url": "https://archive.org/details/gybe2003-03-26.flac",
+        "title": "Godspeed You! Black Emperor Live at Saint Andrew's Hall on 2003-03-26"
+      },
+      {
+        "id": "gybe2003-03-26.shn",
+        "url": "https://archive.org/details/gybe2003-03-26.shn",
+        "title": "Godspeed You! Black Emperor Live at St-Andrew's Hall on 2003-03-26"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-27",
+    "venue": "palais royale, toronto, on",
+    "songs": [
+      "albanian",
+      "gathering storm",
+      "tazer floyd",
+      "12-28-99",
+      "dead metheny",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-27.ccm4",
+        "url": "https://archive.org/details/gybe2003-03-27.ccm4",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"
+      },
+      {
+        "id": "gybe2003-03-27.flac16",
+        "url": "https://archive.org/details/gybe2003-03-27.flac16",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"
+      },
+      {
+        "id": "gybe2003-03-27.matrix",
+        "url": "https://archive.org/details/gybe2003-03-27.matrix",
+        "title": "Godspeed You! Black Emperor Live at Palais Theatre on 2003-03-27"
+      },
+      {
+        "id": "gybe2003-03-27.shn",
+        "url": "https://archive.org/details/gybe2003-03-27.shn",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-27"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-28",
+    "venue": "palais royale, toronto, on",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "moya",
+      "albanian",
+      "motherfucking=redeemer",
+      "blaise bailey finnegan III thanks to ren, pierre"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-28.flac16",
+        "url": "https://archive.org/details/gybe2003-03-28.flac16",
+        "title": "Godspeed You! Black Emperor Live at Palais Royale on 2003-03-28"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-29",
+    "venue": "tivoli theater, hamilton, on",
+    "songs": [
+      "monheim",
+      "12-28-99",
+      "albanian",
+      "world police",
+      "dead metheny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-03-29",
+        "url": "https://archive.org/details/gybe2003-03-29",
+        "title": "Godspeed You! Black Emperor Live at Tivoli Theater on 2003-03-29"
+      }
+    ]
+  },
+  {
+    "date": "2003-03-31",
+    "venue": "rango's auditorium, pittsburgh, pa",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "dead metheny",
+      "world police",
+      "motherfucker=redeemer"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-04-01",
+    "venue": "bowery ballroom, new york, ny",
+    "songs": [
+      "gathering storm",
+      "albanian",
+      "12-28-99",
+      "tazer floyd",
+      "moya",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-04-02",
+    "venue": "bowery ballroom, new york, ny",
+    "songs": [
+      "monheim",
+      "albanian",
+      "world police",
+      "dead metheny",
+      "motherfucker=redeemer",
+      "blaise bailey finnegan IIIthanks to jonathan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-02",
+        "url": "https://archive.org/details/gybe2003-04-02",
+        "title": "Godspeed You! Black Emperor Live at Bowery Ballroom on 2003-04-02"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-03",
+    "venue": "warsaw, brooklyn, ny",
+    "songs": [
+      "gathering storm",
+      "12-28-99",
+      "albanian",
+      "dead metheny",
+      "world police",
+      "tazer floyd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-03.dmf",
+        "url": "https://archive.org/details/gybe2003-04-03.dmf",
+        "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-03"
+      },
+      {
+        "id": "gybe2003-04-03.flac16",
+        "url": "https://archive.org/details/gybe2003-04-03.flac16",
+        "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-03"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-04",
+    "venue": "warsaw, brooklyn, ny",
+    "songs": [
+      "monheim",
+      "tazer floyd",
+      "albanian",
+      "12-28-99",
+      "motherfucker=redeemer"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-04.flac",
+        "url": "https://archive.org/details/gybe2003-04-04.flac",
+        "title": "Godspeed You! Black Emperor Live at Warsaw on 2003-04-04"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-05",
+    "venue": "cole chapel, norton, ma",
+    "songs": [
+      "improvisation",
+      "monheim",
+      "gathering storm",
+      "albanian",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-05.shn",
+        "url": "https://archive.org/details/gybe2003-04-05.shn",
+        "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"
+      },
+      {
+        "id": "gybe2003-04-05.shnf",
+        "url": "https://archive.org/details/gybe2003-04-05.shnf",
+        "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"
+      },
+      {
+        "id": "gybe2003-04-05.flac",
+        "url": "https://archive.org/details/gybe2003-04-05.flac",
+        "title": "Godspeed You! Black Emperor Live at Cole Chapel on 2003-04-05"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-06",
+    "venue": "the roxy, boston, ma",
+    "songs": [
+      "tazer floyd",
+      "dead metheny",
+      "albanian",
+      "world police",
+      "motherfucker=redeemer",
+      "blaise bailey finnegan IIIthanks to dave"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-06.shn",
+        "url": "https://archive.org/details/gybe2003-04-06.shn",
+        "title": "Godspeed You! Black Emperor Live at The Roxy on 2003-04-06"
+      },
+      {
+        "id": "gybe2003-04-06.flac",
+        "url": "https://archive.org/details/gybe2003-04-06.flac",
+        "title": "Godspeed You! Black Emperor Live at Roxy on 2003-04-06"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-09",
+    "venue": "the marquee, halifax, ns",
+    "songs": [
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "world police",
+      "motherfucker=redeemer"
+    ],
+    "recordings": [
+      {
+        "id": "GSYBE2003-04-09",
+        "url": "https://archive.org/details/GSYBE2003-04-09",
+        "title": "Godspeed You! Black Emperor Live at The Marquee on 2003-04-09"
+      },
+      {
+        "id": "gybe2003-04-09.flac",
+        "url": "https://archive.org/details/gybe2003-04-09.flac",
+        "title": "Godspeed You! Black Emperor Live at Marquee Club on 2003-04-09"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-10",
+    "venue": "oxygen night club, moncton, nb",
+    "songs": [
+      "monheim",
+      "....",
+      "albanian",
+      "world police",
+      "moya (?)",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-04-11",
+    "venue": "dugald blue auditorium, fredericton, nb",
+    "songs": [
+      "gathering storm",
+      "dead metheny",
+      "monheim",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-04-12",
+    "venue": "\u00e9glise st-roch, qu\u00e9bec, qc",
+    "songs": [
+      "intro + monheim",
+      "impro + 12-28-99",
+      "world police",
+      "albanian",
+      "tazer floyd",
+      "dead metheny",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-12.flac16",
+        "url": "https://archive.org/details/gybe2003-04-12.flac16",
+        "title": "Godspeed You! Black Emperor Live at Eglise St-Rock on 2003-04-12"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-13",
+    "venue": "th\u00e9\u00e2tre rialto, montr\u00e9al, qc",
+    "songs": [
+      "gathering storm",
+      "albanian",
+      "intro + monheim",
+      "tazer floyd",
+      "world police",
+      "dead metheny",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-13.flacf",
+        "url": "https://archive.org/details/gybe2003-04-13.flacf",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Rialto on 2003-04-13"
+      },
+      {
+        "id": "gybe2003-04-13",
+        "url": "https://archive.org/details/gybe2003-04-13",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Rialto on 2003-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-14",
+    "venue": "th\u00e9\u00e2tre rialto, montr\u00e9al, qc",
+    "songs": [
+      "12-28-99",
+      "tazer floyd",
+      "albanian",
+      "world police",
+      "motherfucker=redeemer",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-14.shn",
+        "url": "https://archive.org/details/gybe2003-04-14.shn",
+        "title": "Godspeed You! Black Emperor Live at Theatre Rialto on 2003-04-14"
+      },
+      {
+        "id": "gybe2003-04-14",
+        "url": "https://archive.org/details/gybe2003-04-14",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Rialto on 2003-04-14"
+      }
+    ]
+  },
+  {
+    "date": "2003-04-15",
+    "venue": "th\u00e9\u00e2tre rialto, montr\u00e9al, qc",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "dead metheny",
+      "albanian",
+      "gathering storm",
+      "world police",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-04-15",
+        "url": "https://archive.org/details/gybe2003-04-15",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Rialto on 2003-04-15"
+      },
+      {
+        "id": "gybe2003-04-15.shn",
+        "url": "https://archive.org/details/gybe2003-04-15.shn",
+        "title": "Godspeed You! Black Emperor Live at Theatre Rialto on 2003-04-15"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-08",
+    "venue": "terminal export, nancy, fr",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "dead metheny",
+      "albanian",
+      "world police",
+      "monheim",
+      "the dead flag blues (outro) thanks to yannick"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-08.YP",
+        "url": "https://archive.org/details/gybe2003-05-08.YP",
+        "title": "Godspeed You! Black Emperor Live at Terminal Export on 2003-05-08"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-09",
+    "venue": "centre des congr\u00e8s, reims, fr",
+    "songs": [
+      "intro + monheim",
+      "albanian",
+      "world police",
+      "motherfucker=redeemer",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-09.YP",
+        "url": "https://archive.org/details/gybe2003-05-09.YP",
+        "title": "Godspeed You! Black Emperor Live at Palais des Congr\u00e8s on 2003-05-09"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-10",
+    "venue": "le grand mix, tourcoing, fr",
+    "songs": [
+      "soundcheck : gamelan",
+      "moya",
+      "12-28-99",
+      "tazer floyd",
+      "albanian",
+      "dead metheny",
+      "gathering storm",
+      "blaise bailey finnegan III",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-10",
+        "url": "https://archive.org/details/gybe2003-05-10",
+        "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2003-05-10"
+      },
+      {
+        "id": "gybe2003-05-10.TCD-D8",
+        "url": "https://archive.org/details/gybe2003-05-10.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2003-05-10"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-12",
+    "venue": "le cabaret sauvage, paris, fr",
+    "songs": [
+      "tazer floyd",
+      "monheim",
+      "albanian",
+      "improvisation",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-12.flacf",
+        "url": "https://archive.org/details/gybe2003-05-12.flacf",
+        "title": "Godspeed You! Black Emperor Live at Le Cabaret Sauvage on 2003-05-12"
+      },
+      {
+        "id": "gybe2003-05-12",
+        "url": "https://archive.org/details/gybe2003-05-12",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-12"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-13",
+    "venue": "le cabaret sauvage, paris, fr",
+    "songs": [
+      "gathering storm",
+      "albanian",
+      "12.28.99",
+      "tazer floyd",
+      "motherfucker=redeemer",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-13.TCD-D8",
+        "url": "https://archive.org/details/gybe2003-05-13.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"
+      },
+      {
+        "id": "gybe2003-05-13.radio",
+        "url": "https://archive.org/details/gybe2003-05-13.radio",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"
+      },
+      {
+        "id": "gybe2003-05-13",
+        "url": "https://archive.org/details/gybe2003-05-13",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Sauvage on 2003-05-13"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-14",
+    "venue": "l'olympic, nantes, fr",
+    "songs": [
+      "monheim",
+      "albanian",
+      "dead metheny",
+      "gamelan",
+      "world police",
+      "tazer floyd",
+      "moya",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-14",
+        "url": "https://archive.org/details/gybe2003-05-14",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"
+      },
+      {
+        "id": "gybe2003-05-14.T",
+        "url": "https://archive.org/details/gybe2003-05-14.T",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"
+      },
+      {
+        "id": "gybe2003-05-14.flacf",
+        "url": "https://archive.org/details/gybe2003-05-14.flacf",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"
+      },
+      {
+        "id": "gybe2003-05-14.shnf",
+        "url": "https://archive.org/details/gybe2003-05-14.shnf",
+        "title": "Godspeed You! Black Emperor Live at L'Olympic on 2003-05-14"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-15",
+    "venue": "la coop\u00e9rative de mai, clermont-ferrand, fr",
+    "songs": [
+      "gathering storm",
+      "12-28-99",
+      "albanian",
+      "motherfucker=redeemer",
+      "wold police",
+      "the dead flag blues (outro) thanks to yannick"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-15.TCD-D8",
+        "url": "https://archive.org/details/gybe2003-05-15.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at La Coop\u00e9rative de Mai on 2003-05-15"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-16",
+    "venue": "ninkasi kao, lyon, fr",
+    "songs": [
+      "moya",
+      "albanian",
+      "dead metheny",
+      "wold police",
+      "motherfucker=redeemer",
+      "tazer floyd thanks to yannick"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-16.TCD-D8",
+        "url": "https://archive.org/details/gybe2003-05-16.TCD-D8",
+        "title": "Godspeed You! Black Emperor Live at Ninkasi Kao on 2003-05-16"
+      },
+      {
+        "id": "gybe2003-05-16.flac",
+        "url": "https://archive.org/details/gybe2003-05-16.flac",
+        "title": "Godspeed You! Black Emperor Live at Ninkasi Kao on 2003-05-16"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-17",
+    "venue": "la nef, angoul\u00eame, fr",
+    "songs": [
+      "gathering storm",
+      "monheim",
+      "gamelan",
+      "albanian",
+      "world police",
+      "blaise bailey finnegan III",
+      "outro"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-20",
+    "venue": "th\u00e9\u00e2tre barbie, bordeaux, fr",
+    "songs": [
+      "moya",
+      "tazer floyd",
+      "12-28-99",
+      "world police",
+      "motherfucker=redeemer",
+      "the sad mafioso",
+      "the dead flag blues (outro) thanks to christophe"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-23",
+    "venue": "roxy, valencia, sp",
+    "songs": [
+      "gamelan",
+      "(incomplete)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-24",
+    "venue": "theatre central, sevilla, sp",
+    "songs": [
+      "monheim",
+      "albanian",
+      "12-28-99",
+      "tazer floyd",
+      "motherfucking=redeemer",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2003-05-24",
+        "url": "https://archive.org/details/gybe2003-05-24",
+        "title": "Godspeed You! Black Emperor Live at Theatre Central on 2003-05-24"
+      }
+    ]
+  },
+  {
+    "date": "2003-05-26",
+    "venue": "arena, madrid, sp",
+    "songs": [
+      "gathering storm",
+      "tazer floyd",
+      "12.28.99",
+      "albanian",
+      "world police",
+      "blaise bailey finnegan III thanks to manuel"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-28",
+    "venue": "teatro s\u00e3o lu\u00edz, lisboa, por",
+    "songs": [
+      "monheim",
+      "moya",
+      "albanian",
+      "dead metheny",
+      "motherfucker=redeemer",
+      "the dead flag blues (outro) thanks to diogo"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-29",
+    "venue": "teatro s\u00e1 da bandeira, oporto, por",
+    "songs": [
+      "gathering storm",
+      "john hughes",
+      "tazer floyd",
+      "12-28-99",
+      "albanian",
+      "world police",
+      "the sad mafioso",
+      "the dead flag blues (outro)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-05-30",
+    "venue": "cine teatro salesianos, vigo, sp",
+    "songs": [
+      "monheim",
+      "albanian",
+      "moya",
+      "dead metheny",
+      "motherfucker=redeemer",
+      "blaise bailey finnegan III thanks to luis, javi"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-06-03",
+    "venue": "gagarin, athens, gr",
+    "songs": [
+      "monheim",
+      "12-28-99",
+      "tazer floyd",
+      "albanian",
+      "dead metheny",
+      "the sad mafioso thanks to costas"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2003-06-04",
+    "venue": "gagarin, athens, gr",
+    "songs": [
+      "gathering storm",
+      "gamelan",
+      "moya",
+      "motherfucker=redeemer",
+      "world police",
+      "blaise bailey finnegan III thanks to costas"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2010-12-03",
+    "venue": "all tomorrow's parties, butlin's, minehead, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-03.dpa4061.rob.flac16",
+        "url": "https://archive.org/details/gybe2010-12-03.dpa4061.rob.flac16",
+        "title": "Godspeed You! Black Emperor Live at ATP Festival, Butlins on 2010-12-03"
+      },
+      {
+        "id": "gybe2010-12-03.dpa4061.flac16",
+        "url": "https://archive.org/details/gybe2010-12-03.dpa4061.flac16",
+        "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-03"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-04",
+    "venue": "all tomorrow's parties, butlin's, minehead, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "gamelan",
+      "tazer floyd",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-04",
+        "url": "https://archive.org/details/gybe2010-12-04",
+        "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-04"
+      },
+      {
+        "id": "gybe2010-12-04.flac24",
+        "url": "https://archive.org/details/gybe2010-12-04.flac24",
+        "title": "Godspeed You! Black Emperor Live at Butlins Holiday Resort (ATP Nightmare Before Christmas) on 2010-12-04"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-05",
+    "venue": "all tomorrow's parties, butlin's, minehead, uk",
+    "songs": [
+      "intro",
+      "the dead flag blues",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "albanian",
+      "john hughes",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-05.mtx",
+        "url": "https://archive.org/details/gybe2010-12-05.mtx",
+        "title": "Godspeed You! Black Emperor Live at Butlins Holiday Resort (ATP Nightmare Before Christmas) on 2010-12-05"
+      },
+      {
+        "id": "gybe2010-12-05.dpa4061.rob.flac16",
+        "url": "https://archive.org/details/gybe2010-12-05.dpa4061.rob.flac16",
+        "title": "Godspeed You! Black Emperor Live at ATP Festival, Butlins on 2010-12-05"
+      },
+      {
+        "id": "gybe2010-12-05",
+        "url": "https://archive.org/details/gybe2010-12-05",
+        "title": "Godspeed You! Black Emperor Live at Butlin's Holiday Centre on 2010-12-05"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-07",
+    "venue": "manchester academy, manchester, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "GYBE2010-12-07.GYBE",
+        "url": "https://archive.org/details/GYBE2010-12-07.GYBE",
+        "title": "Godspeed You! Black Emperor Live at Manchester Academy 1 on 2010-12-07"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-08",
+    "venue": "barrowland, glasgow, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-08",
+        "url": "https://archive.org/details/gybe2010-12-08",
+        "title": "Godspeed You! Black Emperor Live at Barrowland on 2010-12-08"
+      },
+      {
+        "id": "gybe2010-12-08.mix",
+        "url": "https://archive.org/details/gybe2010-12-08.mix",
+        "title": "Godspeed You! Black Emperor Live at Barrowlands Ballroom on 2010-12-08"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-10",
+    "venue": "tripod, dublin, ir",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III",
+      "tazer floyd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-10.r09.flac16",
+        "url": "https://archive.org/details/gybe2010-12-10.r09.flac16",
+        "title": "Godspeed You! Black Emperor Live at Tripod on 2010-12-10"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-12",
+    "venue": "anson rooms, bristol, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "dead metheny",
+      "tazer floyd",
+      "chart #3",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-12",
+        "url": "https://archive.org/details/gybe2010-12-12",
+        "title": "Godspeed You! Black Emperor Live at Anson Rooms on 2010-12-12"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-13",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2010-12-14",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "gamelan",
+      "tazer floyd",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-14.aud.flac16",
+        "url": "https://archive.org/details/gybe2010-12-14.aud.flac16",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-14"
+      },
+      {
+        "id": "gybe2010-12-14.ca-11.remastered.flac16",
+        "url": "https://archive.org/details/gybe2010-12-14.ca-11.remastered.flac16",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-14"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-15",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "the dead flag blues",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "monheim",
+      "albanian",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "12-28-99 (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-15.ca-11.flac16",
+        "url": "https://archive.org/details/gybe2010-12-15.ca-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-15"
+      },
+      {
+        "id": "gybe2010-12-15.ca-11.remastered.flac16",
+        "url": "https://archive.org/details/gybe2010-12-15.ca-11.remastered.flac16",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2010-12-15"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-17",
+    "venue": "gagarin, athens, gr",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "tazer floyd",
+      "gathering storm",
+      "monheim",
+      "chart #3",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-17.gybe2010-12-17remastered.flac24",
+        "url": "https://archive.org/details/gybe2010-12-17.gybe2010-12-17remastered.flac24",
+        "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-17"
+      },
+      {
+        "id": "gybe2010-12-17",
+        "url": "https://archive.org/details/gybe2010-12-17",
+        "title": "Godspeed You! Black Emperor Live at Gagarin on 2010-12-17"
+      }
+    ]
+  },
+  {
+    "date": "2010-12-18",
+    "venue": "gagarin, athens, gr",
+    "songs": [
+      "intro",
+      "albanian",
+      "dead metheny",
+      "gamelan",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "john hughes",
+      "blaise bailey finnegan III",
+      "12-28-99 (outro)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2010-12-18.flacf",
+        "url": "https://archive.org/details/gybe2010-12-18.flacf",
+        "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-18"
+      },
+      {
+        "id": "gybe2010-12-18",
+        "url": "https://archive.org/details/gybe2010-12-18",
+        "title": "Godspeed You! Black Emperor Live at Gagarin 205 on 2010-12-18"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-14",
+    "venue": "grande halle de la villette, paris, fr",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-14.24bits",
+        "url": "https://archive.org/details/gybe2011-01-14.24bits",
+        "title": "Godspeed You! Black Emperor Live at Grande Halle De La Villette, Salle Charlie Parker on 2011-01-14"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-15",
+    "venue": "cirque royal, brussels, bel",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "moya (aborted)",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-15",
+        "url": "https://archive.org/details/gybe2011-01-15",
+        "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-01-15"
+      },
+      {
+        "id": "gybe2011-01-15.ca-11.remastered.flac16",
+        "url": "https://archive.org/details/gybe2011-01-15.ca-11.remastered.flac16",
+        "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-01-15"
+      },
+      {
+        "id": "GYBE2012-11-07.aiff",
+        "url": "https://archive.org/details/GYBE2012-11-07.aiff",
+        "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2011-15-01"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-17",
+    "venue": "kulttuuritalo, helsinki, fin",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "moya",
+      "albanian",
+      "chart #3",
+      "world police",
+      "blaise bailey finnegan III",
+      "dead metheny",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-17",
+        "url": "https://archive.org/details/gybe2011-01-17",
+        "title": "Godspeed You! Black Emperor Live at Kulttuuritalo on 2011-01-17"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-19",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "gathering storm",
+      "moya",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "the cowboy",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-19.r-09.remastered.flac24",
+        "url": "https://archive.org/details/gybe2011-01-19.r-09.remastered.flac24",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2011-01-19"
+      },
+      {
+        "id": "gybe2011-01-19.ca-11.remastered.flac16",
+        "url": "https://archive.org/details/gybe2011-01-19.ca-11.remastered.flac16",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2011-01-19"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-20",
+    "venue": "astra, berlin, ger",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "the cowboy",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-20",
+        "url": "https://archive.org/details/gybe2011-01-20",
+        "title": "Godspeed You! Black Emperor Live at Astra on 2011-01-20"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-22",
+    "venue": "klub eskulap, pozna\u0144, pol",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-01-23",
+    "venue": "pal\u00e1c akropolis, prague, cze",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-01-25",
+    "venue": "arena, vienna, aut",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-25.cos11s.flac16",
+        "url": "https://archive.org/details/gybe2011-01-25.cos11s.flac16",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2011-01-25"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-26",
+    "venue": "estragon, bologna, it",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "gamelan",
+      "chart #3",
+      "world police",
+      "monheim",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-01-27",
+    "venue": "live club, trezzo sull'adda, it",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-27",
+        "url": "https://archive.org/details/gybe2011-01-27",
+        "title": "Godspeed You! Black Emperor Live at Trezzo sull'Adda on 2011-01-27"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-28",
+    "venue": "l'espace julien, marseille, fr",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "monheim",
+      "chart #3",
+      "world police",
+      "john hughes",
+      "tazer floyd",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-28",
+        "url": "https://archive.org/details/gybe2011-01-28",
+        "title": "Godspeed You! Black Emperor Live at L'Espace Julien on 2011-01-28"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-29",
+    "venue": "apolo, barcelona, sp",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "gathering storm",
+      "gamelan",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-01-29",
+        "url": "https://archive.org/details/gybe2011-01-29",
+        "title": "Godspeed You! Black Emperor Live at Apolo on 2011-01-29"
+      }
+    ]
+  },
+  {
+    "date": "2011-01-30",
+    "venue": "la riviera, madrid, sp",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "gathering storm",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-01",
+    "venue": "le bikini, toulouse, fr",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "chart #3",
+      "world police",
+      "gamelan",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-02",
+    "venue": "4ad, diksmuide, bel",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-16",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-02-16.dpa4061.flac",
+        "url": "https://archive.org/details/gybe2011-02-16.dpa4061.flac",
+        "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2011-02-16"
+      }
+    ]
+  },
+  {
+    "date": "2011-02-17",
+    "venue": "the showbox, seattle, wa",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "chart #3",
+      "world police",
+      "albanian",
+      "moya",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-18",
+    "venue": "crystal ballroom, portland, or",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-19",
+    "venue": "the warfield, san francisco, ca",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-02-19",
+        "url": "https://archive.org/details/gybe2011-02-19",
+        "title": "Godspeed You! Black Emperor Live at Warfield Theater on 2011-02-19"
+      }
+    ]
+  },
+  {
+    "date": "2011-02-20",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro -> j.l.h. outro",
+      "moya",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-02-20.m300.flac16",
+        "url": "https://archive.org/details/gybe2011-02-20.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-20"
+      }
+    ]
+  },
+  {
+    "date": "2011-02-21",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "gamelan",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-02-21",
+        "url": "https://archive.org/details/gybe2011-02-21",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"
+      },
+      {
+        "id": "gybe2011-02-21.m300.flac16",
+        "url": "https://archive.org/details/gybe2011-02-21.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"
+      },
+      {
+        "id": "gybe2011-02-21.mtx",
+        "url": "https://archive.org/details/gybe2011-02-21.mtx",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2011-02-21"
+      }
+    ]
+  },
+  {
+    "date": "2011-02-22",
+    "venue": "fox theater, pomona, ca",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-23",
+    "venue": "the fonda, hollywood, los angeles, ca",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-27",
+    "venue": "studio coast, shinkiba, tokyo, jp",
+    "songs": [
+      "intro",
+      "moya",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-02-28",
+    "venue": "duo music exchange, shibuya, tokyo, jp",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "albanian",
+      "moya",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-03-14",
+    "venue": "terminal 5, new york, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-14",
+        "url": "https://archive.org/details/gybe2011-03-14",
+        "title": "Godspeed You! Black Emperor Live at Terminal 5 on 2011-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-15",
+    "venue": "brooklyn masonic temple, brooklyn, ny",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "gathering storm",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-15.bmt_acidjack",
+        "url": "https://archive.org/details/gybe2011-03-15.bmt_acidjack",
+        "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-15"
+      },
+      {
+        "id": "gybe2011-03-15.dpa4060",
+        "url": "https://archive.org/details/gybe2011-03-15.dpa4060",
+        "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-15"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-16",
+    "venue": "brooklyn masonic temple, brooklyn, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-16.bmt_acidjack",
+        "url": "https://archive.org/details/gybe2011-03-16.bmt_acidjack",
+        "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-16"
+      },
+      {
+        "id": "gybe2011-03-16.dpa4060",
+        "url": "https://archive.org/details/gybe2011-03-16.dpa4060",
+        "title": "Godspeed You! Black Emperor Live at Brooklyn Masonic Temple on 2011-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-17",
+    "venue": "the church of st-paul the apostle, new york, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "moya",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-17.dpa4060",
+        "url": "https://archive.org/details/gybe2011-03-17.dpa4060",
+        "title": "Godspeed You! Black Emperor Live at The Church of St-Paul the Apostle on 2011-03-17"
+      },
+      {
+        "id": "gybe2011-03-17",
+        "url": "https://archive.org/details/gybe2011-03-17",
+        "title": "Godspeed You! Black Emperor Live at The Church of St. Paul The Apostle on 2011-03-17"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-18",
+    "venue": "the church of st-paul the apostle, new york, ny",
+    "songs": [
+      "intro",
+      "moya",
+      "dead metheny",
+      "gathering storm",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-18",
+        "url": "https://archive.org/details/gybe2011-03-18",
+        "title": "Godspeed You! Black Emperor Live at The Church of St. Paul The Apostle on 2011-03-18"
+      },
+      {
+        "id": "gybe2011-03-18.dpa4060",
+        "url": "https://archive.org/details/gybe2011-03-18.dpa4060",
+        "title": "Godspeed You! Black Emperor Live at The Church of St-Paul the Apostle on 2011-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-19",
+    "venue": "the trocadero, philadelphia, pa",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-19",
+        "url": "https://archive.org/details/gybe2011-03-19",
+        "title": "Godspeed You! Black Emperor Live at The Trocadero on 2011-03-19"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-20",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "gathering storm",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-20.gybe2011-03-20",
+        "url": "https://archive.org/details/gybe2011-03-20.gybe2011-03-20",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2011-03-20"
+      },
+      {
+        "id": "gybe2011-03-20",
+        "url": "https://archive.org/details/gybe2011-03-20",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2011-03-20"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-22",
+    "venue": "40 watt club, athens, ga",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-22.flac16",
+        "url": "https://archive.org/details/gybe2011-03-22.flac16",
+        "title": "Godspeed You! Black Emperor Live at 40 Watt Club on 2011-03-22"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-24",
+    "venue": "cannery ballroom, nashville, tn",
+    "songs": [
+      "intro",
+      "moya",
+      "gathering storm",
+      "albanian",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-24",
+        "url": "https://archive.org/details/gybe2011-03-24",
+        "title": "Godspeed You! Black Emperor Live at Cannery Ballroom on 2011-03-24"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-26",
+    "venue": "metro, chicago, il",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "dead metheny",
+      "tazer floyd",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-26.ca14.flac24",
+        "url": "https://archive.org/details/gybe2011-03-26.ca14.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Metro on 2011-03-26"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-27",
+    "venue": "metro, chicago, il",
+    "songs": [
+      "intro -> j.l.h. outro",
+      "moya",
+      "albanian",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "gathering storm",
+      "the sad mafiosos"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-27.mk41.flac24_115",
+        "url": "https://archive.org/details/gybe2011-03-27.mk41.flac24_115",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.ca14.omni.flac24",
+        "url": "https://archive.org/details/gybe2011-03-27.ca14.omni.flac24",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.ca14.omni.flac16",
+        "url": "https://archive.org/details/gybe2011-03-27.ca14.omni.flac16",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.mtx",
+        "url": "https://archive.org/details/gybe2011-03-27.mtx",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.mk41.flac16",
+        "url": "https://archive.org/details/gybe2011-03-27.mk41.flac16",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.ca14.cards.flac24",
+        "url": "https://archive.org/details/gybe2011-03-27.ca14.cards.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Metro on 2011-03-27"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-28",
+    "venue": "vic theatre, chicago, il",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monhiem",
+      "albanian",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-03-28.mk41.flac24",
+        "url": "https://archive.org/details/gybe2011-03-28.mk41.flac24",
+        "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"
+      },
+      {
+        "id": "gybe2011-03-28",
+        "url": "https://archive.org/details/gybe2011-03-28",
+        "title": "Godspeed You! Black Emperor Live at The Vic on 2011-03-28"
+      },
+      {
+        "id": "gybe2011-03-28.mk41.flac16",
+        "url": "https://archive.org/details/gybe2011-03-28.mk41.flac16",
+        "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"
+      },
+      {
+        "id": "gybe2011-03-28.flac16.ca-14",
+        "url": "https://archive.org/details/gybe2011-03-28.flac16.ca-14",
+        "title": "Godspeed You! Black Emperor Live at Vic Theatre on 2011-03-28"
+      }
+    ]
+  },
+  {
+    "date": "2011-03-29",
+    "venue": "majestic theatre, detroit, mi",
+    "songs": [
+      "intro",
+      "moya",
+      "gathering storm",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "albanian",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-04-22",
+    "venue": "lee's palace, toronto, on",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-22.flac16",
+        "url": "https://archive.org/details/gybe2011-04-22.flac16",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-22"
+      },
+      {
+        "id": "gybe2011-04-22",
+        "url": "https://archive.org/details/gybe2011-04-22",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-22"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-23",
+    "venue": "lee's palace, toronto, on",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-23",
+        "url": "https://archive.org/details/gybe2011-04-23",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace on 2011-04-23"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-24",
+    "venue": "lee's palace, toronto, on (early show)",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-24.early",
+        "url": "https://archive.org/details/gybe2011-04-24.early",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace (early show) on 2011-04-24"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-24b",
+    "venue": "lee's palace, toronto, on (late show)",
+    "songs": [
+      "intro -> j.l.h. outro",
+      "moya",
+      "albanian",
+      "monheim",
+      "chart #3",
+      "world police",
+      "the cowboy",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-24.late",
+        "url": "https://archive.org/details/gybe2011-04-24.late",
+        "title": "Godspeed You! Black Emperor Live at Lee's Palace (late show) on 2011-04-24"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-26",
+    "venue": "centre communautaire de rupert, la p\u00eache, qc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "the cowboy",
+      "chart #3",
+      "world police",
+      "moya",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-26.flacf",
+        "url": "https://archive.org/details/gybe2011-04-26.flacf",
+        "title": "Godspeed You! Black Emperor Live at Centre Communautaire de Rupert on 2011-04-26"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-27",
+    "venue": "th\u00e9\u00e2tre corona, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-27.dpa.flac",
+        "url": "https://archive.org/details/gybe2011-04-27.dpa.flac",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Corona on 2011-04-27"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-28",
+    "venue": "th\u00e9\u00e2tre corona, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "gathering storm",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "john hughes",
+      "tazer floyd",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-28.dpa.flac",
+        "url": "https://archive.org/details/gybe2011-04-28.dpa.flac",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Corona on 2011-04-28"
+      },
+      {
+        "id": "gybe2011-04-28.flac16",
+        "url": "https://archive.org/details/gybe2011-04-28.flac16",
+        "title": "Godspeed You! Black Emperor Live at Theatre Corona on 2011-04-28"
+      }
+    ]
+  },
+  {
+    "date": "2011-04-29",
+    "venue": "th\u00e9\u00e2tre corona, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "dead metheny",
+      "gathering storm",
+      "tazer floyd",
+      "chart #3",
+      "world police",
+      "albanian",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-04-29.mtx",
+        "url": "https://archive.org/details/gybe2011-04-29.mtx",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Corona on 2011-04-29"
+      },
+      {
+        "id": "gybe2011-04-29.dpa.flac",
+        "url": "https://archive.org/details/gybe2011-04-29.dpa.flac",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Corona on 2011-04-29"
+      },
+      {
+        "id": "gybe2011-04-29.flac",
+        "url": "https://archive.org/details/gybe2011-04-29.flac",
+        "title": "Godspeed You! Black Emperor Live at Theatre Corona on 2011-04-29"
+      }
+    ]
+  },
+  {
+    "date": "2011-05-01",
+    "venue": "th\u00e9\u00e2tre l'olympia, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "john hughes",
+      "gathering storm",
+      "albanian",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-05-01.flac",
+        "url": "https://archive.org/details/gybe2011-05-01.flac",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Olympia on 2011-05-01"
+      }
+    ]
+  },
+  {
+    "date": "2011-05-02",
+    "venue": "th\u00e9\u00e2tre l'olympia, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "monheim",
+      "albanian",
+      "chart #3",
+      "world police",
+      "dead metheny",
+      "tazer floyd",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-05-02.dpa.flac",
+        "url": "https://archive.org/details/gybe2011-05-02.dpa.flac",
+        "title": "Godspeed You! Black Emperor Live at Th\u00e9\u00e2tre Olympia on 2011-05-02"
+      }
+    ]
+  },
+  {
+    "date": "2011-07-22",
+    "venue": "the arches, glasgow, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "dead metheny",
+      "monheim",
+      "albanian",
+      "tazer floyd",
+      "chart #3",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-07-23",
+    "venue": "the lcr, norwich, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "tazer floyd",
+      "moya",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2011-07-24",
+    "venue": "atp i'll be your mirror festival, alexandra palace, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-07-24",
+        "url": "https://archive.org/details/gybe2011-07-24",
+        "title": "Godspeed You! Black Emperor Live at Alexandra Palace on 2011-07-24"
+      }
+    ]
+  },
+  {
+    "date": "2011-07-25",
+    "venue": "leeds metropolitan university, leeds, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2011-07-25",
+        "url": "https://archive.org/details/gybe2011-07-25",
+        "title": "Godspeed You! Black Emperor Live at Leeds Metropolitan University on 2011-07-25"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-14",
+    "venue": "coachella festival, empire polo club, indio, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-14.aud.flac16",
+        "url": "https://archive.org/details/gybe2012-04-14.aud.flac16",
+        "title": "Godspeed You! Black Emperor Live at Coachella Festival on 2012-04-14"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-15",
+    "venue": "fernwood campground, big sur, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "chart #3",
+      "world police",
+      "gathering storm",
+      "tazer floyd",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-15",
+        "url": "https://archive.org/details/gybe2012-04-15",
+        "title": "Godspeed You! Black Emperor Live at Fernwood Campground on 2012-04-15"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-16",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-16.m300.flac16",
+        "url": "https://archive.org/details/gybe2012-04-16.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"
+      },
+      {
+        "id": "gybe2012-04-16.ak40",
+        "url": "https://archive.org/details/gybe2012-04-16.ak40",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"
+      },
+      {
+        "id": "gybe2012-04-16",
+        "url": "https://archive.org/details/gybe2012-04-16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-16"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-17",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "chart #3",
+      "world police",
+      "tazer floyd",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-17",
+        "url": "https://archive.org/details/gybe2012-04-17",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-17"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-18",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "moya",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "chart #3",
+      "world police",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-18.ak40",
+        "url": "https://archive.org/details/gybe2012-04-18.ak40",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-18"
+      },
+      {
+        "id": "gybe2012-04-18",
+        "url": "https://archive.org/details/gybe2012-04-18",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-18"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-19",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "monheim",
+      "tazer floyd",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-19.mk4cmr",
+        "url": "https://archive.org/details/gybe2012-04-19.mk4cmr",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-19"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-20",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "dead metheny",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "moya",
+      "the sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-20.m300.flac16",
+        "url": "https://archive.org/details/gybe2012-04-20.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2012-04-20"
+      }
+    ]
+  },
+  {
+    "date": "2012-04-21",
+    "venue": "coachella festival, empire polo club, indio, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "tazer floyd",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-04-21.aud",
+        "url": "https://archive.org/details/gybe2012-04-21.aud",
+        "title": "Godspeed You! Black Emperor Live at Coachella Valley Music and Arts Festival on 2012-04-21"
+      }
+    ]
+  },
+  {
+    "date": "2012-07-14",
+    "venue": "pitchfork festival, union park, chicago, il",
+    "songs": [
+      "intro",
+      "albanian (w/ aidan)",
+      "gathering storm",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-07-14",
+        "url": "https://archive.org/details/gybe2012-07-14",
+        "title": "Godspeed You! Black Emperor Live at Union Park on 2012-07-14"
+      }
+    ]
+  },
+  {
+    "date": "2012-09-20",
+    "venue": "basilica hudson, hudson, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-09-20.H4",
+        "url": "https://archive.org/details/gybe2012-09-20.H4",
+        "title": "Godspeed You! Black Emperor Live at Basilica Hudson on 2012-09-20"
+      }
+    ]
+  },
+  {
+    "date": "2012-09-23",
+    "venue": "atp i'll be your mirror festival, pier 36, new york, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-01",
+    "venue": "orpheum theater, boston, ma",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-10-01",
+        "url": "https://archive.org/details/gybe2012-10-01",
+        "title": "Godspeed You! Black Emperor Live at Orpheum Theater on 2012-10-01"
+      }
+    ]
+  },
+  {
+    "date": "2012-10-02",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-10-02",
+        "url": "https://archive.org/details/gybe2012-10-02",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2012-10-02"
+      }
+    ]
+  },
+  {
+    "date": "2012-10-03",
+    "venue": "ram's head live, baltimore, md",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-04",
+    "venue": "cat's cradle, chapel hill, nc",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-05",
+    "venue": "buckhead theater, atlanta, ga",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-06",
+    "venue": "cafe bottletree, birmingham, al",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-07",
+    "venue": "tipitina's, new orleans, la",
+    "songs": [
+      "intro",
+      "albanian",
+      "(?)",
+      "behemoth",
+      "(?)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-09",
+    "venue": "mohawk, austin, tx",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-10-09.flac16",
+        "url": "https://archive.org/details/gybe2012-10-09.flac16",
+        "title": "Godspeed You! Black Emperor Live at Mohawk on 2012-10-09"
+      }
+    ]
+  },
+  {
+    "date": "2012-10-10",
+    "venue": "mohawk, austin, tx",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-11",
+    "venue": "granada theater, dallas, tx",
+    "songs": [
+      "intro",
+      "albanian",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-12",
+    "venue": "cannery ballroom, nashville, tn",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "gathering storm"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-13",
+    "venue": "headliners music hall, louisville, ky",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-14",
+    "venue": "majestic theatre, detroit, mi",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-15",
+    "venue": "town ballroom, buffalo, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-10-15",
+        "url": "https://archive.org/details/gybe2012-10-15",
+        "title": "Godspeed You! Black Emperor Live at Town Ballroom on 2012-10-15"
+      }
+    ]
+  },
+  {
+    "date": "2012-10-28",
+    "venue": "hard club, oporto, por",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "improvisation"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-30",
+    "venue": "kapital, madrid, sp",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-10-31",
+    "venue": "apolo, barcelona, sp",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-11-01",
+    "venue": "le rocher de palmer, cenon, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-11-02",
+    "venue": "le lieu unique, nantes, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-11-03",
+    "venue": "la condition publique, roubaix, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-04.OKMIIr.flac16",
+        "url": "https://archive.org/details/gybe2012-11-04.OKMIIr.flac16",
+        "title": "Godspeed You! Black Emperor Live at la Condition Publique on 2012-11-03"
+      },
+      {
+        "id": "gybe2012-11-03.dpa",
+        "url": "https://archive.org/details/gybe2012-11-03.dpa",
+        "title": "Godspeed You! Black Emperor Live at La Condition Publique on 2012-11-03"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-04",
+    "venue": "kentish town forum, camden, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-04.dpa",
+        "url": "https://archive.org/details/gybe2012-11-04.dpa",
+        "title": "Godspeed You! Black Emperor Live at Kentish Forum on 2012-11-04"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-05",
+    "venue": "kentish town forum, camden, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-05.ca-11.London.flac16",
+        "url": "https://archive.org/details/gybe2012-11-05.ca-11.London.flac16",
+        "title": "Godspeed You! Black Emperor Live at HMV Forum on 2012-11-05"
+      },
+      {
+        "id": "gybe2012-11-05.dpa",
+        "url": "https://archive.org/details/gybe2012-11-05.dpa",
+        "title": "Godspeed You! Black Emperor Live at Kentish Forum on 2012-11-05"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-07",
+    "venue": "cirque royal, brussels, bel",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-07.ca14",
+        "url": "https://archive.org/details/gybe2012-11-07.ca14",
+        "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2012-11-07"
+      },
+      {
+        "id": "gybe2012-11-07.ca-11.Brussels.flac16",
+        "url": "https://archive.org/details/gybe2012-11-07.ca-11.Brussels.flac16",
+        "title": "Godspeed You! Black Emperor Live at Cirque Royal on 2012-11-07"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-08",
+    "venue": "so36, berlin, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-08.dpa",
+        "url": "https://archive.org/details/gybe2012-11-08.dpa",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"
+      },
+      {
+        "id": "gybe2012-11-08.ca-11",
+        "url": "https://archive.org/details/gybe2012-11-08.ca-11",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"
+      },
+      {
+        "id": "gybe2012-11-08.mtx2",
+        "url": "https://archive.org/details/gybe2012-11-08.mtx2",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"
+      },
+      {
+        "id": "gybe2012-11-08.mtx",
+        "url": "https://archive.org/details/gybe2012-11-08.mtx",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-08"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-09",
+    "venue": "so36, berlin, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-09.ca-11",
+        "url": "https://archive.org/details/gybe2012-11-09.ca-11",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-09"
+      },
+      {
+        "id": "gybe2012-11-09.dpa",
+        "url": "https://archive.org/details/gybe2012-11-09.dpa",
+        "title": "Godspeed You! Black Emperor Live at SO36 on 2012-11-09"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-10",
+    "venue": "reithalle, dresden, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-10",
+        "url": "https://archive.org/details/gybe2012-11-10",
+        "title": "Godspeed You! Black Emperor Live at Reithalle on 2012-11-10"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-11",
+    "venue": "lucerna, prague, cze",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-11",
+        "url": "https://archive.org/details/gybe2012-11-11",
+        "title": "Godspeed You! Black Emperor Live at Lucerna on 2012-11-11"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-12",
+    "venue": "arena, vienna, aut",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-12.cos11s.flac16",
+        "url": "https://archive.org/details/gybe2012-11-12.cos11s.flac16",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2012-11-12"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-14",
+    "venue": "kino \u0161i\u0161ka, ljubljana, slo",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2012-11-15",
+    "venue": "rote fabrik, z\u00fcrich, swi",
+    "songs": [
+      "intro",
+      "albanian",
+      "12-28-99 (outro)",
+      "chart #3",
+      "world police",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-15.DPA4060",
+        "url": "https://archive.org/details/gybe2012-11-15.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2012-11-15"
+      },
+      {
+        "id": "gybe2012-11-15",
+        "url": "https://archive.org/details/gybe2012-11-15",
+        "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2012-11-15"
+      }
+    ]
+  },
+  {
+    "date": "2012-11-16",
+    "venue": "dachstock reitschule, bern, swi",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2012-11-16",
+        "url": "https://archive.org/details/gybe2012-11-16",
+        "title": "Godspeed You! Black Emperor Live at Dachstock Reitschule on 2012-11-16"
+      }
+    ]
+  },
+  {
+    "date": "2013-02-08",
+    "venue": "king's arms, auckland, nz",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-02-09",
+    "venue": "hunter's lounge, wellington, nz",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "chart #3",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-02-11",
+    "venue": "chevron festival gardens, perth, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "chart #3",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-02-13",
+    "venue": "tivoli, brisbane, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-02-14",
+    "venue": "enmore theatre, sydney, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "monheim",
+      "chart #3",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-02-14.aud",
+        "url": "https://archive.org/details/gybe2013-02-14.aud",
+        "title": "Godspeed You! Black Emperor Live at Enmore Theatre on 2013-02-14"
+      },
+      {
+        "id": "gybe2013-02-14.crankingamps",
+        "url": "https://archive.org/details/gybe2013-02-14.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at Enmore Theatre on 2013-02-14"
+      }
+    ]
+  },
+  {
+    "date": "2013-02-15",
+    "venue": "forum, melbourne, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-02-15.aud",
+        "url": "https://archive.org/details/gybe2013-02-15.aud",
+        "title": "Godspeed You! Black Emperor Live at The Forum on 2013-02-15"
+      },
+      {
+        "id": "gybe2013-02-15.crankingamps",
+        "url": "https://archive.org/details/gybe2013-02-15.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at The Forum on 2013-02-15"
+      }
+    ]
+  },
+  {
+    "date": "2013-02-16",
+    "venue": "atp i'll be your mirror festival, westgate entertainment centre, melbourne, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "chart #3",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-02-16.brendan.flac24",
+        "url": "https://archive.org/details/gybe2013-02-16.brendan.flac24",
+        "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"
+      },
+      {
+        "id": "gybe2013-02-16.aud",
+        "url": "https://archive.org/details/gybe2013-02-16.aud",
+        "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"
+      },
+      {
+        "id": "gybe2013-02-16.brendan.flac16",
+        "url": "https://archive.org/details/gybe2013-02-16.brendan.flac16",
+        "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"
+      },
+      {
+        "id": "gybe2013-02-16.crankingamps",
+        "url": "https://archive.org/details/gybe2013-02-16.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at Westgate Entertainment Centre on 2013-02-16"
+      }
+    ]
+  },
+  {
+    "date": "2013-04-09",
+    "venue": "liquid room, tokyo, jp",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-04-10",
+    "venue": "liquid room, tokyo, jp",
+    "songs": [
+      "intro",
+      "albanian",
+      "chart #3",
+      "world police",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-04-12",
+    "venue": "tango, beijing, chi",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-04-12.matrix",
+        "url": "https://archive.org/details/gybe2013-04-12.matrix",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"
+      },
+      {
+        "id": "gybe2013-04-12.D50",
+        "url": "https://archive.org/details/gybe2013-04-12.D50",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"
+      },
+      {
+        "id": "gybe2013-04-12.hitlike",
+        "url": "https://archive.org/details/gybe2013-04-12.hitlike",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"
+      },
+      {
+        "id": "gybe2013-04-12",
+        "url": "https://archive.org/details/gybe2013-04-12",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2013-04-12"
+      }
+    ]
+  },
+  {
+    "date": "2013-04-13",
+    "venue": "q.s.w. culture centre, shanghai, chi",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-04-13",
+        "url": "https://archive.org/details/gybe2013-04-13",
+        "title": "Godspeed You! Black Emperor Live at QSW Culture Centre on 2013-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2013-04-15",
+    "venue": "the vine centre, wan chai, hong kong",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-04-15",
+        "url": "https://archive.org/details/gybe2013-04-15",
+        "title": "Godspeed You! Black Emperor Live at The Vine Centre on 2013-04-15"
+      }
+    ]
+  },
+  {
+    "date": "2013-04-18",
+    "venue": "kl live, kuala lumpur, ml",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-04-20",
+    "venue": "ntu sports center, taipei, tai",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "chart #3",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-03",
+    "venue": "off festival, dolina trzech staw\u00f3w, katowice, pol",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-03",
+        "url": "https://archive.org/details/gybe2013-08-03",
+        "title": "Godspeed You! Black Emperor Live at Dolina Trzech Staw\u00f3w on 2013-08-03"
+      }
+    ]
+  },
+  {
+    "date": "2013-08-05",
+    "venue": "ut connewitz, leipzig, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "the cowboy (w/ tim)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-05",
+        "url": "https://archive.org/details/gybe2013-08-05",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"
+      },
+      {
+        "id": "gybe2013-08-05.leipzig1.ca-11.flac16",
+        "url": "https://archive.org/details/gybe2013-08-05.leipzig1.ca-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"
+      },
+      {
+        "id": "gybe2013-08-05.leipzig1.ca-11.flac24",
+        "url": "https://archive.org/details/gybe2013-08-05.leipzig1.ca-11.flac24",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"
+      },
+      {
+        "id": "gybe2013-08-05.matrix",
+        "url": "https://archive.org/details/gybe2013-08-05.matrix",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-05"
+      }
+    ]
+  },
+  {
+    "date": "2013-08-06",
+    "venue": "ut connewitz, leipzig, ger",
+    "songs": [
+      "intro",
+      "moya",
+      "dead metheny",
+      "behemoth",
+      "sad mafioso",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-06.leipzig2.ca-11.flac16",
+        "url": "https://archive.org/details/gybe2013-08-06.leipzig2.ca-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"
+      },
+      {
+        "id": "gybe2013-08-06",
+        "url": "https://archive.org/details/gybe2013-08-06",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"
+      },
+      {
+        "id": "gybe2013-08-06.leipzig2.ca-11.flac24",
+        "url": "https://archive.org/details/gybe2013-08-06.leipzig2.ca-11.flac24",
+        "title": "Godspeed You! Black Emperor Live at UT Connewitz on 2013-08-06"
+      }
+    ]
+  },
+  {
+    "date": "2013-08-07",
+    "venue": "tivolis koncertsal, copenhagen, den",
+    "songs": [
+      "intro",
+      "albanian",
+      "dead metheny",
+      "behemoth",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-07.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2013-08-07.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at Tivolis Koncertsal on 2013-08-07"
+      },
+      {
+        "id": "gybe2013-08-07.copenhagen.ca-11.flac24",
+        "url": "https://archive.org/details/gybe2013-08-07.copenhagen.ca-11.flac24",
+        "title": "Godspeed You! Black Emperor Live at Tivolis koncertsal on 2013-08-07"
+      },
+      {
+        "id": "gybe2013-08-07.copenhagen.ca-11.flac16",
+        "url": "https://archive.org/details/gybe2013-08-07.copenhagen.ca-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at Tivolis koncertsal on 2013-08-07"
+      }
+    ]
+  },
+  {
+    "date": "2013-08-08",
+    "venue": "\u00f8yafestivalen, middelalderparken, oslo, nor",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-09",
+    "venue": "way out west festival, slottsskogen, g\u00f6teborg, swe",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-11",
+    "venue": "flow festival, suvilahti, helsinki, fin",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-14",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "albanian",
+      "dead metheny",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-14.Amsterdam.Matrix.flac24",
+        "url": "https://archive.org/details/gybe2013-08-14.Amsterdam.Matrix.flac24",
+        "title": "Godspeed You! Black Emperor Live at Paradso on 2013-08-14"
+      },
+      {
+        "id": "gybe2013-08-14.amsterdam.ca-11.flac16",
+        "url": "https://archive.org/details/gybe2013-08-14.amsterdam.ca-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"
+      },
+      {
+        "id": "gybe2013-08-14.ca14",
+        "url": "https://archive.org/details/gybe2013-08-14.ca14",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"
+      },
+      {
+        "id": "gybe2013-08-14.amsterdam.ca-11.flac24",
+        "url": "https://archive.org/details/gybe2013-08-14.amsterdam.ca-11.flac24",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2013-08-14"
+      }
+    ]
+  },
+  {
+    "date": "2013-08-15",
+    "venue": "pukkelpop, domein kiewit, hasselt, bel",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-16",
+    "venue": "la route du rock, fort de saint-p\u00e8re, st-malo, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-08-18",
+    "venue": "le trianon, paris, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "sad mafioso",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-08-18",
+        "url": "https://archive.org/details/gybe2013-08-18",
+        "title": "Godspeed You! Black Emperor Live at Le Trianon on 2013-08-18"
+      },
+      {
+        "id": "gybe2013-08-18.flacf",
+        "url": "https://archive.org/details/gybe2013-08-18.flacf",
+        "title": "Godspeed You! Black Emperor Live at Le Trianon on 2013-08-18"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-04",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-04.aud.flac16",
+        "url": "https://archive.org/details/gybe2013-09-04.aud.flac16",
+        "title": "Godspeed You! Black Emperor Live at The Vogue Theatre on 2013-09-04"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-05",
+    "venue": "showbox, seattle, wa",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-09-06",
+    "venue": "roseland theater, portland, or",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "dead metheny",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-09-09",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-09.m300.flac16",
+        "url": "https://archive.org/details/gybe2013-09-09.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-09"
+      },
+      {
+        "id": "gybe2013-09-09",
+        "url": "https://archive.org/details/gybe2013-09-09",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-09"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-10",
+    "venue": "great american music hall, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "dead metheny",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-10",
+        "url": "https://archive.org/details/gybe2013-09-10",
+        "title": "Godspeed You! Black Emperor Live at Great American Music Hall on 2013-09-10"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-12",
+    "venue": "the fonda, los angeles, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "chart #3",
+      "world police",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-12.dab.flac24",
+        "url": "https://archive.org/details/gybe2013-09-12.dab.flac24",
+        "title": "Godspeed You! Black Emperor Live at Henry Fonda Theater on 2013-09-12"
+      },
+      {
+        "id": "GYBE2013-09-12.audflac16",
+        "url": "https://archive.org/details/GYBE2013-09-12.audflac16",
+        "title": "Godspeed You! Black Emperor Live at The Fonda Theatre on 2013-09-12"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-14",
+    "venue": "fox theater, pomona, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "gatheering storm",
+      "behemoth",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-14.dab.flac24",
+        "url": "https://archive.org/details/gybe2013-09-14.dab.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Fox Theater on 2013-09-14"
+      },
+      {
+        "id": "GYBE2013-09-14.audflac16",
+        "url": "https://archive.org/details/GYBE2013-09-14.audflac16",
+        "title": "Godspeed You! Black Emperor Live at The Fox Theatre on 2013-09-14"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-15",
+    "venue": "belly up tavern, solana beach, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-15.dab.flac24",
+        "url": "https://archive.org/details/gybe2013-09-15.dab.flac24",
+        "title": "Godspeed You! Black Emperor Live at Belly Up Tavern on 2013-09-15"
+      }
+    ]
+  },
+  {
+    "date": "2013-09-16",
+    "venue": "rialto theater, tucson, az",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-09-16",
+        "url": "https://archive.org/details/gybe2013-09-16",
+        "title": "Godspeed You! Black Emperor Live at Rialto Theatre on 2013-09-16"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-11",
+    "venue": "td garden, boston, ma",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-11",
+        "url": "https://archive.org/details/gybe2013-10-11",
+        "title": "Godspeed You! Black Emperor Live at TD Garden on 2013-10-11"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-12",
+    "venue": "mohegan sun arena, uncasville, ct",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-12",
+        "url": "https://archive.org/details/gybe2013-10-12",
+        "title": "Godspeed You! Black Emperor Live at Mohgen Sun Arena on 2013-10-12"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-14",
+    "venue": "barclays center, brooklyn, ny",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-14",
+        "url": "https://archive.org/details/gybe2013-10-14",
+        "title": "Godspeed You! Black Emperor Live at Barclays Center on 2013-10-14"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-15",
+    "venue": "prudential center, newark, nj",
+    "songs": [
+      "intro",
+      "albanian",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-15.flacf",
+        "url": "https://archive.org/details/gybe2013-10-15.flacf",
+        "title": "Godspeed You! Black Emperor Live at Prudential Center on 2013-10-15"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-16",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-16",
+        "url": "https://archive.org/details/gybe2013-10-16",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2013-10-16"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-18",
+    "venue": "verizon center, washington, dc",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-18",
+        "url": "https://archive.org/details/gybe2013-10-18",
+        "title": "Godspeed You! Black Emperor Live at Verizon Center on 2013-10-18"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-19",
+    "venue": "bryce jordan center, university park, pa",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-10-19.dpa",
+        "url": "https://archive.org/details/gybe2013-10-19.dpa",
+        "title": "Godspeed You! Black Emperor Live at Bryce Jordan Center @ Penn State University on 2013-10-19"
+      },
+      {
+        "id": "gybe2013-10-19.heb",
+        "url": "https://archive.org/details/gybe2013-10-19.heb",
+        "title": "Godspeed You! Black Emperor Live at Bryce Jordan Center on 2013-10-19"
+      }
+    ]
+  },
+  {
+    "date": "2013-10-20",
+    "venue": "jefferson theater, charlottesville, va",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-10-21",
+    "venue": "pnc arena, raleigh, nc",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-10-22",
+    "venue": "bridgestone arena, nashville, tn",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-10-24",
+    "venue": "philips arena, atlanta, ga",
+    "songs": [
+      "intro",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-10-26",
+    "venue": "mountain oasis festival, u.s. cellular center, asheville, nc",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2013-11-21",
+    "venue": "o2 academy brixton, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "moya",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2013-11-21.flacf",
+        "url": "https://archive.org/details/gybe2013-11-21.flacf",
+        "title": "Godspeed You! Black Emperor Live at O2 Academy Brixton on 2013-11-21"
+      }
+    ]
+  },
+  {
+    "date": "2013-11-23",
+    "venue": "atp the end of an era festival, pontins, camber sand, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "chart #3",
+      "world police",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2014-01-18",
+    "venue": "metropolis, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2014-01-18",
+        "url": "https://archive.org/details/gybe2014-01-18",
+        "title": "Godspeed You! Black Emperor Live at Metropolis on 2014-01-18"
+      }
+    ]
+  },
+  {
+    "date": "2014-01-19",
+    "venue": "metropolis, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "behemoth",
+      "moya",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2014-01-19",
+        "url": "https://archive.org/details/gybe2014-01-19",
+        "title": "Godspeed You! Black Emperor Live at Metropolis on 2014-01-19"
+      }
+    ]
+  },
+  {
+    "date": "2014-05-31",
+    "venue": "primavera festival, parc del f\u00f2rum, barcelona, sp",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2014-06-06",
+    "venue": "primavera festival, parque da cidade, oporto, por",
+    "songs": [
+      "intro",
+      "albanian",
+      "gathering storm",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2014-06-06.gybe2014-06-06.flac16",
+        "url": "https://archive.org/details/gybe2014-06-06.gybe2014-06-06.flac16",
+        "title": "Godspeed You! Black Emperor Live at Parque da Cidade do Porto (Primavera Sound 2014) on 2014-06-06"
+      }
+    ]
+  },
+  {
+    "date": "2014-11-25",
+    "venue": "th\u00e9\u00e2tre granada, sherbrooke, qc",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2014-11-26",
+    "venue": "th\u00e9\u00e2tre l'imp\u00e9rial, qu\u00e9bec, qc",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-07",
+    "venue": "markthalle, hamburg, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-07.aud.flac24",
+        "url": "https://archive.org/details/gybe2015-04-07.aud.flac24",
+        "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"
+      },
+      {
+        "id": "gybe2015-04-07.ca-11",
+        "url": "https://archive.org/details/gybe2015-04-07.ca-11",
+        "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"
+      },
+      {
+        "id": "gybe2015-04-07.mtx",
+        "url": "https://archive.org/details/gybe2015-04-07.mtx",
+        "title": "Godspeed You! Black Emperor Live at Markthalle on 2015-04-07"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-08",
+    "venue": "weststadthalle, essen, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-08.dpa",
+        "url": "https://archive.org/details/gybe2015-04-08.dpa",
+        "title": "Godspeed You! Black Emperor Live at Weststadthalle on 2015-04-08"
+      },
+      {
+        "id": "gybe2015-04-08.essen.ca-14.flac16",
+        "url": "https://archive.org/details/gybe2015-04-08.essen.ca-14.flac16",
+        "title": "Godspeed You! Black Emperor Live at Weststadthalle on 2015-04-08"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-09",
+    "venue": "freiheiz, munich, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "tazer floyd (w/ tim)",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-09",
+        "url": "https://archive.org/details/gybe2015-04-09",
+        "title": "Godspeed You! Black Emperor Live at Freiheiz on 2015-04-09"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-10",
+    "venue": "live club, trezzo sull'adda, it",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-11",
+    "venue": "estragon, bologna, it",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-12",
+    "venue": "les docks, lausanne, swi",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-15",
+    "venue": "le transbordeur, villeurbanne, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-16",
+    "venue": "l'a\u00e9ronef, lille, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "moya",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-17",
+    "venue": "albert hall, manchester, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "moya",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-17.dpa4061.rob.flac24",
+        "url": "https://archive.org/details/gybe2015-04-17.dpa4061.rob.flac24",
+        "title": "Godspeed You! Black Emperor Live at Albert Hall on 2015-04-17"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-18",
+    "venue": "vicar street, dublin, ir",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-19",
+    "venue": "abc, glasgow, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-20",
+    "venue": "shepherd's bush empire, london, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-22",
+    "venue": "bataclan, paris, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-22",
+        "url": "https://archive.org/details/gybe2015-04-22",
+        "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-22"
+      },
+      {
+        "id": "gybe2015-04-22.alt",
+        "url": "https://archive.org/details/gybe2015-04-22.alt",
+        "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-22"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-23",
+    "venue": "bataclan, paris, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "tazer floyd",
+      "anthem for no state",
+      "behemoth",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-23",
+        "url": "https://archive.org/details/gybe2015-04-23",
+        "title": "Godspeed You! Black Emperor Live at Bataclan on 2015-04-23"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-24",
+    "venue": "la vapeur, dijon, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-24",
+        "url": "https://archive.org/details/gybe2015-04-24",
+        "title": "Godspeed You! Black Emperor Live at La Vapeur on 2015-04-24"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-25",
+    "venue": "salzhaus, winterthur, swi",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-25",
+        "url": "https://archive.org/details/gybe2015-04-25",
+        "title": "Godspeed You! Black Emperor Live at Salzhaus on 2015-04-25"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-26",
+    "venue": "messegel\u00e4nde, krems, aut",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-28",
+    "venue": "la laiterie, strasbourg, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "moya",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-28",
+        "url": "https://archive.org/details/gybe2015-04-28",
+        "title": "Godspeed You! Black Emperor Live at La Laiterie on 2015-04-28"
+      }
+    ]
+  },
+  {
+    "date": "2015-04-29",
+    "venue": "cirque royal, brussels, bel",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-04-30",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "tazer floyd",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-04-30.dpa",
+        "url": "https://archive.org/details/gybe2015-04-30.dpa",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2015-04-30"
+      },
+      {
+        "id": "gybe2015-04-30.ls5",
+        "url": "https://archive.org/details/gybe2015-04-30.ls5",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2015-04-30"
+      }
+    ]
+  },
+  {
+    "date": "2015-05-01",
+    "venue": "paard van troje, den haag, hol",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "moya",
+      "behemoth"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-05-01",
+        "url": "https://archive.org/details/gybe2015-05-01",
+        "title": "Godspeed You! Black Emperor Live at Paard van Troje on 2015-05-01"
+      }
+    ]
+  },
+  {
+    "date": "2015-06-25",
+    "venue": "sled island, central united church, calgary, ab",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "behemoth"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-06-26",
+    "venue": "sled island, central united church, calgary, ab",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "anthem for no state",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-06-30",
+    "venue": "roundhouse, camden, london, uk",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-06-30",
+        "url": "https://archive.org/details/gybe2015-06-30",
+        "title": "Godspeed You! Black Emperor Live at Roundhouse on 2015-06-30"
+      }
+    ]
+  },
+  {
+    "date": "2015-07-03",
+    "venue": "all tomorrow's parties, \u00e1sbr\u00fa, keflav\u00edk, ic",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-07-17",
+    "venue": "bennic\u00e0sim festival, recinto de festivales, benic\u00e0ssim, sp",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "albanian",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-07-19",
+    "venue": "zanne festival, parco gioeni, catania, it",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "albanian",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-08",
+    "venue": "basilica hudson, hudson, ny",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-09",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-09",
+        "url": "https://archive.org/details/gybe2015-09-09",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-10",
+    "venue": "hopscotch music festival, city plaza, raleigh, nc",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gsybe2015-09-10.hopscotch_acidjack",
+        "url": "https://archive.org/details/gsybe2015-09-10.hopscotch_acidjack",
+        "title": "Godspeed You! Black Emperor Live at Hopscotch Music Festival, City Plaza on 2015-09-10"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-11",
+    "venue": "variety playhouse, atlanta, ga",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "godspeedyoublackemperor2015-09-11.flac16",
+        "url": "https://archive.org/details/godspeedyoublackemperor2015-09-11.flac16",
+        "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2015-09-11"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-12",
+    "venue": "joy theater, new olreans, la",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "gathering storm",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-14",
+    "venue": "mohawk, austin, tx",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-15",
+    "venue": "mohawk, austin, tx",
+    "songs": [
+      "intro",
+      "behemoth",
+      "[bosses hang ?]",
+      "gathering storm",
+      "albanian",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-16",
+    "venue": "warehouse live, houston, tx",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "gathering storm",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-9-16-warehouseliveset",
+        "url": "https://archive.org/details/gybe2015-9-16-warehouseliveset",
+        "title": "Godspeed You! Black Emperor Live at Warehouse Live on 2015-09-16"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-17",
+    "venue": "trees, dallas, tx",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "anthem for no state",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-17",
+        "url": "https://archive.org/details/gybe2015-09-17",
+        "title": "Godspeed You! Black Emperor Live at Trees on 2015-09-17"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-18",
+    "venue": "minglewood hall, memphis, tn",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "gathering storm",
+      "anthem for no state",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-19",
+    "venue": "marathon music works, nashville, tn",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-21",
+    "venue": "bluebird nightclub, bloomington, in",
+    "songs": [
+      "intro",
+      "behemoth",
+      "gathering storm",
+      "anthem for no state",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-21",
+        "url": "https://archive.org/details/gybe2015-09-21",
+        "title": "Godspeed You! Black Emperor Live at Bluebird Nightclub on 2015-09-21"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-22",
+    "venue": "beachland ballroom, cleveland, oh",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "anthem for no state",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-22",
+        "url": "https://archive.org/details/gybe2015-09-22",
+        "title": "Godspeed You! Black Emperor Live at Beachland Ballroom on 2015-09-22"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-23",
+    "venue": "carnegie music hall of homestead, munhall, pa",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-23",
+        "url": "https://archive.org/details/gybe2015-09-23",
+        "title": "Godspeed You! Black Emperor Live at Carnegie Music Hall of Homestead on 2015-09-23"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-25",
+    "venue": "danforth music hall, toronto, on",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-26",
+    "venue": "danforth music hall, toronto, on",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-27",
+    "venue": "paradise rock club, boston, ma",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-28",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-09-28",
+        "url": "https://archive.org/details/gybe2015-09-28",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2015-09-28"
+      }
+    ]
+  },
+  {
+    "date": "2015-09-29",
+    "venue": "terminal 5, new york, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-09-30",
+    "venue": "music hall of williamsburg, brooklyn, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "GYBE2015-09-30.nyctaper",
+        "url": "https://archive.org/details/GYBE2015-09-30.nyctaper",
+        "title": "Godspeed You! Black Emperor Live at Music Hall of Williamsburg on 2015-09-30"
+      }
+    ]
+  },
+  {
+    "date": "2015-10-01",
+    "venue": "warsaw, brooklyn, ny",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-22",
+    "venue": "warwick arts centre, coventry, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "albanian",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-10-22",
+        "url": "https://archive.org/details/gybe2015-10-22",
+        "title": "Godspeed You! Black Emperor Live at Warwick Arts Centre on 2015-10-22"
+      }
+    ]
+  },
+  {
+    "date": "2015-10-23",
+    "venue": "colston hall, bristol, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-10-23",
+        "url": "https://archive.org/details/gybe2015-10-23",
+        "title": "Godspeed You! Black Emperor Live at Colston Hall on 2015-10-23"
+      }
+    ]
+  },
+  {
+    "date": "2015-10-24",
+    "venue": "sage gateshead, gateshead, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-25",
+    "venue": "liquid room, edinburgh, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-27",
+    "venue": "camp and furnace, liverpool, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "albanian",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-28",
+    "venue": "brighton dome, brighton, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-29",
+    "venue": "pitchfork festival, grande halle de la villette, paris, fr",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-10-29",
+        "url": "https://archive.org/details/gybe2015-10-29",
+        "title": "Godspeed You! Black Emperor Live at Grande Halle de la Villette on 2015-10-29"
+      }
+    ]
+  },
+  {
+    "date": "2015-10-30",
+    "venue": "trix, antwerpen, bel",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-10-31",
+    "venue": "de oosterpoort, groningen, nl",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-02",
+    "venue": "den gr\u00e5 hal, k\u00f8benhavn, den",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-11-02.aud.flac24",
+        "url": "https://archive.org/details/gybe2015-11-02.aud.flac24",
+        "title": "Godspeed You! Black Emperor Live at Den Graa Hal on 2015-11-02"
+      }
+    ]
+  },
+  {
+    "date": "2015-11-03",
+    "venue": "kb, malm\u00f6, swe",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-11-03.audix.flac16",
+        "url": "https://archive.org/details/gybe2015-11-03.audix.flac16",
+        "title": "Godspeed You! Black Emperor Live at KB on 2015-11-03"
+      },
+      {
+        "id": "gybe2015-11-03.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2015-11-03.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at KB on 2015-11-03"
+      }
+    ]
+  },
+  {
+    "date": "2015-11-04",
+    "venue": "debaser medis, stockholm, swe",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-05",
+    "venue": "debaser medis, stockholm, swe",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-06",
+    "venue": "rockefeller, oslo, nor",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-08",
+    "venue": "progresja, warsaw, pol",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-11",
+    "venue": "huxleys neue welt, berlin, ger",
+    "songs": [
+      "intro",
+      "gatherng storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-12",
+    "venue": "rote fabrik, z\u00fcrich, swi",
+    "songs": [
+      "intro",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-13",
+    "venue": "teatro della concordia, venaria reale, it",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-14",
+    "venue": "c.s.o. rivolta, venice, it",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-15",
+    "venue": "atlantico live, rome, it",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2015-11-17",
+    "venue": "zorlu center p.s.m., istanbul, tur",
+    "songs": [
+      "intro",
+      "moya",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2015-11-17",
+        "url": "https://archive.org/details/gybe2015-11-17",
+        "title": "Godspeed You! Black Emperor Live at Zorlu Center PSM on 2015-11-17"
+      }
+    ]
+  },
+  {
+    "date": "2016-01-29",
+    "venue": "neumos, seattle, wa",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-01-30",
+    "venue": "neumos, seattle, wa",
+    "songs": [
+      "intro",
+      "moya",
+      "behemoth",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-01-31",
+    "venue": "wonder ballroom, portland, or",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-01-31",
+        "url": "https://archive.org/details/gybe2016-01-31",
+        "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2016-01-31"
+      }
+    ]
+  },
+  {
+    "date": "2016-02-03",
+    "venue": "fox theater, oakland, ca",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-02-03",
+        "url": "https://archive.org/details/gybe2016-02-03",
+        "title": "Godspeed You! Black Emperor Live at Fox Theater on 2016-02-03"
+      }
+    ]
+  },
+  {
+    "date": "2016-02-04",
+    "venue": "immanuel presbyterian church, los angeles, ca",
+    "songs": [
+      "intro",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-02-04",
+        "url": "https://archive.org/details/gybe2016-02-04",
+        "title": "Godspeed You! Black Emperor Live at The Cathedral Sanctuary at Immanuel Presbyterian Church on 2016-02-04"
+      }
+    ]
+  },
+  {
+    "date": "2016-02-05",
+    "venue": "warner grand theater, san pedro, ca",
+    "songs": [
+      "intro",
+      "anthem for no state",
+      "behemoth",
+      "monheim",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-02-05.dpa",
+        "url": "https://archive.org/details/gybe2016-02-05.dpa",
+        "title": "Godspeed You! Black Emperor Live at Warner Grand Theater on 2016-02-05"
+      }
+    ]
+  },
+  {
+    "date": "2016-02-06",
+    "venue": "crescent ballroom, phoenix, az",
+    "songs": [
+      "intro",
+      "behemoth",
+      "dead metheny",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-08",
+    "venue": "ogden theater, denver, co",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-10",
+    "venue": "slowdown, omaha, ne",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-11",
+    "venue": "first avenue, minneapolis, mn",
+    "songs": [
+      "intro",
+      "behemoth",
+      "bosses hang",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-12",
+    "venue": "turner hall ballroom, milwaukee, wi",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-13",
+    "venue": "rockefeller memorial chapel, chicago, il",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-02-14",
+    "venue": "thalia hall, chicago, il",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-02-14.tracked",
+        "url": "https://archive.org/details/gybe2016-02-14.tracked",
+        "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2016-02-14"
+      },
+      {
+        "id": "STE003_201602",
+        "url": "https://archive.org/details/STE003_201602",
+        "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2016-02-14"
+      }
+    ]
+  },
+  {
+    "date": "2016-03-05",
+    "venue": "adelaide festival centre, adelaide, aus",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-03-06",
+    "venue": "thebarton theatre, adelaide, aus",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-03-07",
+    "venue": "elisabeth murdoch hall, melbourne, aus",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-03-07.crankingamps",
+        "url": "https://archive.org/details/gybe2016-03-07.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at Elisabeth Murdoch Hall, Melbourne Recital Centre on 2016-03-07"
+      }
+    ]
+  },
+  {
+    "date": "2016-03-08",
+    "venue": "the domain, sydney, aus",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-03-08",
+        "url": "https://archive.org/details/gybe2016-03-08",
+        "title": "Godspeed You! Black Emperor Live at The Domain on 2016-03-08"
+      }
+    ]
+  },
+  {
+    "date": "2016-03-11",
+    "venue": "macpherson stadium, yau tsim mong, hong kong",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "behemoth",
+      "chart #3",
+      "world police",
+      "albanian",
+      "kicking horse on broken hill"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-03-12",
+    "venue": "q.s.w. culture centre, shanghai, chi",
+    "songs": [
+      "intro",
+      "moya",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-03-14",
+    "venue": "tango, beijing, chi",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "monheim",
+      "blaise bailey finnegan III",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-03-14",
+        "url": "https://archive.org/details/gybe2016-03-14",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2016-03-14"
+      },
+      {
+        "id": "gybe2016-03-14.alt",
+        "url": "https://archive.org/details/gybe2016-03-14.alt",
+        "title": "Godspeed You! Black Emperor Live at Tango on 2016-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2016-03-16",
+    "venue": "duo music exchange, tokyo, jp",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-03-16",
+        "url": "https://archive.org/details/gybe2016-03-16",
+        "title": "Godspeed You! Black Emperor Live at Tokyo Duo Music Exchange on 2016-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2016-03-17",
+    "venue": "duo music exchange, tokyo, jp",
+    "songs": [
+      "intro",
+      "moya",
+      "behemoth",
+      "monheim",
+      "blaise bailey finnegan III",
+      "kicking horse on broken hill"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-03-17",
+        "url": "https://archive.org/details/gybe2016-03-17",
+        "title": "Godspeed You! Black Emperor Live at Tokyo Duo Music Exchange on 2016-03-17"
+      }
+    ]
+  },
+  {
+    "date": "2016-04-11",
+    "venue": "th\u00e9\u00e2tre maisonneuve, montr\u00e9al, qc",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-04-12",
+    "venue": "th\u00e9\u00e2tre maisonneuve, montr\u00e9al, qc",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-04-15",
+    "venue": "grand th\u00e9\u00e2tre, qu\u00e9bec, qc",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-06-14",
+    "venue": "hearn generating station, toronto, on",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-06-14",
+        "url": "https://archive.org/details/gybe2016-06-14",
+        "title": "Godspeed You! Black Emperor Live at Hearn Generating Station on 2016-06-14"
+      }
+    ]
+  },
+  {
+    "date": "2016-06-15",
+    "venue": "hearn generating station, toronto, on",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-08-08",
+    "venue": "playhouse, edinburgh, uk",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-08",
+        "url": "https://archive.org/details/gybe2016-08-08",
+        "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-08"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-09",
+    "venue": "playhouse, edinburgh, uk",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-09",
+        "url": "https://archive.org/details/gybe2016-08-09",
+        "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-09"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-10",
+    "venue": "playhouse, edinburgh, uk",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "bosses hang",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-10",
+        "url": "https://archive.org/details/gybe2016-08-10",
+        "title": "Godspeed You! Black Emperor Live at Playhouse on 2016-08-10"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-12",
+    "venue": "patinoire, le locle, swi",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-08-13",
+    "venue": "gloria, k\u00f6ln, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "dead metheny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-13",
+        "url": "https://archive.org/details/gybe2016-08-13",
+        "title": "Godspeed You! Black Emperor Live at Gloria on 2016-08-13"
+      },
+      {
+        "id": "gybe2016-08-13.remaster",
+        "url": "https://archive.org/details/gybe2016-08-13.remaster",
+        "title": "Godspeed You! Black Emperor Live at Gloria on 2016-08-13"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-15",
+    "venue": "kampnagel k6, hamburg, ger",
+    "songs": [
+      "intro",
+      "behemoth",
+      "moya",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-08-16",
+    "venue": "poppodium 013, tilburg, hol",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-08-17",
+    "venue": "le trianon, paris, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "blaise bailey finnegan III",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-08-18",
+    "venue": "coronet theatre, notting hill, london, uk",
+    "songs": [
+      "intro",
+      "behemoth",
+      "dead metheny",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-18",
+        "url": "https://archive.org/details/gybe2016-08-18",
+        "title": "Godspeed You! Black Emperor Live at Coronet Theater on 2016-08-18"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-19",
+    "venue": "arctangent festival, fernhill farm, compton martin, uk",
+    "songs": [
+      "intro",
+      "behemoth",
+      "moya",
+      "blaise bailey finnegan III",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-19.dpa4061.rob.flac24",
+        "url": "https://archive.org/details/gybe2016-08-19.dpa4061.rob.flac24",
+        "title": "Godspeed You! Black Emperor Live at ArcTanGent Festival, Fernhill Farm on 2016-08-19"
+      }
+    ]
+  },
+  {
+    "date": "2016-08-21",
+    "venue": "vicar street, dublin, ir",
+    "songs": [
+      "intro",
+      "moya",
+      "behemoth",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-08-21",
+        "url": "https://archive.org/details/gybe2016-08-21",
+        "title": "Godspeed You! Black Emperor Live at Vicar Street on 2016-08-21"
+      }
+    ]
+  },
+  {
+    "date": "2016-09-19",
+    "venue": "th\u00e9\u00e2tre paradoxe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-09-19",
+        "url": "https://archive.org/details/gybe2016-09-19",
+        "title": "Godspeed You! Black Emperor Live at Theatre Paradoxe on 2016-09-19"
+      }
+    ]
+  },
+  {
+    "date": "2016-09-20",
+    "venue": "th\u00e9\u00e2tre paradoxe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "behemoth",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-09-21",
+    "venue": "th\u00e9\u00e2tre paradoxe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "behemoth",
+      "kicking horse on broken hill",
+      "monheim",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2016-09-21",
+        "url": "https://archive.org/details/gybe2016-09-21",
+        "title": "Godspeed You! Black Emperor Live at Theatre Paradoxe on 2016-09-21"
+      }
+    ]
+  },
+  {
+    "date": "2016-09-22",
+    "venue": "th\u00e9\u00e2tre paradoxe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "behemoth",
+      "dead metheny",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2016-10-15",
+    "venue": "desert daze festival, institute of mentalphysics, joshua tree, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "behemoth",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-14",
+    "venue": "auditorium conciliazione, rome, it",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-15",
+    "venue": "fri-son, fribourg, swi",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-16",
+    "venue": "le bikini, toulouse, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-17",
+    "venue": "krakatoa, m\u00e9rignac, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-18",
+    "venue": "th\u00e9\u00e2tre national de bretagne, rennes, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-19",
+    "venue": "le 106, rouen, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-20",
+    "venue": "le toboggan, d\u00e9cines-charpieu, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-21",
+    "venue": "la laiterie, strasbourg, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-22",
+    "venue": "la condition publique, roubaix, fr",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-23",
+    "venue": "brighton dome, brighton, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-25",
+    "venue": "boiler shop, newcastle, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-27",
+    "venue": "abc, glasgow, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-28",
+    "venue": "albert hall, manchester, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-10-30",
+    "venue": "motion, bristol, uk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2017-10-30",
+        "url": "https://archive.org/details/gybe2017-10-30",
+        "title": "Godspeed You! Black Emperor Live at Motion on 2017-10-30"
+      }
+    ]
+  },
+  {
+    "date": "2017-10-31",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2017-10-31",
+        "url": "https://archive.org/details/gybe2017-10-31",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2017-10-31"
+      }
+    ]
+  },
+  {
+    "date": "2017-11-01",
+    "venue": "vorst nationaal, brussels, bel",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2017-11-01.brussel.ca-14.flac16",
+        "url": "https://archive.org/details/gybe2017-11-01.brussel.ca-14.flac16",
+        "title": "Godspeed You! Black Emperor Live at Vorst Nationaal on 2017-11-01"
+      }
+    ]
+  },
+  {
+    "date": "2017-11-02",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2017-11-02",
+        "url": "https://archive.org/details/gybe2017-11-02",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2017-11-02"
+      },
+      {
+        "id": "gybe2017-11-02.amsterdam.ca-14.flac16",
+        "url": "https://archive.org/details/gybe2017-11-02.amsterdam.ca-14.flac16",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2017-11-02"
+      }
+    ]
+  },
+  {
+    "date": "2017-11-03",
+    "venue": "festsaal kreuzberg, berlin, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-11-05",
+    "venue": "glocksee, hannover, ger",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-11-07",
+    "venue": "\u00e9lys\u00e9e montmartre, paris, fr",
+    "songs": [
+      "intro",
+      "sad mafioso",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2017-11-07",
+        "url": "https://archive.org/details/gybe2017-11-07",
+        "title": "Godspeed You! Black Emperor Live at \u00c9lys\u00e9e Montmartre on 2017-11-07"
+      }
+    ]
+  },
+  {
+    "date": "2017-12-13",
+    "venue": "sala corona, ciudad de m\u00e9xico, mx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-12-14",
+    "venue": "c3 stage, guadalajara, mx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-12-16",
+    "venue": "paper tiger, san antonio, tx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2017-12-17",
+    "venue": "day for night festival, barbara jordan post office, houston, tx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-01-13",
+    "venue": "princess theatre, launceston, aus",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-01-13.crankingamps",
+        "url": "https://archive.org/details/gybe2018-01-13.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at Princess Theatre on 2018-01-13"
+      }
+    ]
+  },
+  {
+    "date": "2018-01-16",
+    "venue": "metro, sydney, aus",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-01-16",
+        "url": "https://archive.org/details/gybe2018-01-16",
+        "title": "Godspeed You! Black Emperor Live at The Metro on 2018-01-16"
+      }
+    ]
+  },
+  {
+    "date": "2018-01-19",
+    "venue": "mona, hobart, aus",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-01-19.crankingamps",
+        "url": "https://archive.org/details/gybe2018-01-19.crankingamps",
+        "title": "Godspeed You! Black Emperor Live at MONA on 2018-01-19"
+      }
+    ]
+  },
+  {
+    "date": "2018-01-22",
+    "venue": "elisabeth murdoch hall, melbourne, aus",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-05",
+    "venue": "higher ground, burlington, vt",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-06",
+    "venue": "port city music hall, portland, me",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-03-06.Zoom.flac16",
+        "url": "https://archive.org/details/gybe2018-03-06.Zoom.flac16",
+        "title": "Godspeed You! Black Emperor Live at Portcity Music Hall on 2018-03-06"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-07",
+    "venue": "the sinclair, cambridge, ma",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-08",
+    "venue": "sanders theater, cambridge, ma",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-09",
+    "venue": "columbus theater, providence, ri",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-10",
+    "venue": "mass moca, north adams, ma",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-12",
+    "venue": "brooklyn steel, brooklyn, ny",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-13",
+    "venue": "brooklyn steel, brooklyn, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-14",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-03-14",
+        "url": "https://archive.org/details/gybe2018-03-14",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2018-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-15",
+    "venue": "athenaeum theater, columbus, oh",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-16",
+    "venue": "majestic theatre, madison, wi",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-03-16",
+        "url": "https://archive.org/details/gybe2018-03-16",
+        "title": "Godspeed You! Black Emperor Live at Majestic Theatre on 2018-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-17",
+    "venue": "first avenue, minneapolis, mn",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-18",
+    "venue": "metro, chicago, il",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-03-18.CM3.flac1644",
+        "url": "https://archive.org/details/gybe2018-03-18.CM3.flac1644",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2018-03-18"
+      },
+      {
+        "id": "gybe2018-03-18.AT853.flac1644",
+        "url": "https://archive.org/details/gybe2018-03-18.AT853.flac1644",
+        "title": "Godspeed You! Black Emperor Live at Metro on 2018-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-19",
+    "venue": "metro, chicago, il",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-20",
+    "venue": "st-andrew's hall, detroit, mi",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-22",
+    "venue": "big ears music festival, the mill and mine, knoxville, tn",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "GYBE2018-03-22",
+        "url": "https://archive.org/details/GYBE2018-03-22",
+        "title": "Godspeed You! Black Emperor Live at The Mill & Mine on 2018-03-22"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-23",
+    "venue": "haw river ballroom, saxapahaw, nc",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-03-24",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-03-24",
+        "url": "https://archive.org/details/gybe2018-03-24",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2018-03-24"
+      }
+    ]
+  },
+  {
+    "date": "2018-03-25",
+    "venue": "college street music hall, new haven, ct",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-10",
+    "venue": "the circus, helsinki, fin",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-11",
+    "venue": "vasateatern, stockholm, swe",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-12",
+    "venue": "pustervik, g\u00f6teborg, swe",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-13",
+    "venue": "rockefeller, oslo, nor",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-13.LS-14",
+        "url": "https://archive.org/details/gybe2018-04-13.LS-14",
+        "title": "Godspeed You! Black Emperor Live at Rockefeller on 2018-04-13"
+      },
+      {
+        "id": "gybe2018-04-13",
+        "url": "https://archive.org/details/gybe2018-04-13",
+        "title": "Godspeed You! Black Emperor Live at Rockefeller on 2018-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2018-04-14",
+    "venue": "slagthuset, malm\u00f6, swe",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-14.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2018-04-14.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at Slagthuset on 2018-04-14"
+      }
+    ]
+  },
+  {
+    "date": "2018-04-15",
+    "venue": "vega, k\u00f8benhavn, den",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-17",
+    "venue": "tama, pozna\u0144, pol",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-18",
+    "venue": "palladium, warsaw, pol",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-19",
+    "venue": "divadlo archa, prague, cze",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-20",
+    "venue": "festspielhaus hellerau, dresden, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-21",
+    "venue": "roadburn festival, poppodium 013, tilburg, hol",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-21.dpa4061.rob.flac24",
+        "url": "https://archive.org/details/gybe2018-04-21.dpa4061.rob.flac24",
+        "title": "Godspeed You! Black Emperor Live at Roadburn Festival, 013 on 2018-04-21"
+      }
+    ]
+  },
+  {
+    "date": "2018-04-22",
+    "venue": "roadburn festival, poppodium 013, tilburg, hol",
+    "songs": [
+      "intro",
+      "albanian",
+      "monheim",
+      "2 nouveau tower",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-22.dpa4061.rob.flac24",
+        "url": "https://archive.org/details/gybe2018-04-22.dpa4061.rob.flac24",
+        "title": "Godspeed You! Black Emperor Live at Roadburn Festival, 013 on 2018-04-22"
+      }
+    ]
+  },
+  {
+    "date": "2018-04-24",
+    "venue": "batschkapp, frankfurt, ger",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-25",
+    "venue": "salzhaus, winterthur, swi",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "monheim",
+      "2 nouveau tower",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-26",
+    "venue": "estragon, bologna, it",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "monheim",
+      "2 nouveau tower",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-04-27",
+    "venue": "stadtsaal, krems, aut",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-27.cos11d",
+        "url": "https://archive.org/details/gybe2018-04-27.cos11d",
+        "title": "Godspeed You! Black Emperor Live at Stadtsaal on 2018-04-27"
+      }
+    ]
+  },
+  {
+    "date": "2018-04-29",
+    "venue": "gazi music hall, athens, gr",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "sad mafioso",
+      "moya"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-04-29",
+        "url": "https://archive.org/details/gybe2018-04-29",
+        "title": "Godspeed You! Black Emperor Live at Gazi Music Hall on 2018-04-29"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-16",
+    "venue": "mr. smalls theater, millvale, pa",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-17",
+    "venue": "headliners, louisville, ky",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-18",
+    "venue": "record bar, kansas city, mo",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-19",
+    "venue": "ogden theater, denver, co",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-05-19.AT853sc",
+        "url": "https://archive.org/details/gybe2018-05-19.AT853sc",
+        "title": "Godspeed You! Black Emperor Live at Ogden Theatre on 2018-05-19"
+      },
+      {
+        "id": "gybe2018-05-19.AT4031",
+        "url": "https://archive.org/details/gybe2018-05-19.AT4031",
+        "title": "Godspeed You! Black Emperor Live at Ogden Theatre on 2018-05-19"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-21",
+    "venue": "van buren, phoenix, az",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-22",
+    "venue": "observatory north park, san diego, ca",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-23",
+    "venue": "wiltern, los angeles, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "GYBE2018-05-23.losangeles.aud.flac24",
+        "url": "https://archive.org/details/GYBE2018-05-23.losangeles.aud.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Wiltern on 2018-05-23"
+      },
+      {
+        "id": "GYBE2018-05-23.losangeles.aud.flac16",
+        "url": "https://archive.org/details/GYBE2018-05-23.losangeles.aud.flac16",
+        "title": "Godspeed You! Black Emperor Live at The Wiltern on 2018-05-23"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-24",
+    "venue": "observatory, santa ana, ca",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-25",
+    "venue": "pappy and harriets, pioneertown, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-05-25.flac24",
+        "url": "https://archive.org/details/gybe2018-05-25.flac24",
+        "title": "Godspeed You! Black Emperor Live at Pappy & Harriet's on 2018-05-25"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-26",
+    "venue": "bandit town, north fork, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-05-26",
+        "url": "https://archive.org/details/gybe2018-05-26",
+        "title": "Godspeed You! Black Emperor Live at Bandit Town USA on 2018-05-26"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-28",
+    "venue": "rio theater, santa cruz, ca",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-05-29",
+    "venue": "fox theater, oakland, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-05-29.mk4.48khz.flac16",
+        "url": "https://archive.org/details/gybe2018-05-29.mk4.48khz.flac16",
+        "title": "Godspeed You! Black Emperor Live at Fox Theatre on 2018-05-29"
+      },
+      {
+        "id": "gybe2018-05-29.at825.flac16",
+        "url": "https://archive.org/details/gybe2018-05-29.at825.flac16",
+        "title": "Godspeed You! Black Emperor Live at Fox Theater on 2018-05-29"
+      }
+    ]
+  },
+  {
+    "date": "2018-05-31",
+    "venue": "wonder ballroom, portland, or",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-06-01",
+    "venue": "wonder ballroom, portland, or",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-06-02",
+    "venue": "visual arts collective, garden city, id",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-06-03",
+    "venue": "neptune theater, seattle, wa",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-06-04",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-07-04",
+    "venue": "parco di villa ada, rome, it",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-07-05",
+    "venue": "circolo magnolia, segrate, it",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-07-07",
+    "venue": "pointu festival, \u00eele du gaou, six-fours-les-plages, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-07-09",
+    "venue": "openluchttheater rivierenhof, antwerpen, bel",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-07-09.flacf",
+        "url": "https://archive.org/details/gybe2018-07-09.flacf",
+        "title": "Godspeed You! Black Emperor Live at Openluchttheater Rivierenhof on 2018-07-09"
+      }
+    ]
+  },
+  {
+    "date": "2018-07-13",
+    "venue": "barbican, london, uk",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-07-13",
+        "url": "https://archive.org/details/gybe2018-07-13",
+        "title": "Godspeed You! Black Emperor Live at Barbican on 2018-07-13"
+      }
+    ]
+  },
+  {
+    "date": "2018-07-14",
+    "venue": "barbican, london, uk",
+    "songs": [
+      "anthem for no state (part 1)",
+      "untitled",
+      "kicking horse on broken hill",
+      "divorce & fever",
+      "bosses hang (section)",
+      "dead metheny",
+      "untitled",
+      "sad mafioso (part 2)",
+      "behemoth (part 2)",
+      "the dead flag blues (tape)"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-07-14",
+        "url": "https://archive.org/details/gybe2018-07-14",
+        "title": "Godspeed You! Black Emperor Live at Barbican on 2018-07-14"
+      }
+    ]
+  },
+  {
+    "date": "2018-08-06",
+    "venue": "phoenix, toronto, on",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-08-07",
+    "venue": "phoenix, toronto, on",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-08-07",
+        "url": "https://archive.org/details/gybe2018-08-07",
+        "title": "Godspeed You! Black Emperor Live at The Phoenix Concert Theatre on 2018-08-07"
+      }
+    ]
+  },
+  {
+    "date": "2018-08-08",
+    "venue": "asbury hall, buffalo, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-08-09",
+    "venue": "basilica hudson, hudson, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-08-10",
+    "venue": "prospect park, brooklyn, ny",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "monheim",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-08-10",
+        "url": "https://archive.org/details/gybe2018-08-10",
+        "title": "Godspeed You! Black Emperor Live at Prospect Park on 2018-08-10"
+      }
+    ]
+  },
+  {
+    "date": "2018-08-11",
+    "venue": "baltimore soundstage, baltimore, md",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "anthem for no state",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2018-08-12",
+    "venue": "house of independents, asbury park, nj",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2018-08-12.mp3",
+        "url": "https://archive.org/details/gybe2018-08-12.mp3",
+        "title": "Godspeed You! Black Emperor Live at House of Independents on 2018-08-12"
+      }
+    ]
+  },
+  {
+    "date": "2019-02-17",
+    "venue": "III points, mana wynwood convention center, miami, fl",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-08",
+    "venue": "the basement east, nashville, tn",
+    "songs": [
+      "intro",
+      "glacier",
+      "albanian",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-09",
+    "venue": "orange peel, asheville, nc",
+    "songs": [
+      "intro",
+      "glacier",
+      "albanian",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-10",
+    "venue": "variety playhouse, atlanta, ga",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-08-10",
+        "url": "https://archive.org/details/gybe2019-08-10",
+        "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2019-08-10"
+      }
+    ]
+  },
+  {
+    "date": "2019-08-11",
+    "venue": "joy theater, new orleans, la",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-13",
+    "venue": "mohawk, austin, tx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-14",
+    "venue": "lowbrow palace, el paso, tx",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-15",
+    "venue": "rialto theater, tucson, az",
+    "songs": [
+      "intro",
+      "glacier",
+      "albanian",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-16",
+    "venue": "psycho las vegas, mandalay bay events center, las vegas, nv",
+    "songs": [
+      "intro",
+      "albanian",
+      "bosses hang",
+      "glacier",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-17",
+    "venue": "the theatre at ace hotel, los angeles, ca",
+    "songs": [
+      "macrimmon's lament",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-08-17",
+        "url": "https://archive.org/details/gybe2019-08-17",
+        "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"
+      },
+      {
+        "id": "gybe2019-08-17.flac16",
+        "url": "https://archive.org/details/gybe2019-08-17.flac16",
+        "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"
+      },
+      {
+        "id": "gybe2019-08-17.flac24",
+        "url": "https://archive.org/details/gybe2019-08-17.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Theatre at Ace Hotel on 2019-08-17"
+      }
+    ]
+  },
+  {
+    "date": "2019-08-18",
+    "venue": "castro theater, san francisco, ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-08-18",
+        "url": "https://archive.org/details/gybe2019-08-18",
+        "title": "Godspeed You! Black Emperor Live at Castro Theatre on 2019-08-18"
+      }
+    ]
+  },
+  {
+    "date": "2019-08-20",
+    "venue": "ace of spades, sacramento,  ca",
+    "songs": [
+      "intro",
+      "albanian",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-21",
+    "venue": "mcdonald theater, eugene, or",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-22",
+    "venue": "revolution hall, portland, or",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-23",
+    "venue": "spanish ballroom, tacoma, wa",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-24",
+    "venue": "commodore ballroom, vancouver, bc",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-26",
+    "venue": "palace theatre, calgary, ab",
+    "songs": [
+      "intro",
+      "albanian",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-08-26",
+        "url": "https://archive.org/details/gybe2019-08-26",
+        "title": "Godspeed You! Black Emperor Live at The Palace Theatre, Calgary, Alberta on 2019-08-26"
+      }
+    ]
+  },
+  {
+    "date": "2019-08-27",
+    "venue": "starlite, edmonton, ab",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-08-27",
+        "url": "https://archive.org/details/gybe2019-08-27",
+        "title": "Godspeed You! Black Emperor Live at The StarLite Room on 2019-08-27"
+      }
+    ]
+  },
+  {
+    "date": "2019-08-28",
+    "venue": "broadway theatre, saskatoon, sk",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-08-29",
+    "venue": "burton cummings theatre, winnipeg, mb",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-03",
+    "venue": "la tulipe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-03",
+        "url": "https://archive.org/details/gybe2019-11-03",
+        "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-03"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-04",
+    "venue": "la tulipe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-04",
+        "url": "https://archive.org/details/gybe2019-11-04",
+        "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-04"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-05",
+    "venue": "la tulipe, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "anthem for no state",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-05",
+        "url": "https://archive.org/details/gybe2019-11-05",
+        "title": "Godspeed You! Black Emperor Live at Cabaret La Tulipe on 2019-11-05"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-09",
+    "venue": "lisboa ao vivo, lisboa, por",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-09.Lisbon-LAV",
+        "url": "https://archive.org/details/gybe2019-11-09.Lisbon-LAV",
+        "title": "Godspeed You! Black Emperor Live at Lisboa ao Vivo on 2019-11-09"
+      },
+      {
+        "id": "GYBE2019-11-09",
+        "url": "https://archive.org/details/GYBE2019-11-09",
+        "title": "Godspeed You! Black Emperor Live at Lisboa ao Vivo on 2019-11-09"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-10",
+    "venue": "hard club, oporto, por",
+    "songs": [
+      "intro",
+      "albanian",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-11",
+    "venue": "capitol, santiago de compostela, sp",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-12",
+    "venue": "but, madrid, sp",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-13",
+    "venue": "kafe antzokia, bilbao, sp",
+    "songs": [
+      "intro",
+      "moya",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-14",
+    "venue": "apolo, barcelona, sp",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-16",
+    "venue": "atabal, biarritz, fr",
+    "songs": [
+      "intro",
+      "moya",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-17",
+    "venue": "paloma, n\u00eemes, fr",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-17",
+        "url": "https://archive.org/details/gybe2019-11-17",
+        "title": "Godspeed You! Black Emperor Live at Paloma on 2019-11-17"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-18",
+    "venue": "magazini generali, milan, it",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-19",
+    "venue": "hall, padova, it",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-20",
+    "venue": "kino \u0161i\u0161ka, ljubljana, slo",
+    "songs": [
+      "intro",
+      "albanian",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-22",
+    "venue": "tvornica kulture, zagreb, cro",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2019-11-23",
+    "venue": "dom im berg, graz, aut",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-23.cos11d",
+        "url": "https://archive.org/details/gybe2019-11-23.cos11d",
+        "title": "Godspeed You! Black Emperor Live at Dom im Berg on 2019-11-23"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-24",
+    "venue": "technikum, munich, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-24",
+        "url": "https://archive.org/details/gybe2019-11-24",
+        "title": "Godspeed You! Black Emperor Live at Technikum on 2019-11-24"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-25",
+    "venue": "arena, vienna, aut",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-25.ca11",
+        "url": "https://archive.org/details/gybe2019-11-25.ca11",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2019-11-25"
+      },
+      {
+        "id": "gybe2019-11-25.cos11d",
+        "url": "https://archive.org/details/gybe2019-11-25.cos11d",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2019-11-25"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-27",
+    "venue": "aurora, st-petersburg, ru",
+    "songs": [
+      "intro",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-27.xyms",
+        "url": "https://archive.org/details/gybe2019-11-27.xyms",
+        "title": "Godspeed You! Black Emperor Live at Aurora Concert Hall on 2019-11-27"
+      },
+      {
+        "id": "gybe2019-11-27.vit",
+        "url": "https://archive.org/details/gybe2019-11-27.vit",
+        "title": "Godspeed You Black Emperor! Live at Aurora Concert Hall on 2019-11-27"
+      }
+    ]
+  },
+  {
+    "date": "2019-11-28",
+    "venue": "1930, moscow, ru",
+    "songs": [
+      "intro",
+      "bosses hang",
+      "glacier",
+      "2 nouveau tower",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2019-11-28.flac16",
+        "url": "https://archive.org/details/gybe2019-11-28.flac16",
+        "title": "Godspeed You! Black Emperor Live at 1930 Moscow on 2019-11-28"
+      }
+    ]
+  },
+  {
+    "date": "2022-02-25",
+    "venue": "gothic theater, englewood, co",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-02-25.aud.flac16",
+        "url": "https://archive.org/details/gybe2022-02-25.aud.flac16",
+        "title": "Godspeed You! Black Emperor Live at Gothic Theater on 2022-02-25"
+      },
+      {
+        "id": "gybe2022-02-25.remaster",
+        "url": "https://archive.org/details/gybe2022-02-25.remaster",
+        "title": "Godspeed You! Black Emperor Live at Gothic Theatre on 2022-02-25"
+      },
+      {
+        "id": "gybe2022-02-25.aud.flac24",
+        "url": "https://archive.org/details/gybe2022-02-25.aud.flac24",
+        "title": "Godspeed You! Black Emperor Live at Gothic Theatre on 2022-02-25"
+      }
+    ]
+  },
+  {
+    "date": "2022-02-26",
+    "venue": "boulder theater, boulder, co",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-02-26",
+        "url": "https://archive.org/details/gybe2022-02-26",
+        "title": "Godspeed You! Black Emperor Live at Boulder Theater on 2022-02-26"
+      }
+    ]
+  },
+  {
+    "date": "2022-02-27",
+    "venue": "meow wolf, santa fe, nm",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-03-01",
+    "venue": "crystal ballroom, phoenix, az",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to izeaid"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-03-02",
+    "venue": "music box, san diego, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff thanks to woody, gus, and jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-02.iQ7",
+        "url": "https://archive.org/details/gybe2022-03-02.iQ7",
+        "title": "Godspeed You! Black Emperor Live at Music Box on 2022-03-02"
+      },
+      {
+        "id": "gybe2022-03-02",
+        "url": "https://archive.org/details/gybe2022-03-02",
+        "title": "Godspeed You! Black Emperor Live at Music Box on 2022-03-02"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-03",
+    "venue": "belasco, los angeles, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to erik and jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-03",
+        "url": "https://archive.org/details/gybe2022-03-03",
+        "title": "Godspeed You! Black Emperor Live at The Belasco, Los Angeles, CA on 2022-03-03"
+      },
+      {
+        "id": "gybe2022-03-03.flac24",
+        "url": "https://archive.org/details/gybe2022-03-03.flac24",
+        "title": "Godspeed You! Black Emperor Live at The Belasco Theatre on 2022-03-03"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-04",
+    "venue": "uc theatre, berkeley, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso thanks to sumerian, lucas, tankhaus, bowen, and jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-04",
+        "url": "https://archive.org/details/gybe2022-03-04",
+        "title": "Godspeed You! Black Emperor Live at UC Theatre on 2022-03-04"
+      },
+      {
+        "id": "gybe2022-03-04.matrix",
+        "url": "https://archive.org/details/gybe2022-03-04.matrix",
+        "title": "Godspeed You! Black Emperor Live at The UC Theatre on 2022-03-04"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-05",
+    "venue": "regency ballroom, san francisco, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "cliff"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-05",
+        "url": "https://archive.org/details/gybe2022-03-05",
+        "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"
+      },
+      {
+        "id": "gybe2022-03-05.matrix",
+        "url": "https://archive.org/details/gybe2022-03-05.matrix",
+        "title": "Godspeed You! Black Emperor Live at The Regency Ballroom on 2022-03-05"
+      },
+      {
+        "id": "gybe2022-03-05.loughney",
+        "url": "https://archive.org/details/gybe2022-03-05.loughney",
+        "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"
+      },
+      {
+        "id": "gybe2022-03-05.m300.flac16",
+        "url": "https://archive.org/details/gybe2022-03-05.m300.flac16",
+        "title": "Godspeed You! Black Emperor Live at Regency Ballroom on 2022-03-05"
+      },
+      {
+        "id": "gybe2002-03-05",
+        "url": "https://archive.org/details/gybe2002-03-05",
+        "title": "Godspeed You! Black Emperor Live at The Regency Ballroom on 2022-03-05"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-06",
+    "venue": "phoenix theater, petaluma, ca",
+    "songs": [
+      "intro",
+      "moya",
+      "glacier",
+      "cliff",
+      "monheim",
+      "albanian thanks to lieutzip, bowen, and jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-06",
+        "url": "https://archive.org/details/gybe2022-03-06",
+        "title": "Godspeed You! Black Emperor Live at The Phoenix Theater, Petaluma, CA on 2022-03-06"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-08",
+    "venue": "showbox, seattle, wa",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff thanks to jonathan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-08",
+        "url": "https://archive.org/details/gybe2022-03-08",
+        "title": "Godspeed You! Black Emperor Live at The Showbox on 2022-03-08"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-09",
+    "venue": "roseland theater, portland, or",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III thanks to sumerian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-09",
+        "url": "https://archive.org/details/gybe2022-03-09",
+        "title": "Godspeed You! Black Emperor Live at Roseland Theatre on 2022-03-09"
+      },
+      {
+        "id": "gybe2022-03-09.mastered",
+        "url": "https://archive.org/details/gybe2022-03-09.mastered",
+        "title": "Godspeed You! Black Emperor Live at Roseland Theater on 2022-03-09"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-10",
+    "venue": "capital ballroom, victoria, bc",
+    "songs": [
+      "intro",
+      "glaicer",
+      "bosses hang",
+      "anthem for no state",
+      "moya",
+      "cliff"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-10.Victoria",
+        "url": "https://archive.org/details/gybe2022-03-10.Victoria",
+        "title": "Godspeed You! Black Emperor Live at Capital Ballroom on 2022-03-10"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-11",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff thanks to jon and leif"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-11.Vancouver",
+        "url": "https://archive.org/details/gybe2022-03-11.Vancouver",
+        "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2022-03-11"
+      },
+      {
+        "id": "gybe2022-03-11.leifh",
+        "url": "https://archive.org/details/gybe2022-03-11.leifh",
+        "title": "Godspeed You Black Emperor! Live at Vogue Theatre on 2022-03-11"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-12",
+    "venue": "community theatre, kelowna, bc",
+    "songs": [
+      "intro",
+      "glacier",
+      "monheim",
+      "cliff",
+      "anthem for no state",
+      "blaise bailey finnegan III thanks to jon"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-12.Kelowna",
+        "url": "https://archive.org/details/gybe2022-03-12.Kelowna",
+        "title": "Godspeed You! Black Emperor Live at Kelowna Community Theatre on 2022-03-12"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-14",
+    "venue": "palace theatre, calgary, ab",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "anthem for no state",
+      "cliff thanks to jon and sharon"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-14.Calgary",
+        "url": "https://archive.org/details/gybe2022-03-14.Calgary",
+        "title": "Godspeed You! Black Emperor Live at Palace Theatre on 2022-03-14"
+      },
+      {
+        "id": "gybe2022-03-14.sharon",
+        "url": "https://archive.org/details/gybe2022-03-14.sharon",
+        "title": "Godspeed You! Black Emperor Live at Palace Theatre on 2022-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-15",
+    "venue": "union hall, edmonton, ab",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to jon"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-15.Edmonton",
+        "url": "https://archive.org/details/gybe2022-03-15.Edmonton",
+        "title": "Godspeed You! Black Emperor Live at Union Hall on 2022-03-15"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-16",
+    "venue": "broadway theatre, saskatoon, sk",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-16",
+        "url": "https://archive.org/details/gybe2022-03-16",
+        "title": "Godspeed You! Black Emperor Live at Broadway Theatre on 2022-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-17",
+    "venue": "park theatre, winnipeg, mb",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "gathering storm",
+      "albanian",
+      "cliff"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-03-18",
+    "venue": "first avenue, minneapolis, mn",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III thanks to roffels"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-18.AUD",
+        "url": "https://archive.org/details/gybe2022-03-18.AUD",
+        "title": "Godspeed You! Black Emperor Live at First Avenue, Minneapolis MN on 2022-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-19",
+    "venue": "thalia hall, chicago, il",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso thanks to bob and nei"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-03-19.mv88",
+        "url": "https://archive.org/details/gybe2022-03-19.mv88",
+        "title": "Godspeed You! Black Emperor Live at Thalia Hall on 2022-03-19"
+      },
+      {
+        "id": "gybe2022-03-19.ecm",
+        "url": "https://archive.org/details/gybe2022-03-19.ecm",
+        "title": "Godspeed You Black Emperor! Live at Thalia Hall on 2022-03-19"
+      }
+    ]
+  },
+  {
+    "date": "2022-03-20",
+    "venue": "thalia hall, chicago, il",
+    "songs": [
+      "intro",
+      "glacier",
+      "monheim",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to bob and nei"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-04-15",
+    "venue": "levon helm studios, woodstock, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-15",
+        "url": "https://archive.org/details/gybe2022-04-15",
+        "title": "Godspeed You! Black Emperor Live at Levon Helm Studios on 2022-04-15"
+      },
+      {
+        "id": "gybe2022-04-15.tracked",
+        "url": "https://archive.org/details/gybe2022-04-15.tracked",
+        "title": "Godspeed You! Black Emperor Live at Levon Helm Studios on 2022-04-15"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-16",
+    "venue": "academy of music, northampton, ma",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-04-17",
+    "venue": "columbus theater, providence, ri",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "monheim",
+      "blaise bailey finnegan III thanks to frog"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-17.frog",
+        "url": "https://archive.org/details/gybe2022-04-17.frog",
+        "title": "Godspeed You! Black Emperor Live at Columbus Theatre on 2022-04-17"
+      },
+      {
+        "id": "gybe2022-04-17",
+        "url": "https://archive.org/details/gybe2022-04-17",
+        "title": "Godspeed You! Black Emperor Live at Columbus Theatre, Providence, Rhode Island on 2022-04-17"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-18",
+    "venue": "fairfield theater company, fairfield, ct",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "gathering storm",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-04-19",
+    "venue": "paradise rock club, boston, ma",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to nick"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-19.tascam",
+        "url": "https://archive.org/details/gybe2022-04-19.tascam",
+        "title": "Godspeed You! Black Emperor Live at Paradise Rock Club on 2022-04-19"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-21",
+    "venue": "webster hall, new york, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III thanks to nick, j.mart, and nihar"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-21.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2022-04-21.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at Webster Hall on 2022-04-21"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-22",
+    "venue": "white eagle hall, jersey city, nj",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "sad mafioso thanks to j.mart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-22.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2022-04-22.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at White Eagle Hall on 2022-04-22"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-23",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III thanks to \"big muff pi\""
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-23.tascam16",
+        "url": "https://archive.org/details/gybe2022-04-23.tascam16",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2022-04-23"
+      },
+      {
+        "id": "gybe2022-04-23.tascam24",
+        "url": "https://archive.org/details/gybe2022-04-23.tascam24",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2022-04-23"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-24",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to echtoplasm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-24.samsung",
+        "url": "https://archive.org/details/gybe2022-04-24.samsung",
+        "title": "Godspeed You! Black Emperor Live at 9.30 Club on 2022-04-24"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-25",
+    "venue": "the national, richmond, va",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "monheim",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-25.tracked",
+        "url": "https://archive.org/details/gybe2022-04-25.tracked",
+        "title": "Godspeed You! Black Emperor Live at National on 2022-04-25"
+      },
+      {
+        "id": "gybe2022-04-25",
+        "url": "https://archive.org/details/gybe2022-04-25",
+        "title": "Godspeed You! Black Emperor Live at The National, Richmond, VA on 2022-04-25"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-26",
+    "venue": "cat's cradle, chapel hill, nc",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "monheim",
+      "albanian thanks to hazel and subsume"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-26.h1n",
+        "url": "https://archive.org/details/gybe2022-04-26.h1n",
+        "title": "Godspeed You! Black Emperor Live at Cat's Cradle on 2022-04-26"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-28",
+    "venue": "beacham, orlando, fl",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-28",
+        "url": "https://archive.org/details/gybe2022-04-28",
+        "title": "Godspeed You! Black Emperor Live at The Beacham on 2022-04-28"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-29",
+    "venue": "shaky knees festival, central park, atlanta, ga",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-04-30",
+    "venue": "caverns, pelham, tn",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "sad mafioso thanks to subsume"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-04-30",
+        "url": "https://archive.org/details/gybe2022-04-30",
+        "title": "Godspeed You! Black Emperor Live at Caverns, Pelham Tennessee on 2022-04-30"
+      }
+    ]
+  },
+  {
+    "date": "2022-05-01",
+    "venue": "saturn, birmingham, al",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "monheim",
+      "blaise bailey finnegan II"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-05-03",
+    "venue": "vogue, indianapolis, in",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-05-04",
+    "venue": "beachland ballroom, cleveland, oh",
+    "songs": [
+      "intro",
+      "glaicer",
+      "bosses hang",
+      "cliff",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-05-05",
+    "venue": "phoenix, toronto, on",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso thanks to ren"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-05-05.ecm",
+        "url": "https://archive.org/details/gybe2022-05-05.ecm",
+        "title": "Godspeed You! Black Emperor Live at Phoenix Concert Theatre on 2022-05-05"
+      }
+    ]
+  },
+  {
+    "date": "2022-05-06",
+    "venue": "bridgeworks, hamilton, on",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-05-06",
+        "url": "https://archive.org/details/gybe2022-05-06",
+        "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2022-05-06"
+      }
+    ]
+  },
+  {
+    "date": "2022-05-07",
+    "venue": "bronson centre, ottawa, on",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "anthem for no state",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-05-07.aud.flac24",
+        "url": "https://archive.org/details/gybe2022-05-07.aud.flac24",
+        "title": "Godspeed You Black Emperor! Live at Bronson Centre on 2022-05-07"
+      }
+    ]
+  },
+  {
+    "date": "2022-07-13",
+    "venue": "harbiye open air theatre, istanbul, tu",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-07-15",
+    "venue": "acropolis, athens, gr",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to vomvos"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-07-15",
+        "url": "https://archive.org/details/gybe2022-07-15",
+        "title": "Godspeed You! Black Emperor Live at Odeon of Herodes Atticus on 2022-07-15"
+      }
+    ]
+  },
+  {
+    "date": "2022-08-28",
+    "venue": "this ain't no picnic, brookside park, pasadena, ca",
+    "songs": [
+      "glacier",
+      "cliff",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-08-28.flac24",
+        "url": "https://archive.org/details/gybe2022-08-28.flac24",
+        "title": "Godspeed You! Black Emperor Live at This Ain't No Picnic Festival on 2022-08-28"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-17",
+    "venue": "empire, coventry, uk",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-17.emmanuel",
+        "url": "https://archive.org/details/gybe2022-09-17.emmanuel",
+        "title": "Godspeed You! Black Emperor Live at Empire on 2022-09-17"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-18",
+    "venue": "barrowland, glasgow, uk",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-09-19",
+    "venue": "marble factory, bristol, uk",
+    "songs": [
+      "soundcheck: tazer floyd",
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "tazer floyd",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-19.tascam",
+        "url": "https://archive.org/details/gybe2022-09-19.tascam",
+        "title": "Godspeed You! Black Emperor Live at Marble Factory on 2022-09-19"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-20",
+    "venue": "electric ballroom, camden town, london, uk",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "blaise bailey finnegan III thanks to emmanuel, emily, markus"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-20.DPA4060",
+        "url": "https://archive.org/details/gybe2022-09-20.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-20"
+      },
+      {
+        "id": "gybe2022-09-20",
+        "url": "https://archive.org/details/gybe2022-09-20",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-20"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-21",
+    "venue": "electric ballroom, camden town, london, uk",
+    "songs": [
+      "intro",
+      "glacier",
+      "tazer floyd",
+      "cliff",
+      "anthem for no state",
+      "sad mafioso thanks to emmanuel, emily, markus"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-21.DPA4060",
+        "url": "https://archive.org/details/gybe2022-09-21.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-21"
+      },
+      {
+        "id": "gybe2022-09-21",
+        "url": "https://archive.org/details/gybe2022-09-21",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-21"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-22",
+    "venue": "electric ballroom, camden town, london, uk",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to emmanuel, emily, markus"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-22",
+        "url": "https://archive.org/details/gybe2022-09-22",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-22"
+      },
+      {
+        "id": "gybe2022-09-22.DPA4060",
+        "url": "https://archive.org/details/gybe2022-09-22.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Electric Ballroom on 2022-09-22"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-23",
+    "venue": "manchester academy, manchester, uk",
+    "songs": [
+      "intro",
+      "sad mafioso",
+      "glacier",
+      "world police",
+      "moya",
+      "blaise bailey finnegan III thanks to emmanuel, emily, oscar"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-09-25",
+    "venue": "\u00e9lys\u00e9e montmartre, paris, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-09-26",
+    "venue": "sc\u00e8ne parc botanique, brussels, bel",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-26.dpa4061",
+        "url": "https://archive.org/details/gybe2022-09-26.dpa4061",
+        "title": "Godspeed You! Black Emperor Live at Sc\u00e8ne Parc Botanique on 2022-09-26"
+      },
+      {
+        "id": "gybe2022-09-26.at943",
+        "url": "https://archive.org/details/gybe2022-09-26.at943",
+        "title": "Godspeed You! Black Emperor Live at Sc\u00e8ne Parc Botanique on 2022-09-26"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-27",
+    "venue": "felsenkeller, leipzig, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "tazer floyd",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-27.pcmm10",
+        "url": "https://archive.org/details/gybe2022-09-27.pcmm10",
+        "title": "Godspeed You! Black Emperor Live at Felsenkeller on 2022-09-27"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-28",
+    "venue": "astra kulturhaus, berlin, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "world police",
+      "sad mafioso thanks to laura"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-28.okm",
+        "url": "https://archive.org/details/gybe2022-09-28.okm",
+        "title": "Godspeed You! Black Emperor Live at Astra on 2022-09-28"
+      }
+    ]
+  },
+  {
+    "date": "2022-09-29",
+    "venue": "muffathalle, m\u00fcnich, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-09-30",
+    "venue": "rote fabrik, z\u00fcrich, swi",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-09-30",
+        "url": "https://archive.org/details/gybe2022-09-30",
+        "title": "Godspeed You! Black Emperor Live at Rote Fabrik on 2022-09-30"
+      }
+    ]
+  },
+  {
+    "date": "2022-10-01",
+    "venue": "estragon, bologna, it",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-03",
+    "venue": "largo venue, rome, it",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-04",
+    "venue": "alcatraz, milan, it",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "tazer floyd",
+      "fire at static valley",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-05",
+    "venue": "la coop\u00e9rative de mai, clermont-ferrand, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "tazer floyd",
+      "fire at static valley",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-06",
+    "venue": "krakatoa, m\u00e9rignac, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "fire at static valley",
+      "world police"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-08",
+    "venue": "le bikini, toulouse, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-09",
+    "venue": "am fest, la farga, barcelona, sp",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-10",
+    "venue": "zaragoza fest, jard\u00edn de invierno, zaragoza, sp",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-11",
+    "venue": "repvblicca, valencia, sp",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-12",
+    "venue": "sala but, madrid, sp",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-13",
+    "venue": "santana 27, bilbao, sp",
+    "songs": [
+      "intro",
+      "glacier",
+      "cliff",
+      "tazer floyd",
+      "(incomplete / out of order)"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-15",
+    "venue": "amplifest, hard club, oporto, por",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-28",
+    "venue": "levitation festival, empire, austin, tx",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "sad mafioso thanks to will akers."
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-10-28",
+        "url": "https://archive.org/details/gybe2022-10-28",
+        "title": "Godspeed You! Black Emperor Live at Levitation Festival on 2022-10-28"
+      }
+    ]
+  },
+  {
+    "date": "2022-10-29",
+    "venue": "white oak music hall, houston, tx",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to will akers."
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-10-29",
+        "url": "https://archive.org/details/gybe2022-10-29",
+        "title": "Godspeed You! Black Emperor Live at White Oak Music Hall on 2022-10-29"
+      }
+    ]
+  },
+  {
+    "date": "2022-10-30",
+    "venue": "chelsea's live, baton rouge, la",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-10-31",
+    "venue": "texas theater, dallas, tx",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "blaise bailey finnegan III thanks to will akers, tollbooths, eve, and spnii"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-10-31",
+        "url": "https://archive.org/details/gybe2022-10-31",
+        "title": "Godspeed You! Black Emperor Live at Texas Theatre on 2022-10-31"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-01",
+    "venue": "tower theater, oklahoma city, ok",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "monheim",
+      "fire at static valley",
+      "sad mafioso thanks to coleson"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-01",
+        "url": "https://archive.org/details/gybe2022-11-01",
+        "title": "Godspeed You! Black Emperor Live at Tower Theater on 2022-11-01"
+      },
+      {
+        "id": "gybe2022-11-01.mv88.remaster",
+        "url": "https://archive.org/details/gybe2022-11-01.mv88.remaster",
+        "title": "Godspeed You! Black Emperor Live at Tower Theater on 2022-11-01"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-03",
+    "venue": "delmar hall, st. louis, mo",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso thanks to nick and dave."
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-03.matrix",
+        "url": "https://archive.org/details/gybe2022-11-03.matrix",
+        "title": "Godspeed You! Black Emperor Live at Delmar Hall on 2022-11-03"
+      },
+      {
+        "id": "gybe2022-11-03.ZoomH2NFlac24",
+        "url": "https://archive.org/details/gybe2022-11-03.ZoomH2NFlac24",
+        "title": "Godspeed You! Black Emperor Live at Delmar Hall St. Louis MO. on 2022-11-03"
+      },
+      {
+        "id": "gybe2022-11-03.DPA4061remaster",
+        "url": "https://archive.org/details/gybe2022-11-03.DPA4061remaster",
+        "title": "Godspeed You! Black Emperor Live at Delmar Hall on 2022-11-03"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-04",
+    "venue": "admiral theater, omaha, ne",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-05",
+    "venue": "englert theater, iowa city, ia",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "sad mafioso thanks to bob and jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-05",
+        "url": "https://archive.org/details/gybe2022-11-05",
+        "title": "Godspeed You! Black Emperor Live at Englert Theater on 2022-11-05"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-06",
+    "venue": "blue note, columbia, mo",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "fire at static valley",
+      "world police thanks to neff and dave"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-06.mtx",
+        "url": "https://archive.org/details/gybe2022-11-06.mtx",
+        "title": "Godspeed You! Black Emperor Live at Blue Note on 2022-11-06"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-07",
+    "venue": "pabst theater, milwaukee, wi",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso thanks to jessica"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-07.MV88",
+        "url": "https://archive.org/details/gybe2022-11-07.MV88",
+        "title": "Godspeed You Black Emperor! Live at Pabst Theater on 2022-11-07"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-08",
+    "venue": "majestic theater, detroit, mi",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-10",
+    "venue": "variety playhouse, atlanta, ga",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-10",
+        "url": "https://archive.org/details/gybe2022-11-10",
+        "title": "Godspeed You! Black Emperor Live at Variety Playhouse on 2022-11-10"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-11",
+    "venue": "orange peel, asheville, nc",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "albanian",
+      "blaise bailey finnegan III thanks to hazel, gabe, and subsume"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-12",
+    "venue": "stuart's opera house, nelsonville, oh",
+    "songs": [
+      "intro",
+      "glacier",
+      "tazer floyd",
+      "anthem for no state",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-13",
+    "venue": "roxian theater, mckees rocks, pa",
+    "songs": [
+      "intro",
+      "glacier",
+      "tazer floyd",
+      "anthem for no state",
+      "cliff",
+      "albanian thanks to reid"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-13.2024.remaster",
+        "url": "https://archive.org/details/gybe2022-11-13.2024.remaster",
+        "title": "Godspeed You! Black Emperor Live at Roxian Theater on 2022-11-13"
+      },
+      {
+        "id": "gybe2022-11-13",
+        "url": "https://archive.org/details/gybe2022-11-13",
+        "title": "Godspeed You! Black Emperor Live at Roxian Theater on 2022-11-13"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-15",
+    "venue": "town ballroom, buffalo, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "tazer floyd",
+      "cliff",
+      "albanian thanks to klaypersonne"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-16",
+    "venue": "elsewhere, brooklyn, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2022-11-17",
+    "venue": "elsewhere, brooklyn, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "tazer floyd",
+      "cliff",
+      "albanian thanks to simplicial"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-17",
+        "url": "https://archive.org/details/gybe2022-11-17",
+        "title": "Godspeed You! Black Emperor Live at Elsewhere on 2022-11-17"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-18",
+    "venue": "state theater, portland, me",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2022-11-18.flac16",
+        "url": "https://archive.org/details/gybe2022-11-18.flac16",
+        "title": "Godspeed You Black Emperor! Live at The State Theater on 2022-11-18"
+      }
+    ]
+  },
+  {
+    "date": "2022-11-19",
+    "venue": "higher ground, burlington, vt",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-03-08",
+    "venue": "mtelus, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "albanian",
+      "anthem for no state",
+      "blaise bailey finnegan III thanks to luke"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-03-09",
+    "venue": "mtelus, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "glacier",
+      "fire at static valley",
+      "world police",
+      "john hughes",
+      "sad mafioso thanks to joel"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-03-13",
+    "venue": "the chapel, san francisco, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-02-13",
+        "url": "https://archive.org/details/gybe2023-02-13",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-13"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-14",
+    "venue": "the chapel, san francisco, ca",
+    "songs": [
+      "intro",
+      "gathering storm",
+      "glacier",
+      "cliff",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-14.dr40x_ux570",
+        "url": "https://archive.org/details/gybe2023-03-14.dr40x_ux570",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-14"
+      },
+      {
+        "id": "gybe2023-03-14",
+        "url": "https://archive.org/details/gybe2023-03-14",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-15",
+    "venue": "the chapel, san francisco, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "dead metheny",
+      "cliff",
+      "monheim",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-15.DR40X",
+        "url": "https://archive.org/details/gybe2023-03-15.DR40X",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-15"
+      },
+      {
+        "id": "gybe2023-03-15.MC59W",
+        "url": "https://archive.org/details/gybe2023-03-15.MC59W",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-15"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-16",
+    "venue": "the chapel, san francisco, ca",
+    "songs": [
+      "intro",
+      "john hughes",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-16",
+        "url": "https://archive.org/details/gybe2023-03-16",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-16"
+      },
+      {
+        "id": "gybe2023-03-16.H6_UX570",
+        "url": "https://archive.org/details/gybe2023-03-16.H6_UX570",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-17",
+    "venue": "the chapel, san francisco, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "tazer floyd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-17.MC59W",
+        "url": "https://archive.org/details/gybe2023-03-17.MC59W",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-17"
+      },
+      {
+        "id": "gybe2023-03-17.cm4.flac16",
+        "url": "https://archive.org/details/gybe2023-03-17.cm4.flac16",
+        "title": "Godspeed You! Black Emperor Live at The Chapel on 2023-03-17"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-18",
+    "venue": "pappy and harriet's, pioneertown, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III thanks to jessica, gus, woody"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-18",
+        "url": "https://archive.org/details/gybe2023-03-18",
+        "title": "Godspeed You! Black Emperor Live at Pappy & Harriet's on 2023-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-19",
+    "venue": "garden amp, garden grove, ca",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-19",
+        "url": "https://archive.org/details/gybe2023-03-19",
+        "title": "Godspeed You! Black Emperor Live at Garden Amphitheatre on 2023-03-19"
+      },
+      {
+        "id": "gybe2023-03-19.dpa4081.flac24",
+        "url": "https://archive.org/details/gybe2023-03-19.dpa4081.flac24",
+        "title": "Godspeed You! Black Emperor Live at Garden Amp on 2023-03-19"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-21",
+    "venue": "washington's, ft. collins, co",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-03-21",
+        "url": "https://archive.org/details/gybe2023-03-21",
+        "title": "Godspeed You! Black Emperor Live at Washington's on 2023-03-21"
+      }
+    ]
+  },
+  {
+    "date": "2023-03-22",
+    "venue": "the depot, salt lake city, ut",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-03-23",
+    "venue": "treefort festival, egyptian theater, boise, id",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-08",
+    "venue": "rewire festival, paard van troje, den haag, hol",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III thanks to jan-willem"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-09",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-10",
+    "venue": "4ad, diksmuide, bel",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-11",
+    "venue": "l'a\u00e9ronef, lille, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "albanian thanks to oscar"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-11.H2n",
+        "url": "https://archive.org/details/gybe2023-04-11.H2n",
+        "title": "Godspeed You! Black Emperor Live at L'A\u00e9ronef on 2023-04-11"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-12",
+    "venue": "l'antipode, rennes, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "gathering storm",
+      "sad mafioso thanks to brocco"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-14",
+    "venue": "le transbordeur, villeurbanne, fr",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-15",
+    "venue": "dachstock reitschule, bern, swi",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-16",
+    "venue": "l'usine, gen\u00e8ve, swi",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "monheim",
+      "sad mafioso thanks to lucas"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-16.dpa",
+        "url": "https://archive.org/details/gybe2023-04-16.dpa",
+        "title": "Godspeed You! Black Emperor Live at PTR on 2023-04-16"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-17",
+    "venue": "substage, karlsruhe, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "dead metheny",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-18",
+    "venue": "kantine, k\u00f6ln, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "fire at static valley",
+      "world police",
+      "cliff",
+      "dead metheny",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-18.edirol",
+        "url": "https://archive.org/details/gybe2023-04-18.edirol",
+        "title": "Godspeed You! Black Emperor Live at Kantine on 2023-04-18"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-19",
+    "venue": "uebel und gef\u00e4hrlich, hamburg, ger",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-19.ecm717",
+        "url": "https://archive.org/details/gybe2023-04-19.ecm717",
+        "title": "Godspeed You! Black Emperor Live at Uebel & Gef\u00e4hrlich on 2023-04-19"
+      },
+      {
+        "id": "gybe2023-04-19.spcmc8",
+        "url": "https://archive.org/details/gybe2023-04-19.spcmc8",
+        "title": "Godspeed You! Black Emperor Live at Uebel & Gef\u00e4hrlich on 2023-04-19"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-21",
+    "venue": "vega, k\u00f8benhavn, den",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-22",
+    "venue": "vox hall, \u00e5rhus, den",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "gathering storm",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-23",
+    "venue": "pustervik, g\u00f6teborg, swe",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-24",
+    "venue": "berns, stockholm, swe",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "monheim",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-04-25",
+    "venue": "sentrum scene, oslo, nor",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "dead metheny",
+      "blaise bailey finnegan III thanks to markus"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-25",
+        "url": "https://archive.org/details/gybe2023-04-25",
+        "title": "Godspeed You! Black Emperor Live at Sentrum Scene on 2023-04-25"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-27",
+    "venue": "r\u00f8keriet, bergen, nor",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "dead metheny",
+      "sad mafioso thanks to askil"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-27",
+        "url": "https://archive.org/details/gybe2023-04-27",
+        "title": "Godspeed You! Black Emperor Live at USF Veftet on 2023-04-27"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-28",
+    "venue": "folken, stavanger, nor",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "albanian thanks to nora"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-28",
+        "url": "https://archive.org/details/gybe2023-04-28",
+        "title": "Godspeed You Black Emperor! Live at Folken on 2023-04-28"
+      }
+    ]
+  },
+  {
+    "date": "2023-04-29",
+    "venue": "aladdin scene, kristiansand, nor",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "sad mafioso thanks to markus"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-04-29",
+        "url": "https://archive.org/details/gybe2023-04-29",
+        "title": "Godspeed You! Black Emperor Live at Aladdin Scene on 2023-04-29"
+      }
+    ]
+  },
+  {
+    "date": "2023-09-09",
+    "venue": "basilica hudson, hudson, ny",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "world police",
+      "blaise bailey finnegan III thanks to joel, nick, will akers"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-09-09.dr-40",
+        "url": "https://archive.org/details/gybe2023-09-09.dr-40",
+        "title": "Godspeed You! Black Emperor Live at Basilica Hudson on 2023-09-09"
+      }
+    ]
+  },
+  {
+    "date": "2023-09-10",
+    "venue": "palladium, worcester, ma",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso thanks to will akers, maya, keenan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-09-10.ZoomH1n",
+        "url": "https://archive.org/details/gybe2023-09-10.ZoomH1n",
+        "title": "Godspeed You! Black Emperor Live at Palladium on 2023-09-10"
+      }
+    ]
+  },
+  {
+    "date": "2023-09-11",
+    "venue": "music hall, portsmouth, nh",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III thanks to keenan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-09-11.Spire",
+        "url": "https://archive.org/details/gybe2023-09-11.Spire",
+        "title": "Godspeed You Black Emperor! Live at Music Hall on 2023-09-11"
+      }
+    ]
+  },
+  {
+    "date": "2023-09-13",
+    "venue": "anchor rock club, atlantic city, nj",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-09-14",
+    "venue": "athenaeum, columbus, oh",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "sad mafioso thanks to luke"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-09-15",
+    "venue": "burl, lexington, ky",
+    "songs": [
+      "intro",
+      "glacier",
+      "bosses hang",
+      "cliff",
+      "anthem for no state",
+      "blaise bailey finnegan III thanks to luke"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2023-09-16",
+    "venue": "bottom lounge, chicago, il",
+    "songs": [
+      "intro",
+      "glacier",
+      "anthem for no state",
+      "cliff",
+      "fire at static valley",
+      "world police",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2023-09-16.H1n",
+        "url": "https://archive.org/details/gybe2023-09-16.H1n",
+        "title": "Godspeed You! Black Emperor Live at Bottom Lounge on 2023-09-16"
+      },
+      {
+        "id": "gybe2023-09-16.ECM-DS70P",
+        "url": "https://archive.org/details/gybe2023-09-16.ECM-DS70P",
+        "title": "Godspeed You Black Emperor! Live at Bottom Lounge on 2023-09-16"
+      }
+    ]
+  },
+  {
+    "date": "2023-09-17",
+    "venue": "riot fest, douglass park, chicago, il",
+    "songs": [
+      "glacier",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-02-24",
+    "venue": "knockdown center, queens, ny",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "raindrops cast in lead thanks to j.mart, will akers, and sam"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-02-24.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2024-02-24.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at Knockdown Center on 2024-02-24"
+      }
+    ]
+  },
+  {
+    "date": "2024-02-25",
+    "venue": "gild hall, arden, de",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "raindrops cast in lead thanks to brandon and alex"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-02-26",
+    "venue": "center for the arts, homer, ny",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "raindrops cast in lead thanks to brett"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-02-26.H1n",
+        "url": "https://archive.org/details/gybe2024-02-26.H1n",
+        "title": "Godspeed You! Black Emperor Live at Homer Center for the Arts on 2024-02-26"
+      }
+    ]
+  },
+  {
+    "date": "2024-02-27",
+    "venue": "biltmore theatre, oshawa, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "raindrops cast in lead thanks to joel, tankhaus, simplicial, and sunny"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-02-27.H1n",
+        "url": "https://archive.org/details/gybe2024-02-27.H1n",
+        "title": "Godspeed You! Black Emperor Live at Biltmore Theatre on 2024-02-27"
+      }
+    ]
+  },
+  {
+    "date": "2024-02-28",
+    "venue": "grand theatre, kingston, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "raindrops cast in lead thanks to joel and simplicial"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-02-28.CA14_H4n",
+        "url": "https://archive.org/details/gybe2024-02-28.CA14_H4n",
+        "title": "Godspeed You! Black Emperor Live at Kingston Grand Theatre on 2024-02-28"
+      }
+    ]
+  },
+  {
+    "date": "2024-03-07",
+    "venue": "pitchfork fest, front\u00f3n bucareli, mexico city, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "sad mafioso thanks to jos"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-03-07.DR-05",
+        "url": "https://archive.org/details/gybe2024-03-07.DR-05",
+        "title": "Godspeed You! Black Emperor Live at Front\u00f3n Bucareli on 2024-03-07"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-10",
+    "venue": "pakkahuone, tampere, fin",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "sad mafioso thanks to ciika, ele"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-10.Spire",
+        "url": "https://archive.org/details/gybe2024-04-10.Spire",
+        "title": "Godspeed You! Black Emperor Live at Pakkahuone on 2024-04-10"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-11",
+    "venue": "kultuurivabrik, tallinn, est",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-12",
+    "venue": "hanzas perons, riga, lv",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "raindrops cast in lead",
+      "sad mafioso thanks to darren webb"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-12.Xiaomi",
+        "url": "https://archive.org/details/gybe2024-04-12.Xiaomi",
+        "title": "Godspeed You! Black Emperor Live at Hanzas Perons on 2024-04-12"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-13",
+    "venue": "loftas, vilnius, lt",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "world police",
+      "bosses hang",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "raindrops cast in lead",
+      "sad mafioso thanks to gvid"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-13.vilnius.flac16f",
+        "url": "https://archive.org/details/gybe2024-04-13.vilnius.flac16f",
+        "title": "Godspeed You! Black Emperor Live at Loftas on 2024-04-13"
+      },
+      {
+        "id": "gybe2024-04-13.vilnius.flac16f.remaster1",
+        "url": "https://archive.org/details/gybe2024-04-13.vilnius.flac16f.remaster1",
+        "title": "Godspeed You! Black Emperor Live at Loftas on 2024-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-14",
+    "venue": "progresja, warsaw, pol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "raindrops cast in lead",
+      "world police",
+      "sad mafioso",
+      "moya thanks to xpietrex"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-14.H1n",
+        "url": "https://archive.org/details/gybe2024-04-14.H1n",
+        "title": "Godspeed You! Black Emperor Live at Progresja on 2024-04-14"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-16",
+    "venue": "b90, gda\u0144sk, pol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-17",
+    "venue": "kamienna 12, krak\u00f3w, pol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-18",
+    "venue": "majestic music club, bratislava, svk",
+    "songs": [
+      "intro",
+      "sun is a hole",
+      "babys in a thundercloud",
+      "glacier",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-19",
+    "venue": "meet factory, prague, cze",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya",
+      "sad mafioso Order not confirmed."
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-20",
+    "venue": "arena, wien, au",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "sad mafioso thanks to fizzletree"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-20.H1n",
+        "url": "https://archive.org/details/gybe2024-04-20.H1n",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"
+      },
+      {
+        "id": "gybe2024-04-20.mtx",
+        "url": "https://archive.org/details/gybe2024-04-20.mtx",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"
+      },
+      {
+        "id": "gybe2024-04-20.cos11d",
+        "url": "https://archive.org/details/gybe2024-04-20.cos11d",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2024-04-20"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-21",
+    "venue": "d\u00fcrer kert, budapest, hu",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya",
+      "blaise bailey finnegan III thanks to satordweller"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-04-21.Vomvos",
+        "url": "https://archive.org/details/gybe2024-04-21.Vomvos",
+        "title": "Godspeed You! Black Emperor Live at Durer Kert on 2024-04-21"
+      }
+    ]
+  },
+  {
+    "date": "2024-04-23",
+    "venue": "tvornica kulture, zagreb, cr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya",
+      "albanian thanks to mata, tim"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-24",
+    "venue": "orpheum, graz, au",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "glacier",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-04-25",
+    "venue": "kino \u0161i\u0161ka, ljubljana, sl",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "broken spires at dead kapital",
+      "pale spectator takes photographs",
+      "world police",
+      "moya",
+      "albanian thanks to alison"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-09-27",
+    "venue": "national stadium, dublin, ir",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-09-27.H2n",
+        "url": "https://archive.org/details/gybe2024-09-27.H2n",
+        "title": "Godspeed You! Black Emperor Live at National Stadium on 2024-09-27"
+      },
+      {
+        "id": "gybe2024-09-27.A10",
+        "url": "https://archive.org/details/gybe2024-09-27.A10",
+        "title": "Godspeed You! Black Emperor Live at National Stadium on 2024-09-27"
+      }
+    ]
+  },
+  {
+    "date": "2024-09-29",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-09-29.DPA4060s",
+        "url": "https://archive.org/details/gybe2024-09-29.DPA4060s",
+        "title": "Godspeed You Black Emperor! Live at Troxy on 2024-09-29"
+      }
+    ]
+  },
+  {
+    "date": "2024-09-30",
+    "venue": "barrowlands, glasgow, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-10-01",
+    "venue": "o2 ritz, manchester, uk",
+    "songs": [
+      "intro",
+      "babys in a thundercloud",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "raindrops cast in lead",
+      "piss crowns are trebled",
+      "moya",
+      "blaise bailey finnegan III thanks to emily"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-01.SP-CMC-8",
+        "url": "https://archive.org/details/gybe2024-10-01.SP-CMC-8",
+        "title": "Godspeed You! Black Emperor Live at O2 Ritz on 2024-10-01"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-02",
+    "venue": "marble factory, bristol, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled",
+      "sad mafioso thanks to emmanuel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-02",
+        "url": "https://archive.org/details/gybe2024-10-02",
+        "title": "Godspeed You Black Emperor! Live at The Marble Factory on 2024-10-02"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-03",
+    "venue": "empire, coventry, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled",
+      "blaise bailey finnegan III thanks to emmanuel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-04.DPA4060s",
+        "url": "https://archive.org/details/gybe2024-10-04.DPA4060s",
+        "title": "Godspeed You! Black Emperor Live at Empire on 2024-10-03"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-04",
+    "venue": "le grand mix, tourcoing, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-04.mix",
+        "url": "https://archive.org/details/gybe2024-10-04.mix",
+        "title": "Godspeed You! Black Emperor Live at Le Grand Mix on 2024-10-04"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-05",
+    "venue": "kulturfabrik, esch-sur-alzette, lu",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-05.2",
+        "url": "https://archive.org/details/gybe2024-10-05.2",
+        "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2024-10-05"
+      },
+      {
+        "id": "gybe2024-10-05.gvid",
+        "url": "https://archive.org/details/gybe2024-10-05.gvid",
+        "title": "Godspeed You! Black Emperor Live at Kulturfabrik on 2024-10-05"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-06",
+    "venue": "le trianon, paris, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police thanks to abibeur"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-06.Samsung",
+        "url": "https://archive.org/details/gybe2024-10-06.Samsung",
+        "title": "Godspeed You Black Emperor! Live at Le Trianon on 2024-10-06"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-08",
+    "venue": "stereolux, nantes, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "piss crowns are trebled thanks to abibeur, zmlopez"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-08.H4n",
+        "url": "https://archive.org/details/gybe2024-10-08.H4n",
+        "title": "Godspeed You! Black Emperor Live at Stereolux on 2024-10-08"
+      },
+      {
+        "id": "gybe2024-10-08.Samsung",
+        "url": "https://archive.org/details/gybe2024-10-08.Samsung",
+        "title": "Godspeed You! Black Emperor Live at Stereolux on 2024-10-08"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-09",
+    "venue": "jazz pulsations, l'autre canal, nancy, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "chart #3",
+      "world police thanks to yannick"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-10-10",
+    "venue": "volkshaus, z\u00fcrich, swi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police unconfirmed setlist.fm entry"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-10-11",
+    "venue": "les docks, lausanne, swi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "sad mafioso thanks to alison, lucas"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-11.H4n",
+        "url": "https://archive.org/details/gybe2024-10-11.H4n",
+        "title": "Godspeed You! Black Emperor Live at Les Docks on 2024-10-11"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-12",
+    "venue": "zoom, frankfurt, ger",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "sad mafioso thanks to bart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-12.T",
+        "url": "https://archive.org/details/gybe2024-10-12.T",
+        "title": "Godspeed You! Black Emperor Live at Zoom on 2024-10-12"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-14",
+    "venue": "huxleys neue welt, berlin, ger",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police thanks to xpietrex"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-14.dpa",
+        "url": "https://archive.org/details/gybe2024-10-14.dpa",
+        "title": "Godspeed You Black Emperor! Live at Huxleys Neue Welt on 2024-10-14"
+      },
+      {
+        "id": "gybe2024-10-14.H1n",
+        "url": "https://archive.org/details/gybe2024-10-14.H1n",
+        "title": "Godspeed You! Black Emperor Live at Huxleys Neue Welt on 2024-10-14"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-15",
+    "venue": "paradiso, amsterdam, hol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-15.dpa",
+        "url": "https://archive.org/details/gybe2024-10-15.dpa",
+        "title": "Godspeed You! Black Emperor Live at Paradiso on 2024-10-15"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-16",
+    "venue": "ancienne belgique, bruxelles, bel",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-16.AT943",
+        "url": "https://archive.org/details/gybe2024-10-16.AT943",
+        "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2024-10-16"
+      },
+      {
+        "id": "gybe2024-10-16.TM-10LB",
+        "url": "https://archive.org/details/gybe2024-10-16.TM-10LB",
+        "title": "Godspeed You! Black Emperor Live at Ancienne Belgique on 2024-10-16"
+      }
+    ]
+  },
+  {
+    "date": "2024-10-18",
+    "venue": "floyd, athens, gr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-10-18.mixdown",
+        "url": "https://archive.org/details/gybe2024-10-18.mixdown",
+        "title": "Godspeed You! Black Emperor Live at Floyd on 2024-10-18"
+      },
+      {
+        "id": "gybe2024-10-18.H1n",
+        "url": "https://archive.org/details/gybe2024-10-18.H1n",
+        "title": "Godspeed You! Black Emperor Live at Floyd on 2024-10-18"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-03",
+    "venue": "bridgeworks, hamilton, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-03.mtx",
+        "url": "https://archive.org/details/gybe2024-11-03.mtx",
+        "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2024-11-03"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-04",
+    "venue": "bridgeworks, hamilton, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-04.mtx",
+        "url": "https://archive.org/details/gybe2024-11-04.mtx",
+        "title": "Godspeed You! Black Emperor Live at Bridgeworks on 2024-11-04"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-05",
+    "venue": "history, toronto, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static vallley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-05.mtx",
+        "url": "https://archive.org/details/gybe2024-11-05.mtx",
+        "title": "Godspeed You! Black Emperor Live at History on 2024-11-05"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-06",
+    "venue": "london music hall, london, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "albanian"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-06.mtx",
+        "url": "https://archive.org/details/gybe2024-11-06.mtx",
+        "title": "Godspeed You! Black Emperor Live at London Music Hall on 2024-11-06"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-07",
+    "venue": "elevation, grand rapids, mi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-11-08",
+    "venue": "salt shed, chicago, il",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-08.ECM-DS70P",
+        "url": "https://archive.org/details/gybe2024-11-08.ECM-DS70P",
+        "title": "Godspeed You! Black Emperor Live at Salt Shed on 2024-11-08"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-09",
+    "venue": "palace theater, st-paul, mn",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "piss crowns are trebled"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2024-11-11",
+    "venue": "liberty hall, lawrence, ks",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-11.mtx",
+        "url": "https://archive.org/details/gybe2024-11-11.mtx",
+        "title": "Godspeed You! Black Emperor Live at Liberty Hall on 2024-11-11"
+      },
+      {
+        "id": "gybe2024-11-11.DR-07X",
+        "url": "https://archive.org/details/gybe2024-11-11.DR-07X",
+        "title": "Godspeed You! Black Emperor Live at Liberty Hall on 2024-11-11"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-12",
+    "venue": "george's majestic lounge, fayetteville, ar",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "john hughes",
+      "piss crowns are trebled"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-12.H6",
+        "url": "https://archive.org/details/gybe2024-11-12.H6",
+        "title": "Godspeed You! Black Emperor Live at George's Majestic Lounge on 2024-11-12"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-16",
+    "venue": "music farm, charleston, sc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-16.H1n",
+        "url": "https://archive.org/details/gybe2024-11-16.H1n",
+        "title": "Godspeed You! Black Emperor Live at Music Farm on 2024-11-16"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-25",
+    "venue": "mtelus, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "piss crowns are trebled"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-25.mtx",
+        "url": "https://archive.org/details/gybe2024-11-25.mtx",
+        "title": "Godspeed You! Black Emperor Live at MTELUS on 2024-11-25"
+      }
+    ]
+  },
+  {
+    "date": "2024-11-26",
+    "venue": "mtelus, montr\u00e9al, qc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "john hughes",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2024-11-26.mtx",
+        "url": "https://archive.org/details/gybe2024-11-26.mtx",
+        "title": "Godspeed You! Black Emperor Live at MTELUS on 2024-11-26"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-01",
+    "venue": "music station, lisboa, por",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "glacier",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to bart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-01.DPA4060",
+        "url": "https://archive.org/details/gybe2025-03-01.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Music Station on 2025-03-01"
+      },
+      {
+        "id": "gybe2025-03-01.dpa4060.remaster",
+        "url": "https://archive.org/details/gybe2025-03-01.dpa4060.remaster",
+        "title": "Godspeed You! Black Emperor Live at Music Station on 2025-03-01"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-02",
+    "venue": "casa de m\u00fasica, porto, por",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "(?)",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "(?)",
+      "blaise bailey finnegan III only the confirmed songs are listed"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-03-03",
+    "venue": "la riviera, madrid, sp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "bosses hang",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-03",
+        "url": "https://archive.org/details/gybe2025-03-03",
+        "title": "Godspeed You! Black Emperor Live at Sala La Riviera on 2025-03-03"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-04",
+    "venue": "kafe antzokia, bilbao, sp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "chart #3",
+      "world police unconfirmed setlist sourced from setlist.fm"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-03-05",
+    "venue": "sala apolo, barcelona, sp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-03-07",
+    "venue": "l'espace julien, marseille, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "glacier",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police thanks to abibeur"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-07.Samsung",
+        "url": "https://archive.org/details/gybe2025-03-07.Samsung",
+        "title": "Godspeed You Black Emperor! Live at L'Espace Julien on 2025-03-07"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-08",
+    "venue": "o.g.r., torino, it",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to alison"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-08.dr05x",
+        "url": "https://archive.org/details/gybe2025-03-08.dr05x",
+        "title": "Godspeed You! Black Emperor Live at OGR on 2025-03-08"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-10",
+    "venue": "teatro comunale, vicenza, it",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso thanks to alison and xpietrex"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-10.mtx",
+        "url": "https://archive.org/details/gybe2025-03-10.mtx",
+        "title": "Godspeed You! Black Emperor Live at Teatro Comunale Citt\u00e0 di Vicenza on 2025-03-10"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-11",
+    "venue": "estragon, bologna, it",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to alison and xpietrex"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-11.mtx",
+        "url": "https://archive.org/details/gybe2025-03-11.mtx",
+        "title": "Godspeed You! Black Emperor Live at Estragon on 2025-03-11"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-12",
+    "venue": "c.c.o., villeurbanne, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "piss crowns are trebled thanks to bestan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-12.phone",
+        "url": "https://archive.org/details/gybe2025-03-12.phone",
+        "title": "Godspeed You! Black Emperor Live at La Rayonne on 2025-03-12"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-13",
+    "venue": "le 106, rouen, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "sad mafioso thanks to bart, bestan, abibeur"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-13.dpa4061.nt45o",
+        "url": "https://archive.org/details/gybe2025-03-13.dpa4061.nt45o",
+        "title": "Godspeed You! Black Emperor Live at Le 106 on 2025-03-13"
+      },
+      {
+        "id": "gybe2025-03-13.samsung",
+        "url": "https://archive.org/details/gybe2025-03-13.samsung",
+        "title": "Godspeed You! Black Emperor Live at Le 106 on 2025-03-13"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-14",
+    "venue": "tollhaus, karlsruhe, ger",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to bart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-14.mtx",
+        "url": "https://archive.org/details/gybe2025-03-14.mtx",
+        "title": "Godspeed You! Black Emperor Live at Tollhaus on 2025-03-14"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-16",
+    "venue": "vooruit, gent, bel",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "sad mafioso thanks to bart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-16.mtx",
+        "url": "https://archive.org/details/gybe2025-03-16.mtx",
+        "title": "Godspeed You! Black Emperor Live at Vooruit on 2025-03-16"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-17",
+    "venue": "paard, den haag, hol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "piss crowns are trebled thanks to bart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-17.dpa4061",
+        "url": "https://archive.org/details/gybe2025-03-17.dpa4061",
+        "title": "Godspeed You! Black Emperor Live at 't Paard on 2025-03-17"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-18",
+    "venue": "vega, k\u00f8benhavn, den",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to zand"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-18.at853.flac24",
+        "url": "https://archive.org/details/gybe2025-03-18.at853.flac24",
+        "title": "Godspeed You! Black Emperor Live at Vega on 2025-03-18"
+      }
+    ]
+  },
+  {
+    "date": "2025-03-19",
+    "venue": "f\u00e5llan, stockholm, swe",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "piss crowns are trebled thanks to rolfe"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-03-20",
+    "venue": "pustervik, g\u00f6teborg, swe",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "sad mafioso thanks to rolfe"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-03-21",
+    "venue": "sentrum scene, oslo, nor",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to gvid"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-03-21.diy",
+        "url": "https://archive.org/details/gybe2025-03-21.diy",
+        "title": "Godspeed You! Black Emperor Live at Sentrum Scene on 2025-03-21"
+      }
+    ]
+  },
+  {
+    "date": "2025-04-25",
+    "venue": "austin psych fest, far out lounge, austin, tx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-04-26",
+    "venue": "granada theater, dallas, tx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "sad mafioso thanks to coleson"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-04-26.mv88",
+        "url": "https://archive.org/details/gybe2025-04-26.mv88",
+        "title": "Godspeed You! Black Emperor Live at Granada Theater on 2025-04-26"
+      }
+    ]
+  },
+  {
+    "date": "2025-04-28",
+    "venue": "ogden theater, denver, co",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "glacier",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-04-28",
+        "url": "https://archive.org/details/gybe2025-04-28",
+        "title": "Godspeed You Black Emperor! Live at The Ogden Theatre on 2025-04-28"
+      }
+    ]
+  },
+  {
+    "date": "2025-04-30",
+    "venue": "bellwether, los angeles, ca",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to trowftd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-04-30.dpa",
+        "url": "https://archive.org/details/gybe2025-04-30.dpa",
+        "title": "Godspeed You! Black Emperor Live at Bellwether on 2025-04-30"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-01",
+    "venue": "observatory, santa ana, ca",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to trowftd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-01.ambeo",
+        "url": "https://archive.org/details/gybe2025-05-01.ambeo",
+        "title": "Godspeed You! Black Emperor Live at Observatory on 2025-05-01"
+      },
+      {
+        "id": "gybe2025-05-01.dpa4081",
+        "url": "https://archive.org/details/gybe2025-05-01.dpa4081",
+        "title": "Godspeed You! Black Emperor Live at Observatory on 2025-05-01"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-02",
+    "venue": "crescent ballroom, phoenix, az",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-05-03",
+    "venue": "ventura music hall, ventura, ca",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "albanian",
+      "sad mafioso thanks to trowftd"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-03.mp3",
+        "url": "https://archive.org/details/gybe2025-05-03.mp3",
+        "title": "Godspeed You! Black Emperor Live at Ventura Music Hall on 2025-05-03"
+      },
+      {
+        "id": "gybe2025-05-03.H1n",
+        "url": "https://archive.org/details/gybe2025-05-03.H1n",
+        "title": "Godspeed You! Black Emperor Live at Ventura Music Hall on 2025-05-03"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-04",
+    "venue": "fox theater, oakland, ca",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "blaise bailey finnegan III thanks to trowftd, zb"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-04.flac16",
+        "url": "https://archive.org/details/gybe2025-05-04.flac16",
+        "title": "Godspeed You! Black Emperor Live at Fox Theater on 2025-05-04"
+      },
+      {
+        "id": "gybe2025-05-04.4ch-mix",
+        "url": "https://archive.org/details/gybe2025-05-04.4ch-mix",
+        "title": "Godspeed You! Black Emperor Live at The Fox Theater on 2025-05-04"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-06",
+    "venue": "wonder ballroom, portland, or",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "blaise bailey finnegan III thanks to trowftd, sage"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-06.H1n",
+        "url": "https://archive.org/details/gybe2025-05-06.H1n",
+        "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-06"
+      },
+      {
+        "id": "gybe2025-05-06",
+        "url": "https://archive.org/details/gybe2025-05-06",
+        "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-06"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-07",
+    "venue": "wonder ballroom, portland, or",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "cliff",
+      "sad mafioso thanks to trowftd, sage"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-07.H1n",
+        "url": "https://archive.org/details/gybe2025-05-07.H1n",
+        "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-07"
+      },
+      {
+        "id": "gybe2025-05-07",
+        "url": "https://archive.org/details/gybe2025-05-07",
+        "title": "Godspeed You! Black Emperor Live at Wonder Ballroom on 2025-05-07"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-08",
+    "venue": "neptune theater, seattle, wa",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "cliff",
+      "chart #3",
+      "world police thanks to j.mart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-08.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2025-05-08.dpa4061.flac24",
+        "title": "Godspeed You Black Emperor! Live at Neptune Theatre on 2025-05-08"
+      },
+      {
+        "id": "gybe2025-05-08",
+        "url": "https://archive.org/details/gybe2025-05-08",
+        "title": "Godspeed You! Black Emperor Live at Neptune Theater on 2025-05-08"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-09",
+    "venue": "neptune theater, seattle, wa",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to j.mart"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-09",
+        "url": "https://archive.org/details/gybe2025-05-09",
+        "title": "Godspeed You! Black Emperor Live at Neptune Theater on 2025-05-09"
+      },
+      {
+        "id": "gybe2025-05-09.dpa4061.flac24",
+        "url": "https://archive.org/details/gybe2025-05-09.dpa4061.flac24",
+        "title": "Godspeed You! Black Emperor Live at Neptune Theatre on 2025-05-09"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-10",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "cliff",
+      "albanian thanks to joel, ryan"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-10.mtx",
+        "url": "https://archive.org/details/gybe2025-05-10.mtx",
+        "title": "Godspeed You Black Emperor! Live at Vogue Theatre on 2025-05-10"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-11",
+    "venue": "vogue theatre, vancouver, bc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to joel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-11.mtx",
+        "url": "https://archive.org/details/gybe2025-05-11.mtx",
+        "title": "Godspeed You! Black Emperor Live at Vogue Theatre on 2025-05-11"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-12",
+    "venue": "revelry, kelowna, bc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to joel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-12.mtx",
+        "url": "https://archive.org/details/gybe2025-05-12.mtx",
+        "title": "Godspeed You! Black Emperor Live at Revelry on 2025-05-12"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-13",
+    "venue": "palace theatre, calgary, ab",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso thanks to pr0leyyc"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-13",
+        "url": "https://archive.org/details/gybe2025-05-13",
+        "title": "Godspeed You! Black Emperor Live at The Palace Theatre, Calgary, Alberta, Canada on 2025-05-13"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-14",
+    "venue": "midway, edmonton, ab",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to pr0leyyc"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-05-14",
+        "url": "https://archive.org/details/gybe2025-05-14",
+        "title": "Godspeed You! Black Emperor Live at Midway Music Hall, Edmonton, Alberta, Canada on 2025-05-14"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-21",
+    "venue": "masquerade, atlanta, ga",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to jayden and \"192 kHz\""
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-21.h4n",
+        "url": "https://archive.org/details/gybe2025-06-21.h4n",
+        "title": "Godspeed You! Black Emperor Live at Heaven @ Masquerade on 2025-06-21"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-22",
+    "venue": "haw river ballroom, saxapahaw, nc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-06-23",
+    "venue": "9:30 club, washington, dc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to DB and TF"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-23.diy",
+        "url": "https://archive.org/details/gybe2025-06-23.diy",
+        "title": "Godspeed You! Black Emperor Live at 9:30 Club on 2025-06-23"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-24",
+    "venue": "union transfer, philadelphia, pa",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso thanks to kalki"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-24.mtx",
+        "url": "https://archive.org/details/gybe2025-06-24.mtx",
+        "title": "Godspeed You! Black Emperor Live at Union Transfer on 2025-06-24"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-25",
+    "venue": "pioneer works, brooklyn, ny",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "blaise bailey finnegan III thanks to kalki"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-25.mtx",
+        "url": "https://archive.org/details/gybe2025-06-25.mtx",
+        "title": "Godspeed You! Black Emperor Live at Pioneer Works on 2025-06-25"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-26",
+    "venue": "pioneer works, brooklyn, ny",
+    "songs": [
+      "soundcheck:",
+      "babys in a thundercloud",
+      "sun is a hole sun is vapors",
+      "glacier",
+      "monheim",
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso thanks to kalki"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-26",
+        "url": "https://archive.org/details/gybe2025-06-26",
+        "title": "Godspeed You! Black Emperor Live at Pioneer Works on 2025-06-26"
+      }
+    ]
+  },
+  {
+    "date": "2025-06-27",
+    "venue": "district music hall, norwalk, ct",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "sad mafioso thanks to rnvt33"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-06-28",
+    "venue": "roadrunner, boston, ma",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-06-58",
+        "url": "https://archive.org/details/gybe2025-06-58",
+        "title": "Godspeed You! Black Emperor Live at Roadrunner on 2025-06-28"
+      }
+    ]
+  },
+  {
+    "date": "2025-08-14",
+    "venue": "arctangent, fernhill farm, compton martin, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III thanks to bart, emmanuel"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-08-14.mtx",
+        "url": "https://archive.org/details/gybe2025-08-14.mtx",
+        "title": "Godspeed You! Black Emperor Live at Fernhill Farm on 2025-08-14"
+      },
+      {
+        "id": "gybe2025-08-14.DPA",
+        "url": "https://archive.org/details/gybe2025-08-14.DPA",
+        "title": "Godspeed You! Black Emperor Live at Fernhill Farm on 2025-08-14"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-05",
+    "venue": "hopscotch festival, moore square, raleigh, nc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-09-06",
+    "venue": "pisgah brewing, black mountain, nc",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-06.dpa4061",
+        "url": "https://archive.org/details/gybe2025-09-06.dpa4061",
+        "title": "Godspeed You! Black Emperor Live at Pisgah Brewing Company on 2025-09-06"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-07",
+    "venue": "basement east, nashville, tn",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-09-12",
+    "venue": "supercrawl, james street north, hamilton, on",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-12.H1e",
+        "url": "https://archive.org/details/gybe2025-09-12.H1e",
+        "title": "Godspeed You! Black Emperor Live at Supercrawl @ James Street North on 2025-09-12"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-13",
+    "venue": "assembly, kingston, ny",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-13",
+        "url": "https://archive.org/details/gybe2025-09-13",
+        "title": "Godspeed You! Black Emperor Live at Assembly, Kingston on 2025-09-13"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-14",
+    "venue": "state theater, portland, me",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "(?) fire at static valley",
+      "pale spectator takes photographs",
+      "(?)",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-09-15",
+    "venue": "treehouse brewing summerstage, deerfield, ma",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-15.H1",
+        "url": "https://archive.org/details/gybe2025-09-15.H1",
+        "title": "Godspeed You! Black Emperor Live at Treehouse Brewing Summerstage on 2025-09-15"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-26",
+    "venue": "russell industrial center, detroit, mi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-26.A10",
+        "url": "https://archive.org/details/gybe2025-09-26.A10",
+        "title": "Godspeed You! Black Emperor Live at Russell Industrial Center on 2025-09-26"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-27",
+    "venue": "bohemian national cemetery, chicago, il",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "chart #3",
+      "world police"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-09-27.ecm-ds70p",
+        "url": "https://archive.org/details/gybe2025-09-27.ecm-ds70p",
+        "title": "Godspeed You! Black Emperor Live at Bohemian National Cemetery on 2025-09-27"
+      }
+    ]
+  },
+  {
+    "date": "2025-09-28",
+    "venue": "globe iron, cleveland, oh",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-12-03",
+    "venue": "gonggam centre, seoul, sk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-03.128cbr",
+        "url": "https://archive.org/details/gybe2025-12-03.128cbr",
+        "title": "Godspeed You! Black Emperor Live at Gonggam Centre on 2025-12-03"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-05",
+    "venue": "legacy taipei, taipei, tai",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-05.227cbr.aacf",
+        "url": "https://archive.org/details/gybe2025-12-05.227cbr.aacf",
+        "title": "Godspeed You! Black Emperor Live at Legacy Taipei on 2025-12-05"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-07",
+    "venue": "clockenflap festival, central harbourfront, hong kong",
+    "songs": [
+      "intro",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "world police",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-07.H4e",
+        "url": "https://archive.org/details/gybe2025-12-07.H4e",
+        "title": "Godspeed You! Black Emperor Live at Clockenflap Festival @ Central Harbourfront on 2025-12-07"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-09",
+    "venue": "bandai namco, shanghai, chi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm",
+      "moya"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-12-10",
+    "venue": "bandai namco, shanghai, chi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "glacier",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "sad mafioso",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-10.aac.vbr",
+        "url": "https://archive.org/details/gybe2025-12-10.aac.vbr",
+        "title": "Godspeed You! Black Emperor Live at Bandai Namco on 2025-12-10"
+      },
+      {
+        "id": "gybe2025-12-10.aacf",
+        "url": "https://archive.org/details/gybe2025-12-10.aacf",
+        "title": "Godspeed You! Black Emperor Live at Bandai Namco on 2025-12-10"
+      },
+      {
+        "id": "gybe2025-12-10.aactoflac16",
+        "url": "https://archive.org/details/gybe2025-12-10.aactoflac16",
+        "title": "Godspeed You! Black Emperor Live at Bandai Namco Dream Hall on 2025-12-10"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-12",
+    "venue": "fullof livehouse, beijing, chi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "world police",
+      "gathering storm",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-12.flac16",
+        "url": "https://archive.org/details/gybe2025-12-12.flac16",
+        "title": "Godspeed You! Black Emperor Live at Fullof Livehouse on 2025-12-12"
+      },
+      {
+        "id": "gybe2025-12-12.original",
+        "url": "https://archive.org/details/gybe2025-12-12.original",
+        "title": "Godspeed You! Black Emperor, 12 December 2025, Live At Full Of, Beijing"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-13",
+    "venue": "fullof livehouse, beijing, chi",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "piss crowns are trebled",
+      "monheim",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III",
+      "the cowboy"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-13.flac24",
+        "url": "https://archive.org/details/gybe2025-12-13.flac24",
+        "title": "Godspeed You! Black Emperor Live at Fullof Livehouse on 2025-12-13"
+      },
+      {
+        "id": "gybe2025-12-13.flac16",
+        "url": "https://archive.org/details/gybe2025-12-13.flac16",
+        "title": "Godspeed You Black Emperor! Live at Fullof Livehouse on 2025-12-13"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-15",
+    "venue": "yogibo meta valley, osaka, jp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-15.RM-ATZ19",
+        "url": "https://archive.org/details/gybe2025-12-15.RM-ATZ19",
+        "title": "Godspeed You! Black Emperor Live at Yogibo Meta Valley on 2025-12-15"
+      },
+      {
+        "id": "gybe2025-12-15",
+        "url": "https://archive.org/details/gybe2025-12-15",
+        "title": "Godspeed You! Black Emperor Live at YOGIBO META VALLEY, Osaka, Japan on 2025-12-15"
+      }
+    ]
+  },
+  {
+    "date": "2025-12-16",
+    "venue": "kanda square hall, tokyo, jp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2025-12-17",
+    "venue": "kanda square hall, tokyo, jp",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2025-12-17",
+        "url": "https://archive.org/details/gybe2025-12-17",
+        "title": "Godspeed You! Black Emperor Live at Kanda Square, Tokyo on 2025-12-17"
+      }
+    ]
+  },
+  {
+    "date": "2026-01-23",
+    "venue": "foro arpa, quer\u00e9taro, qro, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "world police",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2026-01-23",
+        "url": "https://archive.org/details/gybe2026-01-23",
+        "title": "Godspeed You! Black Emperor Live at Foro Arpa on 2026-01-23"
+      }
+    ]
+  },
+  {
+    "date": "2026-01-24",
+    "venue": "c4, guadalajara, jal, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-01-27",
+    "venue": "foro indie rocks!, mexico city, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-01-28",
+    "venue": "foro indie rocks!, mexico city, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-01-31",
+    "venue": "cine bujazan, tijuana, bc, mx",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-01",
+    "venue": "tavara-asema, tampere, fin",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2026-03-01.H4n",
+        "url": "https://archive.org/details/gybe2026-03-01.H4n",
+        "title": "Godspeed You! Black Emperor Live at Tavara-Asema on 2026-03-01"
+      }
+    ]
+  },
+  {
+    "date": "2026-03-02",
+    "venue": "kultuurivabrik, tallinn, est",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "moya",
+      "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-03",
+    "venue": "hanzas perons, riga, lv",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  }
+];
