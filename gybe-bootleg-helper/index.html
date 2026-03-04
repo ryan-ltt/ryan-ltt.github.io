@@ -468,10 +468,10 @@
 
         <!-- DISCOVER TAB -->
         <div class="tab-panel" id="tab-discover">
-            <p style="font-family:Monaco, 'JetBrains Mono', monospace;font-size:13px;color:#555;margin:0 0 12px 0;">pick a show you've heard, get recommendations for something as different as possible.</p>
+            <p style="font-family:Monaco, 'JetBrains Mono', monospace;font-size:13px;color:#555;margin:0 0 12px 0;">pick a show you've heard, get recommendations for something as similar, or as different as possible.</p>
 
             <h2 style="margin-top:0;">seed show</h2>
-            <p style="font-family:Monaco, 'JetBrains Mono', monospace;font-size:12px;color:#555;margin:0 0 8px 0;">search for the show you want a different setlist from.</p>
+            <p style="font-family:Monaco, 'JetBrains Mono', monospace;font-size:12px;color:#555;margin:0 0 8px 0;">pick a show to base the search off of.</p>
             <div class="show-search-wrap">
                 <input type="text" class="show-search-box" id="showSearch" placeholder="search by date or venue..." oninput="onShowSearch()" onblur="closeDropdown()" autocomplete="off">
                 <div class="show-dropdown" id="showDropdown"></div>
@@ -1363,6 +1363,31 @@ renderSongGrid();
 buildEras();
 renderPicks();
 switchTab(window.location.hash.slice(1) || 'finder');
+
+// When graph view is selected, force "recordings only" + "most similar" and disable both
+document.querySelectorAll('input[name="discoverView"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        const cb = document.getElementById('discoverRecordingsOnly');
+        const modeRadios = document.querySelectorAll('input[name="discoverMode"]');
+        if (radio.value === 'graph' && radio.checked) {
+            cb.checked = true;
+            cb.disabled = true;
+            cb.parentElement.style.color = '#999';
+            modeRadios.forEach(r => {
+                r.disabled = true;
+                if (r.value === 'similar') r.checked = true;
+                r.parentElement.style.color = '#999';
+            });
+        } else {
+            cb.disabled = false;
+            cb.parentElement.style.color = '';
+            modeRadios.forEach(r => {
+                r.disabled = false;
+                r.parentElement.style.color = '';
+            });
+        }
+    });
+});
     </script>
 </body>
 </html>
