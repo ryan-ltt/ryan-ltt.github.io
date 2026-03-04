@@ -9,9 +9,19 @@ const RECOMMENDATIONS = [
         note: "the earliest known recording. only known recording of them playing \"the piece\" live. the recording linked is the master tape which is very high quality."
     },
     {
+        date: "1999-05-24",
+        recordingId: "gybe1999-05-24.flacf",
+        note: "improvisation in the beginning of the show is a really early rendition of clatters from gathering storm. world police pre 2000 has an extended outro and a bit of a different composition, and this one is definitely the best in my opinion. bbf3 sounds terrible, but the rest of the tape is absolutely fantastic."
+    },
+    {
         date: "2002-01-25",
         recordingId: "gybe2002-01-25.T",
         note: "their longest show, in the middle of their insane january 2002 run. includes extended dead metheny, an amazing mf=r, and three encores!!!"
+    },
+    {
+        date: "2002-04-18",
+        recordingId: "gybe2002-04-18.T",
+        note: "fantastic matrix of sbd and aud, my personal favourite jlh outro. one of the most powerful world police performances pre-hiatus."
     },
     {
         date:"2003-05-14",
