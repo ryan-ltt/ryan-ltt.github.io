@@ -29,6 +29,21 @@ const RECOMMENDATIONS = [
         note: "the only recording of gamelan pre-hiatus, includes a very strong performance of world police, a 2003 rendition of albanian, and mixed fantastically by Tankhaus in this matrix."
     },
     {
+        date:"2011-04-29",
+        recordingId: "gybe2011-04-29.mtx",
+        note: "great sounding matrix. the albanian on this one is one of the best ever. also one of the best post-hiatus tazer floyd performances."
+    },
+    {
+        date:"2016-09-21",
+        recordingId: "gybe2016-09-21",
+        note: "one of the best sounding behemoths, as well as a rare performance of kicking horse on broken hill. this show combines so many eras of the band into one setlist that it's a must listen for new fans."
+    },
+    {
+        date:"2019-11-04",
+        recordingId: "gybe2019-11-04",
+        note: "fantastic performances across the entire setlist. features one of the stronger performances of 2 nouveau tower ever. definitely a diamond in one of the more boring eras."
+    },
+    {
         date: "2025-05-10",
         recordingId: "gybe2025-05-10.mtx",
         note: "the best show of 2025 in my opinion. performances of all of the no title songs are at their peak, and albanian has an amazing outro with aidan going nuts on the kit. i also saw this show in person!"
