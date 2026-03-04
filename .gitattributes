@@ -1,0 +1,5 @@
+* text=auto
+setlists.json text eol=lf
+setlists-data.js text eol=lf
+.last-update text eol=lf
+last-update.js text eol=lf
