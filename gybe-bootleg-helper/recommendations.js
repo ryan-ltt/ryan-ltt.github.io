@@ -45,7 +45,7 @@ const RECOMMENDATIONS = [
     },
     {
         date:"2023-03-15",
-        recordingId: "2023-03-15_gybe_01.flac",
+        recordingId: "gybe2023-03-15.DR40X",
         note: "probably my personal favourite out of the 2023 SF residency shows. some of the strongest performances of cliff and glacier ever, as well as rare appearances of dead metheny and monheim for the time."
     },
     {
