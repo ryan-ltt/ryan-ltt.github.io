@@ -1079,7 +1079,16 @@ function renderPicks() {
         const show = showMap[rec.date];
         if (!show) return '';
         const recId = rec.recordingId || BEST_RECORDINGS[show.date];
-        const setlistHtml = show.songs.join(' &nbsp;·&nbsp; ');
+        const thanksLines = [];
+        const songNames = show.songs.map(rawSong => {
+            const m = rawSong.match(/^(.*?)\s+(thanks to\b.*)$/i);
+            if (m) { thanksLines.push(m[2]); return m[1]; }
+            return rawSong;
+        });
+        const thanksSuffix = thanksLines.length > 0
+            ? `<div style="font-family:Monaco;font-size:11px;color:#999;margin-top:6px;">${thanksLines.join('<br>')}</div>`
+            : '';
+        const setlistHtml = songNames.join(' &nbsp;·&nbsp; ') + thanksSuffix;
         const preferredRec = recId && show.recordings
             ? show.recordings.find(r => r.id === recId)
             : null;
