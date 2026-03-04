@@ -44,6 +44,11 @@ const RECOMMENDATIONS = [
         note: "fantastic performances across the entire setlist. features one of the stronger performances of 2 nouveau tower ever. definitely a diamond in one of the more boring eras."
     },
     {
+        date:"2023-03-15",
+        recordingId: "2023-03-15_gybe_01.flac",
+        note: "probably my personal favourite out of the 2023 SF residency shows. some of the strongest performances of cliff and glacier ever, as well as rare appearances of dead metheny and monheim for the time."
+    },
+    {
         date: "2025-05-10",
         recordingId: "gybe2025-05-10.mtx",
         note: "the best show of 2025 in my opinion. performances of all of the no title songs are at their peak, and albanian has an amazing outro with aidan going nuts on the kit. i also saw this show in person!"
