@@ -16356,5 +16356,21 @@ const SETLISTS_DATA = [
       "gathering storm"
     ],
     "recordings": []
+  },
+  {
+    "date": "2026-03-06",
+    "venue": "ck zamek, pozna , pol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
   }
 ];
