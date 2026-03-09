@@ -16288,6 +16288,11 @@ const SETLISTS_DATA = [
         "id": "gybe2026-03-01.H4n",
         "url": "https://archive.org/details/gybe2026-03-01.H4n",
         "title": "Godspeed You! Black Emperor Live at Tavara-Asema on 2026-03-01"
+      },
+      {
+        "id": "gybe2026-03-01",
+        "url": "https://archive.org/details/gybe2026-03-01",
+        "title": "Godspeed You! Black Emperor Live at Tavara-asema, Tampere on 2026-03-01"
       }
     ]
   },
@@ -16370,6 +16375,21 @@ const SETLISTS_DATA = [
       "chart #3",
       "world police",
       "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-08",
+    "venue": "a2, wroc aw, pol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
     ],
     "recordings": []
   }
