@@ -16392,5 +16392,20 @@ const SETLISTS_DATA = [
       "blaise bailey finnegan III"
     ],
     "recordings": []
+  },
+  {
+    "date": "2026-03-09",
+    "venue": "fl da, brno, cz",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "piss crowns are trebled",
+      "gathering storm"
+    ],
+    "recordings": []
   }
 ];
