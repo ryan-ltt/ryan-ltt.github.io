@@ -16095,6 +16095,11 @@
         "id": "gybe2025-12-12.original",
         "url": "https://archive.org/details/gybe2025-12-12.original",
         "title": "Godspeed You! Black Emperor, 12 December 2025, Live At Full Of, Beijing"
+      },
+      {
+        "id": "gybe2025-12-12.flac",
+        "url": "https://archive.org/details/gybe2025-12-12.flac",
+        "title": "Godspeed You! Black Emperor Live at Fullof Livehouse on 2025-12-12"
       }
     ]
   },
@@ -16405,6 +16410,37 @@
       "pale spectator takes photographs",
       "piss crowns are trebled",
       "gathering storm"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-10",
+    "venue": "d rer kert, budapest, hu",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "albanian"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-11",
+    "venue": "posthof, linz, au",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
     ],
     "recordings": []
   }
