@@ -16335,7 +16335,13 @@ const SETLISTS_DATA = [
       "bosses hang",
       "albanian"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-03.diy",
+        "url": "https://archive.org/details/gybe2026-03-03.diy",
+        "title": "Godspeed You! Black Emperor Live at Hanzas Perons on 2026-03-03"
+      }
+    ]
   },
   {
     "date": "2026-03-04",
@@ -16350,7 +16356,13 @@ const SETLISTS_DATA = [
       "moya",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-04.diy",
+        "url": "https://archive.org/details/gybe2026-03-04.diy",
+        "title": "Godspeed You! Black Emperor Live at Loftas on 2026-03-04"
+      }
+    ]
   },
   {
     "date": "2026-03-05",
@@ -16441,6 +16453,21 @@ const SETLISTS_DATA = [
       "chart #3",
       "world police",
       "sad mafioso"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-03-12",
+    "venue": "archa+, praha, cz",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
     ],
     "recordings": []
   }
