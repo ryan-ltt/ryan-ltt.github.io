@@ -16596,5 +16596,20 @@ const SETLISTS_DATA = [
       "piss crowns are trebled"
     ],
     "recordings": []
+  },
+  {
+    "date": "2026-03-20",
+    "venue": "die kantine, k ln, ger",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
+    ],
+    "recordings": []
   }
 ];
