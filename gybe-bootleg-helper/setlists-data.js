@@ -16595,7 +16595,13 @@ const SETLISTS_DATA = [
       "gathering storm",
       "piss crowns are trebled"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-19.diy",
+        "url": "https://archive.org/details/gybe2026-03-19.diy",
+        "title": "Godspeed You! Black Emperor Live at Technikum on 2026-03-19"
+      }
+    ]
   },
   {
     "date": "2026-03-20",
@@ -16610,6 +16616,12 @@ const SETLISTS_DATA = [
       "moya",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-20.ca14",
+        "url": "https://archive.org/details/gybe2026-03-20.ca14",
+        "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
+      }
+    ]
   }
 ];
