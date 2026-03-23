@@ -16621,6 +16621,11 @@ const SETLISTS_DATA = [
         "id": "gybe2026-03-20.ca14",
         "url": "https://archive.org/details/gybe2026-03-20.ca14",
         "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
+      },
+      {
+        "id": "gybe2026-03-20.R09",
+        "url": "https://archive.org/details/gybe2026-03-20.R09",
+        "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
       }
     ]
   }
