@@ -1752,6 +1752,27 @@ const SETLISTS_DATA = [
     ]
   },
   {
+    "date": "2000-10-17",
+    "venue": "",
+    "songs": [
+      "Dead Metheny / The Dead Flag Blues (outro)",
+      "Moya",
+      "Tazer Floyd",
+      "Blaise Bailey Finnegan III",
+      "Rockets Fall on Rocket Falls, Part I",
+      "Rockets Fall on Rocket Falls, Part II",
+      "Blaise Bailey Finnegan III"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2000-10-17.aud",
+        "url": "https://archive.org/details/gybe2000-10-17.aud",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Metro on 2000-10-17"
+      }
+    ],
+    "setlist_pending": true
+  },
+  {
     "date": "2000-10-25",
     "venue": "legends,\nvictoria, bc",
     "songs": [
@@ -5633,6 +5654,11 @@ const SETLISTS_DATA = [
         "id": "gybe2011-03-27.ca14.cards.flac24",
         "url": "https://archive.org/details/gybe2011-03-27.ca14.cards.flac24",
         "title": "Godspeed You! Black Emperor Live at The Metro on 2011-03-27"
+      },
+      {
+        "id": "gybe2011-03-27.aud",
+        "url": "https://archive.org/details/gybe2011-03-27.aud",
+        "title": "Godspeed You! Black Emperor Live at Cabaret Metro on 2011-03-27"
       }
     ]
   },
