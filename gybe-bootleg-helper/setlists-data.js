@@ -3023,7 +3023,13 @@ const SETLISTS_DATA = [
       "motherfucking=redeemer",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2002-03-26.flacf",
+        "url": "https://archive.org/details/gybe2002-03-26.flacf",
+        "title": "Godspeed You! Black Emperor Live at St. George Hall on 2002-03-26"
+      }
+    ]
   },
   {
     "date": "2002-03-27",
@@ -16651,6 +16657,11 @@ const SETLISTS_DATA = [
       {
         "id": "gybe2026-03-20.R09",
         "url": "https://archive.org/details/gybe2026-03-20.R09",
+        "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
+      },
+      {
+        "id": "gybe2026-03-20.mix",
+        "url": "https://archive.org/details/gybe2026-03-20.mix",
         "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
       }
     ]
