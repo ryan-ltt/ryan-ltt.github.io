@@ -7708,6 +7708,36 @@ const SETLISTS_DATA = [
     "recordings": []
   },
   {
+    "date": "2015-03-31",
+    "venue": "",
+    "songs": [
+      "This album contains four tracks as listed on the CD. These are;",
+      "(i) PEASANTRY or 'LIGHT! INSIDE OF LIGHT! [10:28]",
+      "(ii) LAMBS' BREATH [9:52]",
+      "(3) ASUNDER, SWEET [6:13]",
+      "(iv) PISS CROWNS ARE TREBLED [13:50]",
+      "Text from the front of the inner CD sleeve;",
+      "O! HOW WE SALLIED 'ROUND THE ROSES:",
+      "DAVID\u00a0BRYANT-\u00a0ELECTRIC GTR, PORTASOUND, ORGANS AND DRONES.AIDAN GIRT-\u00a0DRUMS.",
+      "TIMOTHY HERZOG-\u00a0DRUMS AND DRONES.",
+      "EFRIM MANUEL MENUCK-\u00a0ELECTRIC GUITAR.",
+      "MICHAEL MOYA-\u00a0ELECTRIC GUITAR.",
+      "MAURO PEZZENTE-\u00a0ELECTRIC BASS.",
+      "SOPHIE TRUDEAU-\u00a0VIOLINS AND DRONES.",
+      "KARL LEMIEUX-\u00a016MM FILM PROJECTIONS.",
+      "SI-\u00a0LIVE SOUND AND ASSORTED GRAINS.",
+      "THANKS, AS ALWAYS:\u00a0HUGSAM, TOMMY W., GREG, CST MTL."
+    ],
+    "recordings": [
+      {
+        "id": "gybe-asaod-cdrip-flac",
+        "url": "https://archive.org/details/gybe-asaod-cdrip-flac",
+        "title": "Asunder, Sweet and Other Distress [CD RIP]"
+      }
+    ],
+    "setlist_pending": true
+  },
+  {
     "date": "2015-04-07",
     "venue": "markthalle, hamburg, ger",
     "songs": [
