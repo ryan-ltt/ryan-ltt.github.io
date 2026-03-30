@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>all the concerts i've ever been to</title>
+    <link rel="stylesheet" href="blog_post.css">
+    <style>
+        .concerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .concert-card {
+            border: 2px solid black;
+            background: white;
+        }
+
+        .concert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            gap: 12px;
+        }
+
+        .concert-header:hover {
+            background: #f5f5f5;
+        }
+
+        .concert-header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+
+        .concert-artist {
+            font-family: Monaco;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .concert-venue {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .concert-header-right {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .concert-date {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .concert-toggle {
+            font-family: Monaco;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .concert-body {
+            display: none;
+            border-top: 2px solid black;
+            padding: 12px 16px;
+        }
+
+        .concert-body.open {
+            display: block;
+        }
+
+        .concert-setlist {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #333;
+            line-height: 2;
+        }
+
+        .concert-setlist .setlist-song {
+            display: block;
+            padding: 0;
+        }
+
+        .concert-setlist .setlist-song::before {
+            content: "— ";
+            color: #aaa;
+        }
+
+        .concert-setlist .setlist-encore {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .concert-setlist .setlist-encore::before {
+            content: "";
+        }
+
+        .concert-notes {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #666;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            line-height: 1.7;
+        }
+
+        /* stats card */
+        .stats-card {
+            border: 2px solid black;
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .stats-header:hover {
+            background: #f5f5f5;
+        }
+
+        .stats-header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .stats-title {
+            font-family: Monaco;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .stats-summary {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .stats-body {
+            display: none;
+            border-top: 2px solid black;
+        }
+
+        .stats-body.open {
+            display: block;
+        }
+
+        .stats-tabs {
+            display: flex;
+            border-bottom: 2px solid black;
+        }
+
+        .stats-tab {
+            padding: 7px 16px;
+            font-family: Monaco;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+            border-right: 2px solid black;
+            color: #555;
+        }
+
+        .stats-tab:last-child {
+            border-right: none;
+        }
+
+        .stats-tab:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .stats-tab.active {
+            background: black;
+            color: white;
+        }
+
+        .stats-panel {
+            display: none;
+            padding: 12px 16px;
+        }
+
+        .stats-panel.active {
+            display: block;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: Monaco;
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            gap: 16px;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-row-name {
+            color: #333;
+        }
+
+        .stats-row-count {
+            color: #999;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-post">
+        <a href="/blog/" class="back-link">← back to blog</a>
+
+        <h1>all the concerts i've ever been to</h1>
+        <div class="post-date">2026-03-30</div>
+
+        <div class="post-content">
+            <p>here i am pulling information from lastfm and setlistfm (and also my memory).</p>
+        </div>
+
+        <div class="stats-card" id="statsCard">
+            <div class="stats-header" onclick="toggleStats()">
+                <div class="stats-header-left">
+                    <span class="stats-title">stats</span>
+                    <span class="stats-summary" id="statsSummary"></span>
+                </div>
+                <span class="concert-toggle" id="statsToggle">▼</span>
+            </div>
+            <div class="stats-body" id="statsBody">
+                <div class="stats-tabs">
+                    <div class="stats-tab active" onclick="switchStatsTab('artists', this)">artists</div>
+                    <div class="stats-tab" onclick="switchStatsTab('venues', this)">venues</div>
+                    <div class="stats-tab" onclick="switchStatsTab('cities', this)">cities</div>
+                </div>
+                <div class="stats-panel active" id="stats-artists"></div>
+                <div class="stats-panel" id="stats-venues"></div>
+                <div class="stats-panel" id="stats-cities"></div>
+            </div>
+        </div>
+
+        <div class="concerts-list">
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Greta Van Fleet</span>
+                        <span class="concert-venue">Scotiabank Arena · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2022-08-19</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Built by Nations</span>
+                        <span class="setlist-song">Safari Song</span>
+                        <span class="setlist-song">Drum Solo</span>
+                        <span class="setlist-song">Black Smoke Rising</span>
+                        <span class="setlist-song">Caravel</span>
+                        <span class="setlist-song">Heat Above</span>
+                        <span class="setlist-song">Light My Love</span>
+                        <span class="setlist-song">Broken Bells</span>
+                        <span class="setlist-song">Age of Machine</span>
+                        <span class="setlist-song">The Weight of Dreams</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Age of Man</span>
+                        <span class="setlist-song">Highway Tune</span>
+                        <span class="setlist-song">That's All Right</span>
+                        <span class="setlist-song">Highway Tune</span>
+                    </div>
+                    <div class="concert-notes">i don't remember much from this show to be honest. something i did learn was that i dislike big venues like this and that i should probably wear earplugs to future shows... the band was okay. definitely lived up to being a "led zeppelin clone" (but shittier)</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Black Country, New Road</span>
+                        <span class="concert-venue">The Concert Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2023-09-15</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Up Song</span>
+                        <span class="setlist-song">The Boy</span>
+                        <span class="setlist-song">Salem Sisters</span>
+                        <span class="setlist-song">I Won't Always Love You</span>
+                        <span class="setlist-song">Across the Pond Friend</span>
+                        <span class="setlist-song">Laughing Song</span>
+                        <span class="setlist-song">Nancy Tries to Take the Night</span>
+                        <span class="setlist-song">Turbines/Pigs</span>
+                        <span class="setlist-song">Dancers</span>
+                        <span class="setlist-song">Up Song (Reprise)</span>
+                    </div>
+                    <div class="concert-notes">3 separate people fainted during turbines/pigs! great show although i wish they changed the band name after isaac left, they're just a completely different band now</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Godspeed You! Black Emperor</span>
+                        <span class="concert-venue">Biltmore Theatre · Oshawa, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-02-27</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hope Drone</span>
+                        <span class="setlist-song">SUN IS A HOLE SUN IS VAPORS</span>
+                        <span class="setlist-song">BABYS IN A THUNDERCLOUD</span>
+                        <span class="setlist-song">Glacier</span>
+                        <span class="setlist-song">BROKEN SPIRES AT DEAD KAPITAL</span>
+                        <span class="setlist-song">PALE SPECTATOR TAKES PHOTOGRAPHS / GREY RUBBLE – GREEN SHOOTS</span>
+                        <span class="setlist-song">Bosses Hang</span>
+                        <span class="setlist-song">RAINDROPS CAST IN LEAD</span>
+                    </div>
+                    <div class="concert-notes">first gybe show i ever saw. became fully enamoured with the band at this point. arrived late and stood in the back of the venue, we missed the opener and got there 5 minutes before hope drone. bosses hang was the most memorable thing from this show and absolutely blew me away. been involved with the band and the community ever since.</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Panchiko</span>
+                        <span class="concert-venue">Danforth Music Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-04-30</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Stuck</span>
+                        <span class="setlist-song">Stabilisers for Big Boys</span>
+                        <span class="setlist-song">Think That's Too Wise</span>
+                        <span class="setlist-song">Sodium Chloride</span>
+                        <span class="setlist-song">No. 8</span>
+                        <span class="setlist-song">Chapel of Salt</span>
+                        <span class="setlist-song">CUT</span>
+                        <span class="setlist-song">Untitled Demo - 1997</span>
+                        <span class="setlist-song">Ginkgo</span>
+                        <span class="setlist-song">Until I Know</span>
+                        <span class="setlist-song">Failed at Math(s)</span>
+                        <span class="setlist-song">NeilSSong</span>
+                        <span class="setlist-song">Laputa</span>
+                        <span class="setlist-song">Gwen Everest</span>
+                        <span class="setlist-song">All They Wanted</span>
+                        <span class="setlist-song">D>E>A>T>H>M>E>T>A>L</span>
+                        <span class="setlist-song">Kicking Cars</span>
+                    </div>
+                    <div class="concert-notes">when i was really interested in lost media, the panchiko deathmetal album piqued my interest. when it was found i was really obsessed with it and even more so when they released the ferric oxide demo tapes. unfortunately, the crowd was all ages and for many of them it was obvious they had never been to a show before. untitled demo 1997 is my absolute favourite from them and the new rendition of NeilSSong was insane.</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">King Gizzard & the Lizard Wizard</span>
+                        <span class="concert-venue">Budweiser Stage · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-08-21</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Perihelion</span>
+                        <span class="setlist-song">Venusian 2</span>
+                        <span class="setlist-song">Converge</span>
+                        <span class="setlist-song">Witchcraft</span>
+                        <span class="setlist-song">The Great Chain of Being</span>
+                        <span class="setlist-song">Dragon</span>
+                        <span class="setlist-song">Hypertension</span>
+                        <span class="setlist-song">Antarctica</span>
+                        <span class="setlist-song">Field of Vision</span>
+                        <span class="setlist-song">Raw Feel</span>
+                        <span class="setlist-song">Hot Water</span>
+                        <span class="setlist-song">Robot Stop</span>
+                        <span class="setlist-song">Gamma Knife</span>
+                        <span class="setlist-song">The Garden Goblin</span>
+                        <span class="setlist-song">Extinction</span>
+                        <span class="setlist-song">Set</span>
+                    </div>
+                    <div class="concert-notes">king gizzard was my favourite band in the first couple of years of high school, so being able to see them live was fantastic. budweiser stage (now some other stupid name) was pretty nice in the summertime for an outdoor crowd. geese opened for them and they did not really give that great of a performance compared to when i saw them later. kglw discography is so wide that i didn't really know much of the material that they played, but the performance was fantastic, and im glad they played some stuff from nonagon infinity</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Crumb</span>
+                        <span class="concert-venue">The Concert Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-08-31</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">AMAMA</span>
+                        <span class="setlist-song">Cracking</span>
+                        <span class="setlist-song">(Alone In) Brussels</span>
+                        <span class="setlist-song">The Bug</span>
+                        <span class="setlist-song">Balloon</span>
+                        <span class="setlist-song">Nightly News</span>
+                        <span class="setlist-song">From Outside A Window Sill</span>
+                        <span class="setlist-song">BNR</span>
+                        <span class="setlist-song">Genie</span>
+                        <span class="setlist-song">Ice Melt</span>
+                        <span class="setlist-song">Ghostride</span>
+                        <span class="setlist-song">Dust Bunny</span>
+                        <span class="setlist-song">Retreat!</span>
+                        <span class="setlist-song">Side By Side</span>
+                        <span class="setlist-song">Crushxd</span>
+                        <span class="setlist-song">Nina</span>
+                        <span class="setlist-song">XXX</span>
+                        <span class="setlist-song">Trophy</span>
+                    </div>
+                    <div class="concert-notes">this show was alright. it was my first time having balcony tickets for the concert hall which i would definitely recommend if you can get there early and get a good seat. the two openers were fine and i didn't know a single song from crumb until the last song, but it was a good atmosphere nonetheless</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Built to Spill</span>
+                        <span class="concert-venue">Webster Hall · New York, NY, USA</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-09-07</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">I Would Hurt a Fly</span>
+                        <span class="setlist-song">In the Morning</span>
+                        <span class="setlist-song">Reasons</span>
+                        <span class="setlist-song">Big Dipper</span>
+                        <span class="setlist-song">Car</span>
+                        <span class="setlist-song">Fling</span>
+                        <span class="setlist-song">Cleo</span>
+                        <span class="setlist-song">The Source</span>
+                        <span class="setlist-song">Twin Falls</span>
+                        <span class="setlist-song">Some</span>
+                        <span class="setlist-song">Distopian Dream Girl</span>
+                        <span class="setlist-song">Israel's Song</span>
+                        <span class="setlist-song">Stab</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Else</span>
+                        <span class="setlist-song">Time Trap</span>
+                        <span class="setlist-song">Sidewalk</span>
+                        <span class="setlist-song">Fool's Gold</span>
+                        <span class="setlist-song">When I'm Blind</span>
+                    </div>
+                    <div class="concert-notes">first time i ever travelled to see a concert, and this trip to new york was pretty awesome. this show was fantastic and i wish they'd tour canada so i didn't have to go down to the states to see them again... i remember having to pee so bad during the concert that it did ruin my enjoyment of it a little. oh well. fantastic show and i wish i could see them again...</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Lamp</span>
+                        <span class="concert-venue">Danforth Music Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-09-12</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hatachi No Koi</span>
+                        <span class="setlist-song">Mood Romantica</span>
+                        <span class="setlist-song">Raindrop City</span>
+                        <span class="setlist-song">Windy Afternoon</span>
+                        <span class="setlist-song">Behind the Moon Shadow</span>
+                        <span class="setlist-song">Konya Mo Kimi Ni Telephone Call</span>
+                        <span class="setlist-song">Autumn in City "A"</span>
+                        <span class="setlist-song">Misty Town</span>
+                        <span class="setlist-song">For Lovers</span>
+                        <span class="setlist-song">From the Window</span>
+                        <span class="setlist-song">Yume Utsutsu</span>
+                        <span class="setlist-song">Hiyayakana Jokei</span>
+                        <span class="setlist-song">1998</span>
+                        <span class="setlist-song">Sachiko</span>
+                        <span class="setlist-song">From the Midnight Shoreline</span>
+                        <span class="setlist-song">The Other Side of a Rainy Night</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Last Train at 25 O'clock</span>
+                    </div>
+                    <div class="concert-notes">i went to this show entirely for the vibes and because my friends wanted to go. terrible all ages crowd even worse than panchiko, and this is the first show where i took my earplugs out because the band was actually very quiet. people stood in the merch line for the duration of the show because the band does not ship anything from japan, so people were buying records for  and reselling them on discogs for . oh well</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">JPEGMAFIA</span>
+                        <span class="concert-venue">REBEL · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-09-19</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Jesus Forgive Me, I Am a Thot</span>
+                        <span class="setlist-song">Lean Beef Patty</span>
+                        <span class="setlist-song">HAZARD DUTY PAY!</span>
+                        <span class="setlist-song">BALD!</span>
+                        <span class="setlist-song">Call Me Maybe</span>
+                        <span class="setlist-song">SIN MIEDO</span>
+                        <span class="setlist-song">i scream this in the mirror before i interact with anyone</span>
+                        <span class="setlist-song">don't rely on other men</span>
+                        <span class="setlist-song">BasicBitchTearGas</span>
+                        <span class="setlist-song">1539 N. Calvert</span>
+                        <span class="setlist-song">Real Nega</span>
+                        <span class="setlist-song">WHAT KIND OF RAPPIN' IS THIS?</span>
+                        <span class="setlist-song">Steppa Pig</span>
+                        <span class="setlist-song">Garbage Pale Kids</span>
+                        <span class="setlist-song">God Loves You</span>
+                        <span class="setlist-song">SCARING THE HOES</span>
+                        <span class="setlist-song">JPEGULTRA!</span>
+                        <span class="setlist-song">New Black History</span>
+                        <span class="setlist-song">Exmilitary</span>
+                        <span class="setlist-song">vulgar display of power</span>
+                        <span class="setlist-song">Baby I'm Bleeding</span>
+                        <span class="setlist-song">Rainbow Six</span>
+                        <span class="setlist-song">Free the Frail</span>
+                        <span class="setlist-song">either on or off the drugs</span>
+                        <span class="setlist-song">it’s dark and hell is hot</span>
+                    </div>
+                    <div class="concert-notes">decent show, however i hate rebel and the energy was a bit too much for me. jane remover opened for this show and it was the first time i heard any of the stuff from revengeseekerz. she was drunk and the performance of that was honestly terrible, but i was in the front row for that so it was special. at rebel the entire floor was basically the pit and there were some terrible people in the crowd, so that put me off. jpegmafia himself is honestly a pretty shitty person, but the atmosphere of this show was good aside from all the bad</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">julie</span>
+                        <span class="concert-venue">The Concert Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-10-18</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">catalogue</span>
+                        <span class="setlist-song">pg.4 a picture of three hedges</span>
+                        <span class="setlist-song">very little effort</span>
+                        <span class="setlist-song">tenebrist</span>
+                        <span class="setlist-song">skipping tiles</span>
+                        <span class="setlist-song">april's-bloom</span>
+                        <span class="setlist-song">knob</span>
+                        <span class="setlist-song">clairbourne practice</span>
+                        <span class="setlist-song">kit</span>
+                        <span class="setlist-song">thread, stitch</span>
+                        <span class="setlist-song">flutter</span>
+                        <span class="setlist-song">feminine adornments</span>
+                        <span class="setlist-song">piano instrumental</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">stuck in a car with angels</span>
+                        <span class="setlist-song">lochness</span>
+                    </div>
+                    <div class="concert-notes">this was a weird one for me. i enjoyed the music and the band in general, and they played a lot of the songs that i went to the show for. however the energy of the band was so low and the people in the crowd sucked. i noticed that instead of tuning guitars in between songs, they'd just have a stagehand swapping out guitars that were tuned for them so they could play the set seamlessly. they definitely had the shows in a very planned out manner, but to me at least it felt a bit robotic.</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Xiu Xiu</span>
+                        <span class="concert-venue">Velvet Underground · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-10-19</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">The Silver Platter</span>
+                        <span class="setlist-song">Sleep Blvd.</span>
+                        <span class="setlist-song">Blacks</span>
+                        <span class="setlist-song">It Comes Out as a Joke</span>
+                        <span class="setlist-song">Suha</span>
+                        <span class="setlist-song">Gray Death</span>
+                        <span class="setlist-song">Jenny GoGo</span>
+                        <span class="setlist-song">Wig Master</span>
+                        <span class="setlist-song">Arp Omni</span>
+                        <span class="setlist-song">T.D.F.T.W.</span>
+                        <span class="setlist-song">The Real Chaos Cha Cha Cha</span>
+                        <span class="setlist-song">Sad Pony Guerrilla Girl</span>
+                        <span class="setlist-song">Common Loon</span>
+                        <span class="setlist-song">Veneficium</span>
+                        <span class="setlist-song">Get Up</span>
+                    </div>
+                    <div class="concert-notes">one of my favourite shows i've ever been to. the atmosphere of this show was intense and i really hope that i can see xiu xiu again. unfortunately, this show took place about a year before the venue closed. it's sad because it was one of my favourite venues in the city. there are still some songs i would love to see from xiu xiu, but this setlist was great and unforgettable.</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Godspeed You! Black Emperor</span>
+                        <span class="concert-venue">Bridgeworks · Hamilton, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-11-03</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hope Drone</span>
+                        <span class="setlist-song">SUN IS A HOLE SUN IS VAPORS</span>
+                        <span class="setlist-song">BABYS IN A THUNDERCLOUD</span>
+                        <span class="setlist-song">RAINDROPS CAST IN LEAD</span>
+                        <span class="setlist-song">Fire at Static Valley</span>
+                        <span class="setlist-song">PALE SPECTATOR TAKES PHOTOGRAPHS / GREY RUBBLE – GREEN SHOOTS</span>
+                        <span class="setlist-song">Cliff</span>
+                        <span class="setlist-song">The Sad Mafioso</span>
+                    </div>
+                    <div class="concert-notes">good show, and my first time in hamilton. the city is honestly terrible but it's not really their fault, it's a bit like detroit in that case. my first time hearing cliff and maffy, i remember maffy blowing me away. efrim flubbed the intro of grey rubble pretty hard, so i believe it's the reason why they ended up adding the drum ride into it.</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Godspeed You! Black Emperor</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2024-11-05</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hope Drone</span>
+                        <span class="setlist-song">SUN IS A HOLE SUN IS VAPORS</span>
+                        <span class="setlist-song">BABYS IN A THUNDERCLOUD</span>
+                        <span class="setlist-song">RAINDROPS CAST IN LEAD</span>
+                        <span class="setlist-song">Fire at Static Valley</span>
+                        <span class="setlist-song">PALE SPECTATOR TAKES PHOTOGRAPHS / GREY RUBBLE – GREEN SHOOTS</span>
+                        <span class="setlist-song">Glacier</span>
+                        <span class="setlist-song">Piss Crowns Are Trebled</span>
+                    </div>
+                    <div class="concert-notes">this show was much better than the one in hamilton. the setlist was more interesting, featuring glacier and piss crowns. unfortunately the show was at HISTORY, my least favourite venue in the entire city, but the show was amazing
+</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Geordie Greep</span>
+                        <span class="concert-venue">The Phoenix Concert Theatre · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-02-03</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Walk Up</span>
+                        <span class="setlist-song">Terra</span>
+                        <span class="setlist-song">The New Sound</span>
+                        <span class="setlist-song">Through a War</span>
+                        <span class="setlist-song">Spain</span>
+                        <span class="setlist-song">As If Waltz</span>
+                        <span class="setlist-song">Holy, Holy</span>
+                        <span class="setlist-song">Rectangular</span>
+                        <span class="setlist-song">Dangerous Liaisons</span>
+                        <span class="setlist-song">Parabola</span>
+                        <span class="setlist-song">Motorbike</span>
+                        <span class="setlist-song">Jam</span>
+                        <span class="setlist-song">Blues</span>
+                        <span class="setlist-song">Bongo Season</span>
+                        <span class="setlist-song">The Magician</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Blind Pilot</span>
+                        <span class="concert-venue">The Axis Club · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-02-05</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">packed powder</span>
+                        <span class="setlist-song">story</span>
+                        <span class="setlist-song">just a bird</span>
+                        <span class="setlist-song">don't you know</span>
+                        <span class="setlist-song">colored knight</span>
+                        <span class="setlist-song">brave</span>
+                        <span class="setlist-song">one red</span>
+                        <span class="setlist-song">poor boy solo</span>
+                        <span class="setlist-song">just one</span>
+                        <span class="setlist-song">oviedo</span>
+                        <span class="setlist-song">jacaranda</span>
+                        <span class="setlist-song">half moon</span>
+                        <span class="setlist-song">lucky</span>
+                        <span class="setlist-song">new york</span>
+                        <span class="setlist-song">watt</span>
+                        <span class="setlist-song">umpqua</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">believe me</span>
+                        <span class="setlist-song">? (crowd suggestion but i forgot)</span>
+                        <span class="setlist-song">3 rounds</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Maruja</span>
+                        <span class="concert-venue">The Garrison · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-03-20</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">The Invisible Man</span>
+                        <span class="setlist-song">Break the Tension</span>
+                        <span class="setlist-song">Zeitgeist</span>
+                        <span class="setlist-song">Look Down on Us</span>
+                        <span class="setlist-song">One Hand Behind the Devil</span>
+                        <span class="setlist-song">Thunder</span>
+                        <span class="setlist-song">Kakistocracy</span>
+                        <span class="setlist-song">Resisting Resistance</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">The Newfound Interest in Connecticut</span>
+                        <span class="concert-venue">The Garrison · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-03-28</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">The Computers Stopped Exchanging Information</span>
+                        <span class="setlist-song">And Started Sharing Stories</span>
+                        <span class="setlist-song">And Then They Kissed</span>
+                        <span class="setlist-song">Okay, You Can Be Tigers, But No Crashing</span>
+                        <span class="setlist-song">Five Years of Work and We Built That Song</span>
+                        <span class="setlist-song">And It Sings for Itself</span>
+                        <span class="setlist-song">I Can Hear Your Footsteps Just Outside Camp a Sah, Sah, Sah...</span>
+                        <span class="setlist-song">I Can See Your Breath Rising in the Air;</span>
+                        <span class="setlist-song">On My Back Watching Northern Lights Recede</span>
+                        <span class="setlist-song">The Arctic Circle</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Mogwai</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-04-14</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">God Gets You Back</span>
+                        <span class="setlist-song">Hi Chaos</span>
+                        <span class="setlist-song">I'm Jim Morrison, I'm Dead</span>
+                        <span class="setlist-song">If You Find This World Bad, You Should See Some of the Others</span>
+                        <span class="setlist-song">Christmas Steps</span>
+                        <span class="setlist-song">Pale Vegan Hip Pain</span>
+                        <span class="setlist-song">Ritchie Sacramento</span>
+                        <span class="setlist-song">Every Country's Sun</span>
+                        <span class="setlist-song">Fanzine Made of Flesh</span>
+                        <span class="setlist-song">Mogwai Fear Satan</span>
+                        <span class="setlist-song">We're No Here</span>
+                        <span class="setlist-song">Lion Rumpus</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">My Father, My King</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Mount Eerie</span>
+                        <span class="concert-venue">The Concert Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-04-15</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Night Palace</span>
+                        <span class="setlist-song">I Saw Another Bird</span>
+                        <span class="setlist-song">Broom of Wind</span>
+                        <span class="setlist-song">Non-Metaphorical Decolonization</span>
+                        <span class="setlist-song">Demolition</span>
+                        <span class="setlist-song">& Sun</span>
+                        <span class="setlist-song">Empty Paper Towel Roll</span>
+                        <span class="setlist-song">I Walk</span>
+                        <span class="setlist-song">the Gleam pt. 3</span>
+                        <span class="setlist-song">I Heard Whales (I Think)</span>
+                        <span class="setlist-song">weren't for the wind</span>
+                        <span class="setlist-song">Voice in Headphones</span>
+                        <span class="setlist-song">I Spoke With a Fish</span>
+                        <span class="setlist-song">Huge Fire</span>
+                        <span class="setlist-song">I Need New Eyes</span>
+                        <span class="setlist-song">Stone Woman Gives Birth to a Child at Night</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Magdalena Bay</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-05-07</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">She Looked Like Me!</span>
+                        <span class="setlist-song">Killing Time</span>
+                        <span class="setlist-song">True Blue Interlude</span>
+                        <span class="setlist-song">Image</span>
+                        <span class="setlist-song">Secrets (Your Fire)</span>
+                        <span class="setlist-song">You Lose!</span>
+                        <span class="setlist-song">Death & Romance</span>
+                        <span class="setlist-song">Fear, Sex</span>
+                        <span class="setlist-song">Vampire in the Corner</span>
+                        <span class="setlist-song">Watching T.V.</span>
+                        <span class="setlist-song">Tunnel Vision</span>
+                        <span class="setlist-song">Top Dog</span>
+                        <span class="setlist-song">Tonguetwister</span>
+                        <span class="setlist-song">Love Is Everywhere</span>
+                        <span class="setlist-song">Feeling DiskInserted?</span>
+                        <span class="setlist-song">Chaeri</span>
+                        <span class="setlist-song">That’s My Floor</span>
+                        <span class="setlist-song">Cry for Me</span>
+                        <span class="setlist-song">Killshot</span>
+                        <span class="setlist-song">Wandering Eyes</span>
+                        <span class="setlist-song">Angel on a Satellite</span>
+                        <span class="setlist-song">The Ballad of Matt & Mica</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">The Beginning</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Godspeed You! Black Emperor</span>
+                        <span class="concert-venue">Vogue Theatre · Vancouver, BC, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-05-10</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hope Drone</span>
+                        <span class="setlist-song">SUN IS A HOLE SUN IS VAPORS</span>
+                        <span class="setlist-song">BABYS IN A THUNDERCLOUD</span>
+                        <span class="setlist-song">RAINDROPS CAST IN LEAD</span>
+                        <span class="setlist-song">Fire at Static Valley</span>
+                        <span class="setlist-song">PALE SPECTATOR TAKES PHOTOGRAPHS / GREY RUBBLE – GREEN SHOOTS</span>
+                        <span class="setlist-song">Cliff</span>
+                        <span class="setlist-song">Albanian</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Geordie Greep</span>
+                        <span class="concert-venue">The Pearl · Vancouver, BC, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-05-11</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">The New Sound</span>
+                        <span class="setlist-song">Walk Up</span>
+                        <span class="setlist-song">Terra</span>
+                        <span class="setlist-song">Through a War</span>
+                        <span class="setlist-song">Oh, ¿qué será?</span>
+                        <span class="setlist-song">Dangerous Liaisons</span>
+                        <span class="setlist-song">Spain</span>
+                        <span class="setlist-song">As If Waltz</span>
+                        <span class="setlist-song">Mighty Mouse</span>
+                        <span class="setlist-song">Holy, Holy</span>
+                        <span class="setlist-song">Cua cua ra, cua cua</span>
+                        <span class="setlist-song">Parabola</span>
+                        <span class="setlist-song">Motorbike</span>
+                        <span class="setlist-song">Blues</span>
+                        <span class="setlist-song">Bongo Season</span>
+                        <span class="setlist-song">The Magician</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Squid</span>
+                        <span class="concert-venue">The Opera House · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-05-17</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Crispy Skin</span>
+                        <span class="setlist-song">Building 650</span>
+                        <span class="setlist-song">The Cleaner</span>
+                        <span class="setlist-song">G.S.K.</span>
+                        <span class="setlist-song">Swing (in a Dream)</span>
+                        <span class="setlist-song">Cowards</span>
+                        <span class="setlist-song">2010</span>
+                        <span class="setlist-song">Undergrowth</span>
+                        <span class="setlist-song">The Blades</span>
+                        <span class="setlist-song">Well Met (Fingers Through the Fence)</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">The Hearth and Circle Round Fire</span>
+                        <span class="setlist-song">Pamphlets</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Panchiko</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-06-03</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Stabilisers for Big Boys</span>
+                        <span class="setlist-song">Stuck</span>
+                        <span class="setlist-song">Ginkgo</span>
+                        <span class="setlist-song">CUT</span>
+                        <span class="setlist-song">Gwen Everest</span>
+                        <span class="setlist-song">Mac’s Omelette</span>
+                        <span class="setlist-song">Failed at Math(s)</span>
+                        <span class="setlist-song">Chapel of Salt</span>
+                        <span class="setlist-song">Untitled Demo - 1997</span>
+                        <span class="setlist-song">NeilSSong</span>
+                        <span class="setlist-song">Honeycomb</span>
+                        <span class="setlist-song">Lifestyle Trainers</span>
+                        <span class="setlist-song">Until I Know</span>
+                        <span class="setlist-song">D>E>A>T>H>M>E>T>A>L</span>
+                        <span class="setlist-song">Kicking Cars</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Mount Eerie</span>
+                        <span class="concert-venue">The Great Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-06-28</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Night Palace</span>
+                        <span class="setlist-song">Broom of Wind</span>
+                        <span class="setlist-song">Lone Bell</span>
+                        <span class="setlist-song">I Walk</span>
+                        <span class="setlist-song">the Gleam pt. 3</span>
+                        <span class="setlist-song">I Heard Whales (I Think)</span>
+                        <span class="setlist-song">Gris</span>
+                        <span class="setlist-song">Wooly Mammoth's Mighty Absence</span>
+                        <span class="setlist-song">Blurred World</span>
+                        <span class="setlist-song">The Moon</span>
+                        <span class="setlist-song">Moon Sequel</span>
+                        <span class="setlist-song">Stone Woman Gives Birth to a Child at Night</span>
+                        <span class="setlist-song">I Spoke With a Fish</span>
+                        <span class="setlist-song">Huge Fire</span>
+                        <span class="setlist-song">Empty Paper Towel Roll</span>
+                        <span class="setlist-song">We Squirm</span>
+                        <span class="setlist-song">Goodbye Hope</span>
+                        <span class="setlist-song">the Place Lives</span>
+                        <span class="setlist-song">I Need New Eyes</span>
+                        <span class="setlist-song">You Swan, Go On</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Men I Trust</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-07-24</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">To Ease You</span>
+                        <span class="setlist-song">Come Back Down</span>
+                        <span class="setlist-song">Husk</span>
+                        <span class="setlist-song">Hard To See</span>
+                        <span class="setlist-song">Sugar</span>
+                        <span class="setlist-song">Another Stone</span>
+                        <span class="setlist-song">In My Years</span>
+                        <span class="setlist-song">Ring of Past</span>
+                        <span class="setlist-song">Carried Away</span>
+                        <span class="setlist-song">Serenade of Water</span>
+                        <span class="setlist-song">Where I Sit</span>
+                        <span class="setlist-song">The Better Half</span>
+                        <span class="setlist-song">Humming Man</span>
+                        <span class="setlist-song">Oncle Jazz / Norton Commander (All We Need) / Hard To Let Go / Numb / Lauren / Oh Dove</span>
+                        <span class="setlist-song">All Night</span>
+                        <span class="setlist-song">Tailwhip</span>
+                        <span class="setlist-song">Seven</span>
+                        <span class="setlist-song">Show Me How</span>
+                        <span class="setlist-song">Say, Can You Hear</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Worn Down</span>
+                        <span class="setlist-song">Billie Toppy</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">clipping.</span>
+                        <span class="concert-venue">The Concert Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-08-11</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Ask What Happened</span>
+                        <span class="setlist-song">Change the Channel</span>
+                        <span class="setlist-song">Wriggle</span>
+                        <span class="setlist-song">Body for the Pile</span>
+                        <span class="setlist-song">Say the Name</span>
+                        <span class="setlist-song">Scams</span>
+                        <span class="setlist-song">Work Work</span>
+                        <span class="setlist-song">Body & Blood</span>
+                        <span class="setlist-song">All in Your Head</span>
+                        <span class="setlist-song">Long Way Away</span>
+                        <span class="setlist-song">Night of Heaven</span>
+                        <span class="setlist-song">Dodger</span>
+                        <span class="setlist-song">Keep Pushing</span>
+                        <span class="setlist-song">Code</span>
+                        <span class="setlist-song">Shooter</span>
+                        <span class="setlist-song">Mirrorshades Pt. 1</span>
+                        <span class="setlist-song">Run It</span>
+                        <span class="setlist-song">Dominator</span>
+                        <span class="setlist-song">Nothing Is Safe</span>
+                        <span class="setlist-song">Ask What Happened</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Enlacing</span>
+                        <span class="setlist-song">Face</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">d4vd</span>
+                        <span class="concert-venue">History · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-08-30</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">What Are You Waiting For</span>
+                        <span class="setlist-song">Take Me to the Sun</span>
+                        <span class="setlist-song">Sky</span>
+                        <span class="setlist-song">Friend Again</span>
+                        <span class="setlist-song">Backstreet Girl</span>
+                        <span class="setlist-song">Sleep Well</span>
+                        <span class="setlist-song">You and I</span>
+                        <span class="setlist-song">WORTHLESS</span>
+                        <span class="setlist-song">Here With Me</span>
+                        <span class="setlist-song">This Is How It Feels</span>
+                        <span class="setlist-song">Crashing</span>
+                        <span class="setlist-song">Where'd It Go Wrong?</span>
+                        <span class="setlist-song">Best Friend</span>
+                        <span class="setlist-song">One More Dance</span>
+                        <span class="setlist-song">Is This Really Love?</span>
+                        <span class="setlist-song">Feel It</span>
+                        <span class="setlist-song">Leave Her</span>
+                        <span class="setlist-song">My House Is Not a Home</span>
+                        <span class="setlist-song">Afterlife</span>
+                        <span class="setlist-song">Romantic Homicide</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Godspeed You! Black Emperor</span>
+                        <span class="concert-venue">Supercrawl · Hamilton, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-09-12</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Hope Drone</span>
+                        <span class="setlist-song">SUN IS A HOLE SUN IS VAPORS</span>
+                        <span class="setlist-song">BABYS IN A THUNDERCLOUD</span>
+                        <span class="setlist-song">RAINDROPS CAST IN LEAD</span>
+                        <span class="setlist-song">PALE SPECTATOR TAKES PHOTOGRAPHS / GREY RUBBLE – GREEN SHOOTS</span>
+                        <span class="setlist-song">The Sad Mafioso</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Maruja</span>
+                        <span class="concert-venue">The Phoenix Concert Theatre · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-09-27</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Bloodsport</span>
+                        <span class="setlist-song">Trenches</span>
+                        <span class="setlist-song">Break the Tension</span>
+                        <span class="setlist-song">Zeitgeist</span>
+                        <span class="setlist-song">Zaytoun</span>
+                        <span class="setlist-song">Thunder</span>
+                        <span class="setlist-song">Born to Die</span>
+                        <span class="setlist-song">Saoirse</span>
+                        <span class="setlist-song">The Invisible Man</span>
+                        <span class="setlist-song">Look Down on Us</span>
+                        <span class="setlist-song">Resisting Resistance</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Bloodsport</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Swans</span>
+                        <span class="concert-venue">The Phoenix Concert Theatre · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-10-03</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">The End of Forgetting</span>
+                        <span class="setlist-song">The Merge</span>
+                        <span class="setlist-song">Paradise Is Mine</span>
+                        <span class="setlist-song">Little Mind</span>
+                        <span class="setlist-song">A Little God in My Hands</span>
+                        <span class="setlist-song">Newly Sentient Being</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Stereolab</span>
+                        <span class="concert-venue">Danforth Music Hall · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-10-06</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Mystical Plosives</span>
+                        <span class="setlist-song">Aerial Troubles</span>
+                        <span class="setlist-song">Motoroller Scalatron</span>
+                        <span class="setlist-song">Transmuted Matter</span>
+                        <span class="setlist-song">Peng! 33</span>
+                        <span class="setlist-song">The Flower Called Nowhere</span>
+                        <span class="setlist-song">Melodie Is a Wound</span>
+                        <span class="setlist-song">If You Remember I Forgot How to Dream Pt. 1</span>
+                        <span class="setlist-song">If You Remember I Forgot How to Dream Pt. 2</span>
+                        <span class="setlist-song">Miss Modular</span>
+                        <span class="setlist-song">Household Names</span>
+                        <span class="setlist-song">Electrified Teenybop!</span>
+                        <span class="setlist-song">Esemplastic Creeping Eruption</span>
+                        <span class="setlist-song">Cybele's Reverie</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">The Way Will Be Opening</span>
+                        <span class="setlist-song">Immortal Hands</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Geese</span>
+                        <span class="concert-venue">The Opera House · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2025-10-11</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">Islands of Men</span>
+                        <span class="setlist-song">100 Horses</span>
+                        <span class="setlist-song">Half Real</span>
+                        <span class="setlist-song">Cowboy Nudes</span>
+                        <span class="setlist-song">Gravity Blues</span>
+                        <span class="setlist-song">Mysterious Love</span>
+                        <span class="setlist-song">Husbands</span>
+                        <span class="setlist-song">Getting Killed</span>
+                        <span class="setlist-song">2122</span>
+                        <span class="setlist-song">Rain Dance</span>
+                        <span class="setlist-song">Au Pays du Cocaine</span>
+                        <span class="setlist-song">Bow Down</span>
+                        <span class="setlist-song">Taxes</span>
+                        <span class="setlist-song">St. Elmo</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Domoto</span>
+                        <span class="setlist-song">Cobra</span>
+                        <span class="setlist-song">Trinidad</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Racing Mount Pleasant</span>
+                        <span class="concert-venue">The Garrison · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2026-01-20</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">new 1</span>
+                        <span class="setlist-song">Emily</span>
+                        <span class="setlist-song">new 2</span>
+                        <span class="setlist-song">new 3</span>
+                        <span class="setlist-song">Annie</span>
+                        <span class="setlist-song">Your New Place</span>
+                        <span class="setlist-song">Racing Mount Pleasant</span>
+                        <span class="setlist-song">Call It Easy</span>
+                        <span class="setlist-song">You</span>
+                        <span class="setlist-song">You Pt. 2</span>
+                        <span class="setlist-song">Seminary</span>
+                        <span class="setlist-song">Snowing, All at Once</span>
+                        <span class="setlist-song">Outlast</span>
+                        <span class="setlist-encore">Encore</span>
+                        <span class="setlist-song">Do You Think I’m Pretty</span>
+                    </div>
+                    <div class="concert-notes">will fill in later
+</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">what is your name?</span>
+                        <span class="concert-venue">The Dance Cave · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2026-03-12</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">It's Okay...</span>
+                        <span class="setlist-song">youthful days</span>
+                    </div>
+                    <div class="concert-notes">will fill in later, this was an opener but i left before the main set</div>
+                </div>
+            </div>
+
+
+            <div class="concert-card">
+                <div class="concert-header" onclick="toggleConcert(this)">
+                    <div class="concert-header-left">
+                        <span class="concert-artist">Mirah</span>
+                        <span class="concert-venue">Dina's Tavern · Toronto, ON, Canada</span>
+                    </div>
+                    <div class="concert-header-right">
+                        <span class="concert-date">2026-03-28</span>
+                        <span class="concert-toggle">▼</span>
+                    </div>
+                </div>
+                <div class="concert-body">
+                    <div class="concert-setlist">
+                        <span class="setlist-song">(setlist unknown)</span>
+                    </div>
+                    <div class="concert-notes">will fill in later</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleConcert(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.concert-toggle');
+            const isOpen = body.classList.toggle('open');
+            toggle.textContent = isOpen ? '▲' : '▼';
+        }
+
+        function toggleStats() {
+            const body = document.getElementById('statsBody');
+            const toggle = document.getElementById('statsToggle');
+            const isOpen = body.classList.toggle('open');
+            toggle.textContent = isOpen ? '▲' : '▼';
+        }
+
+        function switchStatsTab(key, el) {
+            document.querySelectorAll('.stats-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.stats-panel').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('stats-' + key).classList.add('active');
+        }
+
+        function buildStats() {
+            const cards = document.querySelectorAll('.concert-card');
+            const artists = {}, venues = {}, cities = {};
+
+            cards.forEach(card => {
+                const artistEl = card.querySelector('.concert-artist');
+                const venueEl  = card.querySelector('.concert-venue');
+
+                const artist = artistEl ? artistEl.textContent.trim() : null;
+                const venueCity = venueEl ? venueEl.textContent.trim() : null;
+
+                // venue text is "Venue · City" — split on ·
+                let venue = venueCity, city = null;
+                if (venueCity && venueCity.includes('·')) {
+                    const parts = venueCity.split('·').map(s => s.trim());
+                    venue = parts[0];
+                    city  = parts.slice(1).join('·').trim();
+                }
+
+                if (artist) artists[artist] = (artists[artist] || 0) + 1;
+                if (venue)  venues[venue]   = (venues[venue]   || 0) + 1;
+                if (city)   cities[city]    = (cities[city]    || 0) + 1;
+            });
+
+            const total = cards.length;
+            document.getElementById('statsSummary').textContent =
+                total + ' show' + (total !== 1 ? 's' : '');
+
+            function renderPanel(id, counts) {
+                const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+                const panel = document.getElementById(id);
+                panel.innerHTML = sorted.map(([name, count]) =>
+                    `<div class="stats-row">
+                        <span class="stats-row-name">${name}</span>
+                        <span class="stats-row-count">${count}×</span>
+                    </div>`
+                ).join('');
+            }
+
+            renderPanel('stats-artists', artists);
+            renderPanel('stats-venues',  venues);
+            renderPanel('stats-cities',  cities);
+        }
+
+        buildStats();
+    </script>
+</body>
+</html>
