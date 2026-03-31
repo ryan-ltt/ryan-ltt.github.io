@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Limits of Identity-Based Organizing</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --ink: #1a1a18;
+    --accent: #b5320a;
+    --mid: #5c5646;
+    --rule: #c8bfa8;
+    --quote-bg: #ede8dd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.85;
+    font-size: 18px;
+  }
+
+  header {
+    border-bottom: 3px double var(--rule);
+    padding: 3rem 0 2rem;
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .kicker {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 1.4rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.6rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .byline {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 400;
+  }
+
+  .byline span {
+    color: var(--rule);
+    margin: 0 0.6em;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--mid);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+  }
+
+  .back-link:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 6rem;
+  }
+
+  .lead {
+    font-size: 1.18rem;
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding-left: 1.4rem;
+    margin-bottom: 2.8rem;
+    font-style: italic;
+  }
+
+  p {
+    margin-bottom: 1.6rem;
+    color: #2a2a25;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 3.5rem 0 1.2rem;
+    color: var(--ink);
+  }
+
+  h2::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  blockquote {
+    background: var(--quote-bg);
+    border-left: 4px solid var(--accent);
+    margin: 2.4rem 0;
+    padding: 1.4rem 1.8rem;
+    font-style: italic;
+    font-size: 0.97rem;
+    color: var(--mid);
+    line-height: 1.8;
+  }
+
+  blockquote cite {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    font-style: normal;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .section-divider {
+    text-align: center;
+    margin: 3rem 0;
+    color: var(--accent);
+    font-size: 1.3rem;
+    letter-spacing: 0.5em;
+  }
+
+  footer {
+    border-top: 3px double var(--rule);
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.8;
+  }
+
+  footer strong {
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/cmn450-blog/" class="back-link">← back to blog</a>
+  <p class="kicker">Essay &nbsp;·&nbsp; Politics &nbsp;·&nbsp; Culture</p>
+  <h1>The Limits of Identity-Based Organizing</h1>
+  <p class="byline">Opinion<span>·</span> 2026</p>
+</header>
+
+<main>
+
+  <p class="lead">Everybody seeks connection and wants to relate to those around them. But when identity becomes the only framework for organizing, it limits who gets to participate — even when a struggle is experienced by more than just one group.</p>
+
+  <p>It's not uncommon to try and seek out a social group based on similar social identities, such as a group where members may belong to the same gender, culture, sexuality, or another type of identity group. Broadly, this could even extend to circumstances like age, location, or even a hobby that is core to your identity.</p>
+
+  <p>More specifically, social groups that are strongly associated with social identities can emerge because people face isolation or exclusion from more generalized groups. People want social groups where they can feel accepted and exist without justification. Think of a group that forms because its members face a shared struggle that the people around them don't experience or recognize.</p>
+
+  <h2>Identity and Resistance in Xbox Live</h2>
+
+  <p>Kishonna Gray analyzes two identity-based groups in the paper "Collective Organizing, Individual Resistance, or Asshole Griefers? An Ethnographic Analysis of Women of Color In Xbox Live." This paper provides insight on how women of colour belong to and participate in identity based groups in an online setting — more particularly, Xbox gaming communities that are dominated by men.</p>
+
+  <p>The first group described, the Conscious Daughters, formed a clan (social group) on Xbox through the video game Gears of War. The group consisted of women of colour, who wanted to create a safe space for racialized women in the gaming space (Gray, 2013, p. 7). As described by Gray (2013), the other group studied, Puerto Reekan Killaz, had a more exclusive identity membership:</p>
+
+  <blockquote>
+    I realized that the Puerto Reekan Killaz had created their clan as an all-lesbian space, and I had made it known previously that I had a male partner (not realizing that I was ostracizing myself). … I also discovered that the clan rarely welcomed members who were unable to speak Spanish. My Black, female body was not enough for me to pass within this space initially.
+    <cite>Gray, 2013, p. 7</cite>
+  </blockquote>
+
+  <p>Gray describes that the platform operates through voice communication, and describes a process called linguistic profiling and how it is particularly relevant to Xbox users:</p>
+
+  <blockquote>
+    In voice based communities, information is revealed automatically when someone speaks.
+    <cite>Gray, 2013, p. 2</cite>
+  </blockquote>
+
+  <p>Identity markers such as race and gender are immediately audible, and users can be discriminated against based on the way that they sound. One of the members of the Conscious Daughters describes her experience filing complaints against various forms of discrimination:</p>
+
+  <blockquote>
+    "ShedaBoss: Man all the time. But Xbox didn't care. Nothing would ever happen to them. But we ain't stop filing complaints. Some people don't no more. But we do."
+    <cite>Gray, 2013, p. 11</cite>
+  </blockquote>
+
+  <p>Beyond reports to the Xbox platform, both clans participated in a number of resistance strategies against harassment on gaming platforms. The Conscious Daughters blogged, posted on the forums, boycotted games, and organized sit-ins. The Puerto Reekan Killaz used griefing tactics, such as spawn killing, and other disruptive gaming strategies. Both groups were responding rationally to a system that was not taking any action against discrimination.</p>
+
+  <p>Eventually, the platform punished their acts of resistance while continuing to allow the harassers to game without consequences:</p>
+
+  <blockquote>
+    "MissUnique: Shit we got tired of getting suspended. We pay all this money for our memberships and a few people complain and we were the ones getting suspended."
+    <cite>Gray, 2013, p. 11</cite>
+  </blockquote>
+
+  <p>The Conscious Daughters' act of boycotting was organized around women of colour, meaning that the act of resistance had a strict membership criteria, ultimately resulting in very few members participating. The Xbox platform used this identity framework against the Conscious Daughters regarding their forum posts describing the harassment:</p>
+
+  <blockquote>
+    "MissUnique: Because, and I quote, we are violating terms of service. Talking about gender and race may incite racism and sexism they claim."
+    <cite>Gray, 2013, p. 12</cite>
+  </blockquote>
+
+  <div class="section-divider">· · ·</div>
+
+  <h2>The Corporate Lens</h2>
+
+  <p>While the Conscious Daughters had a valid reason to organize around their shared identity and experiences, what happens when you consider the perspective of the corporation? Xbox, as a corporate platform, is built around generating profit and maintaining a consistent user experience. When the Conscious Daughters framed their complaints around race and gender, the platform had the language to dismiss them.</p>
+
+  <p>Additionally, the Conscious Daughters also attempted to boycott games that stereotypically depicted women and people of colour. However, the boycott was only limited to the members of the group:</p>
+
+  <blockquote>
+    "cdXFemmeFataleXcd: … Women make up a small portion of gamers. Women of color is even less. So you tell me. It ain't done shit."
+    <cite>Gray, 2013, p. 12</cite>
+  </blockquote>
+
+  <p>The boycott didn't fail because it was a bad strategy; it failed because organizing strictly around identity meant there were simply not enough participants to make an impact.</p>
+
+  <p>If the boycott had been framed around something that could reach a broader audience — such as holding the platform accountable for ignoring reports, or the right to game without being harassed by other users — it could have drawn support from gamers of all backgrounds who experienced similar struggles.</p>
+
+  <div class="section-divider">· · ·</div>
+
+  <h2>Building a Broader Resistance</h2>
+
+  <p>Identity-based groups such as the Conscious Daughters and the Puerto Reekan Killaz do not need to be dismantled. These groups formed because the members needed each other, and wanted to find community around shared experiences.</p>
+
+  <p>Instead, it should be recognized that anti-assimilation shouldn't mean retreating into smaller and smaller identity labels until your movement can't reach anyone outside your own circle. When identity becomes the only framework for organizing, it limits who gets to participate, even when a struggle is experienced by more than just one group.</p>
+
+  <p>These groups were created to fight problems of discrimination, but the problems themselves were never limited to one identity group. The women in Gray's study were paying customers who were being harassed on a platform that refused to act on their complaints, and were then suspended from the service for attempting to resist that harassment themselves. When this is framed solely as a race or gender issue, it narrows the scope of who can participate in the resistance against large corporations. However, framing it as a structural failure of the corporation opens the door to a much broader coalition.</p>
+
+</main>
+
+<footer>
+  <strong>Works Cited</strong>
+  Gray, K. L. (2013). Collective organizing, individual resistance, or asshole griefers? An ethnographic analysis of women of color in Xbox Live. <em>Ada: A Journal of Gender, New Media, and Technology</em>, 2.
+</footer>
+
+</body>
+</html>
