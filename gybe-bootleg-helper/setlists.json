@@ -16627,7 +16627,13 @@
       "moya",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-17.SP-CMC-8",
+        "url": "https://archive.org/details/gybe2026-03-17.SP-CMC-8",
+        "title": "Godspeed You! Black Emperor Live at Markthalle on 2026-03-17"
+      }
+    ]
   },
   {
     "date": "2026-03-18",
@@ -16693,6 +16699,11 @@
         "id": "gybe2026-03-20.mix",
         "url": "https://archive.org/details/gybe2026-03-20.mix",
         "title": "Godspeed You! Black Emperor Live at Kantine on 2026-03-20"
+      },
+      {
+        "id": "gybe2026-03-20.DPA4060",
+        "url": "https://archive.org/details/gybe2026-03-20.DPA4060",
+        "title": "Godspeed You! Black Emperor Live at Die Kantine on 2026-03-20"
       }
     ]
   }
