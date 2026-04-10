@@ -16706,5 +16706,21 @@ const SETLISTS_DATA = [
         "title": "Godspeed You! Black Emperor Live at Die Kantine on 2026-03-20"
       }
     ]
+  },
+  {
+    "date": "2026-04-09",
+    "venue": "o2 academy, leeds, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "sad mafioso"
+    ],
+    "recordings": []
   }
 ];
