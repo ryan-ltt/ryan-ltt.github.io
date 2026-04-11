@@ -1202,6 +1202,11 @@ const SETLISTS_DATA = [
         "id": "gybe1999-09-24",
         "url": "https://archive.org/details/gybe1999-09-24",
         "title": "Godspeed You! Black Emperor Live at Troubadour on 1999-09-24"
+      },
+      {
+        "id": "gybe1999-09-24.ECM-909",
+        "url": "https://archive.org/details/gybe1999-09-24.ECM-909",
+        "title": "Godspeed You! Black Emperor Live at Troubadour on 1999-09-24"
       }
     ]
   },
@@ -16720,6 +16725,37 @@ const SETLISTS_DATA = [
       "chart #3",
       "world police",
       "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2026-04-09.a10",
+        "url": "https://archive.org/details/gybe2026-04-09.a10",
+        "title": "Godspeed You! Black Emperor Live at O2 Academy Leeds on 2026-04-09"
+      },
+      {
+        "id": "gybe2026-04-09",
+        "url": "https://archive.org/details/gybe2026-04-09",
+        "title": "Godspeed You! Black Emperor Live at Town & Country Club on 2026-04-09"
+      },
+      {
+        "id": "gybe2026-04-09.mtx",
+        "url": "https://archive.org/details/gybe2026-04-09.mtx",
+        "title": "Godspeed You! Black Emperor Live at Town & Country Club on 2026-04-09"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-10",
+    "venue": "troxy, london, uk",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
     ],
     "recordings": []
   }
