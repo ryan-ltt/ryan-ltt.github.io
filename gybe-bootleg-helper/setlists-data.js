@@ -16762,6 +16762,11 @@ const SETLISTS_DATA = [
         "id": "gybe2026-04-10.h4e",
         "url": "https://archive.org/details/gybe2026-04-10.h4e",
         "title": "Godspeed You! Black Emperor Live at Troxy on 2026-04-10"
+      },
+      {
+        "id": "gybe2026-04-10.m4",
+        "url": "https://archive.org/details/gybe2026-04-10.m4",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2026-04-10"
       }
     ]
   },
@@ -16778,6 +16783,27 @@ const SETLISTS_DATA = [
       "chart #3",
       "world police",
       "sad mafioso"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2026-04-11.mtx",
+        "url": "https://archive.org/details/gybe2026-04-11.mtx",
+        "title": "Godspeed You! Black Emperor Live at Trix on 2026-04-11"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-12",
+    "venue": "effenaar, eindhoven, hol",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "fire at static valley",
+      "pale spectator takes photographs",
+      "moya",
+      "blaise bailey finnegan III"
     ],
     "recordings": []
   }
