@@ -16538,7 +16538,13 @@ const SETLISTS_DATA = [
       "world police",
       "sad mafioso"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-11.diy",
+        "url": "https://archive.org/details/gybe2026-03-11.diy",
+        "title": "Godspeed You! Black Emperor Live at Posthof on 2026-03-11"
+      }
+    ]
   },
   {
     "date": "2026-03-12",
@@ -16574,7 +16580,13 @@ const SETLISTS_DATA = [
       "moya",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-03-13.diy",
+        "url": "https://archive.org/details/gybe2026-03-13.diy",
+        "title": "Godspeed You! Black Emperor Live at Arena on 2026-03-13"
+      }
+    ]
   },
   {
     "date": "2026-03-15",
@@ -16804,6 +16816,21 @@ const SETLISTS_DATA = [
       "pale spectator takes photographs",
       "moya",
       "blaise bailey finnegan III"
+    ],
+    "recordings": []
+  },
+  {
+    "date": "2026-04-13",
+    "venue": "trix, antwerpen, bel",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "bosses hang",
+      "gathering storm"
     ],
     "recordings": []
   }
