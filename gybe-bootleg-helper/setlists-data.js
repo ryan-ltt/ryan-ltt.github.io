@@ -16817,7 +16817,13 @@ const SETLISTS_DATA = [
       "moya",
       "blaise bailey finnegan III"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-04-12.mtx",
+        "url": "https://archive.org/details/gybe2026-04-12.mtx",
+        "title": "Godspeed You! Black Emperor Live at Effenaar on 2026-04-12"
+      }
+    ]
   },
   {
     "date": "2026-04-13",
@@ -16831,6 +16837,27 @@ const SETLISTS_DATA = [
       "pale spectator takes photographs",
       "bosses hang",
       "gathering storm"
+    ],
+    "recordings": [
+      {
+        "id": "gybe2026-04-13.mtx",
+        "url": "https://archive.org/details/gybe2026-04-13.mtx",
+        "title": "Godspeed You! Black Emperor Live at Trix on 2026-04-13"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-14",
+    "venue": "la cartonnerie, reims, fr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "albanian",
+      "sad mafioso"
     ],
     "recordings": []
   }
