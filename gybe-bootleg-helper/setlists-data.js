@@ -16860,5 +16860,21 @@ const SETLISTS_DATA = [
       "sad mafioso"
     ],
     "recordings": []
+  },
+  {
+    "date": "2026-04-16",
+    "venue": "floyd, athens, gr",
+    "songs": [
+      "intro",
+      "sun is a hole sun is vapors",
+      "babys in a thundercloud",
+      "raindrops cast in lead",
+      "monheim",
+      "pale spectator takes photographs",
+      "chart #3",
+      "world police",
+      "gathering storm"
+    ],
+    "recordings": []
   }
 ];
