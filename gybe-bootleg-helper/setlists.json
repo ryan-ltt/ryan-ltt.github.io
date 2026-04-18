@@ -16779,6 +16779,11 @@
         "id": "gybe2026-04-10.m4",
         "url": "https://archive.org/details/gybe2026-04-10.m4",
         "title": "Godspeed You! Black Emperor Live at Troxy on 2026-04-10"
+      },
+      {
+        "id": "gybe2026-04-10.DPA",
+        "url": "https://archive.org/details/gybe2026-04-10.DPA",
+        "title": "Godspeed You! Black Emperor Live at Troxy on 2026-04-10"
       }
     ]
   },
@@ -16859,7 +16864,13 @@
       "albanian",
       "sad mafioso"
     ],
-    "recordings": []
+    "recordings": [
+      {
+        "id": "gybe2026-04-14.mtx",
+        "url": "https://archive.org/details/gybe2026-04-14.mtx",
+        "title": "Godspeed You! Black Emperor Live at La Cartonnerie on 2026-04-14"
+      }
+    ]
   },
   {
     "date": "2026-04-16",
