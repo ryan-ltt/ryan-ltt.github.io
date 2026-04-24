@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timeline tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/projects/projects.css">
+    <link rel="stylesheet" href="timeline-tracker.css">
+</head>
+<body>
+    <header>
+        <h1>timeline tracker</h1>
+        <nav class="nav-buttons">
+            <a href="/" class="button">home</a>
+            <a href="/projects/" class="button">projects</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="io-bar">
+            <label class="button" style="cursor:pointer;">
+                upload json
+                <input type="file" id="fileInput" accept=".json,application/json" style="display:none">
+            </label>
+            <button class="button" id="saveBtn">save</button>
+            <button class="button" id="exportBtn">export json</button>
+            <button class="button" id="clearBtn">clear data</button>
+            <span id="statusLine" class="status-line"></span>
+        </div>
+
+        <div id="addRoutePanel" style="display:none">
+            <div class="add-route-form">
+                <div class="add-route-row">
+                    <div class="add-route-field">
+                        <label class="transit-form-label">date</label>
+                        <input type="date" id="newRouteDate" class="transit-entry-input" style="width:140px">
+                    </div>
+                    <div class="add-route-field">
+                        <label class="transit-form-label">start time</label>
+                        <input type="time" id="newRouteStartTime" class="transit-entry-input" style="width:110px">
+                    </div>
+                    <div class="add-route-field">
+                        <label class="transit-form-label">end time</label>
+                        <input type="time" id="newRouteEndTime" class="transit-entry-input" style="width:110px">
+                    </div>
+                    <div class="add-route-field">
+                        <label class="transit-form-label">mode</label>
+                        <select id="newRouteMode" class="transit-mode-select" style="width:180px">
+                            <option value="">unknown</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="add-route-row">
+                    <div class="add-route-field">
+                        <label class="transit-form-label">starts after</label>
+                        <select id="newRouteFromEntry" class="transit-mode-select" style="width:220px">
+                            <option value="">— pick manually —</option>
+                        </select>
+                    </div>
+                    <div class="add-route-field">
+                        <label class="transit-form-label">ends before</label>
+                        <select id="newRouteToEntry" class="transit-mode-select" style="width:220px">
+                            <option value="">— pick manually —</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="add-route-row">
+                    <div class="add-route-coord-group">
+                        <label class="transit-form-label">start point</label>
+                        <div class="add-route-coord-row">
+                            <select id="newRouteStartPlace" class="transit-mode-select" style="flex:1;min-width:0">
+                                <option value="">— named place —</option>
+                            </select>
+                            <button id="pickStartBtn" class="add-route-pick-btn">pick on map</button>
+                        </div>
+                        <span id="newRouteStartCoord" class="add-route-coord-display">—</span>
+                    </div>
+                    <div class="add-route-coord-group">
+                        <label class="transit-form-label">end point</label>
+                        <div class="add-route-coord-row">
+                            <select id="newRouteEndPlace" class="transit-mode-select" style="flex:1;min-width:0">
+                                <option value="">— named place —</option>
+                            </select>
+                            <button id="pickEndBtn" class="add-route-pick-btn">pick on map</button>
+                        </div>
+                        <span id="newRouteEndCoord" class="add-route-coord-display">—</span>
+                    </div>
+                    <button id="newRouteConfirm" class="transit-confirm-btn" style="align-self:flex-end">add route</button>
+                    <button id="newRouteCancel" class="transit-cancel-btn" style="align-self:flex-end">cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-controls">
+            <label class="radio-label">
+                <input type="radio" name="viewMode" value="day" checked> per day
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="viewMode" value="total"> total
+            </label>
+            <select id="daySelect" style="display:none"></select>
+        </div>
+
+        <div class="map-layout">
+            <div id="map"></div>
+            <div id="sidePanel">
+                <div id="sideList"></div>
+                <div id="sideFoot">
+                    <button id="addRouteBtn" class="side-add-btn">+ add route</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="timeline-tracker.js"></script>
+</body>
+</html>

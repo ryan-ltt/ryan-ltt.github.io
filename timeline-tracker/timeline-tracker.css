@@ -1,0 +1,537 @@
+header,
+main {
+    max-width: 1100px;
+}
+
+.io-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.status-line {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    color: #555;
+}
+
+.view-controls {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+    font-family: Monaco, monospace;
+    font-size: 14px;
+}
+
+.radio-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#daySelect {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 2px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+#addRoutePanel {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border: 2px solid black;
+    background: white;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+}
+
+.add-route-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-route-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.add-route-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.add-route-coord-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.add-route-coord-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.add-route-coord-display {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    color: #555;
+}
+
+.add-route-pick-btn {
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1px solid #888;
+    background: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.add-route-pick-btn:hover { background: #eee; }
+.add-route-pick-btn.active { background: #333; color: white; border-color: #333; }
+
+.map-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+#map {
+    flex: 1;
+    min-width: 0;
+    height: 600px;
+    border: 2px solid black;
+}
+
+#sidePanel {
+    width: 280px;
+    flex-shrink: 0;
+    height: 600px;
+    border: 2px solid black;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#sideList {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#sideFoot {
+    border-top: 2px solid black;
+    padding: 8px 10px;
+    flex-shrink: 0;
+}
+
+.side-add-btn {
+    width: 100%;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 6px 0;
+    border: 1px solid #888;
+    background: white;
+    cursor: pointer;
+    text-align: center;
+}
+
+.side-add-btn:hover {
+    background: #f0f0f0;
+}
+
+.side-item-wrap {
+    border-bottom: 1px solid #ddd;
+}
+
+.side-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    gap: 8px;
+}
+
+.side-item:hover {
+    background: #f0f0f0;
+}
+
+.side-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.side-item-kind {
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.side-item-detail {
+    color: #555;
+    word-break: break-word;
+}
+
+.side-item-time {
+    color: #999;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.side-item-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #999;
+    padding: 0 2px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.delete-btn:hover {
+    color: #c00;
+}
+
+.transit-toggle-btn {
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: Monaco, monospace;
+    padding: 2px 6px;
+    color: #555;
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+.transit-toggle-btn:hover,
+.transit-toggle-btn.active {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+.place-name-badge {
+    font-weight: bold;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #2563eb;
+}
+
+.transit-badge {
+    font-weight: bold;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.edit-subbtn-row {
+    display: flex;
+    gap: 4px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+    flex-wrap: wrap;
+}
+
+.transit-panel {
+    padding: 10px 12px;
+    background: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+}
+
+.transit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.transit-form-row {
+    display: flex;
+    gap: 6px;
+}
+
+.transit-seg-list {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.transit-seg-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    background: white;
+    border: 1px solid #ddd;
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    gap: 5px;
+}
+
+.transit-seg-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.transit-seg-insert {
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    color: #888;
+    font-size: 12px;
+    font-family: Monaco, monospace;
+    padding: 0 5px;
+    line-height: 1.5;
+    flex-shrink: 0;
+}
+
+.transit-seg-insert:hover { background: #eee; color: #333; }
+.transit-seg-insert.active { background: #333; color: white; border-color: #333; }
+
+.transit-seg-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 2px;
+    flex-shrink: 0;
+}
+
+.transit-seg-remove:hover { color: #c00; }
+
+.transit-form-label {
+    font-family: Monaco, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.transit-mode-select,
+.transit-ref-input,
+.transit-entry-input,
+.transit-exit-input,
+.transit-city-input {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid #bbb;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.transit-search-btn,
+.transit-clear-btn {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.transit-search-btn:hover { background: black; color: white; }
+.transit-clear-btn:hover { background: #fee; border-color: #c00; color: #c00; }
+
+.transit-results {
+    margin-top: 8px;
+}
+
+.transit-stop-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.transit-selected-route {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 0;
+}
+
+.transit-stop-select {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid #bbb;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.transit-confirm-btn {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid black;
+    background: black;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.transit-confirm-btn:hover { background: #333; }
+
+.transit-cancel-btn {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid #bbb;
+    background: white;
+    color: #555;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.transit-cancel-btn:hover { background: #eee; }
+
+.transit-suggestions {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.transit-suggest-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    padding: 5px 8px;
+    border: 1px solid #c8dff0;
+    background: #eef6ff;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.transit-suggest-btn:hover {
+    background: #d8eeff;
+    border-color: #88aacc;
+}
+
+.transit-suggest-day {
+    color: #999;
+    font-size: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.transit-loading,
+.transit-no-results {
+    font-size: 12px;
+    color: #888;
+    padding: 4px 0;
+}
+
+.transit-result-item {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    background: white;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+.transit-result-item:hover {
+    background: #e8f0ff;
+    border-color: #999;
+}
+
+.transit-result-name {
+    font-weight: bold;
+    display: block;
+}
+
+.transit-result-fromto {
+    color: #666;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.side-empty {
+    padding: 20px;
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    color: #999;
+    text-align: center;
+}
+
+.leaflet-popup-content {
+    font-family: Monaco, monospace;
+    font-size: 12px;
+}
+
+.popup-delete-btn {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: white;
+    border: 1px solid black;
+    cursor: pointer;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+}
+
+.popup-delete-btn:hover {
+    background: #fee;
+}
+
+#map.waypoint-adding {
+    cursor: crosshair;
+}
+
+.waypoint-hint {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 700px) {
+    .map-layout {
+        flex-direction: column;
+    }
+    #map {
+        width: 100%;
+        height: 400px;
+    }
+    #sidePanel {
+        width: 100%;
+        height: 300px;
+    }
+}
