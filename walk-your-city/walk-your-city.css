@@ -1,0 +1,306 @@
+header,
+main {
+    max-width: 1100px;
+}
+
+.io-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.city-select {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    border: 2px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.status-line {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    color: #555;
+}
+
+.tab-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 12px;
+    border-bottom: 2px solid black;
+}
+
+.tab-btn {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    padding: 7px 18px;
+    border: 2px solid black;
+    border-bottom: none;
+    background: white;
+    cursor: pointer;
+    margin-bottom: -2px;
+    color: #555;
+}
+
+.tab-btn:hover {
+    background: #f5f5f5;
+}
+
+.tab-btn.active {
+    background: white;
+    color: black;
+    font-weight: bold;
+    border-bottom: 2px solid white;
+}
+
+.tab-pane {
+    /* no special styling needed */
+}
+
+.date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: Monaco, monospace;
+    font-size: 13px;
+}
+
+.date-label {
+    color: #555;
+}
+
+.date-input {
+    font-family: Monaco, monospace;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 2px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.progress-bar-wrap {
+    height: 6px;
+    border: 1px solid black;
+    background: white;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #16a34a;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.map-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+#map,
+#mapHistory {
+    flex: 1;
+    min-width: 0;
+    height: 600px;
+    border: 2px solid black;
+}
+
+#sidePanel,
+#sidePanelHistory {
+    width: 280px;
+    flex-shrink: 0;
+    height: 600px;
+    border: 2px solid black;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.street-search-wrap {
+    border-bottom: 2px solid black;
+    padding: 6px 8px;
+    flex-shrink: 0;
+}
+
+.street-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+.street-search-input:focus {
+    outline: none;
+    border-color: black;
+}
+
+#sideList,
+#sideListHistory {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* --- Street group (collapsible) --- */
+.street-group {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.street-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    user-select: none;
+}
+
+.street-header:hover {
+    background: #f5f5f5;
+}
+
+.street-header.some-walked {
+    background: #f0fdf4;
+}
+
+.street-header.some-walked:hover {
+    background: #dcfce7;
+}
+
+.street-header.all-walked .street-name {
+    color: #166534;
+}
+
+.street-arrow {
+    flex-shrink: 0;
+    font-size: 10px;
+    color: #888;
+    width: 10px;
+}
+
+.street-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.street-prog {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+}
+
+.street-header.some-walked .street-prog {
+    color: #16a34a;
+}
+
+/* --- Segment rows --- */
+.seg-list {
+    border-top: 1px solid #e5e5e5;
+    background: #fafafa;
+}
+
+.seg-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 10px 5px 24px;
+    cursor: pointer;
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    user-select: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.seg-row:last-child {
+    border-bottom: none;
+}
+
+.seg-row:hover {
+    background: #f0f0f0;
+}
+
+.seg-row.walked {
+    background: #f0fdf4;
+}
+
+.seg-row.walked:hover {
+    background: #dcfce7;
+}
+
+.seg-check {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    border: 1.5px solid #bbb;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: white;
+    background: white;
+}
+
+.seg-row.walked .seg-check {
+    border-color: #16a34a;
+    background: #16a34a;
+}
+
+.seg-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #444;
+}
+
+.seg-row.walked .seg-label {
+    color: #166534;
+}
+
+.seg-len {
+    flex-shrink: 0;
+    color: #aaa;
+    font-size: 10px;
+}
+
+.loading-msg {
+    padding: 20px 10px;
+    font-family: Monaco, monospace;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .map-layout {
+        flex-direction: column;
+    }
+
+    #map,
+    #mapHistory {
+        width: 100%;
+        height: 400px;
+    }
+
+    #sidePanel,
+    #sidePanelHistory {
+        width: 100%;
+        height: 300px;
+    }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>walk your city</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/projects/projects.css">
+    <link rel="stylesheet" href="walk-your-city.css">
+</head>
+<body>
+    <header>
+        <h1>walk your city</h1>
+        <nav class="nav-buttons">
+            <a href="/" class="button">home</a>
+            <a href="/projects/" class="button">projects</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="io-bar">
+            <select id="citySelect" class="city-select">
+                <option value="toronto">Toronto</option>
+                <option value="vancouver">Vancouver</option>
+                <option value="montreal">Montréal</option>
+            </select>
+            <label class="button" style="cursor:pointer;">
+                import json
+                <input type="file" id="importInput" accept=".json,application/json" style="display:none">
+            </label>
+            <button class="button" id="exportBtn">export json</button>
+            <span id="statusLine" class="status-line"></span>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" id="tabMarkBtn">mark walks</button>
+            <button class="tab-btn" id="tabHistoryBtn">history</button>
+        </div>
+
+        <!-- Tab: mark walks -->
+        <div id="tabMark" class="tab-pane">
+            <div class="date-row">
+                <label class="date-label">walking on</label>
+                <input type="date" id="activeDateInput" class="date-input">
+            </div>
+            <div class="map-layout">
+                <div id="map"></div>
+                <div id="sidePanel">
+                    <div class="street-search-wrap">
+                        <input type="text" id="streetSearch" placeholder="filter streets..." class="street-search-input">
+                    </div>
+                    <div id="sideList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: history -->
+        <div id="tabHistory" class="tab-pane" style="display:none">
+            <div class="date-row">
+                <label class="date-label">view day</label>
+                <input type="date" id="historyDateInput" class="date-input">
+                <span id="historyStatus" class="status-line"></span>
+            </div>
+            <div class="map-layout">
+                <div id="mapHistory"></div>
+                <div id="sidePanelHistory">
+                    <div id="sideListHistory"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="walk-your-city.js"></script>
+</body>
+</html>
