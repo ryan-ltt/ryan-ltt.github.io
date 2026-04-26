@@ -1,6 +1,7 @@
 'use strict';
 
 const LS_PREFIX = 'walkYourCity_';
+const CITIES = ['toronto', 'vancouver', 'montreal'];
 const WALKED_COLOR = '#16a34a';
 const WALKED_TODAY_COLOR = '#15803d';
 const UNWALKED_COLOR = '#94a3b8';
@@ -29,6 +30,12 @@ function todayStr() {
     return new Date().toISOString().slice(0, 10);
 }
 
+function invalidateBoth() {
+    // Call immediately and again after a short delay to handle mobile layout settling
+    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); }, 0);
+    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); }, 250);
+}
+
 function formatLength(m) {
     if (m >= 1000) return (m / 1000).toFixed(1) + ' km';
     return Math.round(m) + ' m';
@@ -43,7 +50,7 @@ function init() {
         maxZoom: 19,
     }).addTo(map);
     map.on('zoomend', refreshMapStyles);
-    setTimeout(() => map.invalidateSize(), 0);
+    invalidateBoth();
 
     // History tab map
     mapHistory = L.map('mapHistory', { preferCanvas: true }).setView([43.6532, -79.3832], 12);
@@ -51,7 +58,6 @@ function init() {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
     }).addTo(mapHistory);
-    setTimeout(() => mapHistory.invalidateSize(), 0);
 
     // Date inputs
     document.getElementById('activeDateInput').value = activeDate;
@@ -71,6 +77,7 @@ function init() {
     // IO
     document.getElementById('citySelect').addEventListener('change', e => loadCity(e.target.value));
     document.getElementById('exportBtn').addEventListener('click', exportProgress);
+    document.getElementById('resetBtn').addEventListener('click', resetData);
     document.getElementById('importInput').addEventListener('change', importProgress);
     document.getElementById('streetSearch').addEventListener('input', e => {
         filterText = e.target.value.toLowerCase();
@@ -87,14 +94,8 @@ function switchTab(tab) {
     document.getElementById('tabHistory').style.display = tab === 'history' ? '' : 'none';
     document.getElementById('tabMarkBtn').classList.toggle('active', tab === 'mark');
     document.getElementById('tabHistoryBtn').classList.toggle('active', tab === 'history');
-    if (tab === 'mark') {
-        setTimeout(() => map.invalidateSize(), 0);
-    } else {
-        setTimeout(() => {
-            mapHistory.invalidateSize();
-            renderHistoryTab();
-        }, 0);
-    }
+    if (tab === 'history') renderHistoryTab();
+    invalidateBoth();
 }
 
 // --- Load city ---
@@ -131,7 +132,7 @@ async function loadCity(cityKey) {
     renderList();
     updateStatus();
     if (activeTab === 'history') renderHistoryTab();
-    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); }, 0);
+    invalidateBoth();
 }
 
 // --- Build state ---
@@ -565,6 +566,19 @@ function exportProgress() {
     a.download = `walk-your-city-${currentCity}-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+}
+
+// --- Reset ---
+function resetData() {
+    if (!confirm('Clear all walked segments for every city? This cannot be undone.')) return;
+    for (const key of Object.keys(CITIES)) {
+        localStorage.removeItem(LS_PREFIX + key);
+    }
+    walks = new Map();
+    renderMap();
+    renderList();
+    updateStatus();
+    if (activeTab === 'history') renderHistoryTab();
 }
 
 // --- Import ---
