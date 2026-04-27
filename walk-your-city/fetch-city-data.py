@@ -218,7 +218,7 @@ def collapse_dual_carriageways(ways):
                 mid_a = midpoint(wa["geometry"])
                 mid_b = midpoint(wb["geometry"])
                 dist = haversine(mid_a[0], mid_a[1], mid_b[0], mid_b[1])
-                if dist > 50:
+                if dist > 80:
                     continue
                 if bearing_diff(bearing(wa["geometry"]), bearing(wb["geometry"])) > 30:
                     continue
