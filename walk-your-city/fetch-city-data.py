@@ -54,7 +54,7 @@ CITIES = {
 }
 
 GEO_PRECISION = 5   # ~1m
-MIN_LENGTH_M = 30   # lower threshold post-split (blocks can be short)
+MIN_LENGTH_M = 10   # low threshold — coordinate rounding can shorten segments slightly
 
 
 # ---------------------------------------------------------------------------
