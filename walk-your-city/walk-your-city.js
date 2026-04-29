@@ -47,6 +47,18 @@ function formatLength(m) {
     return Math.round(m) + ' m';
 }
 
+function saveMapPos(cityKey) {
+    const { lat, lng } = map.getCenter();
+    localStorage.setItem(`${LS_PREFIX}mapPos_${cityKey}`, JSON.stringify({ lat, lng, zoom: map.getZoom() }));
+}
+
+function loadMapPos(cityKey) {
+    try {
+        const raw = localStorage.getItem(`${LS_PREFIX}mapPos_${cityKey}`);
+        return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+}
+
 // --- Init ---
 async function init() {
     // Mark tab map
@@ -56,6 +68,7 @@ async function init() {
         maxZoom: 19,
     }).addTo(map);
     map.on('zoomend', refreshMapStyles);
+    map.on('moveend', () => { if (currentCity) saveMapPos(currentCity); });
     invalidateBoth();
 
     // History tab map
@@ -233,8 +246,11 @@ async function loadCity(cityKey) {
     cityData = data;
     cityState = buildState(data);
 
-    map.setView(data.center, data.zoom);
-    mapHistory.setView(data.center, data.zoom);
+    const savedPos = loadMapPos(cityKey);
+    const center = savedPos ? [savedPos.lat, savedPos.lng] : data.center;
+    const zoom = savedPos ? savedPos.zoom : data.zoom;
+    map.setView(center, zoom);
+    mapHistory.setView(center, zoom);
     renderMap();
     subscribeRealtime(cityKey);
     renderList();
