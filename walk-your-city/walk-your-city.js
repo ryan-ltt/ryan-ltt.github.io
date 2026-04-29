@@ -2,6 +2,10 @@
 
 const LS_PREFIX = 'walkYourCity_';
 const CITIES = ['toronto', 'vancouver', 'montreal'];
+
+const SUPABASE_URL = 'https://nzqistdhfkxvfjpkkhfl.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_lJ8UY3QatGlOcsqsVnVAKQ_LPsmTbW_';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const WALKED_COLOR = '#16a34a';
 const WALKED_TODAY_COLOR = '#15803d';
 const UNWALKED_COLOR = '#94a3b8';
@@ -24,6 +28,8 @@ let historyDate = todayStr();
 let activeTab = 'mark';
 let map = null;
 let mapHistory = null;
+let currentUser = null;
+let realtimeChannel = null;
 
 // --- Helpers ---
 function todayStr() {
@@ -42,7 +48,7 @@ function formatLength(m) {
 }
 
 // --- Init ---
-function init() {
+async function init() {
     // Mark tab map
     map = L.map('map', { preferCanvas: true }).setView([43.6532, -79.3832], 12);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -84,6 +90,58 @@ function init() {
         renderList();
     });
 
+    // Auth UI wiring
+    let authMode = 'signin'; // 'signin' | 'signup'
+    document.getElementById('signInBtn').addEventListener('click', () => {
+        authMode = 'signin';
+        document.getElementById('authModalTitle').textContent = 'sign in';
+        document.getElementById('submitAuthBtn').textContent = 'sign in';
+        document.getElementById('toggleAuthModeBtn').textContent = 'no account? sign up';
+        document.getElementById('authModalError').style.display = 'none';
+        document.getElementById('signInModal').style.display = 'flex';
+    });
+    document.getElementById('closeSignInBtn').addEventListener('click', () => {
+        document.getElementById('signInModal').style.display = 'none';
+    });
+    document.getElementById('toggleAuthModeBtn').addEventListener('click', () => {
+        authMode = authMode === 'signin' ? 'signup' : 'signin';
+        const isSignUp = authMode === 'signup';
+        document.getElementById('authModalTitle').textContent = isSignUp ? 'create account' : 'sign in';
+        document.getElementById('submitAuthBtn').textContent = isSignUp ? 'sign up' : 'sign in';
+        document.getElementById('toggleAuthModeBtn').textContent = isSignUp ? 'have an account? sign in' : 'no account? sign up';
+        document.getElementById('authModalError').style.display = 'none';
+    });
+    document.getElementById('submitAuthBtn').addEventListener('click', async () => {
+        const email = document.getElementById('signInEmail').value.trim();
+        const password = document.getElementById('signInPassword').value;
+        const errEl = document.getElementById('authModalError');
+        if (!email || !password) { errEl.textContent = 'email and password required'; errEl.style.display = ''; return; }
+        const { error } = authMode === 'signup'
+            ? await db.auth.signUp({ email, password })
+            : await db.auth.signInWithPassword({ email, password });
+        if (error) { errEl.textContent = error.message; errEl.style.display = ''; return; }
+        document.getElementById('signInModal').style.display = 'none';
+    });
+    document.getElementById('signOutBtn').addEventListener('click', () => db.auth.signOut());
+
+    // Auth state
+    const { data: { session } } = await db.auth.getSession();
+    currentUser = session?.user ?? null;
+    updateAuthUI(currentUser);
+    db.auth.onAuthStateChange((event, session) => {
+        currentUser = session?.user ?? null;
+        updateAuthUI(currentUser);
+        if (event === 'SIGNED_IN') {
+            migrateLocalStorageIfNeeded();
+            if (currentCity) loadCity(currentCity);
+        }
+        if (event === 'SIGNED_OUT') { walks = new Map(); renderMap(); renderList(); updateStatus(); }
+    });
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/walk-your-city/sw.js');
+    }
+
     loadCity('toronto');
 }
 
@@ -102,6 +160,10 @@ function switchTab(tab) {
 async function loadCity(cityKey) {
     currentCity = cityKey;
     walks = loadProgress(cityKey);
+    if (currentUser) {
+        walks = await loadProgressFromDB(cityKey);
+        saveProgress(cityKey);
+    }
     expandedStreets.clear();
     filterText = '';
     document.getElementById('streetSearch').value = '';
@@ -129,6 +191,7 @@ async function loadCity(cityKey) {
     map.setView(data.center, data.zoom);
     mapHistory.setView(data.center, data.zoom);
     renderMap();
+    subscribeRealtime(cityKey);
     renderList();
     updateStatus();
     if (activeTab === 'history') renderHistoryTab();
@@ -449,6 +512,17 @@ function toggleWay(wayId) {
     }
     saveProgress(currentCity);
 
+    if (currentUser) {
+        if (walks.has(wayId)) {
+            db.from('walks').upsert(
+                { user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: activeDate },
+                { onConflict: 'user_id,city,way_id' }
+            );
+        } else {
+            db.from('walks').delete().match({ user_id: currentUser.id, city: currentCity, way_id: wayId });
+        }
+    }
+
     const pl = polylines.get(wayId);
     if (pl) pl.setStyle(styleForMark(walks.get(wayId)));
 
@@ -555,6 +629,73 @@ function loadProgress(cityKey) {
     } catch (_) { return new Map(); }
 }
 
+// --- Auth UI ---
+function updateAuthUI(user) {
+    document.getElementById('signInBtn').style.display = user ? 'none' : '';
+    document.getElementById('signOutBtn').style.display = user ? '' : 'none';
+    const emailEl = document.getElementById('authEmail');
+    emailEl.style.display = user ? '' : 'none';
+    emailEl.textContent = user?.email ?? '';
+}
+
+// --- Supabase DB ---
+async function loadProgressFromDB(cityKey) {
+    const { data, error } = await db.from('walks')
+        .select('way_id, walked_on')
+        .eq('city', cityKey);
+    if (error) { console.error('load from db failed', error); return loadProgress(cityKey); }
+    return new Map(data.map(r => [r.way_id, r.walked_on]));
+}
+
+function subscribeRealtime(cityKey) {
+    if (realtimeChannel) db.removeChannel(realtimeChannel);
+    if (!currentUser) return;
+    realtimeChannel = db.channel('walks-' + cityKey)
+        .on('postgres_changes',
+            { event: '*', schema: 'public', table: 'walks', filter: `city=eq.${cityKey}` },
+            payload => applyRealtimeChange(payload)
+        )
+        .subscribe();
+}
+
+function applyRealtimeChange(payload) {
+    const { eventType, new: newRow, old: oldRow } = payload;
+    if (eventType === 'INSERT' || eventType === 'UPDATE') {
+        walks.set(newRow.way_id, newRow.walked_on);
+    } else if (eventType === 'DELETE') {
+        walks.delete(oldRow.way_id);
+    }
+    const wayId = (newRow?.way_id ?? oldRow?.way_id);
+    const pl = polylines.get(wayId);
+    if (pl) pl.setStyle(styleForMark(walks.get(wayId)));
+    updateStatus();
+}
+
+async function migrateLocalStorageIfNeeded() {
+    if (!currentUser) return;
+    const migKey = 'walkYourCity_migrated_' + currentUser.id;
+    if (localStorage.getItem(migKey)) return;
+
+    const rows = [];
+    for (const cityKey of CITIES) {
+        for (const [wayId, date] of loadProgress(cityKey).entries()) {
+            if (wayId && date) rows.push({
+                user_id: currentUser.id, city: cityKey, way_id: wayId, walked_on: date
+            });
+        }
+    }
+
+    if (rows.length > 0) {
+        for (let i = 0; i < rows.length; i += 500) {
+            const { error } = await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
+            if (error) { console.error('migration failed', error); return; }
+        }
+    }
+
+    localStorage.setItem(migKey, '1');
+    if (rows.length > 0) setStatus(`synced ${rows.length} existing walks to your account`);
+}
+
 // --- Export ---
 function exportProgress() {
     if (!currentCity) return;
@@ -606,7 +747,7 @@ function importProgress(e) {
     reader.readAsText(file);
 }
 
-function mergeImport(data) {
+async function mergeImport(data) {
     // Accept v1 (walkedIds) or v2 (walks)
     if (data.version === 2 && data.walks) {
         for (const [id, date] of Object.entries(data.walks)) walks.set(id, date);
@@ -617,6 +758,15 @@ function mergeImport(data) {
         return;
     }
     saveProgress(currentCity);
+    if (currentUser) {
+        const rows = [];
+        for (const [wayId, date] of walks.entries()) {
+            if (wayId && date) rows.push({ user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: date });
+        }
+        for (let i = 0; i < rows.length; i += 500) {
+            await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
+        }
+    }
     renderMap();
     renderList();
     updateStatus();
