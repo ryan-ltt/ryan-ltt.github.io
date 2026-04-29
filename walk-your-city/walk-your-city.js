@@ -504,22 +504,26 @@ function segLabel(w) {
 }
 
 // --- Toggle a single way segment ---
-function toggleWay(wayId) {
-    if (walks.has(wayId)) {
-        walks.delete(wayId);
-    } else {
+async function toggleWay(wayId) {
+    const nowWalked = !walks.has(wayId);
+    if (nowWalked) {
         walks.set(wayId, activeDate);
+    } else {
+        walks.delete(wayId);
     }
     saveProgress(currentCity);
 
     if (currentUser) {
-        if (walks.has(wayId)) {
-            db.from('walks').upsert(
+        if (nowWalked) {
+            const { error } = await db.from('walks').upsert(
                 { user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: activeDate },
                 { onConflict: 'user_id,city,way_id' }
             );
+            if (error) console.error('upsert failed', error);
         } else {
-            db.from('walks').delete().match({ user_id: currentUser.id, city: currentCity, way_id: wayId });
+            const { error } = await db.from('walks').delete()
+                .match({ user_id: currentUser.id, city: currentCity, way_id: wayId });
+            if (error) console.error('delete failed', error);
         }
     }
 
