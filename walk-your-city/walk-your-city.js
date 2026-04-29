@@ -80,6 +80,51 @@ async function init() {
     document.getElementById('tabMarkBtn').addEventListener('click', () => switchTab('mark'));
     document.getElementById('tabHistoryBtn').addEventListener('click', () => switchTab('history'));
 
+    // Fullscreen
+    const fsButtons = {};
+    function enterFullscreen(layoutId, mapObj) {
+        document.getElementById(layoutId).classList.add('fullscreen');
+        if (fsButtons[layoutId]) { fsButtons[layoutId].innerHTML = '✕'; fsButtons[layoutId].title = 'Exit fullscreen'; }
+        setTimeout(() => mapObj.invalidateSize(), 50);
+    }
+    function exitFullscreen(layoutId, mapObj) {
+        document.getElementById(layoutId).classList.remove('fullscreen');
+        if (fsButtons[layoutId]) { fsButtons[layoutId].innerHTML = '⛶'; fsButtons[layoutId].title = 'Enter fullscreen'; }
+        setTimeout(() => mapObj.invalidateSize(), 50);
+    }
+    function addFullscreenControl(mapObj, layoutId) {
+        const Ctrl = L.Control.extend({
+            onAdd() {
+                const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                const btn = L.DomUtil.create('a', 'fullscreen-map-btn', container);
+                btn.href = '#';
+                btn.title = 'Enter fullscreen';
+                btn.innerHTML = '⛶';
+                fsButtons[layoutId] = btn;
+                L.DomEvent.disableClickPropagation(container);
+                L.DomEvent.on(btn, 'click', L.DomEvent.preventDefault);
+                L.DomEvent.on(btn, 'click', () => {
+                    if (document.getElementById(layoutId).classList.contains('fullscreen')) {
+                        exitFullscreen(layoutId, mapObj);
+                    } else {
+                        enterFullscreen(layoutId, mapObj);
+                    }
+                });
+                return container;
+            },
+            onRemove() {}
+        });
+        new Ctrl({ position: 'topright' }).addTo(mapObj);
+    }
+    addFullscreenControl(map, 'mapLayoutMark');
+    addFullscreenControl(mapHistory, 'mapLayoutHistory');
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            exitFullscreen('mapLayoutMark', map);
+            exitFullscreen('mapLayoutHistory', mapHistory);
+        }
+    });
+
     // IO
     document.getElementById('citySelect').addEventListener('change', e => loadCity(e.target.value));
     document.getElementById('exportBtn').addEventListener('click', exportProgress);

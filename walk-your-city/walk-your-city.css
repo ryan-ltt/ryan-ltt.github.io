@@ -281,6 +281,39 @@ main {
     font-size: 10px;
 }
 
+.map-layout.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    background: white;
+    gap: 0;
+}
+
+.map-layout.fullscreen #map,
+.map-layout.fullscreen #mapHistory {
+    height: 100%;
+    border: none;
+}
+
+.map-layout.fullscreen #sidePanel,
+.map-layout.fullscreen #sidePanelHistory {
+    height: 100%;
+    border-left: 2px solid black;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+}
+
+.fullscreen-map-btn {
+    font-size: 16px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
 .loading-msg {
     padding: 20px 10px;
     font-family: Monaco, monospace;
