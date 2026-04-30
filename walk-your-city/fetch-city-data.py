@@ -51,6 +51,12 @@ CITIES = {
         "center": [45.5017, -73.5673],
         "zoom": 12,
     },
+    "padova": {
+        "relation_id": 44836,
+        "displayName": "Padova",
+        "center": [45.3984, 11.8957],
+        "zoom": 13,
+    },
 }
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
@@ -417,6 +423,36 @@ def lookup_city(query):
     }
 
 
+def patch_script(key, cfg):
+    script_path = __file__
+    with open(script_path, "r", encoding="utf-8") as f:
+        src = f.read()
+    entry = (
+        f'    "{key}": {{\n'
+        f'        "relation_id": {cfg["relation_id"]},\n'
+        f'        "displayName": "{cfg["displayName"]}",\n'
+        f'        "center": {cfg["center"]},\n'
+        f'        "zoom": 12,\n'
+        f'    }},\n'
+    )
+    src = src.replace("NOMINATIM_URL =", entry + "\nNOMINATIM_URL =")
+    with open(script_path, "w", encoding="utf-8") as f:
+        f.write(src)
+    print(f"  Patched fetch-city-data.py with '{key}'")
+
+
+def patch_html(key, display_name):
+    html_path = __file__.replace("fetch-city-data.py", "index.html")
+    with open(html_path, "r", encoding="utf-8") as f:
+        src = f.read()
+    option = f'                <option value="{key}">{display_name}</option>\n'
+    # Insert before the closing </select>
+    src = src.replace("            </select>", option + "            </select>")
+    with open(html_path, "w", encoding="utf-8") as f:
+        f.write(src)
+    print(f"  Patched index.html with '{display_name}' option")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch OSM walkable street data.")
     parser.add_argument("--cities", nargs="+", choices=list(CITIES.keys()), default=None,
@@ -431,15 +467,14 @@ def main():
         for query in args.add:
             print(f"\nLooking up '{query}' on Nominatim...")
             display_name, cfg = lookup_city(query)
+            cfg["displayName"] = display_name
             key = re.sub(r"[^a-z0-9]+", "_", display_name.lower()).strip("_")
             if key in CITIES:
                 print(f"  '{key}' already in CITIES dict, re-using existing config.")
             else:
                 CITIES[key] = cfg
-                print(f"  Added as key '{key}' (relation/{cfg['relation_id']})")
-                print(f"  NOTE: add this to the CITIES dict in the script and the")
-                print(f"        city dropdown in index.html to make it permanent:")
-                print(f'    "{key}": {json.dumps(cfg)},')
+                patch_script(key, cfg)
+                patch_html(key, display_name)
             to_fetch.append(key)
             time.sleep(1)  # be polite to Nominatim
 
