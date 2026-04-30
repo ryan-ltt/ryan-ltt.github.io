@@ -49,8 +49,9 @@ Single-page application shell. Contains:
 - `migrateLocalStorageIfNeeded()` — one-time migration on sign-in: bulk-upserts all cities' localStorage data to Supabase in 500-row batches, then marks completion in localStorage.
 - `mergeImport(data)` — async; after merging JSON into `walks`, also upserts all rows to Supabase if signed in.
 - `renderHistoryTab()` — draws all ways faintly, highlights selected day's walks in blue (`#2563eb`), auto-fits map to that day's segments.
+- `renderList()` — re-renders the full sidebar street list. Streets with at least one walked segment sort first (visited before unvisited), then alphabetically within each group. Called on city load, toggle, import, reset, and search filter. `refreshStreetHeader` (in-place DOM update) was removed in favour of a full `renderList()` call on toggle to keep ordering correct.
 - `segLabel(w)` — formats cross-street label: `"Oak St → Elm Ave"`, `"from Oak St"`, `"to Elm Ave"`, or just the length as fallback.
-- `enterFullscreen(layoutId, mapObj)` / `exitFullscreen(layoutId, mapObj)` — add/remove `.fullscreen` class on the map-layout div and call `mapObj.invalidateSize()` after 50 ms so Leaflet redraws to the new size.
+- `enterFullscreen(layoutId, mapObj)` / `exitFullscreen(layoutId, mapObj)` — add/remove `.fullscreen` class on the map-layout div. On exit, reads `offsetHeight` to force a synchronous browser reflow before calling `mapObj.invalidateSize()` — without this, Leaflet reads the old fullscreen container size and renders polylines at the wrong coordinates. After invalidation, re-renders the map (`renderMap` or `renderHistoryTab`) so polylines are redrawn at the correct positions.
 
 **Storage format (v2)**
 ```json
@@ -134,8 +135,7 @@ click map polyline or sidebar row → toggleWay(wayId)
   → saveProgress (localStorage, always)
   → db upsert/delete (if signed in)
   → update polyline style in-place
-  → update sidebar row DOM in-place
-  → refreshStreetHeader
+  → renderList (re-renders sidebar, visited streets sorted first)
   → updateStatus (progress bar + text)
 ```
 

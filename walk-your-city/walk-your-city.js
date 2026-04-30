@@ -103,7 +103,12 @@ async function init() {
     function exitFullscreen(layoutId, mapObj) {
         document.getElementById(layoutId).classList.remove('fullscreen');
         if (fsButtons[layoutId]) { fsButtons[layoutId].innerHTML = '⛶'; fsButtons[layoutId].title = 'Enter fullscreen'; }
-        setTimeout(() => mapObj.invalidateSize(), 50);
+        void document.getElementById(layoutId).offsetHeight; // sync reflow before Leaflet reads container size
+        mapObj.invalidateSize({ animate: false });
+        if (cityState) {
+            if (mapObj === map) renderMap();
+            else renderHistoryTab();
+        }
     }
     function addFullscreenControl(mapObj, layoutId) {
         const Ctrl = L.Control.extend({
@@ -455,7 +460,7 @@ function renderList() {
     const list = document.getElementById('sideList');
     if (!cityState) return;
 
-    const streets = filterText
+    let streets = filterText
         ? cityState.streetList.filter(s => s.name.toLowerCase().includes(filterText))
         : cityState.streetList;
 
@@ -463,6 +468,12 @@ function renderList() {
         list.innerHTML = '<div class="loading-msg">no streets match</div>';
         return;
     }
+
+    streets = [...streets].sort((a, b) => {
+        const aWalked = a.wayIds.some(id => walks.has(id)) ? 0 : 1;
+        const bWalked = b.wayIds.some(id => walks.has(id)) ? 0 : 1;
+        return aWalked - bWalked;
+    });
 
     const frag = document.createDocumentFragment();
     for (const street of streets) frag.appendChild(buildStreetRow(street));
@@ -610,13 +621,7 @@ async function toggleWay(wayId) {
         }
     }
 
-    const w = cityState.ways.get(wayId);
-    if (w) {
-        const key = 'street_' + w.name.trim().toLowerCase()
-            .replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-        refreshStreetHeader(key);
-    }
-
+    renderList();
     updateStatus();
 }
 
