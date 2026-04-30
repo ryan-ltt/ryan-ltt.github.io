@@ -53,6 +53,8 @@ CITIES = {
     },
 }
 
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+
 GEO_PRECISION = 5   # ~1m
 MIN_LENGTH_M = 10   # low threshold — coordinate rounding can shorten segments slightly
 
@@ -343,7 +345,7 @@ def process_city(city_key):
 
     result = {
         "city": city_key,
-        "displayName": {"toronto": "Toronto", "vancouver": "Vancouver", "montreal": "Montreal"}[city_key],
+        "displayName": CITIES[city_key].get("displayName", city_key.replace("_", " ").title()),
         "center": cfg["center"],
         "zoom": cfg["zoom"],
         "fetchedAt": datetime.now(timezone.utc).isoformat(),
@@ -360,12 +362,94 @@ def process_city(city_key):
     return result
 
 
+def lookup_city(query):
+    """
+    Search Nominatim for a city by name and return a config dict with
+    relation_id, center, and zoom. Prompts the user to pick if multiple
+    admin-level relations are returned.
+    """
+    params = urlencode({
+        "q": query,
+        "format": "jsonv2",
+        "limit": 10,
+        "featuretype": "city",
+        "addressdetails": 0,
+    })
+    url = f"{NOMINATIM_URL}?{params}"
+    req = request.Request(url, headers={"User-Agent": "walk-your-city/1.0 (ryan-ltt.github.io)"})
+    with request.urlopen(req, timeout=30) as resp:
+        results = json.loads(resp.read().decode("utf-8"))
+
+    # Keep only relations (OSM administrative boundaries)
+    relations = [r for r in results if r.get("osm_type") == "relation"]
+    if not relations:
+        # Fall back to all results if no relations found
+        relations = results
+    if not relations:
+        raise ValueError(f"No results found for '{query}'")
+
+    if len(relations) == 1:
+        chosen = relations[0]
+    else:
+        print(f"\n  Multiple results for '{query}':")
+        for i, r in enumerate(relations):
+            print(f"    [{i}] {r.get('display_name', '?')}  (relation/{r['osm_id']})")
+        while True:
+            try:
+                idx = int(input("  Choose number: ").strip())
+                if 0 <= idx < len(relations):
+                    chosen = relations[idx]
+                    break
+            except (ValueError, KeyboardInterrupt):
+                pass
+            print("  Invalid choice, try again.")
+
+    lat = float(chosen["lat"])
+    lon = float(chosen["lon"])
+    relation_id = int(chosen["osm_id"])
+    display_name = chosen.get("display_name", query).split(",")[0].strip()
+    print(f"  Found: {chosen.get('display_name', '?')}  (relation/{relation_id})")
+
+    return display_name, {
+        "relation_id": relation_id,
+        "center": [round(lat, 4), round(lon, 4)],
+        "zoom": 12,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch OSM walkable street data.")
-    parser.add_argument("--cities", nargs="+", choices=list(CITIES.keys()), default=list(CITIES.keys()))
+    parser.add_argument("--cities", nargs="+", choices=list(CITIES.keys()), default=None,
+                        help="Re-fetch one or more already-known cities.")
+    parser.add_argument("--add", nargs="+", metavar="CITY_NAME",
+                        help="Look up new cities by name via Nominatim and fetch them.")
     args = parser.parse_args()
 
-    for i, city in enumerate(args.cities):
+    to_fetch = []
+
+    if args.add:
+        for query in args.add:
+            print(f"\nLooking up '{query}' on Nominatim...")
+            display_name, cfg = lookup_city(query)
+            key = re.sub(r"[^a-z0-9]+", "_", display_name.lower()).strip("_")
+            if key in CITIES:
+                print(f"  '{key}' already in CITIES dict, re-using existing config.")
+            else:
+                CITIES[key] = cfg
+                print(f"  Added as key '{key}' (relation/{cfg['relation_id']})")
+                print(f"  NOTE: add this to the CITIES dict in the script and the")
+                print(f"        city dropdown in index.html to make it permanent:")
+                print(f'    "{key}": {json.dumps(cfg)},')
+            to_fetch.append(key)
+            time.sleep(1)  # be polite to Nominatim
+
+    if args.cities:
+        to_fetch += [c for c in args.cities if c not in to_fetch]
+
+    if not to_fetch:
+        to_fetch = list(CITIES.keys())
+
+    for i, city in enumerate(to_fetch):
         if i > 0:
             print("  Waiting 5s between requests...")
             time.sleep(5)
