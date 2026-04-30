@@ -139,7 +139,10 @@ async function init() {
     });
 
     // IO
-    document.getElementById('citySelect').addEventListener('change', e => loadCity(e.target.value));
+    document.getElementById('citySelect').addEventListener('change', e => {
+        localStorage.setItem(LS_PREFIX + 'lastCity', e.target.value);
+        loadCity(e.target.value);
+    });
     document.getElementById('exportBtn').addEventListener('click', exportProgress);
     document.getElementById('resetBtn').addEventListener('click', resetData);
     document.getElementById('importInput').addEventListener('change', importProgress);
@@ -200,7 +203,9 @@ async function init() {
         navigator.serviceWorker.register('/walk-your-city/sw.js');
     }
 
-    loadCity('toronto');
+    const lastCity = localStorage.getItem(LS_PREFIX + 'lastCity') || 'toronto';
+    document.getElementById('citySelect').value = lastCity;
+    loadCity(lastCity);
 }
 
 // --- Tab switching ---
