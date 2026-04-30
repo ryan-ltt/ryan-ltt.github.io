@@ -221,7 +221,7 @@ function switchTab(tab) {
 
 // --- Load city ---
 async function loadCity(cityKey) {
-    currentCity = cityKey;
+    currentCity = null; // suppress saveMapPos during transition
     walks = loadProgress(cityKey);
     if (currentUser) {
         walks = await loadProgressFromDB(cityKey);
@@ -251,6 +251,7 @@ async function loadCity(cityKey) {
     cityData = data;
     cityState = buildState(data);
 
+    currentCity = cityKey;
     const savedPos = loadMapPos(cityKey);
     const center = savedPos ? [savedPos.lat, savedPos.lng] : data.center;
     const zoom = savedPos ? savedPos.zoom : data.zoom;
