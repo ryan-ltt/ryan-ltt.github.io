@@ -348,4 +348,26 @@ main {
     .status-line {
         width: 100%;
     }
+
+    #mapRoute { width: 100%; height: 55vw; min-height: 280px; }
+    #sidePanelRoute { width: 100%; height: 260px; }
 }
+
+/* Route tab */
+#mapRoute { flex: 1; min-width: 0; height: 600px; border: 2px solid black; }
+#sidePanelRoute { width: 280px; flex-shrink: 0; height: 600px; border: 2px solid black;
+    background: white; display: flex; flex-direction: column; overflow-y: auto; }
+
+.route-controls-row { display: flex; flex-wrap: wrap; align-items: center;
+    gap: 8px; margin-bottom: 4px; font-family: Monaco, monospace; font-size: 13px; }
+.route-status-row { margin-bottom: 12px; min-height: 1.2em; font-family: Monaco, monospace; font-size: 13px; color: #555; }
+.route-address-input { flex: 1; min-width: 160px; }
+.route-distance-input { width: 70px; }
+.route-label { color: #555; white-space: nowrap; font-family: Monaco, monospace; font-size: 13px; }
+.route-seg-num { flex-shrink: 0; font-size: 10px; color: #888; width: 20px; text-align: right; }
+.route-legend { display: flex; align-items: center; gap: 4px; margin-bottom: 8px;
+    font-family: Monaco, monospace; font-size: 12px; color: #555; }
+.route-legend-swatch { display: inline-block; width: 24px; height: 4px; border-radius: 2px; flex-shrink: 0; }
+
+.map-layout.fullscreen #mapRoute { width: 100%; height: 100%; border: none; }
+.map-layout.fullscreen #sidePanelRoute { display: none; }

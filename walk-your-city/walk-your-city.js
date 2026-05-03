@@ -11,6 +11,11 @@ const WALKED_TODAY_COLOR = '#15803d';
 const UNWALKED_COLOR = '#94a3b8';
 const HIGHLIGHT_COLOR = '#f59e0b';
 const HISTORY_COLOR = '#2563eb';
+const ROUTE_COLOR = '#7c3aed';
+const ROUTE_OVERLAP_COLOR = '#f43f5e';
+const ROUTE_START_COLOR = '#f97316';
+const ROUTE_BG_OPACITY = 0.15;
+const WALKED_PENALTY = 5;
 
 // --- State ---
 let cityData = null;
@@ -28,18 +33,28 @@ let historyDate = todayStr();
 let activeTab = 'mark';
 let map = null;
 let mapHistory = null;
+let mapRoute = null;
 let currentUser = null;
 let realtimeChannel = null;
+
+// Route tab state
+let routePolylines = new Map();
+let routeHighlight = [];
+let routeStartMarker = null;
+let routeStartLatLon = null;
+let routeStartWayId = null;
+let routeGraph = null;
+let lastRouteCity = null;
+let lastRouteWayIds = [];
 
 // --- Helpers ---
 function todayStr() {
     return new Date().toISOString().slice(0, 10);
 }
 
-function invalidateBoth() {
-    // Call immediately and again after a short delay to handle mobile layout settling
-    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); }, 0);
-    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); }, 250);
+function invalidateAll() {
+    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); if (mapRoute) mapRoute.invalidateSize(); }, 0);
+    setTimeout(() => { map.invalidateSize(); mapHistory.invalidateSize(); if (mapRoute) mapRoute.invalidateSize(); }, 250);
 }
 
 function formatLength(m) {
@@ -59,6 +74,354 @@ function loadMapPos(cityKey) {
     } catch { return null; }
 }
 
+// --- Route tab helpers ---
+function setRouteStatus(msg) {
+    document.getElementById('routeStatus').textContent = msg;
+}
+
+function updateRouteTimeLabel() {
+    const km = parseFloat(document.getElementById('routeDistanceInput').value) || 0;
+    const mins = Math.round(km / 5 * 60);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    document.getElementById('routeTimeLabel').textContent = `~${h}h ${m}m`;
+}
+
+function clearRouteBackground() {
+    for (const pl of routePolylines.values()) mapRoute.removeLayer(pl);
+    routePolylines.clear();
+}
+
+function renderRouteBackground() {
+    if (!cityState || !mapRoute) return;
+    clearRouteBackground();
+    for (const w of cityState.ways.values()) {
+        const date = walks.get(w.id);
+        const color = date === activeDate ? WALKED_TODAY_COLOR : date ? WALKED_COLOR : UNWALKED_COLOR;
+        const opacity = date ? 0.7 : ROUTE_BG_OPACITY;
+        const weight = date ? 4 : 3;
+        const pl = L.polyline(w.geometry, { color, weight, opacity }).addTo(mapRoute);
+        routePolylines.set(w.id, pl);
+    }
+}
+
+function buildRouteGraph() {
+    const nodeIndex = new Map();
+    const nodeCoords = [];
+    const adj = [];
+
+    function getOrAddNode(lat, lon) {
+        const key = lat.toFixed(6) + ',' + lon.toFixed(6);
+        if (!nodeIndex.has(key)) {
+            const id = nodeCoords.length;
+            nodeIndex.set(key, id);
+            nodeCoords.push({ lat, lon, key });
+            adj.push([]);
+        }
+        return nodeIndex.get(key);
+    }
+
+    for (const w of cityState.ways.values()) {
+        const geo = w.geometry;
+        const a = getOrAddNode(geo[0][0], geo[0][1]);
+        const b = getOrAddNode(geo[geo.length - 1][0], geo[geo.length - 1][1]);
+        if (a === b) continue;
+        adj[a].push({ to: b, wayId: w.id, cost: w.length_m });
+        adj[b].push({ to: a, wayId: w.id, cost: w.length_m });
+    }
+
+    return { nodeIndex, nodeCoords, adj };
+}
+
+function findClosestWay(lat, lon) {
+    let bestDist = Infinity, bestId = null;
+    for (const w of cityState.ways.values()) {
+        const geo = w.geometry;
+        for (let i = 0; i < geo.length - 1; i++) {
+            const d = pointSegDistSq(lat, lon, geo[i][0], geo[i][1], geo[i + 1][0], geo[i + 1][1]);
+            if (d < bestDist) { bestDist = d; bestId = w.id; }
+        }
+    }
+    return bestId;
+}
+
+function pointSegDistSq(px, py, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq === 0) { const ex = px - ax, ey = py - ay; return ex * ex + ey * ey; }
+    const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lenSq));
+    const cx = ax + t * dx, cy = ay + t * dy;
+    const fx = px - cx, fy = py - cy;
+    return fx * fx + fy * fy;
+}
+
+async function geocodeAddress(address) {
+    let viewbox = '';
+    if (cityData) {
+        const lats = cityData.ways.map(w => w.geometry.map(p => p[0])).flat();
+        const lons = cityData.ways.map(w => w.geometry.map(p => p[1])).flat();
+        viewbox = `&viewbox=${Math.min(...lons)},${Math.max(...lats)},${Math.max(...lons)},${Math.min(...lats)}&bounded=1`;
+    }
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1${viewbox}`;
+    const resp = await fetch(url, { headers: { 'User-Agent': 'walk-your-city/1.0' } });
+    const results = await resp.json();
+    if (!results.length) return null;
+    return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+}
+
+function dijkstra(graph, startNodeId, penaltyFactor, extraPenalised = null) {
+    const n = graph.nodeCoords.length;
+    const dist = new Float64Array(n).fill(Infinity);
+    const prev = new Array(n).fill(null);
+    dist[startNodeId] = 0;
+    const heap = [[0, startNodeId]];
+    while (heap.length) {
+        const [d, u] = heap.shift();
+        if (d > dist[u]) continue;
+        for (const edge of graph.adj[u]) {
+            const penalised = walks.has(edge.wayId) || (extraPenalised && extraPenalised.has(edge.wayId));
+            const cost = edge.cost * (penalised ? penaltyFactor : 1);
+            const nd = dist[u] + cost;
+            if (nd < dist[edge.to]) {
+                dist[edge.to] = nd;
+                prev[edge.to] = { parentNodeId: u, wayId: edge.wayId };
+                let lo = 0, hi = heap.length;
+                while (lo < hi) { const mid = (lo + hi) >> 1; heap[mid][0] < nd ? lo = mid + 1 : hi = mid; }
+                heap.splice(lo, 0, [nd, edge.to]);
+            }
+        }
+    }
+    return { dist, prev };
+}
+
+function reconstructPath(prev, endNodeId) {
+    const wayIds = [];
+    let cur = endNodeId;
+    while (prev[cur] !== null) {
+        wayIds.push(prev[cur].wayId);
+        cur = prev[cur].parentNodeId;
+    }
+    return wayIds.reverse();
+}
+
+function routeLength(wayIds) {
+    return wayIds.reduce((s, id) => s + (cityState.ways.get(id)?.length_m ?? 0), 0);
+}
+
+function shuffled(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function buildLoopRoute(graph, startNodeId, targetM) {
+    // 2 Dijkstra calls total:
+    // 1. Unpenalised — real geographic distances, used only to find the radius band.
+    // 2. Penalised — preferred path (avoids walked streets), used for both outbound and return
+    //    (graph is undirected so dist[node] also equals cheapest penalised return from node).
+    const { dist: geoDist } = dijkstra(graph, startNodeId, 1);
+    const { dist: penDist, prev: penPrev } = dijkstra(graph, startNodeId, WALKED_PENALTY);
+
+    const targetRadius = targetM / (2 * Math.PI);
+    const lo = targetRadius * 0.7, hi = targetRadius * 1.3;
+    const band = shuffled(
+        Array.from({ length: graph.nodeCoords.length }, (_, i) => i)
+             .filter(i => geoDist[i] >= lo && geoDist[i] <= hi)
+    );
+    if (!band.length) throw new Error('no reachable turnaround point — try a different start or distance');
+
+    // For each candidate, outbound path cost = penDist[node], return cost = penDist[node] (undirected).
+    // Pick the candidate whose total penalised round-trip is closest to targetM, within 10%.
+    const tolerance = 0.10;
+    let best = null, bestDiff = Infinity;
+    for (const node of band) {
+        const outIds = reconstructPath(penPrev, node);
+        const estimatedTotal = penDist[node] * 2;
+        if (estimatedTotal < targetM * (1 - tolerance) || estimatedTotal > targetM * (1 + tolerance)) continue;
+        const outSet = new Set(outIds);
+        const { prev: retPrev } = dijkstra(graph, node, WALKED_PENALTY, outSet);
+        const retIds = reconstructPath(retPrev, startNodeId);
+        const total = routeLength([...outIds, ...retIds]);
+        const diff = Math.abs(total - targetM);
+        if (diff < bestDiff) { bestDiff = diff; best = { outIds, retIds }; }
+        if (diff <= targetM * tolerance) break;
+    }
+
+    if (!best) {
+        for (const node of band) {
+            const outIds = reconstructPath(penPrev, node);
+            const outSet = new Set(outIds);
+            const { prev: retPrev } = dijkstra(graph, node, WALKED_PENALTY, outSet);
+            const retIds = reconstructPath(retPrev, startNodeId);
+            const total = routeLength([...outIds, ...retIds]);
+            const diff = Math.abs(total - targetM);
+            if (diff < bestDiff) { bestDiff = diff; best = { outIds, retIds }; }
+        }
+    }
+    return [...best.outIds, ...best.retIds];
+}
+
+function buildLinearRoute(graph, startNodeId, targetM) {
+    const { dist: geoDist } = dijkstra(graph, startNodeId, 1);
+    const { prev: penPrev } = dijkstra(graph, startNodeId, WALKED_PENALTY);
+
+    const lo = targetM * 0.7, hi = targetM * 1.3;
+    const band = shuffled(
+        Array.from({ length: graph.nodeCoords.length }, (_, i) => i)
+             .filter(i => geoDist[i] >= lo && geoDist[i] <= hi)
+    );
+    if (!band.length) throw new Error('no reachable endpoint at that distance — try a different start or distance');
+
+    const tolerance = 0.10;
+    let best = null, bestDiff = Infinity;
+    for (const node of band) {
+        const wayIds = reconstructPath(penPrev, node);
+        const total = routeLength(wayIds);
+        const diff = Math.abs(total - targetM);
+        if (diff < bestDiff) { bestDiff = diff; best = wayIds; }
+        if (diff <= targetM * tolerance) break;
+    }
+    return best;
+}
+
+async function generateRoute() {
+    if (!cityState) { setRouteStatus('load a city first'); return; }
+    if (!routeStartWayId) { setRouteStatus('click the map or enter an address to set a start point'); return; }
+
+    const targetM = (parseFloat(document.getElementById('routeDistanceInput').value) || 5) * 1000;
+    const isLoop = document.getElementById('routeLoopToggle').checked;
+    const btn = document.getElementById('routeGenerateBtn');
+    btn.disabled = true;
+    setRouteStatus('generating...');
+
+    await new Promise(r => setTimeout(r, 20));
+
+    try {
+        if (lastRouteCity !== currentCity) {
+            routeGraph = buildRouteGraph();
+            lastRouteCity = currentCity;
+        }
+
+        // Find start node: endpoint of routeStartWayId closest to click point
+        const startWay = cityState.ways.get(routeStartWayId);
+        const geo = startWay.geometry;
+        const endA = geo[0], endB = geo[geo.length - 1];
+        function latLonDist(a, b) { return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2; }
+        const startCoord = latLonDist(endA, [routeStartLatLon.lat, routeStartLatLon.lon]) <
+            latLonDist(endB, [routeStartLatLon.lat, routeStartLatLon.lon]) ? endA : endB;
+        const startKey = startCoord[0].toFixed(6) + ',' + startCoord[1].toFixed(6);
+        const startNodeId = routeGraph.nodeIndex.get(startKey);
+        if (startNodeId === undefined) throw new Error('start point not on graph');
+
+        const wayIds = isLoop
+            ? buildLoopRoute(routeGraph, startNodeId, targetM)
+            : buildLinearRoute(routeGraph, startNodeId, targetM);
+
+        lastRouteWayIds = wayIds;
+        renderGeneratedRoute(wayIds);
+        document.getElementById('routeExportGpxBtn').style.display = '';
+    } catch (err) {
+        setRouteStatus('error: ' + err.message);
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function renderGeneratedRoute(wayIds) {
+    for (const pl of routeHighlight) mapRoute.removeLayer(pl);
+    routeHighlight = [];
+
+    const wayObjects = wayIds.map(id => cityState.ways.get(id)).filter(Boolean);
+    let totalM = 0;
+    const allCoords = [];
+
+    for (const w of wayObjects) {
+        const color = walks.has(w.id) ? ROUTE_OVERLAP_COLOR : ROUTE_COLOR;
+        const pl = L.polyline(w.geometry, { color, weight: 6, opacity: 0.9 }).addTo(mapRoute);
+        routeHighlight.push(pl);
+        totalM += w.length_m;
+        for (const c of w.geometry) allCoords.push(c);
+    }
+
+    if (allCoords.length) mapRoute.fitBounds(L.latLngBounds(allCoords), { padding: [40, 40] });
+
+    const mins = Math.round(totalM / 1000 / 5 * 60);
+    const h = Math.floor(mins / 60), m = mins % 60;
+    const newCount = wayIds.filter(id => !walks.has(id)).length;
+    const pctNew = wayIds.length ? Math.round(newCount / wayIds.length * 100) : 0;
+    setRouteStatus(`${(totalM / 1000).toFixed(1)} km · ~${h}h ${m}m · ${pctNew}% new streets`);
+
+    renderRouteSidebar(wayObjects);
+}
+
+function renderRouteSidebar(wayObjects) {
+    const list = document.getElementById('sideListRoute');
+    const frag = document.createDocumentFragment();
+
+    wayObjects.forEach((w, i) => {
+        const row = document.createElement('div');
+        row.className = 'seg-row';
+        row.style.paddingLeft = '10px';
+
+        const num = document.createElement('span');
+        num.className = 'route-seg-num';
+        num.textContent = i + 1;
+
+        const label = document.createElement('span');
+        label.className = 'seg-label';
+        label.textContent = w.name + (segLabel(w) !== `${Math.round(w.length_m)} m segment` ? ' · ' + segLabel(w) : '');
+        label.title = label.textContent;
+
+        const len = document.createElement('span');
+        len.className = 'seg-len';
+        len.textContent = formatLength(w.length_m);
+
+        row.appendChild(num);
+        row.appendChild(label);
+        row.appendChild(len);
+
+        row.addEventListener('click', () => {
+            const pl = routeHighlight[i];
+            if (!pl) return;
+            mapRoute.flyToBounds(L.latLngBounds(w.geometry), { padding: [60, 60], maxZoom: 17, duration: 0.4 });
+            const origColor = walks.has(w.id) ? ROUTE_OVERLAP_COLOR : ROUTE_COLOR;
+            pl.setStyle({ color: ROUTE_START_COLOR, weight: 10, opacity: 1 });
+            setTimeout(() => pl.setStyle({ color: origColor, weight: 6, opacity: 0.9 }), 1200);
+        });
+
+        frag.appendChild(row);
+    });
+
+    list.innerHTML = '';
+    list.appendChild(frag);
+}
+
+function exportGpx() {
+    if (!lastRouteWayIds.length) return;
+    const segments = lastRouteWayIds.map(id => cityState.ways.get(id)).filter(Boolean);
+    const trkpts = segments.map(w =>
+        w.geometry.map(pt => `      <trkpt lat="${pt[0]}" lon="${pt[1]}"/>`).join('\n')
+    ).join('\n');
+    const gpx = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="walk-your-city" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk><name>Generated Route</name>
+    <trkseg>
+${trkpts}
+    </trkseg>
+  </trk>
+</gpx>`;
+    const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `route-${currentCity}-${new Date().toISOString().slice(0, 10)}.gpx`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
 // --- Init ---
 async function init() {
     // Mark tab map
@@ -69,7 +432,7 @@ async function init() {
     }).addTo(map);
     map.on('zoomend', refreshMapStyles);
     map.on('moveend', () => { if (currentCity) saveMapPos(currentCity); });
-    invalidateBoth();
+    invalidateAll();
 
     // History tab map
     mapHistory = L.map('mapHistory', { preferCanvas: true }).setView([43.6532, -79.3832], 12);
@@ -92,6 +455,7 @@ async function init() {
     // Tabs
     document.getElementById('tabMarkBtn').addEventListener('click', () => switchTab('mark'));
     document.getElementById('tabHistoryBtn').addEventListener('click', () => switchTab('history'));
+    document.getElementById('tabRouteBtn').addEventListener('click', () => switchTab('route'));
 
     // Fullscreen
     const fsButtons = {};
@@ -107,7 +471,8 @@ async function init() {
         mapObj.invalidateSize({ animate: false });
         if (cityState) {
             if (mapObj === map) renderMap();
-            else renderHistoryTab();
+            else if (mapObj === mapHistory) renderHistoryTab();
+            else if (mapObj === mapRoute) renderRouteBackground();
         }
     }
     function addFullscreenControl(mapObj, layoutId) {
@@ -134,12 +499,31 @@ async function init() {
         });
         new Ctrl({ position: 'topright' }).addTo(mapObj);
     }
+    // Route tab map
+    mapRoute = L.map('mapRoute', { preferCanvas: true }).setView([43.6532, -79.3832], 12);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+    }).addTo(mapRoute);
+    mapRoute.on('click', async e => {
+        const { lat, lng } = e.latlng;
+        routeStartLatLon = { lat, lon: lng };
+        if (routeStartMarker) mapRoute.removeLayer(routeStartMarker);
+        routeStartMarker = L.circleMarker([lat, lng], { radius: 8, color: ROUTE_START_COLOR, fillColor: ROUTE_START_COLOR, fillOpacity: 1 }).addTo(mapRoute);
+        if (!cityState) return;
+        routeStartWayId = findClosestWay(lat, lng);
+        const w = cityState.ways.get(routeStartWayId);
+        setRouteStatus(w ? `start: ${w.name}` : 'start set');
+    });
+
     addFullscreenControl(map, 'mapLayoutMark');
     addFullscreenControl(mapHistory, 'mapLayoutHistory');
+    addFullscreenControl(mapRoute, 'mapLayoutRoute');
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             exitFullscreen('mapLayoutMark', map);
             exitFullscreen('mapLayoutHistory', mapHistory);
+            exitFullscreen('mapLayoutRoute', mapRoute);
         }
     });
 
@@ -154,6 +538,31 @@ async function init() {
     document.getElementById('streetSearch').addEventListener('input', e => {
         filterText = e.target.value.toLowerCase();
         renderList();
+    });
+
+    // Route controls
+    document.getElementById('routeDistanceInput').addEventListener('input', updateRouteTimeLabel);
+    document.getElementById('routeGenerateBtn').addEventListener('click', generateRoute);
+    document.getElementById('routeExportGpxBtn').addEventListener('click', exportGpx);
+    async function handleGeocode() {
+        const addr = document.getElementById('routeAddressInput').value.trim();
+        if (!addr) return;
+        setRouteStatus('looking up address...');
+        const result = await geocodeAddress(addr);
+        if (!result) { setRouteStatus('address not found'); return; }
+        routeStartLatLon = result;
+        if (routeStartMarker) mapRoute.removeLayer(routeStartMarker);
+        routeStartMarker = L.circleMarker([result.lat, result.lon], { radius: 8, color: ROUTE_START_COLOR, fillColor: ROUTE_START_COLOR, fillOpacity: 1 }).addTo(mapRoute);
+        mapRoute.setView([result.lat, result.lon], 15);
+        if (cityState) {
+            routeStartWayId = findClosestWay(result.lat, result.lon);
+            const w = cityState.ways.get(routeStartWayId);
+            setRouteStatus(w ? `start: ${w.name}` : 'start set');
+        }
+    }
+    document.getElementById('routeGeocodeBtn').addEventListener('click', handleGeocode);
+    document.getElementById('routeAddressInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleGeocode();
     });
 
     // Auth UI wiring
@@ -218,10 +627,13 @@ function switchTab(tab) {
     activeTab = tab;
     document.getElementById('tabMark').style.display = tab === 'mark' ? '' : 'none';
     document.getElementById('tabHistory').style.display = tab === 'history' ? '' : 'none';
+    document.getElementById('tabRoute').style.display = tab === 'route' ? '' : 'none';
     document.getElementById('tabMarkBtn').classList.toggle('active', tab === 'mark');
     document.getElementById('tabHistoryBtn').classList.toggle('active', tab === 'history');
+    document.getElementById('tabRouteBtn').classList.toggle('active', tab === 'route');
     if (tab === 'history') renderHistoryTab();
-    invalidateBoth();
+    if (tab === 'route' && cityState) renderRouteBackground();
+    invalidateAll();
 }
 
 // --- Load city ---
@@ -239,8 +651,17 @@ async function loadCity(cityKey) {
     setStatus('loading...');
     clearMap();
     clearHistoryMap();
+    clearRouteBackground();
+    routeGraph = null; lastRouteCity = null;
+    for (const pl of routeHighlight) mapRoute.removeLayer(pl);
+    routeHighlight = []; lastRouteWayIds = [];
+    if (routeStartMarker) { mapRoute.removeLayer(routeStartMarker); routeStartMarker = null; }
+    routeStartWayId = null; routeStartLatLon = null;
+    document.getElementById('routeExportGpxBtn').style.display = 'none';
+    setRouteStatus('');
     document.getElementById('sideList').innerHTML = '<div class="loading-msg">loading street data...</div>';
     document.getElementById('sideListHistory').innerHTML = '';
+    document.getElementById('sideListRoute').innerHTML = '';
 
     let data;
     try {
@@ -262,12 +683,14 @@ async function loadCity(cityKey) {
     const zoom = savedPos ? savedPos.zoom : data.zoom;
     map.setView(center, zoom);
     mapHistory.setView(center, zoom);
+    mapRoute.setView(center, zoom);
     renderMap();
     subscribeRealtime(cityKey);
     renderList();
     updateStatus();
     if (activeTab === 'history') renderHistoryTab();
-    invalidateBoth();
+    if (activeTab === 'route') renderRouteBackground();
+    invalidateAll();
 }
 
 // --- Build state ---
@@ -607,6 +1030,15 @@ async function toggleWay(wayId) {
 
     const pl = polylines.get(wayId);
     if (pl) pl.setStyle(styleForMark(walks.get(wayId)));
+
+    const routePl = routePolylines.get(wayId);
+    if (routePl) {
+        const date = walks.get(wayId);
+        const color = date === activeDate ? WALKED_TODAY_COLOR : date ? WALKED_COLOR : UNWALKED_COLOR;
+        const opacity = date ? 0.7 : ROUTE_BG_OPACITY;
+        const weight = date ? 4 : 3;
+        routePl.setStyle({ color, weight, opacity });
+    }
 
     const segRow = document.querySelector(`.seg-row[data-way-id="${CSS.escape(wayId)}"]`);
     if (segRow) {

@@ -45,6 +45,7 @@
         <div class="tab-bar">
             <button class="tab-btn active" id="tabMarkBtn">mark walks</button>
             <button class="tab-btn" id="tabHistoryBtn">history</button>
+            <button class="tab-btn" id="tabRouteBtn">generate route</button>
         </div>
 
         <!-- Tab: mark walks -->
@@ -60,6 +61,33 @@
                         <input type="text" id="streetSearch" placeholder="filter streets..." class="street-search-input">
                     </div>
                     <div id="sideList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: generate route -->
+        <div id="tabRoute" class="tab-pane" style="display:none">
+            <div class="route-controls-row">
+                <input type="text" id="routeAddressInput" class="street-search-input route-address-input" placeholder="start address (or click map)">
+                <button class="button" id="routeGeocodeBtn">find</button>
+                <label class="route-label">distance</label>
+                <input type="number" id="routeDistanceInput" class="date-input route-distance-input" value="5" min="0.5" max="50" step="0.5">
+                <span class="route-label">km</span>
+                <span class="route-label" id="routeTimeLabel">~1h 0m</span>
+                <label class="route-label"><input type="checkbox" id="routeLoopToggle" checked> loop</label>
+                <button class="button" id="routeGenerateBtn">generate</button>
+                <button class="button" id="routeExportGpxBtn" style="display:none">download gpx</button>
+            </div>
+            <div class="route-status-row" id="routeStatus"></div>
+            <div class="route-legend">
+                <span class="route-legend-swatch" style="background:#7c3aed"></span> new street
+                <span class="route-legend-swatch" style="background:#f43f5e; margin-left:12px"></span> already walked
+                <span class="route-legend-swatch" style="background:#16a34a; margin-left:12px"></span> your walks
+            </div>
+            <div class="map-layout" id="mapLayoutRoute">
+                <div id="mapRoute"></div>
+                <div id="sidePanelRoute">
+                    <div id="sideListRoute"></div>
                 </div>
             </div>
         </div>
