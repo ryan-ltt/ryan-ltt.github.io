@@ -2,7 +2,7 @@
 
 ## What It Does
 
-A personal web app for tracking which city streets you have physically walked. For each supported city (Toronto, Vancouver, Montréal, Padova), every walkable street segment is displayed on an interactive Leaflet map. Clicking a segment marks it as walked on a specific date. A progress bar and status line show streets and kilometres covered. A History tab lets you pick any past date to see which streets you walked that day. A Generate Route tab lets you generate a walking route of a specified distance from a start point, with GPX export.
+A personal web app for tracking which city streets you have physically walked. For each supported city (Toronto, Vancouver, Montréal, Padova), every walkable street segment is displayed on an interactive Leaflet map. Clicking a segment marks it as walked on a specific date. A progress bar and status line show streets and kilometres covered. A History tab lets you pick any past date to see which streets you walked that day. A Generate Route tab lets you generate a walking route of a specified distance from a start point, with optional waypoint pins, and GPX export.
 
 ## Tech Stack
 
@@ -25,7 +25,8 @@ Single-page application shell. Contains:
 - IO bar: city selector, import/export JSON buttons, reset button, status line.
 - Progress bar (`#progressFill`) showing % of streets fully walked.
 - Three tabs: "mark walks", "history", and "generate route". Each has a map+sidebar layout (`#mapLayoutMark`, `#mapLayoutHistory`, `#mapLayoutRoute`) with a fullscreen button.
-- Generate route tab has three control rows: (1) address input + find button, (2) distance, time estimate, loop toggle, generate, download gpx, (3) status line. A colour legend sits below.
+- Mark walks tab sidebar: street filter input (`#streetSearch`) + "show on map" checkbox (`#streetSearchShowOnMap`) below it. When checked, matching ways are highlighted on the mark map (green if walked, red if not).
+- Generate route tab: map+sidebar appear first (matching other tabs), then controls below — (1) address input + find button, (2) distance, time estimate, loop toggle, generate, download gpx, (3) add pin / clear pins / ordered toggle / pin count, (4) status line. A colour legend sits below the controls.
 - Sign-in modal (fixed overlay) supporting both sign-in and sign-up flows (email + password, no magic link). Error shown inline.
 - Auth bar lives in the header `<nav>` (top-right), not the IO bar.
 - Script tags: Leaflet → `supabase.min.js` → `walk-your-city.js`.
@@ -35,9 +36,12 @@ Single-page application shell. Contains:
 **State**
 - `walks` — `Map<wayId, 'YYYY-MM-DD'>` of every marked segment.
 - `polylines` / `historyPolylines` — `Map<wayId, LeafletPolyline>` for mark and history tab maps.
+- `markSearchHighlight` — `LeafletPolyline[]` for the "show on map" search highlights on the mark tab (green = walked, red = unwalked). Cleared on city change.
 - `routePolylines` — `Map<wayId, LeafletPolyline>` for the route tab background layer.
 - `routeHighlight` — `LeafletPolyline[]` for the generated route (purple = new, red = already walked).
 - `routeStartMarker`, `routeStartLatLon`, `routeStartWayId` — current start point state.
+- `routePins` — `[{ lat, lon, wayId, marker }]` array of user-placed waypoint pins; persists across generates, cleared on city change.
+- `routeMapMode` — `'start'` | `'pin'`; controls whether map clicks place a start marker or a pin.
 - `routeGraph`, `lastRouteCity` — lazily built graph, invalidated on city change.
 - `lastRouteWayIds` — way IDs of last generated route, used for GPX export.
 - `lastTurnaroundNode` — excluded from the next generate to ensure a different route each press.
@@ -59,13 +63,19 @@ Single-page application shell. Contains:
 - `mergeImport(data)` — async; after merging JSON into `walks`, also upserts all rows to Supabase if signed in.
 - `renderHistoryTab()` — draws all ways faintly, highlights selected day's walks in blue (`#2563eb`), auto-fits map to that day's segments.
 - `renderList()` — re-renders the full sidebar street list. Streets with at least one walked segment sort first, then alphabetically.
+- `clearMarkSearch()` / `applyMarkSearch()` — clears/redraws the mark tab search highlights. `applyMarkSearch` reads `#streetSearch` value and `#streetSearchShowOnMap` checked state; colours each matching way green (`WALKED_COLOR`) if walked, red (`ROUTE_OVERLAP_COLOR`) if not, then fits the map to the matched bounds.
 - `segLabel(w)` — formats cross-street label: `"Oak St → Elm Ave"`, `"from Oak St"`, `"to Elm Ave"`, or length fallback.
 - `enterFullscreen(layoutId, mapObj)` / `exitFullscreen(layoutId, mapObj)` — add/remove `.fullscreen` class. On exit, forces reflow then calls `invalidateSize()` and re-renders the relevant map.
 - `buildRouteGraph()` — builds an adjacency list graph from `cityState.ways`. Nodes are way endpoints keyed by `lat.toFixed(6),lon.toFixed(6)`. Edges are bidirectional with `{ to, wayId, cost: length_m }`.
 - `dijkstra(graph, startNodeId, penaltyFactor, extraPenalised?)` — binary min-heap Dijkstra. Edge cost = `length_m * penaltyFactor` if the way is in `walks` or `extraPenalised`, else `length_m`. Returns `{ dist: Float64Array, prev }`.
 - `buildLoopRoute(graph, startNodeId, targetM, excludeNode?)` — 3 Dijkstra calls: (1) unpenalised for geographic radius band, (2) penalised outbound, (3) penalised return from turnaround with outbound ways as `extraPenalised`. Picks turnaround node from shuffled band whose `penDistOut * 2` is closest to `targetM`, excluding `excludeNode` for variety. Stores chosen node in `lastTurnaroundNode`.
 - `buildLinearRoute(graph, startNodeId, targetM)` — 2 Dijkstra calls: unpenalised for geographic band, penalised for path. Picks endpoint closest to `targetM`.
-- `generateRoute()` — async; validates state, builds graph lazily, finds start node, calls loop/linear builder, renders result.
+- `resolveNodeForLatLon(graph, lat, lon)` — snaps a lat/lon to the nearest graph node via `findClosestWay`; used for both start point and pin resolution.
+- `chainLegs(graph, nodeSequence)` — chains penalised Dijkstra legs through an ordered sequence of nodes; each leg adds its ways to `walkedSoFar` (extra-penalised) so subsequent legs avoid backtracking.
+- `greedyPinOrder(graph, startNodeId, pinNodeIds)` — nearest-neighbour greedy ordering of pins using penalised Dijkstra distances, so the sequence maximises new streets visited.
+- `updatePinUI()` — syncs "add pin" button active state, shows/hides clear pins / ordered / pin count elements based on `routeMapMode` and `routePins.length`.
+- `clearAllPins()` — removes all pin markers from the map and empties `routePins`.
+- `generateRoute()` — async; validates state, builds graph lazily, resolves pins to nodes, calls `greedyPinOrder` (unordered) or preserves user order (ordered), then chains legs through pins via `chainLegs`; falls back to original `buildLoopRoute`/`buildLinearRoute` when no pins are set.
 - `renderRouteBackground()` — draws all ways on route map: walked streets in green (matching mark tab colours), unwalked faintly grey. Updated in-place by `toggleWay`.
 - `renderGeneratedRoute(wayIds)` — draws route highlight: purple (`ROUTE_COLOR`) for new streets, red/rose (`ROUTE_OVERLAP_COLOR`) for already-walked segments. Fits map bounds, updates status and sidebar.
 - `renderRouteSidebar(wayObjects)` — ordered list of route segments; click flies to segment and flashes orange.
@@ -88,7 +98,8 @@ Stored under `walkYourCity_<city>` in localStorage. The app migrates v1 (plain w
 - `.map-layout.fullscreen`: `position: fixed; inset: 0; z-index: 500` — covers the full viewport. Map and sidebar both stretch to 100% height. A floating close button (`.fullscreen-close-btn`) is revealed via `display: block` at top-left.
 - Progress bar: 6 px green fill with CSS `transition: width 0.3s ease`.
 - `.street-header.some-walked` → green tint background; `.all-walked` → dark green name text.
-- Route tab: `.route-controls-row` for each row of controls, `.route-legend` + `.route-legend-swatch` for the colour legend, `#mapRoute` / `#sidePanelRoute` sized same as other maps.
+- `.street-search-wrap` — flex column so the filter input and "show on map" checkbox label stack vertically. `.street-search-map-label` — small monospace label with cursor pointer for the checkbox.
+- Route tab: map+sidebar first (matching other tabs), controls below. `.route-controls-row` for each row, `.route-legend` + `.route-legend-swatch` for the colour legend, `#mapRoute` / `#sidePanelRoute` sized same as other maps. `.route-btn-active` — blue filled state for "add pin" button when in pin mode. `.route-legend-swatch--pin` — circular (border-radius 50%) swatch for the pin legend entry.
 - Responsive at 700 px: map + sidebar stack vertically (applies to all three tab maps).
 
 ### `sw.js`
@@ -167,11 +178,25 @@ click map polyline or sidebar row → toggleWay(wayId)
 ```
 click generate → generateRoute()
   → buildRouteGraph() if city changed (lazy)
-  → findClosestWay() to snap start point to graph node
-  → buildLoopRoute() or buildLinearRoute() — 3 or 2 Dijkstra calls
+  → resolveNodeForLatLon() to snap start point to graph node
+  → resolve each pin to a graph node via resolveNodeForLatLon()
+  → if no pins: buildLoopRoute() or buildLinearRoute() — 3 or 2 Dijkstra calls
+  → if pins + unordered: greedyPinOrder() then chainLegs()
+  → if pins + ordered: chainLegs() in user-placed order
+  → loop: final leg returns to start node; linear: last pin is endpoint
   → renderGeneratedRoute() — purple (new) / red (walked) polylines
   → renderRouteSidebar()
   → show download gpx button
+```
+
+**Pin placement**
+```
+click "add pin" → routeMapMode = 'pin', button turns blue
+map click → place blue circleMarker, push to routePins, updatePinUI()
+click pin marker → remove from map + routePins, updatePinUI()
+click "clear pins" → clearAllPins()
+click "add pin" again → routeMapMode = 'start', button returns to default
+city change → clearAllPins(), routeMapMode = 'start'
 ```
 
 **Auth + migration**
@@ -197,7 +222,8 @@ Supabase postgres_changes on walks table (filtered by city)
 - **`data/` JSON files are large.** Montréal is 33 MB. Loading a new city involves a full `fetch()` of that file; there is no lazy loading.
 - **Supabase credentials are public (anon key).** This is intentional for a Supabase project — row-level security on the `walks` table enforces user isolation server-side.
 - **Route graph is built lazily** on first generate press for a city, then cached in `routeGraph` until city changes. Building the graph for Toronto (~54K nodes) takes ~100ms.
-- **Dijkstra uses a binary min-heap** (O(E log V)). Two runs per generate (unpenalised + penalised). A third run (penalised return from turnaround with outbound ways extra-penalised) encourages a different return path. Total ~3 Dijkstra calls per generate.
+- **Dijkstra uses a binary min-heap** (O(E log V)). Two runs per generate (unpenalised + penalised). A third run (penalised return from turnaround with outbound ways extra-penalised) encourages a different return path. Total ~3 Dijkstra calls per generate (no pins). With N pins, `chainLegs` runs N penalised Dijkstra calls; unordered adds N more for `greedyPinOrder`.
+- **Pin routing uses `chainLegs`** which accumulates ways used in each leg as `extraPenalised` for the next, preventing intra-route backtracking. The `greedyPinOrder` nearest-neighbour heuristic uses penalised costs as the objective, so it sequences pins to maximise new streets rather than minimise geographic distance.
 - **Route distance accuracy:** geographic (unpenalised) Dijkstra distances are used to identify the radius band; penalised Dijkstra is used only for path selection. This prevents the walked penalty from inflating apparent distances and producing short routes.
 - **Canvas repaint after alt-tab:** `visibilitychange` listener calls `invalidateAll()` when the tab regains focus, forcing Leaflet to repaint all three canvas maps.
 - **Known bug — Reset:** `resetData()` calls `Object.keys(CITIES)` where `CITIES` is an array, so it gets string indices instead of city names. Only the in-memory `walks` Map is cleared; localStorage entries are not removed.

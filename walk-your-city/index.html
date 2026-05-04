@@ -59,6 +59,9 @@
                 <div id="sidePanel">
                     <div class="street-search-wrap">
                         <input type="text" id="streetSearch" placeholder="filter streets..." class="street-search-input">
+                        <label class="street-search-map-label">
+                            <input type="checkbox" id="streetSearchShowOnMap"> show on map
+                        </label>
                     </div>
                     <div id="sideList"></div>
                 </div>
@@ -67,7 +70,13 @@
 
         <!-- Tab: generate route -->
         <div id="tabRoute" class="tab-pane" style="display:none">
-            <div class="route-controls-row">
+            <div class="map-layout" id="mapLayoutRoute">
+                <div id="mapRoute"></div>
+                <div id="sidePanelRoute">
+                    <div id="sideListRoute"></div>
+                </div>
+            </div>
+            <div class="route-controls-row" style="margin-top:8px">
                 <input type="text" id="routeAddressInput" class="street-search-input route-address-input" placeholder="start address (or click map)">
                 <button class="button" id="routeGeocodeBtn">find</button>
             </div>
@@ -81,18 +90,19 @@
                 <button class="button" id="routeExportGpxBtn" style="display:none">download gpx</button>
             </div>
             <div class="route-controls-row">
+                <button class="button" id="routeAddPinBtn">add pin</button>
+                <button class="button" id="routeClearPinsBtn" style="display:none">clear pins</button>
+                <label class="route-label" id="routePinsOrderedLabel" style="display:none"><input type="checkbox" id="routePinsOrderedToggle"> ordered</label>
+                <span class="route-label" id="routePinCount" style="display:none"></span>
+            </div>
+            <div class="route-controls-row">
                 <span class="status-line" id="routeStatus"></span>
             </div>
             <div class="route-legend">
                 <span class="route-legend-swatch" style="background:#7c3aed"></span> new street
                 <span class="route-legend-swatch" style="background:#f43f5e; margin-left:12px"></span> already walked
                 <span class="route-legend-swatch" style="background:#16a34a; margin-left:12px"></span> your walks
-            </div>
-            <div class="map-layout" id="mapLayoutRoute">
-                <div id="mapRoute"></div>
-                <div id="sidePanelRoute">
-                    <div id="sideListRoute"></div>
-                </div>
+                <span class="route-legend-swatch route-legend-swatch--pin" style="background:#2563eb; margin-left:12px"></span> pin
             </div>
         </div>
 

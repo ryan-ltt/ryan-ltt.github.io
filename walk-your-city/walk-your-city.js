@@ -14,6 +14,7 @@ const HISTORY_COLOR = '#2563eb';
 const ROUTE_COLOR = '#7c3aed';
 const ROUTE_OVERLAP_COLOR = '#f43f5e';
 const ROUTE_START_COLOR = '#f97316';
+const ROUTE_PIN_COLOR = '#2563eb';
 const ROUTE_BG_OPACITY = 0.15;
 const WALKED_PENALTY = 5;
 
@@ -47,6 +48,8 @@ let routeGraph = null;
 let lastRouteCity = null;
 let lastRouteWayIds = [];
 let lastTurnaroundNode = null;
+let routePins = [];       // [{ lat, lon, wayId, marker }]
+let routeMapMode = 'start'; // 'start' | 'pin'
 
 // --- Helpers ---
 function todayStr() {
@@ -88,9 +91,56 @@ function updateRouteTimeLabel() {
     document.getElementById('routeTimeLabel').textContent = `~${h}h ${m}m`;
 }
 
+function updatePinUI() {
+    const hasPins = routePins.length > 0;
+    const addBtn = document.getElementById('routeAddPinBtn');
+    const clearBtn = document.getElementById('routeClearPinsBtn');
+    const orderedLabel = document.getElementById('routePinsOrderedLabel');
+    const countEl = document.getElementById('routePinCount');
+    if (addBtn) addBtn.classList.toggle('route-btn-active', routeMapMode === 'pin');
+    if (clearBtn) clearBtn.style.display = hasPins ? '' : 'none';
+    if (orderedLabel) orderedLabel.style.display = hasPins ? '' : 'none';
+    if (countEl) {
+        countEl.style.display = hasPins ? '' : 'none';
+        countEl.textContent = `${routePins.length} pin${routePins.length === 1 ? '' : 's'}`;
+    }
+}
+
+function clearAllPins() {
+    for (const p of routePins) mapRoute.removeLayer(p.marker);
+    routePins = [];
+    updatePinUI();
+}
+
 function clearRouteBackground() {
     for (const pl of routePolylines.values()) mapRoute.removeLayer(pl);
     routePolylines.clear();
+}
+
+// --- Mark tab search highlight ---
+let markSearchHighlight = [];
+
+function clearMarkSearch() {
+    for (const pl of markSearchHighlight) map.removeLayer(pl);
+    markSearchHighlight = [];
+}
+
+function applyMarkSearch() {
+    clearMarkSearch();
+    const query = document.getElementById('streetSearch').value.trim();
+    const showOnMap = document.getElementById('streetSearchShowOnMap').checked;
+    if (!cityState || !showOnMap || !query) return;
+    const q = query.toLowerCase();
+    const allCoords = [];
+    for (const w of cityState.ways.values()) {
+        if (w.name.toLowerCase().includes(q)) {
+            const color = walks.has(w.id) ? WALKED_COLOR : ROUTE_OVERLAP_COLOR;
+            const pl = L.polyline(w.geometry, { color, weight: 6, opacity: 0.95 }).addTo(map);
+            markSearchHighlight.push(pl);
+            for (const c of w.geometry) allCoords.push(c);
+        }
+    }
+    if (allCoords.length) map.fitBounds(L.latLngBounds(allCoords), { padding: [40, 40] });
 }
 
 function renderRouteBackground() {
@@ -245,6 +295,50 @@ function shuffled(arr) {
     return a;
 }
 
+function resolveNodeForLatLon(graph, lat, lon) {
+    const wayId = findClosestWay(lat, lon);
+    const w = cityState.ways.get(wayId);
+    if (!w) return null;
+    const geo = w.geometry;
+    const endA = geo[0], endB = geo[geo.length - 1];
+    function sq(a, b) { return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2; }
+    const coord = sq(endA, [lat, lon]) < sq(endB, [lat, lon]) ? endA : endB;
+    return graph.nodeIndex.get(coord[0].toFixed(6) + ',' + coord[1].toFixed(6)) ?? null;
+}
+
+// Chain Dijkstra legs through an ordered sequence of node IDs.
+// Returns concatenated wayId arrays for each leg, using penalized costs.
+// walkedSoFar accumulates ways used so far as extra-penalized for subsequent legs.
+function chainLegs(graph, nodeSequence) {
+    const wayIds = [];
+    const walkedSoFar = new Set();
+    for (let i = 0; i < nodeSequence.length - 1; i++) {
+        const { prev } = dijkstra(graph, nodeSequence[i], WALKED_PENALTY, walkedSoFar);
+        const leg = reconstructPath(prev, nodeSequence[i + 1]);
+        for (const id of leg) walkedSoFar.add(id);
+        wayIds.push(...leg);
+    }
+    return wayIds;
+}
+
+// Greedy nearest-neighbour ordering of pinNodeIds starting from startNodeId,
+// using penalized Dijkstra distances as the "cost" (lower = more new streets).
+function greedyPinOrder(graph, startNodeId, pinNodeIds) {
+    const remaining = pinNodeIds.slice();
+    const ordered = [startNodeId];
+    let current = startNodeId;
+    while (remaining.length) {
+        const { dist } = dijkstra(graph, current, WALKED_PENALTY);
+        let bestIdx = 0, bestDist = Infinity;
+        for (let i = 0; i < remaining.length; i++) {
+            if (dist[remaining[i]] < bestDist) { bestDist = dist[remaining[i]]; bestIdx = i; }
+        }
+        current = remaining.splice(bestIdx, 1)[0];
+        ordered.push(current);
+    }
+    return ordered;
+}
+
 function buildLoopRoute(graph, startNodeId, targetM, excludeNode = null) {
     // 3 Dijkstra calls total, no per-candidate inner loops:
     // 1. Unpenalised from start — real geographic distances for the radius band.
@@ -312,6 +406,7 @@ async function generateRoute() {
 
     const targetM = (parseFloat(document.getElementById('routeDistanceInput').value) || 5) * 1000;
     const isLoop = document.getElementById('routeLoopToggle').checked;
+    const isOrdered = document.getElementById('routePinsOrderedToggle').checked;
     const btn = document.getElementById('routeGenerateBtn');
     btn.disabled = true;
     setRouteStatus('generating...');
@@ -324,20 +419,34 @@ async function generateRoute() {
             lastRouteCity = currentCity;
         }
 
-        // Find start node: endpoint of routeStartWayId closest to click point
-        const startWay = cityState.ways.get(routeStartWayId);
-        const geo = startWay.geometry;
-        const endA = geo[0], endB = geo[geo.length - 1];
-        function latLonDist(a, b) { return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2; }
-        const startCoord = latLonDist(endA, [routeStartLatLon.lat, routeStartLatLon.lon]) <
-            latLonDist(endB, [routeStartLatLon.lat, routeStartLatLon.lon]) ? endA : endB;
-        const startKey = startCoord[0].toFixed(6) + ',' + startCoord[1].toFixed(6);
-        const startNodeId = routeGraph.nodeIndex.get(startKey);
-        if (startNodeId === undefined) throw new Error('start point not on graph');
+        const startNodeId = resolveNodeForLatLon(routeGraph, routeStartLatLon.lat, routeStartLatLon.lon);
+        if (startNodeId === null) throw new Error('start point not on graph');
 
-        const wayIds = isLoop
-            ? buildLoopRoute(routeGraph, startNodeId, targetM, lastTurnaroundNode)
-            : buildLinearRoute(routeGraph, startNodeId, targetM);
+        // Resolve pins to graph nodes, skip any that fail
+        const pinNodeIds = routePins
+            .map(p => resolveNodeForLatLon(routeGraph, p.lat, p.lon))
+            .filter(n => n !== null);
+
+        let wayIds;
+        if (pinNodeIds.length === 0) {
+            // No pins — original behaviour
+            wayIds = isLoop
+                ? buildLoopRoute(routeGraph, startNodeId, targetM, lastTurnaroundNode)
+                : buildLinearRoute(routeGraph, startNodeId, targetM);
+        } else {
+            // Order the pins
+            const orderedNodes = isOrdered
+                ? [startNodeId, ...pinNodeIds]
+                : greedyPinOrder(routeGraph, startNodeId, pinNodeIds);
+
+            if (isLoop) {
+                // Chain legs through pins, then a final leg back to start
+                wayIds = chainLegs(routeGraph, [...orderedNodes, startNodeId]);
+            } else {
+                // Chain legs through pins; last pin is the endpoint
+                wayIds = chainLegs(routeGraph, orderedNodes);
+            }
+        }
 
         lastRouteWayIds = wayIds;
         renderGeneratedRoute(wayIds);
@@ -526,14 +635,30 @@ async function init() {
     }).addTo(mapRoute);
     mapRoute.on('click', async e => {
         const { lat, lng } = e.latlng;
-        routeStartLatLon = { lat, lon: lng };
-        if (routeStartMarker) mapRoute.removeLayer(routeStartMarker);
-        routeStartMarker = L.circleMarker([lat, lng], { radius: 8, color: ROUTE_START_COLOR, fillColor: ROUTE_START_COLOR, fillOpacity: 1 }).addTo(mapRoute);
-        if (!cityState) return;
-        routeStartWayId = findClosestWay(lat, lng);
-        lastTurnaroundNode = null;
-        const w = cityState.ways.get(routeStartWayId);
-        setRouteStatus(w ? `start: ${w.name}` : 'start set');
+        if (routeMapMode === 'pin') {
+            const wayId = cityState ? findClosestWay(lat, lng) : null;
+            const marker = L.circleMarker([lat, lng], {
+                radius: 7, color: ROUTE_PIN_COLOR, fillColor: ROUTE_PIN_COLOR, fillOpacity: 1
+            }).addTo(mapRoute);
+            const pin = { lat, lon: lng, wayId, marker };
+            routePins.push(pin);
+            marker.on('click', e => {
+                L.DomEvent.stopPropagation(e);
+                mapRoute.removeLayer(pin.marker);
+                routePins.splice(routePins.indexOf(pin), 1);
+                updatePinUI();
+            });
+            updatePinUI();
+        } else {
+            routeStartLatLon = { lat, lon: lng };
+            if (routeStartMarker) mapRoute.removeLayer(routeStartMarker);
+            routeStartMarker = L.circleMarker([lat, lng], { radius: 8, color: ROUTE_START_COLOR, fillColor: ROUTE_START_COLOR, fillOpacity: 1 }).addTo(mapRoute);
+            if (!cityState) return;
+            routeStartWayId = findClosestWay(lat, lng);
+            lastTurnaroundNode = null;
+            const w = cityState.ways.get(routeStartWayId);
+            setRouteStatus(w ? `start: ${w.name}` : 'start set');
+        }
     });
 
     addFullscreenControl(map, 'mapLayoutMark');
@@ -558,12 +683,21 @@ async function init() {
     document.getElementById('streetSearch').addEventListener('input', e => {
         filterText = e.target.value.toLowerCase();
         renderList();
+        applyMarkSearch();
+    });
+    document.getElementById('streetSearchShowOnMap').addEventListener('change', () => {
+        applyMarkSearch();
     });
 
     // Route controls
     document.getElementById('routeDistanceInput').addEventListener('input', updateRouteTimeLabel);
     document.getElementById('routeGenerateBtn').addEventListener('click', generateRoute);
     document.getElementById('routeExportGpxBtn').addEventListener('click', exportGpx);
+    document.getElementById('routeAddPinBtn').addEventListener('click', () => {
+        routeMapMode = routeMapMode === 'pin' ? 'start' : 'pin';
+        updatePinUI();
+    });
+    document.getElementById('routeClearPinsBtn').addEventListener('click', clearAllPins);
     async function handleGeocode() {
         const addr = document.getElementById('routeAddressInput').value.trim();
         if (!addr) return;
@@ -585,6 +719,8 @@ async function init() {
     document.getElementById('routeAddressInput').addEventListener('keydown', e => {
         if (e.key === 'Enter') handleGeocode();
     });
+
+
 
     // Auth UI wiring
     let authMode = 'signin'; // 'signin' | 'signup'
@@ -672,6 +808,7 @@ async function loadCity(cityKey) {
     expandedStreets.clear();
     filterText = '';
     document.getElementById('streetSearch').value = '';
+    clearMarkSearch();
 
     setStatus('loading...');
     clearMap();
@@ -682,6 +819,8 @@ async function loadCity(cityKey) {
     routeHighlight = []; lastRouteWayIds = [];
     if (routeStartMarker) { mapRoute.removeLayer(routeStartMarker); routeStartMarker = null; }
     routeStartWayId = null; routeStartLatLon = null; lastTurnaroundNode = null;
+    clearAllPins();
+    routeMapMode = 'start';
     document.getElementById('routeExportGpxBtn').style.display = 'none';
     setRouteStatus('');
     document.getElementById('sideList').innerHTML = '<div class="loading-msg">loading street data...</div>';
