@@ -70,6 +70,8 @@
             <div class="route-controls-row">
                 <input type="text" id="routeAddressInput" class="street-search-input route-address-input" placeholder="start address (or click map)">
                 <button class="button" id="routeGeocodeBtn">find</button>
+            </div>
+            <div class="route-controls-row">
                 <label class="route-label">distance</label>
                 <input type="number" id="routeDistanceInput" class="date-input route-distance-input" value="5" min="0.5" max="50" step="0.5">
                 <span class="route-label">km</span>
@@ -78,7 +80,9 @@
                 <button class="button" id="routeGenerateBtn">generate</button>
                 <button class="button" id="routeExportGpxBtn" style="display:none">download gpx</button>
             </div>
-            <div class="route-status-row" id="routeStatus"></div>
+            <div class="route-controls-row">
+                <span class="status-line" id="routeStatus"></span>
+            </div>
             <div class="route-legend">
                 <span class="route-legend-swatch" style="background:#7c3aed"></span> new street
                 <span class="route-legend-swatch" style="background:#f43f5e; margin-left:12px"></span> already walked

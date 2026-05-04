@@ -46,6 +46,7 @@ let routeStartWayId = null;
 let routeGraph = null;
 let lastRouteCity = null;
 let lastRouteWayIds = [];
+let lastTurnaroundNode = null;
 
 // --- Helpers ---
 function todayStr() {
@@ -174,9 +175,38 @@ function dijkstra(graph, startNodeId, penaltyFactor, extraPenalised = null) {
     const dist = new Float64Array(n).fill(Infinity);
     const prev = new Array(n).fill(null);
     dist[startNodeId] = 0;
+
+    // Binary min-heap storing [cost, nodeId]
     const heap = [[0, startNodeId]];
+    const heapSwap = (i, j) => { const t = heap[i]; heap[i] = heap[j]; heap[j] = t; };
+    const heapPush = (item) => {
+        heap.push(item);
+        let i = heap.length - 1;
+        while (i > 0) {
+            const p = (i - 1) >> 1;
+            if (heap[p][0] <= heap[i][0]) break;
+            heapSwap(i, p); i = p;
+        }
+    };
+    const heapPop = () => {
+        const top = heap[0];
+        const last = heap.pop();
+        if (heap.length) {
+            heap[0] = last;
+            let i = 0;
+            while (true) {
+                let s = i, l = 2 * i + 1, r = 2 * i + 2;
+                if (l < heap.length && heap[l][0] < heap[s][0]) s = l;
+                if (r < heap.length && heap[r][0] < heap[s][0]) s = r;
+                if (s === i) break;
+                heapSwap(i, s); i = s;
+            }
+        }
+        return top;
+    };
+
     while (heap.length) {
-        const [d, u] = heap.shift();
+        const [d, u] = heapPop();
         if (d > dist[u]) continue;
         for (const edge of graph.adj[u]) {
             const penalised = walks.has(edge.wayId) || (extraPenalised && extraPenalised.has(edge.wayId));
@@ -185,9 +215,7 @@ function dijkstra(graph, startNodeId, penaltyFactor, extraPenalised = null) {
             if (nd < dist[edge.to]) {
                 dist[edge.to] = nd;
                 prev[edge.to] = { parentNodeId: u, wayId: edge.wayId };
-                let lo = 0, hi = heap.length;
-                while (lo < hi) { const mid = (lo + hi) >> 1; heap[mid][0] < nd ? lo = mid + 1 : hi = mid; }
-                heap.splice(lo, 0, [nd, edge.to]);
+                heapPush([nd, edge.to]);
             }
         }
     }
@@ -217,51 +245,42 @@ function shuffled(arr) {
     return a;
 }
 
-function buildLoopRoute(graph, startNodeId, targetM) {
-    // 2 Dijkstra calls total:
-    // 1. Unpenalised — real geographic distances, used only to find the radius band.
-    // 2. Penalised — preferred path (avoids walked streets), used for both outbound and return
-    //    (graph is undirected so dist[node] also equals cheapest penalised return from node).
+function buildLoopRoute(graph, startNodeId, targetM, excludeNode = null) {
+    // 3 Dijkstra calls total, no per-candidate inner loops:
+    // 1. Unpenalised from start — real geographic distances for the radius band.
+    // 2. Penalised from start — preferred outbound path.
+    // 3. Penalised from start again but treating outbound ways as walked — preferred return path.
+    //    Since the graph is undirected, dist[node] from run 3 = cheapest penalised return from that node.
+    //    We run run 3 after picking the turnaround so we can pass outbound ways as extraPenalised.
     const { dist: geoDist } = dijkstra(graph, startNodeId, 1);
-    const { dist: penDist, prev: penPrev } = dijkstra(graph, startNodeId, WALKED_PENALTY);
+    const { dist: penDistOut, prev: penPrevOut } = dijkstra(graph, startNodeId, WALKED_PENALTY);
 
     const targetRadius = targetM / (2 * Math.PI);
     const lo = targetRadius * 0.7, hi = targetRadius * 1.3;
     const band = shuffled(
         Array.from({ length: graph.nodeCoords.length }, (_, i) => i)
-             .filter(i => geoDist[i] >= lo && geoDist[i] <= hi)
+             .filter(i => i !== excludeNode && geoDist[i] >= lo && geoDist[i] <= hi)
     );
     if (!band.length) throw new Error('no reachable turnaround point — try a different start or distance');
 
-    // For each candidate, outbound path cost = penDist[node], return cost = penDist[node] (undirected).
-    // Pick the candidate whose total penalised round-trip is closest to targetM, within 10%.
+    // Use penDistOut[node] as outbound cost proxy and pick the candidate
+    // whose estimated round-trip (outbound + same-cost return) is closest to targetM.
+    // Since the graph is undirected, penDistOut[node] approximates the return cost too.
     const tolerance = 0.10;
-    let best = null, bestDiff = Infinity;
+    let bestNode = band[0], bestDiff = Infinity;
     for (const node of band) {
-        const outIds = reconstructPath(penPrev, node);
-        const estimatedTotal = penDist[node] * 2;
-        if (estimatedTotal < targetM * (1 - tolerance) || estimatedTotal > targetM * (1 + tolerance)) continue;
-        const outSet = new Set(outIds);
-        const { prev: retPrev } = dijkstra(graph, node, WALKED_PENALTY, outSet);
-        const retIds = reconstructPath(retPrev, startNodeId);
-        const total = routeLength([...outIds, ...retIds]);
-        const diff = Math.abs(total - targetM);
-        if (diff < bestDiff) { bestDiff = diff; best = { outIds, retIds }; }
+        const estimated = penDistOut[node] * 2;
+        const diff = Math.abs(estimated - targetM);
+        if (diff < bestDiff) { bestDiff = diff; bestNode = node; }
         if (diff <= targetM * tolerance) break;
     }
 
-    if (!best) {
-        for (const node of band) {
-            const outIds = reconstructPath(penPrev, node);
-            const outSet = new Set(outIds);
-            const { prev: retPrev } = dijkstra(graph, node, WALKED_PENALTY, outSet);
-            const retIds = reconstructPath(retPrev, startNodeId);
-            const total = routeLength([...outIds, ...retIds]);
-            const diff = Math.abs(total - targetM);
-            if (diff < bestDiff) { bestDiff = diff; best = { outIds, retIds }; }
-        }
-    }
-    return [...best.outIds, ...best.retIds];
+    lastTurnaroundNode = bestNode;
+    const outIds = reconstructPath(penPrevOut, bestNode);
+    const outSet = new Set(outIds);
+    const { prev: penPrevRet } = dijkstra(graph, bestNode, WALKED_PENALTY, outSet);
+    const retIds = reconstructPath(penPrevRet, startNodeId);
+    return [...outIds, ...retIds];
 }
 
 function buildLinearRoute(graph, startNodeId, targetM) {
@@ -317,7 +336,7 @@ async function generateRoute() {
         if (startNodeId === undefined) throw new Error('start point not on graph');
 
         const wayIds = isLoop
-            ? buildLoopRoute(routeGraph, startNodeId, targetM)
+            ? buildLoopRoute(routeGraph, startNodeId, targetM, lastTurnaroundNode)
             : buildLinearRoute(routeGraph, startNodeId, targetM);
 
         lastRouteWayIds = wayIds;
@@ -512,6 +531,7 @@ async function init() {
         routeStartMarker = L.circleMarker([lat, lng], { radius: 8, color: ROUTE_START_COLOR, fillColor: ROUTE_START_COLOR, fillOpacity: 1 }).addTo(mapRoute);
         if (!cityState) return;
         routeStartWayId = findClosestWay(lat, lng);
+        lastTurnaroundNode = null;
         const w = cityState.ways.get(routeStartWayId);
         setRouteStatus(w ? `start: ${w.name}` : 'start set');
     });
@@ -556,6 +576,7 @@ async function init() {
         mapRoute.setView([result.lat, result.lon], 15);
         if (cityState) {
             routeStartWayId = findClosestWay(result.lat, result.lon);
+            lastTurnaroundNode = null;
             const w = cityState.ways.get(routeStartWayId);
             setRouteStatus(w ? `start: ${w.name}` : 'start set');
         }
@@ -617,6 +638,10 @@ async function init() {
         navigator.serviceWorker.register('/walk-your-city/sw.js');
     }
 
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') invalidateAll();
+    });
+
     const lastCity = localStorage.getItem(LS_PREFIX + 'lastCity') || 'toronto';
     document.getElementById('citySelect').value = lastCity;
     loadCity(lastCity);
@@ -656,7 +681,7 @@ async function loadCity(cityKey) {
     for (const pl of routeHighlight) mapRoute.removeLayer(pl);
     routeHighlight = []; lastRouteWayIds = [];
     if (routeStartMarker) { mapRoute.removeLayer(routeStartMarker); routeStartMarker = null; }
-    routeStartWayId = null; routeStartLatLon = null;
+    routeStartWayId = null; routeStartLatLon = null; lastTurnaroundNode = null;
     document.getElementById('routeExportGpxBtn').style.display = 'none';
     setRouteStatus('');
     document.getElementById('sideList').innerHTML = '<div class="loading-msg">loading street data...</div>';

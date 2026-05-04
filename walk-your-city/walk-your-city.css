@@ -359,9 +359,8 @@ main {
     background: white; display: flex; flex-direction: column; overflow-y: auto; }
 
 .route-controls-row { display: flex; flex-wrap: wrap; align-items: center;
-    gap: 8px; margin-bottom: 4px; font-family: Monaco, monospace; font-size: 13px; }
-.route-status-row { margin-bottom: 12px; min-height: 1.2em; font-family: Monaco, monospace; font-size: 13px; color: #555; }
-.route-address-input { flex: 1; min-width: 160px; }
+    gap: 8px; margin-bottom: 8px; font-family: Monaco, monospace; font-size: 13px; }
+.route-address-input { width: 300px; }
 .route-distance-input { width: 70px; }
 .route-label { color: #555; white-space: nowrap; font-family: Monaco, monospace; font-size: 13px; }
 .route-seg-num { flex-shrink: 0; font-size: 10px; color: #888; width: 20px; text-align: right; }
