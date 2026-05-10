@@ -185,6 +185,11 @@ function buildRouteGraph() {
 }
 
 function findClosestWay(lat, lon) {
+    const { wayId } = findClosestWayWithDist(lat, lon);
+    return wayId;
+}
+
+function findClosestWayWithDist(lat, lon) {
     let bestDist = Infinity, bestId = null;
     for (const w of cityState.ways.values()) {
         const geo = w.geometry;
@@ -193,7 +198,7 @@ function findClosestWay(lat, lon) {
             if (d < bestDist) { bestDist = d; bestId = w.id; }
         }
     }
-    return bestId;
+    return { wayId: bestId, distSq: bestDist };
 }
 
 function pointSegDistSq(px, py, ax, ay, bx, by) {
@@ -680,6 +685,7 @@ async function init() {
     document.getElementById('exportBtn').addEventListener('click', exportProgress);
     document.getElementById('resetBtn').addEventListener('click', resetData);
     document.getElementById('importInput').addEventListener('change', importProgress);
+    document.getElementById('stravaInput').addEventListener('change', importStrava);
     document.getElementById('streetSearch').addEventListener('input', e => {
         filterText = e.target.value.toLowerCase();
         renderList();
@@ -1442,6 +1448,141 @@ async function mergeImport(data) {
     renderMap();
     renderList();
     updateStatus();
+}
+
+// --- Strava GPX/TCX Import ---
+
+function parseGpxFile(text) {
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    const trkpts = doc.querySelectorAll('trkpt');
+    const points = [];
+    for (const pt of trkpts) {
+        const lat = parseFloat(pt.getAttribute('lat'));
+        const lon = parseFloat(pt.getAttribute('lon'));
+        if (!isNaN(lat) && !isNaN(lon)) points.push({ lat, lon });
+    }
+    const timeEl = doc.querySelector('metadata > time') || doc.querySelector('trkpt > time');
+    const date = timeEl ? timeEl.textContent.trim().slice(0, 10) : null;
+    return { points, date };
+}
+
+function parseTcxFile(text) {
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    const trackpoints = doc.querySelectorAll('Trackpoint');
+    const points = [];
+    for (const tp of trackpoints) {
+        const latEl = tp.querySelector('LatitudeDegrees');
+        const lonEl = tp.querySelector('LongitudeDegrees');
+        if (!latEl || !lonEl) continue;
+        const lat = parseFloat(latEl.textContent);
+        const lon = parseFloat(lonEl.textContent);
+        if (!isNaN(lat) && !isNaN(lon)) points.push({ lat, lon });
+    }
+    const timeEl = doc.querySelector('Activity > Id') || doc.querySelector('Trackpoint > Time');
+    const date = timeEl ? timeEl.textContent.trim().slice(0, 10) : null;
+    return { points, date };
+}
+
+// Returns the t parameter (0–1) of the closest point on the polyline to (lat, lon),
+// where 0 = start of way and 1 = end, weighted by segment lengths.
+function projectOntoWay(lat, lon, geo) {
+    let bestDistSq = Infinity, bestT = 0, totalLen = 0;
+    // Compute total length in degree-space to convert segment t to global t
+    const segLens = [];
+    for (let i = 0; i < geo.length - 1; i++) {
+        const dx = geo[i+1][1] - geo[i][1], dy = geo[i+1][0] - geo[i][0];
+        segLens.push(Math.sqrt(dx*dx + dy*dy));
+        totalLen += segLens[i];
+    }
+    let accumulated = 0;
+    for (let i = 0; i < geo.length - 1; i++) {
+        const ax = geo[i][0], ay = geo[i][1], bx = geo[i+1][0], by = geo[i+1][1];
+        const dx = bx - ax, dy = by - ay;
+        const lenSq = dx*dx + dy*dy;
+        let segT = 0;
+        if (lenSq > 0) segT = Math.max(0, Math.min(1, ((lat-ax)*dx + (lon-ay)*dy) / lenSq));
+        const cx = ax + segT*dx, cy = ay + segT*dy;
+        const fx = lat-cx, fy = lon-cy;
+        const d = fx*fx + fy*fy;
+        if (d < bestDistSq) {
+            bestDistSq = d;
+            bestT = totalLen > 0 ? (accumulated + segT * segLens[i]) / totalLen : 0;
+        }
+        accumulated += segLens[i];
+    }
+    return { t: bestT, distSq: bestDistSq };
+}
+
+function snapTrackToWays(points, date) {
+    // 30 m threshold in degree-space
+    const MAX_DIST_SQ = (30 / 111111) ** 2;
+    // Per-way accumulator: track min/max t of projected GPS points
+    const wayCoverage = new Map(); // wayId -> { minT, maxT }
+
+    for (let i = 0; i < points.length; i += 2) {
+        const { lat, lon } = points[i];
+        const { wayId, distSq } = findClosestWayWithDist(lat, lon);
+        if (!wayId || distSq > MAX_DIST_SQ) continue;
+
+        const way = cityState.ways.get(wayId);
+        const { t } = projectOntoWay(lat, lon, way.geometry);
+        if (wayCoverage.has(wayId)) {
+            const c = wayCoverage.get(wayId);
+            if (t < c.minT) c.minT = t;
+            if (t > c.maxT) c.maxT = t;
+        } else {
+            wayCoverage.set(wayId, { minT: t, maxT: t });
+        }
+    }
+
+    const walkDate = date || todayStr();
+    const result = new Map();
+    for (const [wayId, { minT, maxT }] of wayCoverage) {
+        const way = cityState.ways.get(wayId);
+        const coveredM = (maxT - minT) * way.length_m;
+        // Mark walked if covered span >= 40 m OR >= 50% of the way's length
+        if (coveredM >= 40 || coveredM >= 0.5 * way.length_m) {
+            result.set(wayId, walkDate);
+        }
+    }
+    return result;
+}
+
+async function importStrava(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    e.target.value = '';
+    if (!cityState) { alert('Load a city first.'); return; }
+
+    const text = await file.text();
+    const ext = file.name.split('.').pop().toLowerCase();
+    let parsed;
+    try {
+        parsed = ext === 'tcx' ? parseTcxFile(text) : parseGpxFile(text);
+    } catch (_) { alert('Could not parse file.'); return; }
+
+    if (!parsed.points.length) { alert('No GPS trackpoints found in file.'); return; }
+
+    const matched = snapTrackToWays(parsed.points, parsed.date);
+    if (!matched.size) { alert('No streets matched. Make sure the activity is in the currently selected city.'); return; }
+
+    for (const [wayId, date] of matched) walks.set(wayId, date);
+    saveProgress(currentCity);
+
+    if (currentUser) {
+        const rows = [];
+        for (const [wayId, date] of matched) {
+            if (wayId && date) rows.push({ user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: date });
+        }
+        for (let i = 0; i < rows.length; i += 500) {
+            await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
+        }
+    }
+
+    renderMap();
+    renderList();
+    updateStatus();
+    alert(`Imported ${matched.size} street${matched.size === 1 ? '' : 's'} from ${file.name}.`);
 }
 
 init();
