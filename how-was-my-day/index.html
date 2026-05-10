@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>how was my day</title>
+    <link rel="stylesheet" href="/projects/projects.css">
+    <link rel="stylesheet" href="how-was-my-day.css">
+</head>
+<body>
+    <header>
+        <h1>how was my day</h1>
+        <nav class="nav-buttons">
+            <a href="/" class="button">home</a>
+            <a href="/projects/" class="button">projects</a>
+        </nav>
+    </header>
+
+    <main>
+        <p>daily mood ratings from 2021 to present, on a scale of 1–7.</p>
+
+        <div class="tab-bar">
+            <button class="tab active" id="tab-chart">chart</button>
+            <button class="tab" id="tab-table">calendar table</button>
+        </div>
+
+        <div id="view-chart">
+            <div class="controls">
+                <div class="group-buttons">
+                    <button class="button active" id="btn-week">week</button>
+                    <button class="button" id="btn-month">month</button>
+                    <button class="button" id="btn-year">year</button>
+                </div>
+                <div class="nav-arrows">
+                    <button class="button" id="prev">&#8592;</button>
+                    <span id="period-label"></span>
+                    <button class="button" id="next">&#8594;</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="chart"></canvas>
+            </div>
+
+            <div class="stats-row" id="stats"></div>
+        </div>
+
+        <div id="view-table" style="display:none">
+            <div class="table-scroll" id="table-scroll">
+                <table id="cal-table"></table>
+            </div>
+            <div class="table-mirror-scroll" id="table-mirror">
+                <div class="table-mirror-inner" id="table-mirror-inner"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="how-was-my-day.js"></script>
+</body>
+</html>
