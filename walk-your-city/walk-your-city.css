@@ -103,6 +103,7 @@ main {
     display: flex;
     gap: 16px;
     align-items: flex-start;
+    position: relative;
 }
 
 #map,
@@ -387,3 +388,83 @@ main {
 
 .map-layout.fullscreen #mapRoute { width: 100%; height: 100%; border: none; }
 .map-layout.fullscreen #sidePanelRoute { display: none; }
+
+/* GPS tracking overlay */
+#gpsStatsOverlay {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 510;
+    background: rgba(0, 0, 0, 0.78);
+    color: white;
+    font-family: Monaco, monospace;
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+#gpsStatsOverlay.gps-active {
+    display: flex;
+}
+
+.gps-stat-block {
+    text-align: center;
+    flex: 1;
+}
+
+.gps-stat-value {
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.gps-stat-label {
+    font-size: 10px;
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+}
+
+/* GPS walk control button */
+.gps-track-btn {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: bottom 0.2s ease;
+    z-index: 520;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    background: #1e293b;
+    color: white;
+    font-size: 28px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.gps-track-btn.gps-btn-active {
+    color: #ef4444;
+    border-color: #ef4444;
+    bottom: 104px;
+}
+
+@keyframes gps-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}

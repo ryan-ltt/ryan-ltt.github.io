@@ -51,6 +51,19 @@ let lastTurnaroundNode = null;
 let routePins = [];       // [{ lat, lon, wayId, marker }]
 let routeMapMode = 'start'; // 'start' | 'pin'
 
+// GPS tracking state
+let gpsTracking = false;
+let gpsWatchId = null;
+let gpsMarker = null;
+let gpsAccuracyCircle = null;
+let gpsTrackPoints = [];
+let gpsCoverage = new Map();   // wayId -> { minT, maxT }
+let gpsSessionWalked = new Set();
+let gpsSessionNewStreets = 0;
+let gpsSessionKm = 0;
+let gpsPrevLatLon = null;
+let gpsControlBtn = null;      // ref to the Leaflet control button for state resets
+
 // --- Helpers ---
 function todayStr() {
     return new Date().toISOString().slice(0, 10);
@@ -669,11 +682,13 @@ async function init() {
     addFullscreenControl(map, 'mapLayoutMark');
     addFullscreenControl(mapHistory, 'mapLayoutHistory');
     addFullscreenControl(mapRoute, 'mapLayoutRoute');
+    addGpsControl();
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             exitFullscreen('mapLayoutMark', map);
             exitFullscreen('mapLayoutHistory', mapHistory);
             exitFullscreen('mapLayoutRoute', mapRoute);
+            if (gpsTracking) stopGpsTracking();
         }
     });
 
@@ -1448,6 +1463,201 @@ async function mergeImport(data) {
     renderMap();
     renderList();
     updateStatus();
+}
+
+// --- GPS Live Tracking ---
+
+function markWayWalked(wayId, date) {
+    if (walks.has(wayId)) return; // already walked, don't overwrite
+    walks.set(wayId, date);
+    saveProgress(currentCity);
+
+    if (currentUser) {
+        db.from('walks').upsert(
+            { user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: date },
+            { onConflict: 'user_id,city,way_id' }
+        ).then(({ error }) => { if (error) console.error('gps upsert failed', error); });
+    }
+
+    const pl = polylines.get(wayId);
+    if (pl) pl.setStyle(styleForMark(date));
+
+    const routePl = routePolylines.get(wayId);
+    if (routePl) {
+        const color = date === activeDate ? WALKED_TODAY_COLOR : WALKED_COLOR;
+        routePl.setStyle({ color, weight: 4, opacity: 0.7 });
+    }
+
+    const segRow = document.querySelector(`.seg-row[data-way-id="${CSS.escape(wayId)}"]`);
+    if (segRow) {
+        segRow.className = 'seg-row walked';
+        segRow.querySelector('.seg-check').textContent = '✓';
+        const meta = segRow.querySelector('.seg-len');
+        if (meta) meta.textContent = date;
+    }
+}
+
+function snapLivePoint(lat, lon) {
+    const MAX_DIST_SQ = (30 / 111111) ** 2;
+    const { wayId, distSq } = findClosestWayWithDist(lat, lon);
+    if (!wayId || distSq > MAX_DIST_SQ) return;
+
+    const way = cityState.ways.get(wayId);
+    const { t } = projectOntoWay(lat, lon, way.geometry);
+
+    if (gpsCoverage.has(wayId)) {
+        const c = gpsCoverage.get(wayId);
+        if (t < c.minT) c.minT = t;
+        if (t > c.maxT) c.maxT = t;
+    } else {
+        gpsCoverage.set(wayId, { minT: t, maxT: t });
+    }
+
+    const { minT, maxT } = gpsCoverage.get(wayId);
+    const coveredM = (maxT - minT) * way.length_m;
+    if ((coveredM >= 40 || coveredM >= 0.5 * way.length_m) && !gpsSessionWalked.has(wayId) && !walks.has(wayId)) {
+        const today = todayStr();
+        gpsSessionWalked.add(wayId);
+
+        // Count new full streets
+        const streetKey = 'street_' + way.name.trim().toLowerCase()
+            .replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        const street = cityState.streets.get(streetKey);
+        if (street) {
+            const prevAllWalked = street.wayIds.every(id => walks.has(id));
+            markWayWalked(wayId, today);
+            const nowAllWalked = street.wayIds.every(id => walks.has(id));
+            if (!prevAllWalked && nowAllWalked) gpsSessionNewStreets++;
+        } else {
+            markWayWalked(wayId, today);
+        }
+
+        updateGpsStats();
+        renderList();
+        updateStatus();
+    }
+}
+
+function updateGpsStats() {
+    document.getElementById('gpsStatWays').textContent = gpsSessionWalked.size;
+    document.getElementById('gpsStatKm').textContent = gpsSessionKm.toFixed(2);
+    document.getElementById('gpsStatStreets').textContent = gpsSessionNewStreets;
+}
+
+function onGpsPosition(pos) {
+    const { latitude: lat, longitude: lon, accuracy } = pos.coords;
+
+    // Update km walked
+    if (gpsPrevLatLon) {
+        const dlat = lat - gpsPrevLatLon.lat;
+        const dlon = lon - gpsPrevLatLon.lon;
+        const distM = Math.sqrt(dlat * dlat + dlon * dlon) * 111111;
+        if (distM < 200) gpsSessionKm += distM / 1000; // ignore GPS jumps > 200m
+    }
+    gpsPrevLatLon = { lat, lon };
+
+    // Update position marker
+    if (!gpsMarker) {
+        gpsMarker = L.circleMarker([lat, lon], {
+            radius: 9, color: 'white', weight: 2,
+            fillColor: '#2563eb', fillOpacity: 1,
+            zIndexOffset: 1000
+        }).addTo(map);
+        gpsAccuracyCircle = L.circle([lat, lon], {
+            radius: accuracy,
+            color: '#2563eb', weight: 1,
+            fillColor: '#2563eb', fillOpacity: 0.12
+        }).addTo(map);
+    } else {
+        gpsMarker.setLatLng([lat, lon]);
+        gpsAccuracyCircle.setLatLng([lat, lon]);
+        gpsAccuracyCircle.setRadius(accuracy);
+    }
+
+    map.panTo([lat, lon], { animate: true, duration: 0.5 });
+
+    if (cityState) snapLivePoint(lat, lon);
+    updateGpsStats();
+}
+
+function onGpsError(err) {
+    const msgs = {
+        1: 'Location permission denied. Enable it in your browser settings.',
+        2: 'Location unavailable. Check your GPS signal.',
+        3: 'Location request timed out. Try again.'
+    };
+    if (gpsTracking) {
+        document.getElementById('gpsStatWays').textContent = '—';
+        document.getElementById('gpsStatKm').textContent = msgs[err.code] || 'GPS error';
+        document.getElementById('gpsStatStreets').textContent = '—';
+    }
+    if (err.code === 1) stopGpsTracking();
+}
+
+function startGpsTracking() {
+    if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+    }
+    gpsTracking = true;
+    gpsTrackPoints = [];
+    gpsCoverage = new Map();
+    gpsSessionWalked = new Set();
+    gpsSessionNewStreets = 0;
+    gpsSessionKm = 0;
+    gpsPrevLatLon = null;
+
+    document.getElementById('gpsStatsOverlay').classList.add('gps-active');
+    updateGpsStats();
+
+    if (!document.getElementById('mapLayoutMark').classList.contains('fullscreen')) {
+        enterFullscreen('mapLayoutMark', map);
+    }
+
+    gpsWatchId = navigator.geolocation.watchPosition(onGpsPosition, onGpsError, {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 15000
+    });
+}
+
+function stopGpsTracking() {
+    gpsTracking = false;
+    if (gpsWatchId !== null) {
+        navigator.geolocation.clearWatch(gpsWatchId);
+        gpsWatchId = null;
+    }
+    if (gpsMarker) { map.removeLayer(gpsMarker); gpsMarker = null; }
+    if (gpsAccuracyCircle) { map.removeLayer(gpsAccuracyCircle); gpsAccuracyCircle = null; }
+    document.getElementById('gpsStatsOverlay').classList.remove('gps-active');
+    gpsPrevLatLon = null;
+    if (gpsControlBtn) {
+        gpsControlBtn.classList.remove('gps-btn-active');
+        gpsControlBtn.innerHTML = '⊙';
+        gpsControlBtn.title = 'Start GPS walk';
+        gpsControlBtn.style.animation = '';
+    }
+}
+
+function addGpsControl() {
+    const btn = document.createElement('button');
+    btn.className = 'gps-track-btn';
+    btn.title = 'Start GPS walk';
+    btn.innerHTML = '⊙';
+    gpsControlBtn = btn;
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (gpsTracking) {
+            stopGpsTracking();
+        } else {
+            startGpsTracking();
+            btn.classList.add('gps-btn-active');
+            btn.innerHTML = '●';
+            btn.title = 'Stop GPS walk';
+            btn.style.animation = 'gps-pulse 1.2s ease-in-out infinite';
+        }
+    });
+    document.getElementById('mapLayoutMark').appendChild(btn);
 }
 
 // --- Strava GPX/TCX Import ---
