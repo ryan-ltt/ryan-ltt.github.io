@@ -608,11 +608,13 @@ async function init() {
     function enterFullscreen(layoutId, mapObj) {
         document.getElementById(layoutId).classList.add('fullscreen');
         if (fsButtons[layoutId]) { fsButtons[layoutId].innerHTML = '✕'; fsButtons[layoutId].title = 'Exit fullscreen'; }
+        if (layoutId === 'mapLayoutMark' && gpsControlBtn) gpsControlBtn.style.display = 'flex';
         setTimeout(() => mapObj.invalidateSize(), 50);
     }
     function exitFullscreen(layoutId, mapObj) {
         document.getElementById(layoutId).classList.remove('fullscreen');
         if (fsButtons[layoutId]) { fsButtons[layoutId].innerHTML = '⛶'; fsButtons[layoutId].title = 'Enter fullscreen'; }
+        if (layoutId === 'mapLayoutMark' && gpsControlBtn) gpsControlBtn.style.display = 'none';
         void document.getElementById(layoutId).offsetHeight; // sync reflow before Leaflet reads container size
         mapObj.invalidateSize({ animate: false });
         if (cityState) {
@@ -1644,6 +1646,7 @@ function addGpsControl() {
     btn.className = 'gps-track-btn';
     btn.title = 'Start GPS walk';
     btn.innerHTML = '⊙';
+    btn.style.display = 'none';
     gpsControlBtn = btn;
     btn.addEventListener('click', e => {
         e.stopPropagation();
