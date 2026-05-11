@@ -57,6 +57,84 @@ CITIES = {
         "center": [45.3984, 11.8957],
         "zoom": 13,
     },
+    "ajax": {
+        "relation_id": 2408837,
+        "displayName": "Ajax",
+        "center": [43.8505, -79.0209],
+        "zoom": 12,
+    },
+    "mississauga": {
+        "relation_id": 1954127,
+        "displayName": "Mississauga",
+        "center": [43.5885, -79.6437],
+        "zoom": 12,
+    },
+    "brampton": {
+        "relation_id": 2407358,
+        "displayName": "Brampton",
+        "center": [43.6858, -79.7599],
+        "zoom": 12,
+    },
+    "vaughan": {
+        "relation_id": 324212,
+        "displayName": "Vaughan",
+        "center": [43.7942, -79.5268],
+        "zoom": 12,
+    },
+    "markham": {
+        "relation_id": 324213,
+        "displayName": "Markham",
+        "center": [43.8564, -79.3377],
+        "zoom": 12,
+    },
+    "richmond_hill": {
+        "relation_id": 2407259,
+        "displayName": "Richmond Hill",
+        "center": [43.8801, -79.4393],
+        "zoom": 12,
+    },
+    "hamilton": {
+        "relation_id": 7034910,
+        "displayName": "Hamilton",
+        "center": [43.2561, -79.8729],
+        "zoom": 12,
+    },
+    "burlington": {
+        "relation_id": 2407513,
+        "displayName": "Burlington",
+        "center": [43.3249, -79.7967],
+        "zoom": 12,
+    },
+    "oakville": {
+        "relation_id": 2407500,
+        "displayName": "Oakville",
+        "center": [43.4474, -79.6667],
+        "zoom": 12,
+    },
+    "oshawa": {
+        "relation_id": 333748,
+        "displayName": "Oshawa",
+        "center": [43.8976, -78.8635],
+        "zoom": 12,
+    },
+    "whitby": {
+        "relation_id": 2408838,
+        "displayName": "Whitby",
+        "center": [43.8798, -78.9422],
+        "zoom": 12,
+    },
+    "pickering": {
+        "relation_id": 2408836,
+        "displayName": "Pickering",
+        "center": [43.8358, -79.0906],
+        "zoom": 12,
+    },
+    "newmarket": {
+        "relation_id": 2407406,
+        "displayName": "Newmarket",
+        "center": [44.0563, -79.4617],
+        "zoom": 12,
+    },
 }
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
@@ -435,9 +513,17 @@ def patch_script(key, cfg):
         f'        "zoom": 12,\n'
         f'    }},\n'
     )
-    src = src.replace("NOMINATIM_URL =", entry + "\nNOMINATIM_URL =")
+    # Insert before the closing brace of the CITIES dict.
+    # Regex matches the last entry's closing },\n} pattern robustly.
+    new_src = re.sub(
+        r'(    \},\n)(}\n\nNOMINATIM_URL)',
+        lambda m: m.group(1) + entry + m.group(2),
+        src,
+    )
+    if new_src == src:
+        raise RuntimeError("patch_script: could not find insertion point in CITIES dict")
     with open(script_path, "w", encoding="utf-8") as f:
-        f.write(src)
+        f.write(new_src)
     print(f"  Patched fetch-city-data.py with '{key}'")
 
 
