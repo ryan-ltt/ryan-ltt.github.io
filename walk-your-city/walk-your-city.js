@@ -1779,12 +1779,15 @@ async function importStrava(e) {
     const matched = snapTrackToWays(parsed.points, parsed.date);
     if (!matched.size) { alert('No streets matched. Make sure the activity is in the currently selected city.'); return; }
 
-    for (const [wayId, date] of matched) walks.set(wayId, date);
+    const newOnly = new Map();
+    for (const [wayId, date] of matched) {
+        if (!walks.has(wayId)) { walks.set(wayId, date); newOnly.set(wayId, date); }
+    }
     saveProgress(currentCity);
 
     if (currentUser) {
         const rows = [];
-        for (const [wayId, date] of matched) {
+        for (const [wayId, date] of newOnly) {
             if (wayId && date) rows.push({ user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: date });
         }
         for (let i = 0; i < rows.length; i += 500) {
@@ -1795,7 +1798,9 @@ async function importStrava(e) {
     renderMap();
     renderList();
     updateStatus();
-    alert(`Imported ${matched.size} street${matched.size === 1 ? '' : 's'} from ${file.name}.`);
+    const skipped = matched.size - newOnly.size;
+    const skipNote = skipped > 0 ? ` (${skipped} already claimed, skipped)` : '';
+    alert(`Imported ${newOnly.size} street${newOnly.size === 1 ? '' : 's'} from ${file.name}.${skipNote}`);
 }
 
 init();
