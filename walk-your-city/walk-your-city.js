@@ -771,11 +771,20 @@ async function init() {
         const password = document.getElementById('signInPassword').value;
         const errEl = document.getElementById('authModalError');
         if (!email || !password) { errEl.textContent = 'email and password required'; errEl.style.display = ''; return; }
-        const { error } = authMode === 'signup'
-            ? await db.auth.signUp({ email, password })
-            : await db.auth.signInWithPassword({ email, password });
-        if (error) { errEl.textContent = error.message; errEl.style.display = ''; return; }
-        document.getElementById('signInModal').style.display = 'none';
+        const btn = document.getElementById('submitAuthBtn');
+        const origText = btn.textContent;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="loading-spinner" style="border-top-color:white;vertical-align:middle;margin-right:5px"></span>${origText}...`;
+        try {
+            const { error } = authMode === 'signup'
+                ? await db.auth.signUp({ email, password })
+                : await db.auth.signInWithPassword({ email, password });
+            if (error) { errEl.textContent = error.message; errEl.style.display = ''; return; }
+            document.getElementById('signInModal').style.display = 'none';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = origText;
+        }
     });
     document.getElementById('signOutBtn').addEventListener('click', () => db.auth.signOut());
 
@@ -824,10 +833,13 @@ function switchTab(tab) {
 async function loadCity(cityKey) {
     currentCity = null; // suppress saveMapPos during transition
     walks = loadProgress(cityKey);
+
     if (currentUser) {
+        setSidebarLoading('loading your walks...');
         walks = await loadProgressFromDB(cityKey);
         saveProgress(cityKey);
     }
+
     expandedStreets.clear();
     filterText = '';
     document.getElementById('streetSearch').value = '';
@@ -846,7 +858,7 @@ async function loadCity(cityKey) {
     routeMapMode = 'start';
     document.getElementById('routeExportGpxBtn').style.display = 'none';
     setRouteStatus('');
-    document.getElementById('sideList').innerHTML = '<div class="loading-msg">loading street data...</div>';
+    setSidebarLoading('loading street data...');
     document.getElementById('sideListHistory').innerHTML = '';
     document.getElementById('sideListRoute').innerHTML = '';
 
@@ -1296,6 +1308,12 @@ function setStatus(msg) {
     document.getElementById('statusLine').textContent = msg;
 }
 
+function setSidebarLoading(title, sub) {
+    const subHtml = sub ? `<div class="loading-msg-sub">${sub}</div>` : '';
+    document.getElementById('sideList').innerHTML =
+        `<div class="loading-msg"><span class="loading-spinner"></span><div class="loading-msg-text">${title}</div>${subHtml}</div>`;
+}
+
 // --- Persistence ---
 // Storage format v2: { version: 2, city, walks: { wayId: 'YYYY-MM-DD' } }
 // Migrates v1 (walkedIds array) on load.
@@ -1381,9 +1399,11 @@ async function migrateLocalStorageIfNeeded() {
     }
 
     if (rows.length > 0) {
+        setSidebarLoading('syncing existing walks...', `0 / ${rows.length}`);
         for (let i = 0; i < rows.length; i += 500) {
             const { error } = await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
             if (error) { console.error('migration failed', error); return; }
+            setSidebarLoading('syncing existing walks...', `${Math.min(i + 500, rows.length)} / ${rows.length}`);
         }
     }
 
@@ -1726,26 +1746,30 @@ function projectOntoWay(lat, lon, geo) {
     return { t: bestT, distSq: bestDistSq };
 }
 
-function snapTrackToWays(points, date) {
-    // 30 m threshold in degree-space
+async function snapTrackToWays(points, date, onProgress) {
     const MAX_DIST_SQ = (30 / 111111) ** 2;
-    // Per-way accumulator: track min/max t of projected GPS points
-    const wayCoverage = new Map(); // wayId -> { minT, maxT }
+    const wayCoverage = new Map();
+    const CHUNK = 400; // process 200 sampled points (every other) per chunk
 
-    for (let i = 0; i < points.length; i += 2) {
-        const { lat, lon } = points[i];
-        const { wayId, distSq } = findClosestWayWithDist(lat, lon);
-        if (!wayId || distSq > MAX_DIST_SQ) continue;
+    for (let i = 0; i < points.length; i += CHUNK) {
+        const end = Math.min(i + CHUNK, points.length);
+        for (let j = i; j < end; j += 2) {
+            const { lat, lon } = points[j];
+            const { wayId, distSq } = findClosestWayWithDist(lat, lon);
+            if (!wayId || distSq > MAX_DIST_SQ) continue;
 
-        const way = cityState.ways.get(wayId);
-        const { t } = projectOntoWay(lat, lon, way.geometry);
-        if (wayCoverage.has(wayId)) {
-            const c = wayCoverage.get(wayId);
-            if (t < c.minT) c.minT = t;
-            if (t > c.maxT) c.maxT = t;
-        } else {
-            wayCoverage.set(wayId, { minT: t, maxT: t });
+            const way = cityState.ways.get(wayId);
+            const { t } = projectOntoWay(lat, lon, way.geometry);
+            if (wayCoverage.has(wayId)) {
+                const c = wayCoverage.get(wayId);
+                if (t < c.minT) c.minT = t;
+                if (t > c.maxT) c.maxT = t;
+            } else {
+                wayCoverage.set(wayId, { minT: t, maxT: t });
+            }
         }
+        if (onProgress) onProgress(Math.min(end, points.length), points.length);
+        await new Promise(r => setTimeout(r, 0));
     }
 
     const walkDate = date || todayStr();
@@ -1753,7 +1777,6 @@ function snapTrackToWays(points, date) {
     for (const [wayId, { minT, maxT }] of wayCoverage) {
         const way = cityState.ways.get(wayId);
         const coveredM = (maxT - minT) * way.length_m;
-        // Mark walked if covered span >= 40 m OR >= 50% of the way's length
         if (coveredM >= 40 || coveredM >= 0.5 * way.length_m) {
             result.set(wayId, walkDate);
         }
@@ -1776,7 +1799,11 @@ async function importStrava(e) {
 
     if (!parsed.points.length) { alert('No GPS trackpoints found in file.'); return; }
 
-    const matched = snapTrackToWays(parsed.points, parsed.date);
+    const total = parsed.points.length;
+    setSidebarLoading('matching streets...', `0 / ${Math.ceil(total / 2)} points`);
+    const matched = await snapTrackToWays(parsed.points, parsed.date, (done, all) => {
+        setSidebarLoading('matching streets...', `${Math.ceil(done / 2)} / ${Math.ceil(all / 2)} points`);
+    });
     if (!matched.size) { alert('No streets matched. Make sure the activity is in the currently selected city.'); return; }
 
     const newOnly = new Map();
@@ -1790,17 +1817,34 @@ async function importStrava(e) {
         for (const [wayId, date] of newOnly) {
             if (wayId && date) rows.push({ user_id: currentUser.id, city: currentCity, way_id: wayId, walked_on: date });
         }
-        for (let i = 0; i < rows.length; i += 500) {
-            await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
+        if (rows.length > 0) {
+            setSidebarLoading('saving to account...', `0 / ${rows.length} streets`);
+            for (let i = 0; i < rows.length; i += 500) {
+                await db.from('walks').upsert(rows.slice(i, i + 500), { onConflict: 'user_id,city,way_id' });
+                setSidebarLoading('saving to account...', `${Math.min(i + 500, rows.length)} / ${rows.length} streets`);
+            }
         }
     }
+
+    setSidebarLoading('updating map...');
+    await new Promise(r => setTimeout(r, 0));
 
     renderMap();
     renderList();
     updateStatus();
     const skipped = matched.size - newOnly.size;
-    const skipNote = skipped > 0 ? ` (${skipped} already claimed, skipped)` : '';
-    alert(`Imported ${newOnly.size} street${newOnly.size === 1 ? '' : 's'} from ${file.name}.${skipNote}`);
+    const skipNote = skipped > 0 ? `${skipped} already claimed, skipped` : '';
+    const sideList = document.getElementById('sideList');
+    const banner = document.createElement('div');
+    banner.className = 'import-banner';
+    banner.innerHTML = `<span class="import-banner-title">imported ${newOnly.size} street${newOnly.size === 1 ? '' : 's'}</span>`
+        + `<span class="import-banner-sub">from ${file.name}</span>`
+        + (skipNote ? `<span class="import-banner-sub">${skipNote}</span>` : '');
+    sideList.prepend(banner);
+    setTimeout(() => {
+        banner.classList.add('dismissed');
+        banner.addEventListener('transitionend', () => banner.remove(), { once: true });
+    }, 3000);
 }
 
 init();
