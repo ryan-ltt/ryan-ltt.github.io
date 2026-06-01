@@ -1426,8 +1426,11 @@ function exportProgress() {
 
 // --- Reset ---
 function resetData() {
-    if (!confirm('Clear all walked segments for every city? This cannot be undone.')) return;
-    for (const key of Object.keys(CITIES)) {
+    const msg = currentUser
+        ? 'Clear all walked segments for every city? This cannot be undone.'
+        : 'Clear all walked segments for every city? This cannot be undone.\n\nNote: you are not signed in, only locally stored data will be cleared.';
+    if (!confirm(msg)) return;
+    for (const key of CITIES) {
         localStorage.removeItem(LS_PREFIX + key);
     }
     walks = new Map();
