@@ -89,10 +89,17 @@
                 </div>
                 <div id="sidePanel">
                     <div class="street-search-wrap">
-                        <input type="text" id="streetSearch" placeholder="filter streets..." class="street-search-input">
-                        <label class="street-search-map-label">
-                            <input type="checkbox" id="streetSearchShowOnMap"> show on map
-                        </label>
+                        <div class="street-search-row">
+                            <input type="text" id="streetSearch" placeholder="filter streets..." class="street-search-input">
+                            <label class="street-search-map-label">
+                                <input type="checkbox" id="streetSearchShowOnMap"> show
+                            </label>
+                        </div>
+                        <div class="walked-filter-toggle">
+                            <button class="walked-filter-btn walked-filter-btn--active" data-filter="all">all</button>
+                            <button class="walked-filter-btn" data-filter="some">started</button>
+                            <button class="walked-filter-btn" data-filter="full">completed</button>
+                        </div>
                     </div>
                     <div id="sideList"></div>
                 </div>

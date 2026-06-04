@@ -134,6 +134,16 @@ main {
     gap: 4px;
 }
 
+.street-search-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.street-search-row .street-search-input {
+    flex: 1;
+}
+
 .street-search-map-label {
     font-family: Monaco, monospace;
     font-size: 11px;
@@ -145,8 +155,45 @@ main {
     user-select: none;
 }
 
+.walked-filter-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.walked-filter-btn {
+    flex: 1;
+    padding: 4px 0;
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    background: white;
+    border: none;
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+    color: #555;
+    user-select: none;
+}
+
+.walked-filter-btn:last-child {
+    border-right: none;
+}
+
+.walked-filter-btn:hover {
+    background: #f5f5f5;
+}
+
+.walked-filter-btn--active {
+    background: black;
+    color: white;
+}
+
+.walked-filter-btn--active:hover {
+    background: #222;
+}
+
 .street-search-input {
-    width: 100%;
     box-sizing: border-box;
     font-family: Monaco, monospace;
     font-size: 12px;
@@ -182,15 +229,31 @@ main {
     user-select: none;
 }
 
-.street-header:hover {
+.street-header {
     background: #f5f5f5;
 }
 
+.street-header:hover {
+    background: #ebebeb;
+}
+
 .street-header.some-walked {
-    background: #f0fdf4;
+    background: white;
 }
 
 .street-header.some-walked:hover {
+    background: #f5f5f5;
+}
+
+.street-header.some-walked .street-name {
+    color: #166534;
+}
+
+.street-header.all-walked {
+    background: #f0fdf4;
+}
+
+.street-header.all-walked:hover {
     background: #dcfce7;
 }
 
@@ -220,14 +283,15 @@ main {
     white-space: nowrap;
 }
 
-.street-header.some-walked .street-prog {
+.street-header.some-walked .street-prog,
+.street-header.all-walked .street-prog {
     color: #16a34a;
 }
 
 /* --- Segment rows --- */
 .seg-list {
     border-top: 1px solid #e5e5e5;
-    background: #fafafa;
+    background: #f5f5f5;
 }
 
 .seg-row {
@@ -239,7 +303,8 @@ main {
     font-family: Monaco, monospace;
     font-size: 11px;
     user-select: none;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #ebebeb;
+    background: #f5f5f5;
 }
 
 .seg-row:last-child {
@@ -247,7 +312,7 @@ main {
 }
 
 .seg-row:hover {
-    background: #f0f0f0;
+    background: #ebebeb;
 }
 
 .seg-row.walked {

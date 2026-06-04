@@ -29,6 +29,7 @@ let historyPolylines = new Map(); // wayId -> Leaflet polyline (history tab map)
 let expandedStreets = new Set();
 let currentCity = null;
 let filterText = '';
+let walkedFilter = 'all'; // 'all' | 'some' | 'full'
 let activeDate = todayStr();
 let historyDate = todayStr();
 let activeTab = 'mark';
@@ -711,6 +712,13 @@ async function init() {
     document.getElementById('streetSearchShowOnMap').addEventListener('change', () => {
         applyMarkSearch();
     });
+    document.querySelectorAll('.walked-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            walkedFilter = btn.dataset.filter;
+            document.querySelectorAll('.walked-filter-btn').forEach(b => b.classList.toggle('walked-filter-btn--active', b === btn));
+            renderList();
+        });
+    });
 
     // Route controls
     document.getElementById('routeDistanceInput').addEventListener('input', updateRouteTimeLabel);
@@ -842,7 +850,9 @@ async function loadCity(cityKey) {
 
     expandedStreets.clear();
     filterText = '';
+    walkedFilter = 'all';
     document.getElementById('streetSearch').value = '';
+    document.querySelectorAll('.walked-filter-btn').forEach(b => b.classList.toggle('walked-filter-btn--active', b.dataset.filter === 'all'));
     clearMarkSearch();
 
     setStatus('loading...');
@@ -1086,16 +1096,22 @@ function renderList() {
         ? cityState.streetList.filter(s => s.name.toLowerCase().includes(filterText))
         : cityState.streetList;
 
+    if (walkedFilter === 'some') {
+        streets = streets.filter(s => s.wayIds.some(id => walks.has(id)));
+    } else if (walkedFilter === 'full') {
+        streets = streets.filter(s => s.wayIds.every(id => walks.has(id)));
+    } else {
+        streets = [...streets].sort((a, b) => {
+            const aWalked = a.wayIds.some(id => walks.has(id)) ? 0 : 1;
+            const bWalked = b.wayIds.some(id => walks.has(id)) ? 0 : 1;
+            return aWalked - bWalked;
+        });
+    }
+
     if (streets.length === 0) {
         list.innerHTML = '<div class="loading-msg">no streets match</div>';
         return;
     }
-
-    streets = [...streets].sort((a, b) => {
-        const aWalked = a.wayIds.some(id => walks.has(id)) ? 0 : 1;
-        const bWalked = b.wayIds.some(id => walks.has(id)) ? 0 : 1;
-        return aWalked - bWalked;
-    });
 
     const frag = document.createDocumentFragment();
     for (const street of streets) frag.appendChild(buildStreetRow(street));
