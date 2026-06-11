@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GroceryPal</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/projects/projects.css">
+    <link rel="stylesheet" href="grocerypal.css">
+</head>
+<body>
+    <header>
+        <h1>GroceryPal</h1>
+        <nav class="nav-buttons">
+            <a href="/" class="button">home</a>
+            <a href="/projects/" class="button">projects</a>
+            <div class="auth-bar">
+                <span id="authUserLabel" class="auth-label"></span>
+                <button class="button small-btn" id="authSignInBtn" style="display:none">sign in</button>
+                <button class="button small-btn" id="authSignOutBtn" style="display:none">sign out</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <p class="tagline">Compare grocery prices across Toronto stores and find the best shopping route for you.</p>
+
+        <!-- IO bar: export / import catalog -->
+        <div class="io-bar">
+            <button class="button small-btn" id="exportCatalogBtn">export catalog</button>
+            <button class="button small-btn" id="importCatalogBtn">import catalog</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none">
+            <span class="status-line" id="ioStatus"></span>
+        </div>
+
+        <!-- ── STEP 1: Grocery List ── -->
+        <section class="step-section" id="step1">
+            <h2 class="step-heading"><span class="step-num">1</span> My Grocery List</h2>
+
+            <!-- Search existing catalog -->
+            <div class="search-row">
+                <input type="text" id="catalogSearch" class="big-input" placeholder="Search your catalog…" autocomplete="off">
+            </div>
+            <div id="catalogResults" class="catalog-results"></div>
+
+            <!-- Current list -->
+            <div id="listEmpty" class="empty-msg" style="display:none">Your list is empty. Add items from your catalog or add a new item below.</div>
+            <div id="shoppingList" class="shopping-list"></div>
+
+            <!-- Add new item form -->
+            <details class="add-item-details" id="addItemDetails">
+                <summary class="add-item-summary">+ Add a new item to catalog</summary>
+                <div class="add-item-form">
+                    <div class="form-row">
+                        <label for="newItemName">Item name</label>
+                        <input type="text" id="newItemName" class="big-input" placeholder="e.g. Milk (2L)">
+                    </div>
+                    <div class="form-row">
+                        <label for="newItemCategory">Category</label>
+                        <select id="newItemCategory" class="big-select">
+                            <option value="produce">Produce</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="meat">Meat</option>
+                            <option value="bakery">Bakery</option>
+                            <option value="pantry">Pantry</option>
+                            <option value="frozen">Frozen</option>
+                            <option value="household">Household</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label for="newItemBarcode">Barcode <span class="optional">(optional)</span></label>
+                        <input type="text" id="newItemBarcode" class="big-input" placeholder="UPC or PLU">
+                    </div>
+                    <div class="price-grid">
+                        <div class="price-grid-header">Prices (leave blank if unknown)</div>
+                        <div class="price-row">
+                            <span class="chain-label metro-label">Metro</span>
+                            <input type="number" id="priceMetro" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                        </div>
+                        <div class="price-row">
+                            <span class="chain-label walmart-label">Walmart</span>
+                            <input type="number" id="priceWalmart" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                        </div>
+                        <div class="price-row">
+                            <span class="chain-label nofrills-label">No Frills</span>
+                            <input type="number" id="priceNofrills" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                        </div>
+                        <div class="price-row">
+                            <span class="chain-label freshco-label">FreshCo</span>
+                            <input type="number" id="priceFreshco" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                        </div>
+                    </div>
+                    <button class="button big-btn" id="addItemBtn">Add to Catalog</button>
+                    <div class="form-msg" id="addItemMsg"></div>
+                </div>
+            </details>
+        </section>
+
+        <!-- ── FLYER DEALS ── -->
+        <section class="step-section" id="flyerSection">
+            <h2 class="step-heading"><span class="step-num deals-num">🏷</span> Flyer Deals</h2>
+            <p class="deals-desc">
+                Upload a grocery flyer to extract sale prices and share them with the community.
+                <span id="dealsCountBadge" class="deals-badge">Loading deals…</span>
+            </p>
+
+            <!-- Upload area -->
+            <div id="flyer-upload-area">
+                <div id="flyer-drop-area" class="flyer-drop-area">
+                    <div class="flyer-drop-icon">📄</div>
+                    <div class="flyer-drop-text">Drag &amp; drop a flyer image here</div>
+                    <div class="flyer-drop-sub">JPG, PNG, or WebP</div>
+                    <button class="button big-btn" id="flyerUploadBtn">Choose file</button>
+                    <input type="file" id="flyerFileInput" accept="image/jpeg,image/png,image/webp" style="display:none">
+                </div>
+                <p class="hint" style="margin-top:12px">Check every row before submitting — OCR makes mistakes on colourful flyers. Use <strong>Crop-to-add</strong> for tricky tiles.</p>
+            </div>
+
+            <!-- OCR progress -->
+            <div id="flyer-ocr-progress" style="display:none">
+                <div class="ocr-progress-wrap">
+                    <div id="ocrProgressBar" class="ocr-progress-bar" style="width:0%"></div>
+                </div>
+                <div id="ocrStatusText" class="hint" style="margin-top:8px">Starting…</div>
+            </div>
+
+            <!-- Review area -->
+            <div id="flyer-review-area" style="display:none">
+                <!-- Metadata row -->
+                <div class="flyer-meta-row">
+                    <div class="form-row" style="margin-bottom:0">
+                        <label for="flyerChainSelect">Chain</label>
+                        <select id="flyerChainSelect" class="big-select" style="width:auto">
+                            <option value="metro">Metro</option>
+                            <option value="walmart">Walmart</option>
+                            <option value="nofrills">No Frills</option>
+                            <option value="freshco">FreshCo</option>
+                        </select>
+                    </div>
+                    <div class="form-row" style="margin-bottom:0">
+                        <label for="flyerValidFrom">Valid from</label>
+                        <input type="date" id="flyerValidFrom" class="big-input" style="width:180px">
+                    </div>
+                    <div class="form-row" style="margin-bottom:0">
+                        <label for="flyerValidTo">Valid to</label>
+                        <input type="date" id="flyerValidTo" class="big-input" style="width:180px">
+                    </div>
+                </div>
+
+                <!-- Image + overlay -->
+                <div class="flyer-image-wrap">
+                    <div id="flyer-image-container"></div>
+                </div>
+
+                <!-- Crop tool -->
+                <div class="crop-toolbar">
+                    <button class="button small-btn" id="cropToggleBtn">Crop-to-add</button>
+                    <span class="hint" id="cropStatusMsg">Draw a box around one flyer tile to add it.</span>
+                </div>
+
+                <!-- Candidate table -->
+                <div class="table-scroll" style="margin-top:16px">
+                    <table class="comp-table candidate-table">
+                        <thead>
+                            <tr>
+                                <th style="width:28px"></th>
+                                <th>Item name</th>
+                                <th>Price ($)</th>
+                                <th>Unit</th>
+                                <th>Frozen</th>
+                                <th>Barcode</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidateTbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Add to local catalog option -->
+                <label class="checkbox-label" style="margin-top:16px">
+                    <input type="checkbox" id="addToLocalCatalogCheck" checked>
+                    Also add these items to my local catalog
+                </label>
+
+                <!-- Submit -->
+                <div class="flyer-submit-row">
+                    <button class="button big-btn" id="flyerSubmitBtn" disabled>Submit to community database</button>
+                    <button class="button small-btn secondary-btn" id="flyerRestartBtn">Start over</button>
+                </div>
+                <div class="form-msg" id="flyerSubmitStatus"></div>
+            </div>
+        </section>
+
+        <!-- ── STEP 2: Location & Travel ── -->
+        <section class="step-section" id="step2">
+            <h2 class="step-heading"><span class="step-num">2</span> Where I Am &amp; How I Travel</h2>
+
+            <div class="form-row">
+                <label for="addressInput">Your address or intersection</label>
+                <div class="address-row">
+                    <input type="text" id="addressInput" class="big-input" placeholder="e.g. Yonge &amp; Bloor, Toronto">
+                    <button class="button big-btn addr-btn" id="geocodeBtn">Find</button>
+                </div>
+                <div class="form-msg" id="geocodeMsg"></div>
+            </div>
+
+            <div class="mode-row">
+                <button class="mode-btn" id="modeWalk" data-mode="walk">
+                    <span class="mode-icon">🚶</span>
+                    <span class="mode-label">Walking</span>
+                </button>
+                <button class="mode-btn" id="modeTransit" data-mode="transit">
+                    <span class="mode-icon">🚌</span>
+                    <span class="mode-label">Transit</span>
+                </button>
+                <button class="mode-btn" id="modeDrive" data-mode="drive">
+                    <span class="mode-icon">🚗</span>
+                    <span class="mode-label">Driving</span>
+                </button>
+            </div>
+
+            <!-- Driving options -->
+            <div id="driveOptions" class="mode-options" style="display:none">
+                <div class="form-row">
+                    <label for="carClassSelect">My vehicle</label>
+                    <select id="carClassSelect" class="big-select">
+                        <option value="small">Small car / hatchback (7 L/100km)</option>
+                        <option value="sedan" selected>Sedan (9 L/100km)</option>
+                        <option value="suv">SUV (12 L/100km)</option>
+                        <option value="truck">Truck (14 L/100km)</option>
+                        <option value="hybrid">Hybrid (5 L/100km)</option>
+                        <option value="ev">Electric vehicle (¢/km, ~2¢/km)</option>
+                    </select>
+                </div>
+                <div class="form-row" id="gasPriceRow">
+                    <label for="gasPriceInput">Gas price (¢/L)</label>
+                    <input type="number" id="gasPriceInput" class="big-input narrow-input" value="165" min="50" max="300" step="1">
+                </div>
+                <div class="form-row" id="evRateRow" style="display:none">
+                    <label for="evRateInput">Electricity cost (¢/km)</label>
+                    <input type="number" id="evRateInput" class="big-input narrow-input" value="12" min="1" max="50" step="0.1">
+                </div>
+            </div>
+
+            <!-- Transit options -->
+            <div id="transitOptions" class="mode-options" style="display:none">
+                <div class="form-row">
+                    <label for="transitFareInput">TTC fare ($)</label>
+                    <input type="number" id="transitFareInput" class="big-input narrow-input" value="3.35" min="0" max="20" step="0.05">
+                    <p class="hint">The 2-hour TTC transfer usually covers a multi-store trip as a single fare.</p>
+                </div>
+            </div>
+
+            <!-- Frozen goods last -->
+            <div class="frozen-row">
+                <label class="checkbox-label" for="frozenLastCheck">
+                    <input type="checkbox" id="frozenLastCheck" checked>
+                    Buy frozen goods last (so they don't thaw)
+                </label>
+            </div>
+        </section>
+
+        <!-- ── STEP 3: Find Best Plan ── -->
+        <section class="step-section" id="step3">
+            <h2 class="step-heading"><span class="step-num">3</span> My Best Shopping Plan</h2>
+
+            <button class="button big-btn find-btn" id="findPlanBtn">Find My Best Plan</button>
+            <div class="form-msg" id="planMsg"></div>
+
+            <!-- Results (hidden until plan is found) -->
+            <div id="planResults" style="display:none">
+
+                <!-- Recommendation card -->
+                <div class="rec-card" id="recCard"></div>
+
+                <!-- Map -->
+                <div id="planMap"></div>
+
+                <!-- Per-store lists -->
+                <div id="storeListsSection"></div>
+
+                <!-- Comparison table -->
+                <div class="comparison-section">
+                    <h3>All options compared</h3>
+                    <div class="table-scroll">
+                        <table id="comparisonTable" class="comp-table"></table>
+                    </div>
+                </div>
+
+                <!-- Print button -->
+                <button class="button big-btn print-btn" id="printListBtn">🖨 Generate Shopping List (PDF / Print)</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Print-only shopping list (hidden on screen) -->
+    <div id="printArea" class="print-only"></div>
+
+    <!-- Edit item modal -->
+    <div id="editModal" class="modal-overlay" style="display:none">
+        <div class="modal-box">
+            <h3 id="editModalTitle">Edit Item</h3>
+            <div class="form-row">
+                <label for="editItemName">Item name</label>
+                <input type="text" id="editItemName" class="big-input">
+            </div>
+            <div class="form-row">
+                <label for="editItemCategory">Category</label>
+                <select id="editItemCategory" class="big-select">
+                    <option value="produce">Produce</option>
+                    <option value="dairy">Dairy</option>
+                    <option value="meat">Meat</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="pantry">Pantry</option>
+                    <option value="frozen">Frozen</option>
+                    <option value="household">Household</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="editItemBarcode">Barcode <span class="optional">(optional)</span></label>
+                <input type="text" id="editItemBarcode" class="big-input">
+            </div>
+            <div class="price-grid">
+                <div class="price-grid-header">Prices</div>
+                <div class="price-row">
+                    <span class="chain-label metro-label">Metro</span>
+                    <input type="number" id="editPriceMetro" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                </div>
+                <div class="price-row">
+                    <span class="chain-label walmart-label">Walmart</span>
+                    <input type="number" id="editPriceWalmart" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                </div>
+                <div class="price-row">
+                    <span class="chain-label nofrills-label">No Frills</span>
+                    <input type="number" id="editPriceNofrills" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                </div>
+                <div class="price-row">
+                    <span class="chain-label freshco-label">FreshCo</span>
+                    <input type="number" id="editPriceFreshco" class="price-input" min="0" step="0.01" placeholder="$0.00">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="button big-btn" id="saveEditBtn">Save</button>
+                <button class="button big-btn secondary-btn" id="cancelEditBtn">Cancel</button>
+                <button class="button big-btn danger-btn" id="deleteItemBtn">Delete Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign-in modal -->
+    <div id="signInModal" class="modal-overlay" style="display:none">
+        <div class="modal-box">
+            <h3 id="signInModalTitle">Sign in to GroceryPal</h3>
+            <div class="form-row">
+                <label for="authEmail">Email</label>
+                <input type="email" id="authEmail" class="big-input" autocomplete="email">
+            </div>
+            <div class="form-row">
+                <label for="authPassword">Password</label>
+                <input type="password" id="authPassword" class="big-input" autocomplete="current-password">
+            </div>
+            <div class="form-msg" id="authMsg"></div>
+            <div class="modal-buttons">
+                <button class="button big-btn" id="doSignInBtn">Sign in</button>
+                <button class="button big-btn secondary-btn" id="doSignUpBtn">Create account</button>
+                <button class="button big-btn secondary-btn" id="cancelSignInBtn">Cancel</button>
+            </div>
+            <p class="hint" style="margin-top:14px">An account is only needed to <strong>submit</strong> flyer prices. Browsing deals is always free and requires no account.</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Firebase v10 compat (global firebase.* API — no bundler needed) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="grocerypal.js"></script>
+    <script src="flyer-import.js"></script>
+</body>
+</html>

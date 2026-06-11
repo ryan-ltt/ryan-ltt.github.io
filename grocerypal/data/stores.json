@@ -1,0 +1,844 @@
+{
+  "stores": [
+    {
+      "id": "n10875495069",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "1500 Jane Street",
+      "lat": 43.69677,
+      "lon": -79.503922
+    },
+    {
+      "id": "n1500853555",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.692687,
+      "lon": -79.465738
+    },
+    {
+      "id": "n264107691",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "2490 Gerrard Street East, Scarborough",
+      "lat": 43.687782,
+      "lon": -79.284858
+    },
+    {
+      "id": "n380202725",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "2650 Lawrence Avenue East, Scarborough",
+      "lat": 43.752713,
+      "lon": -79.263539
+    },
+    {
+      "id": "n598103300",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.667547,
+      "lon": -79.44085
+    },
+    {
+      "id": "n6369148099",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.654654,
+      "lon": -79.407364
+    },
+    {
+      "id": "n6371122436",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.66927,
+      "lon": -79.375322
+    },
+    {
+      "id": "n691071779",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "325 Parliament Street, Toronto",
+      "lat": 43.659714,
+      "lon": -79.365645
+    },
+    {
+      "id": "w1042084198",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.772053,
+      "lon": -79.345838
+    },
+    {
+      "id": "w114706720",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "McCowan Road, Toronto",
+      "lat": 43.774013,
+      "lon": -79.25131
+    },
+    {
+      "id": "w15803442",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "FreshCo",
+      "lat": 43.64342,
+      "lon": -79.426936
+    },
+    {
+      "id": "w182090184",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "731 Eastern Avenue, Toronto",
+      "lat": 43.659267,
+      "lon": -79.330259
+    },
+    {
+      "id": "w219669957",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "2440 Dundas Street West, Toronto",
+      "lat": 43.658116,
+      "lon": -79.452437
+    },
+    {
+      "id": "w662098193",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "3400 Dundas Street West, York",
+      "lat": 43.666235,
+      "lon": -79.484667
+    },
+    {
+      "id": "w680378895",
+      "chain": "freshco",
+      "name": "FreshCo",
+      "address": "2699 Jane Street, North York",
+      "lat": 43.75551,
+      "lon": -79.516493
+    },
+    {
+      "id": "n1250411699",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.660672,
+      "lon": -79.383423
+    },
+    {
+      "id": "n13107676346",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.797561,
+      "lon": -79.317979
+    },
+    {
+      "id": "n2437943980",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.791307,
+      "lon": -79.444317
+    },
+    {
+      "id": "n254315320",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "89 Gould Street",
+      "lat": 43.658216,
+      "lon": -79.376892
+    },
+    {
+      "id": "n264107390",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.689892,
+      "lon": -79.288983
+    },
+    {
+      "id": "n276474902",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "80 Front Street East, Toronto",
+      "lat": 43.649024,
+      "lon": -79.37316
+    },
+    {
+      "id": "n302473945",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "291 York Mills Road, North York",
+      "lat": 43.747351,
+      "lon": -79.385576
+    },
+    {
+      "id": "n339530251",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "600 Sheppard Avenue West, North York",
+      "lat": 43.756035,
+      "lon": -79.439916
+    },
+    {
+      "id": "n3418915694",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.623105,
+      "lon": -79.482708
+    },
+    {
+      "id": "n357059431",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "261 Port Union Road, Toronto",
+      "lat": 43.788656,
+      "lon": -79.139514
+    },
+    {
+      "id": "n367103951",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.770893,
+      "lon": -79.282214
+    },
+    {
+      "id": "n371811938",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.660886,
+      "lon": -79.383223
+    },
+    {
+      "id": "n387792400",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.733922,
+      "lon": -79.343424
+    },
+    {
+      "id": "n392512380",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "2300 Yonge Street, Toronto",
+      "lat": 43.707048,
+      "lon": -79.399434
+    },
+    {
+      "id": "n416130760",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.708373,
+      "lon": -79.476901
+    },
+    {
+      "id": "n417232563",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "3090 Bathurst Street, North York",
+      "lat": 43.719743,
+      "lon": -79.430591
+    },
+    {
+      "id": "n4953740624",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "1230 Queen Street West, Toronto",
+      "lat": 43.64274,
+      "lon": -79.427679
+    },
+    {
+      "id": "w105154475",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "3142 Yonge Street, Toronto",
+      "lat": 43.726818,
+      "lon": -79.403137
+    },
+    {
+      "id": "w1147510134",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.79746,
+      "lon": -79.31792
+    },
+    {
+      "id": "w163637928",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "2155 St. Clair Avenue West, Toronto",
+      "lat": 43.669616,
+      "lon": -79.473199
+    },
+    {
+      "id": "w22199522",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "425 Bloor Street West, Toronto",
+      "lat": 43.666176,
+      "lon": -79.404894
+    },
+    {
+      "id": "w22788329",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "735 College Street, Toronto",
+      "lat": 43.654185,
+      "lon": -79.419394
+    },
+    {
+      "id": "w256389473",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "20 Church Avenue, Toronto",
+      "lat": 43.774392,
+      "lon": -79.413173
+    },
+    {
+      "id": "w25795164",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "656 Eglinton Avenue East, Toronto",
+      "lat": 43.711194,
+      "lon": -79.378585
+    },
+    {
+      "id": "w31812626",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "100 Lynn Williams Street, Toronto",
+      "lat": 43.639998,
+      "lon": -79.417822
+    },
+    {
+      "id": "w33541951",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Toronto",
+      "lat": 43.742828,
+      "lon": -79.216397
+    },
+    {
+      "id": "w382778656",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "201 Lloyd Manor Road, Etobicoke",
+      "lat": 43.675022,
+      "lon": -79.555531
+    },
+    {
+      "id": "w662727263",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "Metro",
+      "lat": 43.724199,
+      "lon": -79.298254
+    },
+    {
+      "id": "w673532722",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "1500 Royal York Road, Etobicoke",
+      "lat": 43.691196,
+      "lon": -79.531295
+    },
+    {
+      "id": "w673997323",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "250 The West Mall, Etobicoke",
+      "lat": 43.630563,
+      "lon": -79.555267
+    },
+    {
+      "id": "w696803995",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "1090 Wilson Avenue, Toronto",
+      "lat": 43.728246,
+      "lon": -79.481321
+    },
+    {
+      "id": "w699672302",
+      "chain": "metro",
+      "name": "Metro",
+      "address": "15 Ellesmere Road, Scarborough",
+      "lat": 43.756511,
+      "lon": -79.313524
+    },
+    {
+      "id": "n12344862008",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.648763,
+      "lon": -79.391552
+    },
+    {
+      "id": "n12742161531",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "899 College Street",
+      "lat": 43.653819,
+      "lon": -79.42447
+    },
+    {
+      "id": "n13180560840",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "75 Shuter Street",
+      "lat": 43.654854,
+      "lon": -79.375584
+    },
+    {
+      "id": "n13663530620",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.708444,
+      "lon": -79.376536
+    },
+    {
+      "id": "n1639866940",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "200 Front Street East",
+      "lat": 43.651118,
+      "lon": -79.366359
+    },
+    {
+      "id": "n1685297716",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1020 Islington Avenue, Etobicoke",
+      "lat": 43.631916,
+      "lon": -79.51911
+    },
+    {
+      "id": "n271813303",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1800 Eglinton Avenue East, Scarborough",
+      "lat": 43.72665,
+      "lon": -79.299752
+    },
+    {
+      "id": "n302045073",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.794466,
+      "lon": -79.354445
+    },
+    {
+      "id": "n303207540",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.655154,
+      "lon": -79.449588
+    },
+    {
+      "id": "n3288802961",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "345 Bloor Street East, Toronto",
+      "lat": 43.671611,
+      "lon": -79.378113
+    },
+    {
+      "id": "n3306493403",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "3685 Keele Street, North York",
+      "lat": 43.75416,
+      "lon": -79.487688
+    },
+    {
+      "id": "n3396318852",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1030 King Street West",
+      "lat": 43.641562,
+      "lon": -79.415285
+    },
+    {
+      "id": "n380199493",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.769108,
+      "lon": -79.186861
+    },
+    {
+      "id": "n410375809",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.719807,
+      "lon": -79.509795
+    },
+    {
+      "id": "n4253506981",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "449 Parliament Street, Toronto",
+      "lat": 43.663415,
+      "lon": -79.367386
+    },
+    {
+      "id": "n431299397",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.70938,
+      "lon": -79.24815
+    },
+    {
+      "id": "n549033787",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1435 King Street West, Toronto",
+      "lat": 43.63685,
+      "lon": -79.436777
+    },
+    {
+      "id": "n6096959395",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "42 Hanna Avenue, Toronto",
+      "lat": 43.639266,
+      "lon": -79.420002
+    },
+    {
+      "id": "n754637562",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "755 Mount Pleasant Road, Toronto",
+      "lat": 43.707715,
+      "lon": -79.389545
+    },
+    {
+      "id": "w105185633",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.664268,
+      "lon": -79.468595
+    },
+    {
+      "id": "w107771908",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1951 Eglinton Avenue West, York",
+      "lat": 43.694775,
+      "lon": -79.453032
+    },
+    {
+      "id": "w170242327",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "Toronto",
+      "lat": 43.798266,
+      "lon": -79.141306
+    },
+    {
+      "id": "w200089381",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "2187 Bloor Street West, Toronto",
+      "lat": 43.651159,
+      "lon": -79.474843
+    },
+    {
+      "id": "w22942361",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.594236,
+      "lon": -79.539691
+    },
+    {
+      "id": "w23225269",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "222 Lansdowne Avenue, Toronto",
+      "lat": 43.649663,
+      "lon": -79.440401
+    },
+    {
+      "id": "w23442035",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "243 Alberta Avenue, York",
+      "lat": 43.681064,
+      "lon": -79.433765
+    },
+    {
+      "id": "w245209100",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.673622,
+      "lon": -79.319137
+    },
+    {
+      "id": "w25656474",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.708304,
+      "lon": -79.296229
+    },
+    {
+      "id": "w315223345",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1811 Avenue Road, Toronto",
+      "lat": 43.730692,
+      "lon": -79.418582
+    },
+    {
+      "id": "w31582988",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "720 Broadview Avenue, Toronto",
+      "lat": 43.675161,
+      "lon": -79.358478
+    },
+    {
+      "id": "w32358150",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "25 Photography Drive",
+      "lat": 43.686669,
+      "lon": -79.483834
+    },
+    {
+      "id": "w32359112",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "245 Dixon Road, Etobicoke",
+      "lat": 43.695874,
+      "lon": -79.54493
+    },
+    {
+      "id": "w32630677",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1450 Lawrence Avenue East, North York",
+      "lat": 43.742624,
+      "lon": -79.310716
+    },
+    {
+      "id": "w32651959",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "Toronto",
+      "lat": 43.73346,
+      "lon": -79.266995
+    },
+    {
+      "id": "w33590548",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.650339,
+      "lon": -79.579681
+    },
+    {
+      "id": "w43806053",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "2742 Eglinton Avenue East, Toronto",
+      "lat": 43.737652,
+      "lon": -79.246612
+    },
+    {
+      "id": "w43807862",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "270 Wilson Avenue, North York",
+      "lat": 43.73776,
+      "lon": -79.433147
+    },
+    {
+      "id": "w43809727",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "220 Royal York Road",
+      "lat": 43.612227,
+      "lon": -79.497875
+    },
+    {
+      "id": "w529701908",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.783167,
+      "lon": -79.293211
+    },
+    {
+      "id": "w57386795",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.701316,
+      "lon": -79.502726
+    },
+    {
+      "id": "w59252690",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "748 The Queensway",
+      "lat": 43.62655,
+      "lon": -79.503278
+    },
+    {
+      "id": "w659728828",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "Toronto",
+      "lat": 43.823829,
+      "lon": -79.298935
+    },
+    {
+      "id": "w676389093",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1530 Albion Road, Etobicoke",
+      "lat": 43.741944,
+      "lon": -79.586202
+    },
+    {
+      "id": "w680388211",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "1 York Gate Boulevard, Toronto",
+      "lat": 43.759029,
+      "lon": -79.518805
+    },
+    {
+      "id": "w696957668",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "6220 Yonge Street, North York",
+      "lat": 43.794796,
+      "lon": -79.42186
+    },
+    {
+      "id": "w699417492",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "900 Dufferin Street",
+      "lat": 43.655348,
+      "lon": -79.434343
+    },
+    {
+      "id": "w701945852",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "No Frills",
+      "lat": 43.757227,
+      "lon": -79.230591
+    },
+    {
+      "id": "w706078541",
+      "chain": "nofrills",
+      "name": "No Frills",
+      "address": "McLevin Avenue, Scarborough",
+      "lat": 43.808341,
+      "lon": -79.223579
+    },
+    {
+      "id": "w138155262",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "2525 St. Clair Avenue West, York",
+      "lat": 43.667925,
+      "lon": -79.484656
+    },
+    {
+      "id": "w177052132",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "2245 Islington Avenue, Etobicoke",
+      "lat": 43.713811,
+      "lon": -79.553347
+    },
+    {
+      "id": "w326292601",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "3132 Eglinton Avenue East, Toronto",
+      "lat": 43.742843,
+      "lon": -79.22362
+    },
+    {
+      "id": "w33459330",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "165 North Queen Street, Etobicoke",
+      "lat": 43.618385,
+      "lon": -79.554143
+    },
+    {
+      "id": "w504775784",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "Walmart Supercentre",
+      "lat": 43.757751,
+      "lon": -79.488659
+    },
+    {
+      "id": "w659549418",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "5995 Steeles Avenue East, Toronto",
+      "lat": 43.833379,
+      "lon": -79.255405
+    },
+    {
+      "id": "w660307239",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "785 Milner Avenue, Toronto",
+      "lat": 43.797902,
+      "lon": -79.200701
+    },
+    {
+      "id": "w662727127",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "1900 Eglinton Avenue East, Scarborough",
+      "lat": 43.728346,
+      "lon": -79.295457
+    },
+    {
+      "id": "w699417491",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "900 Dufferin Street, Toronto",
+      "lat": 43.656254,
+      "lon": -79.43548
+    },
+    {
+      "id": "w701685242",
+      "chain": "walmart",
+      "name": "Walmart",
+      "address": "300 Borough Drive, Scarborough",
+      "lat": 43.777197,
+      "lon": -79.258518
+    }
+  ]
+}
