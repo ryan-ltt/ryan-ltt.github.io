@@ -29,6 +29,8 @@
         <div class="io-bar">
             <button class="button small-btn" id="exportCatalogBtn">export catalog</button>
             <button class="button small-btn" id="importCatalogBtn">import catalog</button>
+            <button class="button small-btn" id="importFlyerJsonBtn">import flyer JSON</button>
+            <button class="button small-btn danger-btn" id="clearLocalStorageBtn">clear local data</button>
             <input type="file" id="importFileInput" accept=".json" style="display:none">
             <span class="status-line" id="ioStatus"></span>
         </div>
@@ -100,31 +102,35 @@
         <section class="step-section" id="flyerSection">
             <h2 class="step-heading"><span class="step-num deals-num">🏷</span> Flyer Deals</h2>
             <p class="deals-desc">
-                Upload a grocery flyer to extract sale prices and share them with the community.
+                Upload a grocery flyer — AI extracts all the sale prices automatically.
                 <span id="dealsCountBadge" class="deals-badge">Loading deals…</span>
             </p>
+            <div class="gemini-key-bar">
+                <span id="geminiKeyStatus" class="hint"></span>
+                <button class="button small-btn" id="geminiKeyBtn">API key</button>
+            </div>
 
             <!-- Upload area -->
             <div id="flyer-upload-area">
                 <div id="flyer-drop-area" class="flyer-drop-area">
                     <div class="flyer-drop-icon">📄</div>
                     <div class="flyer-drop-text">Drag &amp; drop a flyer image here</div>
-                    <div class="flyer-drop-sub">JPG, PNG, or WebP</div>
+                    <div class="flyer-drop-sub">JPG, PNG, WebP, or PDF — or paste with Ctrl+V</div>
                     <button class="button big-btn" id="flyerUploadBtn">Choose file</button>
-                    <input type="file" id="flyerFileInput" accept="image/jpeg,image/png,image/webp" style="display:none">
+                    <button class="button big-btn" id="flyerCameraBtn" style="display:none">Take photo</button>
+                    <input type="file" id="flyerFileInput" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none">
+                    <input type="file" id="flyerCameraInput" accept="image/*" capture="environment" style="display:none">
                 </div>
-                <p class="hint" style="margin-top:12px">Check every row before submitting — OCR makes mistakes on colourful flyers. Use <strong>Crop-to-add</strong> for tricky tiles.</p>
+                <p class="hint" style="margin-top:12px">Review every row before submitting. You can edit, add, or delete rows.</p>
             </div>
 
-            <!-- OCR progress -->
-            <div id="flyer-ocr-progress" style="display:none">
-                <div class="ocr-progress-wrap">
-                    <div id="ocrProgressBar" class="ocr-progress-bar" style="width:0%"></div>
-                </div>
-                <div id="ocrStatusText" class="hint" style="margin-top:8px">Starting…</div>
+            <!-- AI processing indicator -->
+            <div id="flyer-processing" style="display:none;padding:32px;text-align:center">
+                <div class="spinner" id="processingSpinner" style="display:inline;margin-right:8px">⏳</div>
+                <span id="processingStatusText" style="font-size:18px;color:#555">Analyzing flyer…</span>
             </div>
 
-            <!-- Review area -->
+            <!-- Review area (shown after successful Gemini extraction or fallback JSON load) -->
             <div id="flyer-review-area" style="display:none">
                 <!-- Metadata row -->
                 <div class="flyer-meta-row">
@@ -147,15 +153,9 @@
                     </div>
                 </div>
 
-                <!-- Image + overlay -->
+                <!-- Flyer image (for reference while reviewing) -->
                 <div class="flyer-image-wrap">
-                    <div id="flyer-image-container"></div>
-                </div>
-
-                <!-- Crop tool -->
-                <div class="crop-toolbar">
-                    <button class="button small-btn" id="cropToggleBtn">Crop-to-add</button>
-                    <span class="hint" id="cropStatusMsg">Draw a box around one flyer tile to add it.</span>
+                    <div id="review-image-container"></div>
                 </div>
 
                 <!-- Candidate table -->
@@ -175,6 +175,7 @@
                         <tbody id="candidateTbody"></tbody>
                     </table>
                 </div>
+                <button class="button small-btn secondary-btn" id="addCandidateRowBtn" style="margin-top:8px">+ Add row</button>
 
                 <!-- Add to local catalog option -->
                 <label class="checkbox-label" style="margin-top:16px">
@@ -188,6 +189,24 @@
                     <button class="button small-btn secondary-btn" id="flyerRestartBtn">Start over</button>
                 </div>
                 <div class="form-msg" id="flyerSubmitStatus"></div>
+            </div>
+
+            <!-- Fallback: AI quota exhausted or no key -->
+            <div id="flyer-fallback" style="display:none;padding:16px 0">
+                <p class="hint" id="fallbackReason" style="color:#c00;margin-bottom:16px"></p>
+                <div id="fallback-image-container" style="margin-bottom:16px"></div>
+                <p style="font-size:16px;margin:0 0 8px 0"><strong>Option A:</strong> Copy this prompt and paste it (along with the flyer image) into any AI assistant (ChatGPT, Gemini, Claude.ai, etc.):</p>
+                <div style="position:relative;margin-bottom:16px">
+                    <textarea id="fallbackPromptText" class="big-input" rows="8" readonly style="font-size:13px;font-family:Monaco,monospace;width:100%;box-sizing:border-box;resize:vertical;background:#f8f8f8"></textarea>
+                    <button class="button small-btn" id="copyPromptBtn" style="margin-top:4px">Copy prompt</button>
+                </div>
+                <p style="font-size:16px;margin:0 0 8px 0"><strong>Option B:</strong> Paste the JSON array your AI returns here:</p>
+                <textarea id="fallbackJsonInput" class="big-input" rows="8" style="font-size:13px;font-family:Monaco,monospace;width:100%;box-sizing:border-box;resize:vertical" placeholder='[{"item_name":"Corn","price":0.44,"unit":"each","frozen":false,"barcode":null}, ...]'></textarea>
+                <div class="form-msg" id="fallbackJsonMsg"></div>
+                <div style="display:flex;gap:12px;margin-top:12px">
+                    <button class="button big-btn" id="loadFallbackJsonBtn">Load this JSON</button>
+                    <button class="button small-btn secondary-btn" id="fallbackRestartBtn">Start over</button>
+                </div>
             </div>
         </section>
 
@@ -347,6 +366,25 @@
         </div>
     </div>
 
+    <!-- Flyer JSON import modal -->
+    <div id="flyerJsonModal" class="modal-overlay" style="display:none">
+        <div class="modal-box" style="max-width:640px">
+            <h3>Import flyer JSON</h3>
+            <p style="font-size:16px;margin:0 0 12px 0">Paste a flyer JSON object. Items will be submitted to the community database (sign-in required) and optionally added to your local catalog.</p>
+            <textarea id="flyerJsonInput" class="big-input" rows="12" style="font-size:13px;font-family:Monaco,monospace;width:100%;box-sizing:border-box;resize:vertical" placeholder='{ "chain": "walmart", "valid_from": "2026-06-11", "valid_to": "2026-06-17", "items": [...] }'></textarea>
+            <div class="form-msg" id="flyerJsonMsg"></div>
+            <label class="checkbox-label" style="margin-top:12px">
+                <input type="checkbox" id="flyerJsonLocalCheck" checked>
+                Also add to my local catalog
+            </label>
+            <div class="modal-buttons" style="margin-top:16px">
+                <button class="button big-btn" id="flyerJsonSubmitBtn">Submit to community database</button>
+                <button class="button big-btn secondary-btn" id="flyerJsonLocalOnlyBtn">Add to my catalog only</button>
+                <button class="button big-btn secondary-btn" id="flyerJsonCancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Sign-in modal -->
     <div id="signInModal" class="modal-overlay" style="display:none">
         <div class="modal-box">
@@ -369,8 +407,23 @@
         </div>
     </div>
 
+    <!-- Gemini API key modal -->
+    <div id="geminiKeyModal" class="modal-overlay" style="display:none">
+        <div class="modal-box" style="max-width:480px">
+            <h3>Gemini API key</h3>
+            <p style="font-size:15px;margin:0 0 12px 0">Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com</a> (free tier: 1,500 flyer scans/day, no credit card needed).</p>
+            <div class="form-row">
+                <label for="geminiKeyInput">Your API key</label>
+                <input type="text" id="geminiKeyInput" class="big-input" placeholder="AIzaSy…">
+            </div>
+            <div class="modal-buttons">
+                <button class="button big-btn" id="saveGeminiKeyBtn">Save key</button>
+                <button class="button big-btn secondary-btn" id="cancelGeminiKeyBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
     <!-- Firebase v10 compat (global firebase.* API — no bundler needed) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>

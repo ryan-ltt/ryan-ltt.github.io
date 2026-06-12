@@ -199,10 +199,11 @@ function parsePriceInputs(prefix) {
 function renderCatalogResults(query) {
     const box = document.getElementById('catalogResults');
     const q = query.trim().toLowerCase();
-    if (!q) { box.classList.remove('visible'); box.innerHTML = ''; return; }
+    if (!q && !catalog.length) { box.classList.remove('visible'); box.innerHTML = ''; return; }
 
-    const matches = catalog.filter(i => i.name.toLowerCase().includes(q) ||
-        (i.barcode && i.barcode.includes(q)));
+    const matches = q
+        ? catalog.filter(i => i.name.toLowerCase().includes(q) || (i.barcode && i.barcode.includes(q)))
+        : [...catalog];
 
     box.innerHTML = '';
     if (!matches.length) {
@@ -496,7 +497,17 @@ async function fetchDealPrices() {
             const row = doc.data();
             const key = `${row.chain}:${(row.barcode || row.item_name.toLowerCase().trim())}`;
             if (!deals[key] || row.price < deals[key].price) {
-                deals[key] = { price: row.price, unit: row.unit, validTo: row.valid_to, chain: row.chain, itemName: row.item_name };
+                deals[key] = {
+                    price:       row.price,
+                    unit:        row.unit,
+                    validTo:     row.valid_to,
+                    chain:       row.chain,
+                    itemName:    row.item_name,
+                    unitPriceMl: row.unit_price_ml || null,
+                    unitPriceG:  row.unit_price_g  || null,
+                    totalMl:     row.total_ml      || null,
+                    totalG:      row.total_g       || null,
+                };
             }
         });
         window.gpDealPrices = deals;
@@ -509,9 +520,57 @@ async function fetchDealPrices() {
 function dealLookup(item, chain) {
     if (!window.gpDealPrices) return null;
     const normName = item.name.toLowerCase().trim();
+
+    // 1. Exact barcode match
     const byBarcode = item.barcode ? window.gpDealPrices[`${chain}:${item.barcode}`] : null;
-    const byName    = window.gpDealPrices[`${chain}:${normName}`];
-    return byBarcode || byName || null;
+    if (byBarcode) return byBarcode;
+
+    // 2. Exact name match
+    const byName = window.gpDealPrices[`${chain}:${normName}`];
+    if (byName) return byName;
+
+    // 3. Base-name fuzzy match — find a deal whose item_name is a prefix/substring of
+    //    the catalog item name (or vice versa), then convert price using unit price.
+    //    e.g. catalog "Coca-Cola Soft Drinks 24x355mL" matches deal "Coca-Cola" with unitPriceMl.
+    const catalogTotalMl = extractTotalMl(item.name);
+    const catalogTotalG  = extractTotalG(item.name);
+
+    for (const deal of Object.values(window.gpDealPrices)) {
+        if (deal.chain !== chain) continue;
+        const dealBase = deal.itemName.toLowerCase().trim();
+        if (!normName.includes(dealBase) && !dealBase.includes(normName)) continue;
+
+        // Same product, different size — convert via unit price
+        if (deal.unitPriceMl && catalogTotalMl) {
+            return { ...deal, price: parseFloat((deal.unitPriceMl * catalogTotalMl).toFixed(2)) };
+        }
+        if (deal.unitPriceG && catalogTotalG) {
+            return { ...deal, price: parseFloat((deal.unitPriceG * catalogTotalG).toFixed(2)) };
+        }
+        // No size info — return the deal price as-is (same base product)
+        return deal;
+    }
+    return null;
+}
+
+// Parse "24x355mL" or "355mL" → total mL from a product name string
+function extractTotalMl(name) {
+    const multi = name.match(/(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*ml/i);
+    if (multi) return parseInt(multi[1]) * parseFloat(multi[2]);
+    const single = name.match(/(\d+(?:\.\d+)?)\s*(?:L|litre|liter)\b/i);
+    if (single) return parseFloat(single[1]) * 1000;
+    const ml = name.match(/(\d+(?:\.\d+)?)\s*ml/i);
+    if (ml) return parseFloat(ml[1]);
+    return null;
+}
+
+// Parse "500g" or "1kg" → total grams from a product name string
+function extractTotalG(name) {
+    const kg = name.match(/(\d+(?:\.\d+)?)\s*kg\b/i);
+    if (kg) return parseFloat(kg[1]) * 1000;
+    const g = name.match(/(\d+(?:\.\d+)?)\s*g\b/i);
+    if (g) return parseFloat(g[1]);
+    return null;
 }
 
 function effectivePrice(item, chain) {
@@ -656,12 +715,21 @@ async function findBestPlan() {
 
         // Enumerate all subsets of size 1–3
         const allPlans = [];
-        for (const size of [1, 2, 3]) {
-            for (const subset of subsets(candidates, size)) {
-                const { total: basketTotal, assignments, missing } = basketCost(subset);
-                const lastChain = frozenStore(subset, assignments);
-                const route = await bestRouteOrder(home, subset, lastChain);
-                if (!route) continue;
+        const allSubsets = [1, 2, 3].flatMap(size => subsets(candidates, size));
+        let done = 0;
+        for (const subset of allSubsets) {
+            const label = subset.map(s => s.name).join(' + ');
+            showMsg(msg, `Checking routes… (${done}/${allSubsets.length}) ${label}`, '');
+
+            const { total: basketTotal, assignments, missing } = basketCost(subset);
+
+            // Skip plans where no list items have prices at any store in this subset
+            if (!assignments.length) { done++; continue; }
+
+            const lastChain = frozenStore(subset, assignments);
+            const route = await bestRouteOrder(home, subset, lastChain);
+            done++;
+            if (!route) continue;
 
                 const { cost: travCost, tooFar } = travelCost(route.distanceM, route.durationSec);
                 const grandTotal = basketTotal + travCost;
@@ -684,7 +752,6 @@ async function findBestPlan() {
                     geometry: route.geometry,
                     tooFar,
                 });
-            }
         }
 
         if (!allPlans.length) {
@@ -1043,6 +1110,7 @@ function init() {
 
     applySettingsToUI();
     renderShoppingList();
+    renderCatalogResults('');
 
     // Auth
     if (gpAuth && gpDb) {
@@ -1075,7 +1143,8 @@ function init() {
     document.getElementById('catalogSearch').addEventListener('blur', () => {
         setTimeout(() => {
             const box = document.getElementById('catalogResults');
-            box.classList.remove('visible');
+            const q = document.getElementById('catalogSearch').value.trim();
+            if (!q) box.classList.remove('visible');
         }, 200);
     });
 
@@ -1144,12 +1213,131 @@ function init() {
         e.target.value = '';
     });
 
+    // Clear local data
+    document.getElementById('clearLocalStorageBtn').addEventListener('click', () => {
+        if (!confirm('Clear all local data? This will erase your catalog, shopping list, and saved settings. This cannot be undone.')) return;
+        localStorage.clear();
+        location.reload();
+    });
+
+    // Flyer JSON import
+    document.getElementById('importFlyerJsonBtn').addEventListener('click', openFlyerJsonModal);
+    document.getElementById('flyerJsonSubmitBtn').addEventListener('click', submitFlyerJson);
+    document.getElementById('flyerJsonLocalOnlyBtn').addEventListener('click', () => submitFlyerJson(true));
+    document.getElementById('flyerJsonCancelBtn').addEventListener('click', closeFlyerJsonModal);
+    document.getElementById('flyerJsonModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('flyerJsonModal')) closeFlyerJsonModal();
+    });
+
     // Settings persistence on any change
     document.getElementById('gasPriceInput').addEventListener('change', () => { collectSettings(); saveSettings(); });
     document.getElementById('evRateInput').addEventListener('change', () => { collectSettings(); saveSettings(); });
     document.getElementById('transitFareInput').addEventListener('change', () => { collectSettings(); saveSettings(); });
     document.getElementById('frozenLastCheck').addEventListener('change', () => { collectSettings(); saveSettings(); });
     document.getElementById('carClassSelect').addEventListener('change', () => { collectSettings(); saveSettings(); });
+}
+
+// ── Flyer JSON import ─────────────────────────────────────────────────────
+function openFlyerJsonModal() {
+    document.getElementById('flyerJsonInput').value = '';
+    document.getElementById('flyerJsonMsg').textContent = '';
+    document.getElementById('flyerJsonModal').style.display = 'flex';
+    document.getElementById('flyerJsonInput').focus();
+}
+
+function closeFlyerJsonModal() {
+    document.getElementById('flyerJsonModal').style.display = 'none';
+}
+
+async function submitFlyerJson(localOnly = false) {
+    const btn    = localOnly ? document.getElementById('flyerJsonLocalOnlyBtn') : document.getElementById('flyerJsonSubmitBtn');
+    const msg    = document.getElementById('flyerJsonMsg');
+    const raw    = document.getElementById('flyerJsonInput').value.trim();
+    const addLocal = localOnly || document.getElementById('flyerJsonLocalCheck').checked;
+
+    let parsed;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        showMsg(msg, 'Invalid JSON — check the format and try again.', 'error');
+        return;
+    }
+
+    const { chain, valid_from, valid_to, region = 'ontario', items } = parsed;
+    if (!chain || !valid_from || !valid_to || !Array.isArray(items) || !items.length) {
+        showMsg(msg, 'Missing required fields: chain, valid_from, valid_to, items.', 'error');
+        return;
+    }
+
+    // Submit to Firestore if signed in and not local-only
+    if (!localOnly && gpDb && window.gpAuthUser) {
+        const rows = items.map(it => ({
+            user_id:    window.gpAuthUser.uid,
+            region,
+            chain,
+            item_name:  it.item_name,
+            barcode:    it.barcode ? String(it.barcode) : null,
+            price:      parseFloat(parseFloat(it.price).toFixed(2)),
+            unit:       it.unit || 'each',
+            frozen:     !!it.frozen,
+            valid_from,
+            valid_to,
+            created_at: new Date().toISOString(),
+        }));
+
+        btn.disabled = true;
+        showMsg(msg, 'Submitting…', '');
+        try {
+            const batch = gpDb.batch();
+            for (const row of rows) batch.set(gpDb.collection('flyer_prices').doc(), row);
+            await batch.commit();
+            showMsg(msg, `✓ ${rows.length} items submitted to community database.`, 'success');
+            await fetchDealPrices();
+            if (typeof updateDealsCountBadge === 'function') updateDealsCountBadge();
+        } catch (e) {
+            showMsg(msg, 'Submit failed: ' + (e.message || e), 'error');
+            btn.disabled = false;
+            return;
+        }
+        btn.disabled = false;
+    } else if (!localOnly && gpDb && !window.gpAuthUser) {
+        showMsg(msg, 'Sign in first to submit to the community database.', 'error');
+        return;
+    }
+
+    // Merge into local catalog
+    if (addLocal) {
+        for (const it of items) {
+            const normName = it.item_name.toLowerCase().trim();
+            const barcodeStr = it.barcode ? String(it.barcode) : null;
+            let existing = catalog.find(c =>
+                (barcodeStr && c.barcode === barcodeStr) ||
+                c.name.toLowerCase().trim() === normName
+            );
+            if (existing) {
+                if (existing.prices[chain] == null || existing.prices[chain] > it.price) {
+                    existing.prices[chain] = parseFloat(it.price);
+                }
+            } else {
+                catalog.push({
+                    id: uuid(),
+                    name:     it.item_name,
+                    category: it.frozen ? 'frozen' : 'pantry',
+                    barcode:  barcodeStr,
+                    frozen:   !!it.frozen,
+                    prices:   { metro: null, walmart: null, nofrills: null, freshco: null, [chain]: parseFloat(it.price) },
+                });
+            }
+        }
+        saveCatalog();
+        renderShoppingList();
+        const localMsg = gpDb && window.gpAuthUser
+            ? ` Also added ${items.length} items to your local catalog.`
+            : `Added ${items.length} items to your local catalog.`;
+        showMsg(msg, (msg.textContent || '') + localMsg, 'success');
+    }
+
+    setTimeout(closeFlyerJsonModal, 2000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
