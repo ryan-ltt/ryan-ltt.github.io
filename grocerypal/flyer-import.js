@@ -4,9 +4,7 @@
 // Primary: Gemini 2.0 Flash vision API (free tier, user's key stored in localStorage)
 // Fallback: copyable prompt for any AI assistant + paste-JSON textarea
 
-// Free Gemini API key — replace with your own from https://aistudio.google.com/app/apikey
-// Users can also supply their own key which is stored in localStorage.
-const BUILT_IN_GEMINI_KEY = 'AQ.Ab8RN6IIOSLT_Qe1TTU4uHvFfnJKp6EuMP0mUzvrhQMPSDzn8A';
+const BUILT_IN_GEMINI_KEY = '';
 const LS_GEMINI_KEY = 'groceryPal_geminiKey';
 // Try models in order; fall back to next on quota errors
 const GEMINI_MODELS = ['gemini-3.1-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash'];
@@ -44,7 +42,7 @@ function getGeminiKey() {
 }
 
 function isKeyConfigured() {
-    return getGeminiKey() !== 'YOUR_GEMINI_API_KEY';
+    return !!getGeminiKey();
 }
 
 // ── Section visibility ─────────────────────────────────────────────────────
@@ -623,7 +621,7 @@ function saveGeminiKey() {
     if (val) localStorage.setItem(LS_GEMINI_KEY, val);
     else localStorage.removeItem(LS_GEMINI_KEY);
     closeGeminiKeyModal();
-    document.getElementById('geminiKeyStatus').textContent = val ? '✓ API key saved' : 'Using built-in key';
+    document.getElementById('geminiKeyStatus').textContent = val ? '✓ API key saved' : 'No API key — flyer import will use manual fallback';
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -657,6 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cancelGeminiKeyBtn')?.addEventListener('click', closeGeminiKeyModal);
 
     document.getElementById('geminiKeyStatus').textContent = isKeyConfigured()
-        ? (BUILT_IN_GEMINI_KEY !== 'YOUR_GEMINI_API_KEY' ? 'Using built-in key' : '✓ API key saved')
-        : 'No API key — will use manual fallback';
+        ? '✓ API key saved'
+        : 'No API key — add one to use Gemini (free at aistudio.google.com)';
 });
