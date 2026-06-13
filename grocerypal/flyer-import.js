@@ -489,6 +489,9 @@ async function submitFlyerPrices() {
             valid_from:    validFrom,
             valid_to:      validTo,
             created_at:    new Date().toISOString(),
+            ttl:           firebase.firestore.Timestamp.fromDate(
+                               new Date(new Date(validTo).getTime() + 7 * 24 * 60 * 60 * 1000)
+                           ),
         }));
 
     if (!rows.length) { alert('No valid items to submit.'); return; }
@@ -512,6 +515,14 @@ async function submitFlyerPrices() {
         }
         if (typeof fetchDealPrices === 'function') await fetchDealPrices();
         if (typeof updateDealsCountBadge === 'function') updateDealsCountBadge();
+
+        const today = new Date().toISOString().slice(0, 10);
+        const expiredSnap = await db.collection('flyer_prices').where('valid_to', '<', today).get();
+        if (!expiredSnap.empty) {
+            const cleanupBatch = db.batch();
+            expiredSnap.forEach(doc => cleanupBatch.delete(doc.ref));
+            await cleanupBatch.commit();
+        }
 
         candidates = [];
         renderCandidateTable();
