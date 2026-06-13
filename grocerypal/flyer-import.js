@@ -29,11 +29,12 @@ Rules:
 - For rollback/sale items with two prices shown, use the LOWER (sale) price
 - barcode is the item number shown (e.g. #9479895 → "9479895"), or null if not shown
 - Skip store banners, logos, and promotional text (e.g. "Save on 1000s of items")
-- Include every product with a price`;
+- Include every product with a price
+- When multiple products share one price (e.g. "Ritz or Triscuit Crackers $1.98"), create a SEPARATE entry for each product with the same price — never merge them into one entry`;
 
 // State
-let flyerFile    = null;   // original File object
-let flyerCanvas  = null;   // displayed canvas
+let flyerFiles   = [];     // File objects (one per image)
+let flyerCanvases = [];    // rendered canvases, one per file
 let candidates   = [];     // [{name, price, unit, frozen, barcode}]
 
 // ── Gemini key helpers ────────────────────────────────────────────────────
@@ -71,14 +72,40 @@ function displayFlyerImage(file) {
             URL.revokeObjectURL(url);
             const maxW = 700;
             const scale = img.width > maxW ? maxW / img.width : 1;
-            flyerCanvas = document.createElement('canvas');
-            flyerCanvas.width  = Math.round(img.width  * scale);
-            flyerCanvas.height = Math.round(img.height * scale);
-            flyerCanvas.getContext('2d').drawImage(img, 0, 0, flyerCanvas.width, flyerCanvas.height);
-            resolve();
+            const canvas = document.createElement('canvas');
+            canvas.width  = Math.round(img.width  * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas);
         };
         img.src = url;
     });
+}
+
+function mapGeminiItem(it) {
+    const price       = parseFloat(it.price) || 0;
+    const packCount   = parseInt(it.pack_count) || 1;
+    const volMl       = parseFloat(it.unit_volume_ml) || null;
+    const weightG     = parseFloat(it.unit_weight_g) || null;
+    const totalMl     = volMl   ? packCount * volMl   : null;
+    const totalG      = weightG ? packCount * weightG : null;
+    const unitPriceMl = totalMl ? price / totalMl : null;
+    const unitPriceG  = totalG  ? price / totalG  : null;
+    return {
+        name: String(it.item_name || '').trim(),
+        price, unit: it.unit || 'each', frozen: !!it.frozen,
+        barcode: it.barcode ? String(it.barcode) : '',
+        packCount, totalMl, totalG, unitPriceMl, unitPriceG,
+    };
+}
+
+function deduplicateCandidates(items) {
+    const seen = new Map();
+    for (const item of items) {
+        const key = item.name.toLowerCase().trim();
+        if (!seen.has(key) || item.price < seen.get(key).price) seen.set(key, item);
+    }
+    return [...seen.values()];
 }
 
 // ── Gemini Files API upload (used for PDFs — too large for inline base64) ─
@@ -236,7 +263,8 @@ function initFlyerUpload() {
 
     uploadBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', e => {
-        if (e.target.files[0]) processFile(e.target.files[0]);
+        const files = [...e.target.files];
+        if (files.length) processFiles(files);
         e.target.value = '';
     });
 
@@ -248,7 +276,7 @@ function initFlyerUpload() {
     }
     cameraBtn.addEventListener('click', () => cameraInput.click());
     cameraInput.addEventListener('change', e => {
-        if (e.target.files[0]) processFile(e.target.files[0]);
+        if (e.target.files[0]) processFiles([e.target.files[0]]);
         e.target.value = '';
     });
     // Clipboard paste (Ctrl+V with an image copied)
@@ -256,7 +284,7 @@ function initFlyerUpload() {
         const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
         if (!item) return;
         const f = item.getAsFile();
-        if (f) processFile(f);
+        if (f) processFiles([f]);
     });
 
     // Use the whole upload section as the drop target so child elements don't block drops
@@ -269,55 +297,34 @@ function initFlyerUpload() {
     dropTarget.addEventListener('drop', e => {
         e.preventDefault();
         dropArea.classList.remove('drag-over');
-        const f = e.dataTransfer.files[0];
-        if (f && (/^image\//.test(f.type) || f.type === 'application/pdf' || /\.(jpe?g|png|webp|pdf)$/i.test(f.name))) processFile(f);
+        const files = [...e.dataTransfer.files].filter(
+            f => /^image\//.test(f.type) || f.type === 'application/pdf' || /\.(jpe?g|png|webp|pdf)$/i.test(f.name)
+        );
+        if (files.length) processFiles(files);
     });
 }
 
-async function processFile(file) {
-    flyerFile = file;
+async function processFiles(files) {
+    flyerFiles = files;
     showFlyerSection('flyer-processing');
-    setProcessingStatus('Reading flyer…', true);
+    const label = files.length > 1 ? `${files.length} images` : 'flyer';
+    setProcessingStatus(`Reading ${label}…`, true);
 
-    await displayFlyerImage(file);
-
-    // Try to detect chain from filename as a hint
-    prefillChain(file.name);
+    flyerCanvases = await Promise.all(files.map(displayFlyerImage));
+    prefillChain(files[0].name);
 
     if (!isKeyConfigured()) {
         showFallback('No Gemini API key configured.');
         return;
     }
 
-    setProcessingStatus('Sending to Gemini AI…', true);
+    setProcessingStatus(`Sending ${label} to Gemini AI…`, true);
     try {
-        const items = await callGemini(file);
-        if (!Array.isArray(items) || !items.length) throw new Error('No items returned.');
+        const results = await Promise.all(files.map(callGemini));
+        const allItems = results.flat().filter(it => it && it.item_name);
+        if (!allItems.length) throw new Error('No items returned.');
 
-        candidates = items.map(it => {
-            const price      = parseFloat(it.price) || 0;
-            const packCount  = parseInt(it.pack_count) || 1;
-            const volMl      = parseFloat(it.unit_volume_ml) || null;
-            const weightG    = parseFloat(it.unit_weight_g) || null;
-            const totalMl    = volMl   ? packCount * volMl   : null;
-            const totalG     = weightG ? packCount * weightG : null;
-            // price per mL or per g — used for cross-size matching
-            const unitPriceMl = totalMl ? price / totalMl : null;
-            const unitPriceG  = totalG  ? price / totalG  : null;
-            return {
-                name:         String(it.item_name || '').trim(),
-                price,
-                unit:         it.unit || 'each',
-                frozen:       !!it.frozen,
-                barcode:      it.barcode ? String(it.barcode) : '',
-                packCount,
-                totalMl,
-                totalG,
-                unitPriceMl,
-                unitPriceG,
-            };
-        });
-
+        candidates = deduplicateCandidates(allItems.map(mapGeminiItem));
         setProcessingStatus(`Found ${candidates.length} items.`, false);
         renderReviewUI();
         showFlyerSection('flyer-review-area');
@@ -338,13 +345,9 @@ function showFallback(reason) {
         ? `(Gemini unavailable: ${reason})`
         : '';
 
-    // Show the flyer image in fallback view too
     const imgContainer = document.getElementById('fallback-image-container');
     imgContainer.innerHTML = '';
-    if (flyerCanvas) {
-        flyerCanvas.style.maxWidth = '100%';
-        imgContainer.appendChild(flyerCanvas);
-    }
+    flyerCanvases.forEach(c => { c.style.maxWidth = '100%'; imgContainer.appendChild(c); });
 
     // Build the copyable prompt
     const chain = document.getElementById('flyerChainSelect').value;
@@ -366,13 +369,9 @@ Return ONLY the JSON array, nothing else.`;
 
 // ── Review UI ─────────────────────────────────────────────────────────────
 function renderReviewUI() {
-    // Show flyer image alongside table
     const imgContainer = document.getElementById('review-image-container');
     imgContainer.innerHTML = '';
-    if (flyerCanvas) {
-        flyerCanvas.style.maxWidth = '100%';
-        imgContainer.appendChild(flyerCanvas);
-    }
+    flyerCanvases.forEach(c => { c.style.maxWidth = '100%'; imgContainer.appendChild(c); });
     renderCandidateTable();
     updateSubmitBtn();
 }
@@ -644,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('flyerSubmitBtn')?.addEventListener('click', submitFlyerPrices);
     document.getElementById('flyerRestartBtn')?.addEventListener('click', () => {
-        candidates = []; flyerFile = null; flyerCanvas = null;
+        candidates = []; flyerFiles = []; flyerCanvases = [];
         showFlyerSection('flyer-upload-area');
     });
     document.getElementById('addCandidateRowBtn')?.addEventListener('click', addBlankRow);
@@ -656,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('loadFallbackJsonBtn')?.addEventListener('click', loadFallbackJson);
     document.getElementById('fallbackRestartBtn')?.addEventListener('click', () => {
-        candidates = []; flyerFile = null; flyerCanvas = null;
+        candidates = []; flyerFiles = []; flyerCanvases = [];
         showFlyerSection('flyer-upload-area');
     });
 
