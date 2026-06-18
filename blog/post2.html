@@ -289,6 +289,72 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+
+        /* include-openers switch */
+        .stats-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-bottom: 2px solid black;
+        }
+
+        .switch-label {
+            font-family: Monaco;
+            font-size: 12px;
+            color: #555;
+            user-select: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 20px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .switch input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch .track {
+            position: absolute;
+            inset: 0;
+            background: white;
+            border: 2px solid black;
+            border-radius: 20px;
+            transition: background 0.15s ease;
+        }
+
+        .switch .knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            background: black;
+            border-radius: 50%;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .switch input:checked + .track {
+            background: black;
+        }
+
+        .switch input:checked + .track .knob {
+            transform: translateX(18px);
+            background: white;
+        }
+
+        .switch input:focus-visible + .track {
+            outline: 2px solid #888;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -311,6 +377,13 @@
                 <span class="concert-toggle" id="statsToggle">▼</span>
             </div>
             <div class="stats-body" id="statsBody">
+                <div class="stats-controls">
+                    <label class="switch">
+                        <input type="checkbox" id="includeOpeners" onchange="buildStats()">
+                        <span class="track"><span class="knob"></span></span>
+                    </label>
+                    <span class="switch-label">include openers</span>
+                </div>
                 <div class="stats-tabs">
                     <div class="stats-tab active" onclick="switchStatsTab('artists', this)">artists</div>
                     <div class="stats-tab" onclick="switchStatsTab('venues', this)">venues</div>
@@ -2137,7 +2210,11 @@
 
         function buildStats() {
             const cards = document.querySelectorAll('.concert-card');
+            const includeOpeners = document.getElementById('includeOpeners').checked;
             const artists = {}, venues = {}, cities = {};
+            let openerActs = 0;
+
+            const bump = (obj, key) => { if (key) obj[key] = (obj[key] || 0) + 1; };
 
             cards.forEach(card => {
                 const artistEl = card.querySelector('.concert-artist');
@@ -2154,14 +2231,29 @@
                     city  = parts.slice(1).join('·').trim();
                 }
 
-                if (artist) artists[artist] = (artists[artist] || 0) + 1;
-                if (venue)  venues[venue]   = (venues[venue]   || 0) + 1;
-                if (city)   cities[city]    = (cities[city]    || 0) + 1;
+                bump(artists, artist);
+                bump(venues, venue);
+                bump(cities, city);
+
+                // openers played the same venue/city — count each as an act there
+                if (includeOpeners) {
+                    card.querySelectorAll('.opener-name').forEach(el => {
+                        const name = el.textContent.trim();
+                        if (!name) return;
+                        openerActs++;
+                        bump(artists, name);
+                        bump(venues, venue);
+                        bump(cities, city);
+                    });
+                }
             });
 
             const total = cards.length;
-            document.getElementById('statsSummary').textContent =
-                total + ' show' + (total !== 1 ? 's' : '');
+            let summary = total + ' show' + (total !== 1 ? 's' : '');
+            if (includeOpeners && openerActs) {
+                summary += ' · +' + openerActs + ' opener' + (openerActs !== 1 ? 's' : '');
+            }
+            document.getElementById('statsSummary').textContent = summary;
 
             function renderPanel(id, counts) {
                 const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
