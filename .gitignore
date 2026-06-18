@@ -2,3 +2,5 @@
 grocerypal/GroceryPal_planv1.md
 grocerypal/GroceryPal_planv2.md
 *.md
+__pycache__/
+*.pyc

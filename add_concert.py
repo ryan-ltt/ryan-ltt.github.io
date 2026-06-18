@@ -5,14 +5,45 @@ add_concert.py — scrape a setlist.fm page and add/update a concert card in pos
 Usage:
     python add_concert.py <setlist.fm URL> [--notes "optional notes"]
     python add_concert.py <setlist.fm URL> --fill-template   # fills the placeholder template card
+    python add_concert.py <setlist.fm URL> --no-openers      # skip scraping opening acts
+
+Opening acts are read from the page's `relatedVenueSetlists` box (same venue, same
+date), and each opener's own setlist is scraped when available.
 """
 
 import sys
 import re
+import time
 import argparse
 from datetime import datetime
+from urllib.parse import urljoin
 from urllib.request import urlopen, Request
 from html.parser import HTMLParser
+
+USER_AGENT = "Mozilla/5.0 (compatible; concert-blog-scraper/1.0)"
+
+
+def fetch_html(url: str, retries: int = 5) -> str:
+    """Fetch a setlist.fm page, retrying through intermittent empty/202 bot-challenge
+    responses. setlist.fm occasionally answers with HTTP 202 and an empty body; we
+    retry with a growing delay and treat a too-short body as a failure."""
+    last_err = None
+    for attempt in range(retries):
+        try:
+            req = Request(url, headers={"User-Agent": USER_AGENT,
+                                        "Accept-Language": "en-US,en;q=0.9"})
+            with urlopen(req, timeout=25) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+            if len(html) > 1000:
+                return html
+            last_err = f"empty/short body (status {resp.status}, {len(html)} bytes)"
+        except Exception as e:  # noqa: BLE001 — network errors are retried
+            last_err = f"{type(e).__name__}: {e}"
+        time.sleep(2 * (attempt + 1))
+    raise RuntimeError(
+        f"Could not fetch {url} after {retries} tries ({last_err}). "
+        "setlist.fm may be serving a bot challenge — try again later."
+    )
 
 
 # ── HTML parser ───────────────────────────────────────────────────────────────
@@ -140,10 +171,8 @@ class SetlistParser(HTMLParser):
 
 # ── scraper ───────────────────────────────────────────────────────────────────
 
-def scrape_setlist(url: str) -> dict:
-    req = Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; concert-blog-scraper/1.0)"})
-    with urlopen(req, timeout=15) as resp:
-        html = resp.read().decode("utf-8", errors="replace")
+def scrape_setlist(url: str, with_openers: bool = False) -> dict:
+    html = fetch_html(url)
 
     parser = SetlistParser()
     parser.feed(html)
@@ -160,16 +189,123 @@ def scrape_setlist(url: str) -> dict:
             songs.append(("__encore__", f"Encore {i}" if i > 1 else "Encore"))
         songs.extend(("song", s) for s in song_list)
 
-    return {
+    data = {
         "artist": parser.artist,
         "venue": parser.venue or "Unknown Venue",
         "city": parser.city or "",
         "date": parser.date,
         "songs": songs,
+        "openers": [],
     }
+
+    if with_openers:
+        data["openers"] = scrape_openers(html, url)
+
+    return data
+
+
+# ── opener scraping ─────────────────────────────────────────────────────────--
+
+def _related_block(html: str) -> str:
+    """Return the HTML slice for the `relatedVenueSetlists` box (same venue, same
+    date co-bills) — server-rendered on every setlist page — or '' if absent."""
+    i = html.find("relatedVenueSetlists")
+    if i < 0:
+        return ""
+    # the box lives in one contentBox row; cut at the next contentBox after it
+    j = html.find("contentBox", i + len("relatedVenueSetlists"))
+    return html[i:j] if j > 0 else html[i:i + 6000]
+
+
+_RELATED_LI = re.compile(
+    r'<li class="([^"]*setlistLink[^"]*)">.*?'
+    r'href="([^"]+)"\s*title="View this (.+?) setlist"',
+    re.DOTALL,
+)
+
+
+def scrape_openers(html: str, base_url: str) -> list:
+    """Parse the same-venue/same-date co-bills from a setlist page's
+    `relatedVenueSetlists` box. The headliner is the entry flagged
+    `currentSetlist`; every other entry is treated as an opener/co-bill.
+
+    Returns a list of {"name", "songs"}. Openers whose own setlist page can't be
+    fetched (or has no songs) are returned name-only with an empty song list."""
+    block = _related_block(html)
+    if not block:
+        return []
+
+    openers = []
+    for cls, href, name in _RELATED_LI.findall(block):
+        if "currentSetlist" in cls:
+            continue  # this is the headliner itself
+        name = _unescape(name.strip())
+        link = urljoin(base_url, href)
+        songs = []
+        try:
+            songs = scrape_setlist(link, with_openers=False)["songs"]
+        except Exception as e:  # noqa: BLE001 — missing/blocked opener page → name-only
+            print(f"  (opener '{name}': no setlist — {e})")
+        openers.append({"name": name, "songs": songs})
+    return openers
+
+
+def _unescape(s: str) -> str:
+    return (s.replace("&amp;", "&").replace("&lt;", "<")
+             .replace("&gt;", ">").replace("&#39;", "'").replace("&quot;", '"'))
 
 
 # ── HTML builder ──────────────────────────────────────────────────────────────
+
+def build_feat_tag(openers: list) -> str:
+    """Faint `feat. A, B` tag for the collapsed header. '' when no openers."""
+    if not openers:
+        return ""
+    names = ", ".join(o["name"] for o in openers)
+    return f'\n                        <span class="concert-feat">feat. {names}</span>'
+
+
+def build_openers_block(openers: list) -> str:
+    """The expandable `.concert-openers` section placed above the headliner
+    setlist. Each opener is collapsible; openers with no songs are name-only.
+    Returns '' when there are no openers (card stays identical to before)."""
+    if not openers:
+        return ""
+
+    opener_html = []
+    for o in openers:
+        if o["songs"]:
+            song_lines = "\n".join(
+                f'                            <span class="setlist-encore">{s}</span>'
+                if kind == "__encore__" else
+                f'                            <span class="setlist-song">{s}</span>'
+                for kind, s in o["songs"]
+            )
+            opener_html.append(
+                '                    <div class="opener">\n'
+                '                        <div class="opener-head" onclick="toggleOpener(this)">\n'
+                f'                            <span class="opener-name">{o["name"]}</span>\n'
+                '                            <span class="opener-toggle">▼</span>\n'
+                '                        </div>\n'
+                '                        <div class="opener-setlist">\n'
+                f'{song_lines}\n'
+                '                        </div>\n'
+                '                    </div>'
+            )
+        else:
+            opener_html.append(
+                '                    <div class="opener">\n'
+                '                        <div class="opener-head opener-nosetlist">\n'
+                f'                            <span class="opener-name">{o["name"]}</span>\n'
+                '                        </div>\n'
+                '                    </div>'
+            )
+
+    return ('                    <div class="concert-openers">\n'
+            '                        <div class="openers-label">openers</div>\n'
+            + "\n".join(opener_html) + '\n'
+            '                    </div>\n')
+
 
 def build_card(data: dict, notes: str = "") -> str:
     venue_str = data["venue"]
@@ -190,12 +326,15 @@ def build_card(data: dict, notes: str = "") -> str:
     if notes:
         notes_html = f'\n                    <div class="concert-notes">{notes}</div>'
 
+    feat_html = build_feat_tag(data.get("openers", []))
+    openers_html = build_openers_block(data.get("openers", []))
+
     return f"""
             <div class="concert-card">
                 <div class="concert-header" onclick="toggleConcert(this)">
                     <div class="concert-header-left">
                         <span class="concert-artist">{data['artist']}</span>
-                        <span class="concert-venue">{venue_str}</span>
+                        <span class="concert-venue">{venue_str}</span>{feat_html}
                     </div>
                     <div class="concert-header-right">
                         <span class="concert-date">{data['date']}</span>
@@ -203,7 +342,7 @@ def build_card(data: dict, notes: str = "") -> str:
                     </div>
                 </div>
                 <div class="concert-body">
-                    <div class="concert-setlist">
+{openers_html}                    <div class="concert-setlist">
 {setlist_html}
                     </div>{notes_html}
                 </div>
@@ -247,14 +386,18 @@ def main():
                         help="Replace the placeholder template card instead of appending")
     parser.add_argument("--blog-post", default="blog/post2.html",
                         help="Path to the blog post HTML file (default: blog/post2.html)")
+    parser.add_argument("--no-openers", action="store_true",
+                        help="Skip scraping opening acts from the same-venue/date box")
     args = parser.parse_args()
 
     print(f"Scraping {args.url} ...")
-    data = scrape_setlist(args.url)
+    data = scrape_setlist(args.url, with_openers=not args.no_openers)
     print(f"  Artist : {data['artist']}")
     print(f"  Venue  : {data['venue']}, {data['city']}")
     print(f"  Date   : {data['date']}")
     print(f"  Songs  : {len(data['songs'])} items")
+    if data["openers"]:
+        print(f"  Openers: {', '.join(o['name'] for o in data['openers'])}")
 
     card = build_card(data, notes=args.notes)
 
