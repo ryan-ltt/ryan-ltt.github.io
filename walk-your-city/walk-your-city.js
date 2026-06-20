@@ -840,6 +840,16 @@ async function init() {
     const { data: { session } } = await db.auth.getSession();
     currentUser = session?.user ?? null;
     updateAuthUI(currentUser);
+
+    // Recovery links land here with `type=recovery` in the URL hash. Supabase
+    // consumes that hash and fires PASSWORD_RECOVERY during createClient() —
+    // before this listener is attached — so we can't rely on catching the
+    // event. Detect the recovery flag from the hash directly and open the
+    // "set new password" modal.
+    if (/[#&]type=recovery/.test(window.location.hash) && currentUser) {
+        openNewPasswordModal();
+    }
+
     db.auth.onAuthStateChange((event, session) => {
         currentUser = session?.user ?? null;
         updateAuthUI(currentUser);
@@ -848,12 +858,7 @@ async function init() {
             if (currentCity) loadCity(currentCity);
         }
         if (event === 'SIGNED_OUT') { walks = new Map(); renderMap(); renderList(); updateStatus(); }
-        if (event === 'PASSWORD_RECOVERY') {
-            document.getElementById('signInModal').style.display = 'none';
-            const errEl = document.getElementById('newPasswordError');
-            errEl.style.display = 'none';
-            document.getElementById('newPasswordModal').style.display = 'flex';
-        }
+        if (event === 'PASSWORD_RECOVERY') openNewPasswordModal();
     });
 
     if ('serviceWorker' in navigator) {
@@ -1415,11 +1420,21 @@ function updateAuthUI(user) {
 
 // --- Supabase DB ---
 async function loadProgressFromDB(cityKey) {
-    const { data, error } = await db.from('walks')
-        .select('way_id, walked_on')
-        .eq('city', cityKey);
-    if (error) { console.error('load from db failed', error); return loadProgress(cityKey); }
-    return new Map(data.map(r => [r.way_id, r.walked_on]));
+    // Supabase caps each response at 1000 rows by default, so page through
+    // until a short page is returned. Without this, users with >1000 walks
+    // in one city silently lose the overflow rows.
+    const PAGE = 1000;
+    const result = new Map();
+    for (let from = 0; ; from += PAGE) {
+        const { data, error } = await db.from('walks')
+            .select('way_id, walked_on')
+            .eq('city', cityKey)
+            .range(from, from + PAGE - 1);
+        if (error) { console.error('load from db failed', error); return loadProgress(cityKey); }
+        for (const r of data) result.set(r.way_id, r.walked_on);
+        if (data.length < PAGE) break;
+    }
+    return result;
 }
 
 function subscribeRealtime(cityKey) {
