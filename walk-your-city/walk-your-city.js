@@ -1418,6 +1418,15 @@ function updateAuthUI(user) {
     emailEl.textContent = user?.email ?? '';
 }
 
+function openNewPasswordModal() {
+    document.getElementById('signInModal').style.display = 'none';
+    const errEl = document.getElementById('newPasswordError');
+    errEl.style.display = 'none';
+    document.getElementById('newPasswordModal').style.display = 'flex';
+    // Strip the recovery hash so a refresh doesn't re-open the modal.
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+}
+
 // --- Supabase DB ---
 async function loadProgressFromDB(cityKey) {
     // Supabase caps each response at 1000 rows by default, so page through
