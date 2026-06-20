@@ -760,7 +760,9 @@ async function init() {
         document.getElementById('authModalTitle').textContent = 'sign in';
         document.getElementById('submitAuthBtn').textContent = 'sign in';
         document.getElementById('toggleAuthModeBtn').textContent = 'no account? sign up';
-        document.getElementById('authModalError').style.display = 'none';
+        const errEl = document.getElementById('authModalError');
+        errEl.style.color = '#f87171';
+        errEl.style.display = 'none';
         document.getElementById('signInModal').style.display = 'flex';
     });
     document.getElementById('closeSignInBtn').addEventListener('click', () => {
@@ -773,6 +775,44 @@ async function init() {
         document.getElementById('submitAuthBtn').textContent = isSignUp ? 'sign up' : 'sign in';
         document.getElementById('toggleAuthModeBtn').textContent = isSignUp ? 'have an account? sign in' : 'no account? sign up';
         document.getElementById('authModalError').style.display = 'none';
+    });
+    document.getElementById('forgotPasswordBtn').addEventListener('click', async () => {
+        const email = document.getElementById('signInEmail').value.trim();
+        const errEl = document.getElementById('authModalError');
+        if (!email) { errEl.textContent = 'enter your email above first'; errEl.style.display = ''; return; }
+        const btn = document.getElementById('forgotPasswordBtn');
+        const origText = btn.textContent;
+        btn.disabled = true;
+        try {
+            const { error } = await db.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + window.location.pathname,
+            });
+            if (error) { errEl.textContent = error.message; errEl.style.display = ''; return; }
+            errEl.style.color = '#4ade80';
+            errEl.textContent = 'reset link sent — check your email';
+            errEl.style.display = '';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = origText;
+        }
+    });
+    document.getElementById('submitNewPasswordBtn').addEventListener('click', async () => {
+        const password = document.getElementById('newPassword').value;
+        const errEl = document.getElementById('newPasswordError');
+        if (!password) { errEl.textContent = 'password required'; errEl.style.display = ''; return; }
+        const btn = document.getElementById('submitNewPasswordBtn');
+        const origText = btn.textContent;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="loading-spinner" style="border-top-color:white;vertical-align:middle;margin-right:5px"></span>${origText}...`;
+        try {
+            const { error } = await db.auth.updateUser({ password });
+            if (error) { errEl.textContent = error.message; errEl.style.display = ''; return; }
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newPasswordModal').style.display = 'none';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = origText;
+        }
     });
     document.getElementById('submitAuthBtn').addEventListener('click', async () => {
         const email = document.getElementById('signInEmail').value.trim();
@@ -808,6 +848,12 @@ async function init() {
             if (currentCity) loadCity(currentCity);
         }
         if (event === 'SIGNED_OUT') { walks = new Map(); renderMap(); renderList(); updateStatus(); }
+        if (event === 'PASSWORD_RECOVERY') {
+            document.getElementById('signInModal').style.display = 'none';
+            const errEl = document.getElementById('newPasswordError');
+            errEl.style.display = 'none';
+            document.getElementById('newPasswordModal').style.display = 'flex';
+        }
     });
 
     if ('serviceWorker' in navigator) {
