@@ -18,34 +18,77 @@ OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 # Toronto OSM relation
 TORONTO_RELATION = 324211
 
-# Brand name aliases → canonical chain key
+# Brand name aliases → canonical chain key. Keep in sync with fetch-prices.py CHAINS.
+# NOTE: order matters — longer/more specific aliases are checked first below.
 CHAIN_ALIASES = {
-    "metro": "metro",
+    # Metro Inc.
     "metro plus": "metro",
+    "metro": "metro",
     "super c": "metro",          # Metro-owned banner
-    "walmart": "walmart",
+    "food basics": "foodbasics",
+    "foodbasics": "foodbasics",
+    # Walmart
     "walmart supercentre": "walmart",
+    "walmart": "walmart",
+    # Loblaw
     "no frills": "nofrills",
     "no-frills": "nofrills",
+    "real canadian superstore": "rcss",
+    "loblaws": "loblaws",
+    "loblaw": "loblaws",
+    "zehrs": "zehrs",
+    "fortinos": "fortinos",
+    "valu-mart": "valumart",
+    "valu mart": "valumart",
+    "your independent grocer": "independent",
+    "independent": "independent",
+    # Empire/Sobeys
     "freshco": "freshco",
     "fresh co": "freshco",
+    "sobeys": "sobeys",
+    "foodland": "foodland",
+    "longo's": "longos",
+    "longos": "longos",
+    "farm boy": "farmboy",
+    "farmboy": "farmboy",
+    # Independent
+    "highland farms": "highlandfarms",
 }
 
 CHAIN_DISPLAY = {
     "metro": "Metro",
+    "foodbasics": "Food Basics",
     "walmart": "Walmart",
     "nofrills": "No Frills",
+    "loblaws": "Loblaws",
+    "rcss": "Real Canadian Superstore",
+    "zehrs": "Zehrs",
+    "fortinos": "Fortinos",
+    "valumart": "Valu-mart",
+    "independent": "Independent",
     "freshco": "FreshCo",
+    "sobeys": "Sobeys",
+    "foodland": "Foodland",
+    "longos": "Longo's",
+    "farmboy": "Farm Boy",
+    "highlandfarms": "Highland Farms",
 }
 
-QUERY = """
+# Brand regex covering all supported banners (case-insensitive).
+BRAND_REGEX = (
+    "Metro|Food Basics|Walmart|No Frills|No-Frills|"
+    "Real Canadian Superstore|Loblaws|Zehrs|Fortinos|Valu-?mart|Independent|"
+    "FreshCo|Fresh Co|Sobeys|Foodland|Longo|Farm Boy|Highland Farms"
+)
+
+QUERY = f"""
 [out:json][timeout:90];
 area[boundary=administrative]["name"="Toronto"]->.toronto;
 (
-  node["shop"~"supermarket|grocery"]["brand"~"Metro|Walmart|No Frills|FreshCo|Fresh Co",i](area.toronto);
-  way["shop"~"supermarket|grocery"]["brand"~"Metro|Walmart|No Frills|FreshCo|Fresh Co",i](area.toronto);
-  node["shop"~"supermarket|grocery"]["name"~"Metro|Walmart|No Frills|FreshCo|Fresh Co",i](area.toronto);
-  way["shop"~"supermarket|grocery"]["name"~"Metro|Walmart|No Frills|FreshCo|Fresh Co",i](area.toronto);
+  node["shop"~"supermarket|grocery"]["brand"~"{BRAND_REGEX}",i](area.toronto);
+  way["shop"~"supermarket|grocery"]["brand"~"{BRAND_REGEX}",i](area.toronto);
+  node["shop"~"supermarket|grocery"]["name"~"{BRAND_REGEX}",i](area.toronto);
+  way["shop"~"supermarket|grocery"]["name"~"{BRAND_REGEX}",i](area.toronto);
 );
 out center tags;
 """

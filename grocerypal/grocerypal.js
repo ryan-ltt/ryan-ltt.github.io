@@ -485,15 +485,20 @@ function travelCost(distanceM, durationSec) {
 async function fetchDealPrices() {
     if (!gpDb) return;
     const today = new Date().toISOString().slice(0, 10);
+    const queryCollection = (name) => gpDb.collection(name)
+        .where('region',     '==', 'ontario')
+        .where('valid_from', '<=', today)
+        .where('valid_to',   '>=', today)
+        .get();
     try {
-        const snap = await gpDb.collection('flyer_prices')
-            .where('region',     '==', 'ontario')
-            .where('valid_from', '<=', today)
-            .where('valid_to',   '>=', today)
-            .get();
+        // Community flyer data + machine-scraped data, merged (cheaper-wins).
+        const [flyerSnap, scrapedSnap] = await Promise.all([
+            queryCollection('flyer_prices'),
+            queryCollection('scraped_prices'),
+        ]);
 
         const deals = {};
-        snap.forEach(doc => {
+        const fold = (snap) => snap.forEach(doc => {
             const row = doc.data();
             const key = `${row.chain}:${(row.barcode || row.item_name.toLowerCase().trim())}`;
             if (!deals[key] || row.price < deals[key].price) {
@@ -510,6 +515,8 @@ async function fetchDealPrices() {
                 };
             }
         });
+        fold(flyerSnap);
+        fold(scrapedSnap);
         window.gpDealPrices = deals;
         if (typeof updateDealsCountBadge === 'function') updateDealsCountBadge();
     } catch (e) {
