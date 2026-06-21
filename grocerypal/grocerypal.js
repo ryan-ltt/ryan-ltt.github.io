@@ -228,28 +228,45 @@ function populateChainSelect(selectId) {
     sel.innerHTML = CHAINS.map(c => `<option value="${c}">${esc(CHAIN_LABELS[c])}</option>`).join('');
 }
 
-// Group the live deals database by item name → { name, deals: {chain: dealPrice} }.
-// One flyer item can appear under several chains; we collapse them so search shows
-// one row per product with its cheapest known per-chain prices.
+// Group the live deals database by NORMALIZED name so look-alike flyer lines
+// collapse to one concept. Each group tracks, per chain, the cheapest flat price
+// and the cheapest per-mL/per-g (when a size is parseable), plus a display name.
+// → { normKey: { name, deals: {chain:{price, unitPriceMl, unitPriceG}}, hasSize } }
 function dealsByName(query) {
     const out = {};
     for (const d of Object.values(window.gpDealPrices || {})) {
         const name = d.itemName;
         if (!name) continue;
         if (query && !name.toLowerCase().includes(query)) continue;
-        const key = name.toLowerCase().trim();
-        if (!out[key]) out[key] = { name, deals: {} };
-        const cur = out[key].deals[d.chain];
-        if (cur == null || d.price < cur) out[key].deals[d.chain] = d.price;
+        const key = normalizeDealName(name) || name.toLowerCase().trim();
+        if (!out[key]) out[key] = { name, deals: {}, hasSize: false };
+        const g = out[key];
+        // Prefer the shortest display name in the group (usually the cleanest).
+        if (name.length < g.name.length) g.name = name;
+
+        const ml = d.unitPriceMl || null;
+        const gr = d.unitPriceG  || null;
+        if (ml || gr) g.hasSize = true;
+
+        const cur = g.deals[d.chain];
+        if (!cur) {
+            g.deals[d.chain] = { price: d.price, unitPriceMl: ml, unitPriceG: gr };
+        } else {
+            if (d.price < cur.price) cur.price = d.price;
+            if (ml && (cur.unitPriceMl == null || ml < cur.unitPriceMl)) cur.unitPriceMl = ml;
+            if (gr && (cur.unitPriceG  == null || gr < cur.unitPriceG))  cur.unitPriceG  = gr;
+        }
     }
     return out;
 }
 
 // Create a catalog item from a deal group and add it to the list.
+// Stores each chain's cheapest flat price so the catalog stays usable even
+// offline; per-mL routing is recomputed live from gpDealPrices via dealLookup.
 function addDealToList(name, deals) {
     const prices = {};
-    for (const [chain, price] of Object.entries(deals)) {
-        if (price > 0 && CHAINS.includes(chain)) prices[chain] = price;
+    for (const [chain, info] of Object.entries(deals)) {
+        if (info.price > 0 && CHAINS.includes(chain)) prices[chain] = info.price;
     }
     const item = createItem(name, 'pantry', '', prices);
     addToList(item.id);
@@ -297,18 +314,32 @@ function renderCatalogResults(query) {
         box.appendChild(div);
     }
 
-    // 2. Deal-database items (cap to keep the dropdown manageable)
+    // 2. Deal-database items — sized concepts first (per-mL comparable), then
+    //    sizeless ("size unknown") ones. Cap to keep the dropdown manageable.
     const DEAL_LIMIT = 40;
-    for (const g of dealMatches.slice(0, DEAL_LIMIT)) {
+    const sortedDeals = dealMatches.sort((a, b) => (b.hasSize ? 1 : 0) - (a.hasSize ? 1 : 0));
+    for (const g of sortedDeals.slice(0, DEAL_LIMIT)) {
         const chains = Object.keys(g.deals);
-        const lowest = Math.min(...Object.values(g.deals));
         const chainNames = chains.map(c => CHAIN_LABELS[c] || c).join(', ');
+        const lowestFlat = Math.min(...chains.map(c => g.deals[c].price));
+        // Best per-mL across chains (mL preferred; fall back to per-g).
+        const mlVals = chains.map(c => g.deals[c].unitPriceMl).filter(v => v != null);
+        const gVals  = chains.map(c => g.deals[c].unitPriceG).filter(v => v != null);
+        let priceStr, sizeNote = '';
+        if (mlVals.length) {
+            priceStr = `${fmt$(Math.min(...mlVals) * 1000)}/L`;       // per-L reads better than per-mL
+        } else if (gVals.length) {
+            priceStr = `${fmt$(Math.min(...gVals) * 1000)}/kg`;
+        } else {
+            priceStr = `from ${fmt$(lowestFlat)}`;
+            sizeNote = ' <span class="size-unknown">size unknown</span>';
+        }
         const div = document.createElement('div');
-        div.className = 'catalog-result-item deal-result-item';
+        div.className = 'catalog-result-item deal-result-item' + (g.hasSize ? '' : ' size-unknown-item');
         div.innerHTML = `
-            <span class="result-name">${esc(g.name)} <span class="deal-badge">deal</span></span>
+            <span class="result-name">${esc(g.name)} <span class="deal-badge">deal</span>${sizeNote}</span>
             <span class="result-category">${esc(chainNames)}</span>
-            <span class="result-price-range">from ${fmt$(lowest)}</span>
+            <span class="result-price-range">${priceStr}</span>
         `;
         div.addEventListener('click', () => { addDealToList(g.name, g.deals); clearSearch(); });
         box.appendChild(div);
@@ -620,28 +651,68 @@ function dealLookup(item, chain) {
     const byName = window.gpDealPrices[`${chain}:${normName}`];
     if (byName) return byName;
 
-    // 3. Base-name fuzzy match — find a deal whose item_name is a prefix/substring of
-    //    the catalog item name (or vice versa), then convert price using unit price.
-    //    e.g. catalog "Coca-Cola Soft Drinks 24x355mL" matches deal "Coca-Cola" with unitPriceMl.
+    // 3. Base-name fuzzy match. Scan ALL of this chain's deals that plausibly match
+    //    the item, and pick the BEST PER-mL (or per-g) among them — not just the
+    //    first. This is what lets "Coca-Cola" on the list auto-resolve to a chain's
+    //    cheapest unit-price soda deal across pack sizes.
     const catalogTotalMl = extractTotalMl(item.name);
     const catalogTotalG  = extractTotalG(item.name);
+    const itemNorm = normalizeDealName(item.name);
+
+    let bestUnitMl = null;   // {deal} with lowest unitPriceMl
+    let bestUnitG  = null;
+    let flatFallback = null; // first sizeless matching deal (used only if no sized deal)
 
     for (const deal of Object.values(window.gpDealPrices)) {
         if (deal.chain !== chain) continue;
         const dealBase = deal.itemName.toLowerCase().trim();
-        if (!normName.includes(dealBase) && !dealBase.includes(normName)) continue;
+        const dealNorm = normalizeDealName(deal.itemName);
+        // Match on raw substring OR normalized substring (catches size/varieties noise).
+        const matches = normName.includes(dealBase) || dealBase.includes(normName)
+            || (itemNorm && dealNorm && (itemNorm.includes(dealNorm) || dealNorm.includes(itemNorm)));
+        if (!matches) continue;
 
-        // Same product, different size — convert via unit price
-        if (deal.unitPriceMl && catalogTotalMl) {
-            return { ...deal, price: parseFloat((deal.unitPriceMl * catalogTotalMl).toFixed(2)) };
-        }
-        if (deal.unitPriceG && catalogTotalG) {
-            return { ...deal, price: parseFloat((deal.unitPriceG * catalogTotalG).toFixed(2)) };
-        }
-        // No size info — return the deal price as-is (same base product)
-        return deal;
+        if (deal.unitPriceMl && (!bestUnitMl || deal.unitPriceMl < bestUnitMl.unitPriceMl)) bestUnitMl = deal;
+        if (deal.unitPriceG  && (!bestUnitG  || deal.unitPriceG  < bestUnitG.unitPriceG))   bestUnitG  = deal;
+        if (!flatFallback) flatFallback = deal;
     }
-    return null;
+
+    // Prefer per-mL, then per-g. If the catalog item itself has a size, price that
+    // exact size; otherwise price one representative pack (the cheapest-per-mL deal's
+    // own pack price) and expose the unit price for display/comparison.
+    if (bestUnitMl) {
+        const price = catalogTotalMl
+            ? parseFloat((bestUnitMl.unitPriceMl * catalogTotalMl).toFixed(2))
+            : bestUnitMl.price;
+        return { ...bestUnitMl, price };
+    }
+    if (bestUnitG) {
+        const price = catalogTotalG
+            ? parseFloat((bestUnitG.unitPriceG * catalogTotalG).toFixed(2))
+            : bestUnitG.price;
+        return { ...bestUnitG, price };
+    }
+    // No sized deal for this chain — fall back to a flat-price match if any.
+    return flatFallback;
+}
+
+// Normalize a flyer/deal name to a comparison key: drop sizes, pack counts,
+// trademark junk, French boilerplate, and "selected varieties" filler so that
+// look-alike flyer lines collapse to the same key. Used to dedupe the dropdown.
+function normalizeDealName(name) {
+    return (name || '')
+        .toLowerCase()
+        .replace(/[®™®™�]/g, ' ')                    // trademark chars / mojibake
+        .replace(/\d+\s*x\s*\d+(?:\.\d+)?\s*(?:ml|l|g|kg)\b/gi, ' ') // "12x355ml" pack sizes
+        .replace(/\d+(?:\.\d+)?\s*(?:ml|l|litre|liter|g|kg)\b/gi, ' ') // "2 l", "500g"
+        .replace(/\bselected varieties\b/gi, ' ')
+        .replace(/\bmini cans?\b/gi, ' ')
+        .replace(/\bpkg\b|\bbottles?\b/gi, ' ')
+        .replace(/\bboissons gazeuses\b/gi, ' ')   // common French boilerplate
+        .replace(/\bsoft drinks?\b|\bbeverages?\b/gi, ' ')
+        .replace(/[^a-z0-9 ]/g, ' ')                                 // punctuation
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 // Parse "24x355mL" or "355mL" → total mL from a product name string
@@ -668,7 +739,14 @@ function effectivePrice(item, chain) {
     const deal = dealLookup(item, chain);
     const manual = item.prices[chain];
     if (deal && deal.price > 0) {
-        if (manual == null || deal.price < manual) return { price: deal.price, isDeal: true, validTo: deal.validTo };
+        if (manual == null || deal.price < manual) {
+            return {
+                price: deal.price, isDeal: true, validTo: deal.validTo,
+                unitPriceMl: deal.unitPriceMl || null,
+                unitPriceG:  deal.unitPriceG  || null,
+                dealName:    deal.itemName || null,
+            };
+        }
     }
     if (manual != null && manual > 0) return { price: manual, isDeal: false, validTo: null };
     return null;
@@ -686,26 +764,31 @@ function basketCost(storeSubset) {
         const item = getCatalogItem(entry.itemId);
         if (!item) continue;
 
-        let best = null;
+        let bestEp = null;
         let bestChain = null;
-        let bestIsDeal = false;
-        let bestValidTo = null;
         for (const c of chains) {
             const ep = effectivePrice(item, c);
-            if (ep && (best === null || ep.price < best)) {
-                best = ep.price;
-                bestChain = c;
-                bestIsDeal = ep.isDeal;
-                bestValidTo = ep.validTo;
-            }
+            if (!ep) continue;
+            if (bestEp === null) { bestEp = ep; bestChain = c; continue; }
+            // Rank by per-mL (then per-g) when both candidates expose one — that's
+            // the "best value across sizes" comparison. Otherwise rank by price.
+            const better =
+                (ep.unitPriceMl != null && bestEp.unitPriceMl != null) ? ep.unitPriceMl < bestEp.unitPriceMl :
+                (ep.unitPriceG  != null && bestEp.unitPriceG  != null) ? ep.unitPriceG  < bestEp.unitPriceG  :
+                ep.price < bestEp.price;
+            if (better) { bestEp = ep; bestChain = c; }
         }
 
-        if (best === null) {
+        if (bestEp === null) {
             missing.push(item);
         } else {
-            const subtotal = best * entry.qty;
+            const subtotal = bestEp.price * entry.qty;
             total += subtotal;
-            assignments.push({ item, chain: bestChain, price: best, qty: entry.qty, subtotal, isDeal: bestIsDeal, validTo: bestValidTo });
+            assignments.push({
+                item, chain: bestChain, price: bestEp.price, qty: entry.qty, subtotal,
+                isDeal: bestEp.isDeal, validTo: bestEp.validTo,
+                unitPriceMl: bestEp.unitPriceMl || null, unitPriceG: bestEp.unitPriceG || null,
+            });
         }
     }
 
@@ -994,6 +1077,8 @@ function renderStoreLists(best) {
                         <span class="store-list-item-name">
                             ${esc(a.item.name)}${a.item.frozen ? ' ❄' : ''}
                             ${a.isDeal ? `<span class="deal-badge" title="Sale until ${a.validTo}">🏷 sale until ${esc(a.validTo)}</span>` : ''}
+                            ${a.unitPriceMl ? `<span class="unit-price-note">${fmt$(a.unitPriceMl * 1000)}/L</span>`
+                              : a.unitPriceG ? `<span class="unit-price-note">${fmt$(a.unitPriceG * 1000)}/kg</span>` : ''}
                         </span>
                         <span class="store-list-item-qty">×${a.qty}</span>
                         <span class="store-list-item-price">${fmt$(a.subtotal)}</span>

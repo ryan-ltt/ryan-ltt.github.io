@@ -213,6 +213,21 @@ main {
 .deal-result-item {
     border-left: 3px solid #ca8a04;
 }
+.size-unknown-item {
+    border-left-color: #cbd5e1;
+}
+.size-unknown {
+    font-size: 12px;
+    color: #64748b;
+    font-style: italic;
+    margin-left: 6px;
+}
+.unit-price-note {
+    font-size: 12px;
+    color: #0f766e;
+    margin-left: 6px;
+    white-space: nowrap;
+}
 
 .result-name {
     flex: 1;
