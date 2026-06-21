@@ -332,6 +332,8 @@ def get_db():
 
 
 def write_to_firestore(deals):
+    from google.cloud.firestore_v1.base_query import FieldFilter
+
     db = get_db()
     col = db.collection("scraped_prices")
     today = datetime.now(timezone.utc).date().isoformat()
@@ -341,28 +343,37 @@ def write_to_firestore(deals):
 
     # ── Idempotency: full-replace per chain being refreshed ──
     # Delete existing scraped_prices for the region+chains we're about to write.
+    # Filter only on `region` (single-field, no composite index) and match the
+    # chain set in Python.
+    refreshed = set(chains_in_run)
     deleted = 0
-    for chain in chains_in_run:
-        old = col.where("region", "==", REGION).where("chain", "==", chain).stream()
-        batch = db.batch()
-        n = 0
-        for doc in old:
-            batch.delete(doc.reference)
-            n += 1
-            deleted += 1
-            if n >= 450:
-                batch.commit()
-                batch = db.batch()
-                n = 0
-        if n:
+    batch = db.batch()
+    n = 0
+    for doc in col.where(filter=FieldFilter("region", "==", REGION)).stream():
+        if doc.to_dict().get("chain") not in refreshed:
+            continue
+        batch.delete(doc.reference)
+        n += 1
+        deleted += 1
+        if n >= 450:
             batch.commit()
+            batch = db.batch()
+            n = 0
+    if n:
+        batch.commit()
     print(f"  Replaced (deleted) {deleted} existing docs for refreshed chains")
 
     # ── Belt-and-suspenders: delete any region docs already past valid_to ──
-    expired = col.where("region", "==", REGION).where("valid_to", "<", today).stream()
+    # Catches chains that had data last week but returned no flyer this week (so
+    # the per-chain replace above never touched them). Filter only on `region`
+    # (a single-field query needs no composite index) and apply the date check
+    # in Python.
+    region_docs = col.where(filter=FieldFilter("region", "==", REGION)).stream()
     batch = db.batch()
     n = exp_count = 0
-    for doc in expired:
+    for doc in region_docs:
+        if (doc.to_dict().get("valid_to") or "9999-99-99") >= today:
+            continue
         batch.delete(doc.reference)
         n += 1
         exp_count += 1
