@@ -556,7 +556,7 @@ function mergeIntoLocalCatalog(rows, chain) {
                 category: row.frozen ? 'frozen' : 'pantry',
                 barcode:  row.barcode || null,
                 frozen:   row.frozen,
-                prices:   { metro: null, walmart: null, nofrills: null, freshco: null, [chain]: row.price },
+                prices:   { ...(typeof emptyPrices === 'function' ? emptyPrices() : {}), [chain]: row.price },
             });
             changed = true;
         }

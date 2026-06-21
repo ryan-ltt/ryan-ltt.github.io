@@ -73,24 +73,9 @@
                         <label for="newItemBarcode">Barcode <span class="optional">(optional)</span></label>
                         <input type="text" id="newItemBarcode" class="big-input" placeholder="UPC or PLU">
                     </div>
-                    <div class="price-grid">
+                    <div class="price-grid" id="addPriceGrid">
                         <div class="price-grid-header">Prices (leave blank if unknown)</div>
-                        <div class="price-row">
-                            <span class="chain-label metro-label">Metro</span>
-                            <input type="number" id="priceMetro" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                        </div>
-                        <div class="price-row">
-                            <span class="chain-label walmart-label">Walmart</span>
-                            <input type="number" id="priceWalmart" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                        </div>
-                        <div class="price-row">
-                            <span class="chain-label nofrills-label">No Frills</span>
-                            <input type="number" id="priceNofrills" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                        </div>
-                        <div class="price-row">
-                            <span class="chain-label freshco-label">FreshCo</span>
-                            <input type="number" id="priceFreshco" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                        </div>
+                        <!-- price rows generated from CHAINS by buildPriceGrid('price', '#addPriceGrid') -->
                     </div>
                     <button class="button big-btn" id="addItemBtn">Add to Catalog</button>
                     <div class="form-msg" id="addItemMsg"></div>
@@ -339,24 +324,9 @@
                 <label for="editItemBarcode">Barcode <span class="optional">(optional)</span></label>
                 <input type="text" id="editItemBarcode" class="big-input">
             </div>
-            <div class="price-grid">
+            <div class="price-grid" id="editPriceGrid">
                 <div class="price-grid-header">Prices</div>
-                <div class="price-row">
-                    <span class="chain-label metro-label">Metro</span>
-                    <input type="number" id="editPriceMetro" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                </div>
-                <div class="price-row">
-                    <span class="chain-label walmart-label">Walmart</span>
-                    <input type="number" id="editPriceWalmart" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                </div>
-                <div class="price-row">
-                    <span class="chain-label nofrills-label">No Frills</span>
-                    <input type="number" id="editPriceNofrills" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                </div>
-                <div class="price-row">
-                    <span class="chain-label freshco-label">FreshCo</span>
-                    <input type="number" id="editPriceFreshco" class="price-input" min="0" step="0.01" placeholder="$0.00">
-                </div>
+                <!-- price rows generated from CHAINS by buildPriceGrid('editPrice', '#editPriceGrid') -->
             </div>
             <div class="modal-buttons">
                 <button class="button big-btn" id="saveEditBtn">Save</button>

@@ -209,6 +209,11 @@ main {
     background: white;
 }
 
+/* Suggestions sourced from the live deals database */
+.deal-result-item {
+    border-left: 3px solid #ca8a04;
+}
+
 .result-name {
     flex: 1;
 }
@@ -410,6 +415,21 @@ main {
 .walmart-label { color: #0071ce; }
 .nofrills-label { color: #ffd100; background: #222; padding: 1px 6px; border-radius: 2px; }
 .freshco-label { color: #e31837; }
+/* Expanded chains */
+.foodbasics-label { color: #00833e; }
+.loblaws-label { color: #e1251b; }
+.rcss-label { color: #0054a4; }
+.zehrs-label { color: #d2232a; }
+.fortinos-label { color: #006937; }
+.valumart-label { color: #e4002b; }
+.independent-label { color: #b01116; }
+.sobeys-label { color: #00833e; }
+.foodland-label { color: #6cb33f; }
+.longos-label { color: #7a1f2b; }
+.farmboy-label { color: #4a8b2c; }
+.highlandfarms-label { color: #1a4d8f; }
+/* Make room for longer banner names in the price grid */
+.chain-label { width: auto; min-width: 100px; }
 
 .price-input {
     font-family: Monaco, monospace;

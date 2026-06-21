@@ -43,8 +43,20 @@ const LS_CATALOG  = 'groceryPal_catalog';
 const LS_LIST     = 'groceryPal_list';
 const LS_SETTINGS = 'groceryPal_settings';
 
-const CHAINS = ['metro', 'walmart', 'nofrills', 'freshco'];
-const CHAIN_LABELS = { metro: 'Metro', walmart: 'Walmart', nofrills: 'No Frills', freshco: 'FreshCo' };
+// All supported chains (mirrors fetch-prices.py CHAINS / fetch-stores.py CHAIN_DISPLAY).
+const CHAIN_LABELS = {
+    metro: 'Metro', foodbasics: 'Food Basics',
+    walmart: 'Walmart',
+    nofrills: 'No Frills', loblaws: 'Loblaws', rcss: 'Real Canadian Superstore',
+    zehrs: 'Zehrs', fortinos: 'Fortinos', valumart: 'Valu-mart', independent: 'Independent',
+    freshco: 'FreshCo', sobeys: 'Sobeys', foodland: 'Foodland', longos: "Longo's", farmboy: 'Farm Boy',
+    highlandfarms: 'Highland Farms',
+};
+const CHAINS = Object.keys(CHAIN_LABELS);
+// Element-id suffix for a chain key, e.g. 'nofrills' → 'Nofrills' (used for price inputs).
+function chainIdSuffix(c) { return c.charAt(0).toUpperCase() + c.slice(1); }
+// Fresh price object with every chain null.
+function emptyPrices() { return Object.fromEntries(CHAINS.map(c => [c, null])); }
 const CATEGORIES = ['produce','dairy','meat','bakery','pantry','frozen','household'];
 
 // L/100km per car class (EV handled separately in ¢/km)
@@ -140,7 +152,7 @@ function createItem(name, category, barcode, prices) {
         category,
         barcode: barcode.trim() || null,
         frozen,
-        prices: { metro: null, walmart: null, nofrills: null, freshco: null, ...prices },
+        prices: { ...emptyPrices(), ...prices },
     };
     catalog.push(item);
     saveCatalog();
@@ -154,7 +166,7 @@ function updateItem(id, name, category, barcode, prices) {
     item.category = category;
     item.barcode = barcode.trim() || null;
     item.frozen = category === 'frozen';
-    item.prices = { metro: null, walmart: null, nofrills: null, freshco: null, ...prices };
+    item.prices = { ...emptyPrices(), ...prices };
     saveCatalog();
 }
 
@@ -188,11 +200,60 @@ function isInList(itemId) { return !!list.find(e => e.itemId === itemId); }
 function parsePriceInputs(prefix) {
     const prices = {};
     for (const c of CHAINS) {
-        const el = document.getElementById(`${prefix}${c.charAt(0).toUpperCase() + c.slice(1)}`);
+        const el = document.getElementById(`${prefix}${chainIdSuffix(c)}`);
         const v = el ? parseFloat(el.value) : NaN;
         prices[c] = isNaN(v) || v <= 0 ? null : v;
     }
     return prices;
+}
+
+// ── Build chain-dependent DOM (price grids, chain selects) from CHAINS ────────
+function buildPriceGrid(prefix, gridSelector) {
+    const grid = document.querySelector(gridSelector);
+    if (!grid) return;
+    // Keep the existing header; append a price-row per chain.
+    for (const c of CHAINS) {
+        const row = document.createElement('div');
+        row.className = 'price-row';
+        row.innerHTML =
+            `<span class="chain-label ${c}-label">${esc(CHAIN_LABELS[c])}</span>` +
+            `<input type="number" id="${prefix}${chainIdSuffix(c)}" class="price-input" min="0" step="0.01" placeholder="$0.00">`;
+        grid.appendChild(row);
+    }
+}
+
+function populateChainSelect(selectId) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    sel.innerHTML = CHAINS.map(c => `<option value="${c}">${esc(CHAIN_LABELS[c])}</option>`).join('');
+}
+
+// Group the live deals database by item name → { name, deals: {chain: dealPrice} }.
+// One flyer item can appear under several chains; we collapse them so search shows
+// one row per product with its cheapest known per-chain prices.
+function dealsByName(query) {
+    const out = {};
+    for (const d of Object.values(window.gpDealPrices || {})) {
+        const name = d.itemName;
+        if (!name) continue;
+        if (query && !name.toLowerCase().includes(query)) continue;
+        const key = name.toLowerCase().trim();
+        if (!out[key]) out[key] = { name, deals: {} };
+        const cur = out[key].deals[d.chain];
+        if (cur == null || d.price < cur) out[key].deals[d.chain] = d.price;
+    }
+    return out;
+}
+
+// Create a catalog item from a deal group and add it to the list.
+function addDealToList(name, deals) {
+    const prices = {};
+    for (const [chain, price] of Object.entries(deals)) {
+        if (price > 0 && CHAINS.includes(chain)) prices[chain] = price;
+    }
+    const item = createItem(name, 'pantry', '', prices);
+    addToList(item.id);
+    renderShoppingList();
 }
 
 // ── Render catalog search results ─────────────────────────────────────────
@@ -201,18 +262,26 @@ function renderCatalogResults(query) {
     const q = query.trim().toLowerCase();
     if (!q && !catalog.length) { box.classList.remove('visible'); box.innerHTML = ''; return; }
 
-    const matches = q
+    const catMatches = q
         ? catalog.filter(i => i.name.toLowerCase().includes(q) || (i.barcode && i.barcode.includes(q)))
         : [...catalog];
 
-    box.innerHTML = '';
-    if (!matches.length) {
-        box.innerHTML = `<div class="catalog-empty-msg">No items found. Use "Add a new item" below.</div>`;
-        box.classList.add('visible');
-        return;
-    }
+    // Deal matches: only when searching, and exclude names already in the catalog
+    // (those already appear above with the user's own prices).
+    const catNames = new Set(catalog.map(i => i.name.toLowerCase().trim()));
+    const dealMatches = q
+        ? Object.values(dealsByName(q)).filter(g => !catNames.has(g.name.toLowerCase().trim()))
+        : [];
 
-    for (const item of matches) {
+    box.innerHTML = '';
+    const clearSearch = () => {
+        document.getElementById('catalogSearch').value = '';
+        box.classList.remove('visible');
+        box.innerHTML = '';
+    };
+
+    // 1. Local catalog items
+    for (const item of catMatches) {
         const inList = isInList(item.id);
         const div = document.createElement('div');
         div.className = 'catalog-result-item' + (inList ? ' already-added' : '');
@@ -223,15 +292,30 @@ function renderCatalogResults(query) {
             ${inList ? '<span style="font-size:13px;color:#888">✓ in list</span>' : ''}
         `;
         if (!inList) {
-            div.addEventListener('click', () => {
-                addToList(item.id);
-                renderShoppingList();
-                document.getElementById('catalogSearch').value = '';
-                box.classList.remove('visible');
-                box.innerHTML = '';
-            });
+            div.addEventListener('click', () => { addToList(item.id); renderShoppingList(); clearSearch(); });
         }
         box.appendChild(div);
+    }
+
+    // 2. Deal-database items (cap to keep the dropdown manageable)
+    const DEAL_LIMIT = 40;
+    for (const g of dealMatches.slice(0, DEAL_LIMIT)) {
+        const chains = Object.keys(g.deals);
+        const lowest = Math.min(...Object.values(g.deals));
+        const chainNames = chains.map(c => CHAIN_LABELS[c] || c).join(', ');
+        const div = document.createElement('div');
+        div.className = 'catalog-result-item deal-result-item';
+        div.innerHTML = `
+            <span class="result-name">${esc(g.name)} <span class="deal-badge">deal</span></span>
+            <span class="result-category">${esc(chainNames)}</span>
+            <span class="result-price-range">from ${fmt$(lowest)}</span>
+        `;
+        div.addEventListener('click', () => { addDealToList(g.name, g.deals); clearSearch(); });
+        box.appendChild(div);
+    }
+
+    if (!catMatches.length && !dealMatches.length) {
+        box.innerHTML = `<div class="catalog-empty-msg">No items found. Use "Add a new item" below.</div>`;
     }
     box.classList.add('visible');
 }
@@ -290,7 +374,7 @@ function handleAddItem() {
     document.getElementById('newItemName').value = '';
     document.getElementById('newItemBarcode').value = '';
     for (const c of CHAINS) {
-        const el = document.getElementById(`price${c.charAt(0).toUpperCase() + c.slice(1)}`);
+        const el = document.getElementById(`price${chainIdSuffix(c)}`);
         if (el) el.value = '';
     }
     showMsg(msg, `"${item.name}" added to catalog and list.`, 'success');
@@ -308,7 +392,7 @@ function openEditModal(itemId) {
     document.getElementById('editItemCategory').value = item.category;
     document.getElementById('editItemBarcode').value = item.barcode || '';
     for (const c of CHAINS) {
-        const el = document.getElementById(`editPrice${c.charAt(0).toUpperCase() + c.slice(1)}`);
+        const el = document.getElementById(`editPrice${chainIdSuffix(c)}`);
         if (el) el.value = item.prices[c] != null ? item.prices[c] : '';
     }
     document.getElementById('editModal').style.display = 'flex';
@@ -1115,6 +1199,11 @@ function init() {
     list     = loadList();
     settings = { ...defaultSettings(), ...loadSettings() };
 
+    // Build chain-dependent DOM before anything reads it.
+    buildPriceGrid('price', '#addPriceGrid');
+    buildPriceGrid('editPrice', '#editPriceGrid');
+    populateChainSelect('flyerChainSelect');
+
     applySettingsToUI();
     renderShoppingList();
     renderCatalogResults('');
@@ -1332,7 +1421,7 @@ async function submitFlyerJson(localOnly = false) {
                     category: it.frozen ? 'frozen' : 'pantry',
                     barcode:  barcodeStr,
                     frozen:   !!it.frozen,
-                    prices:   { metro: null, walmart: null, nofrills: null, freshco: null, [chain]: parseFloat(it.price) },
+                    prices:   { ...emptyPrices(), [chain]: parseFloat(it.price) },
                 });
             }
         }
