@@ -11,11 +11,11 @@ const MAP_ROWS = 100;
 const ZOOM_LEVELS = [8, 12, 16, 24, 32, 48, 64];
 const ZOOM_LABELS  = ['25%', '37%', '50%', '75%', '100%', '150%', '200%'];
 
-const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7, TREE_FARM = 8, STONE_FARM = 9, FARM = 10, ROW_HOUSE = 11, APARTMENT = 12;
+const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7, TREE_FARM = 8, STONE_FARM = 9, FARM = 10, ROW_HOUSE = 11, APARTMENT = 12, WELL = 13, SCHOOL = 14;
 
 // Flat colours used for LOD / minimap-like rendering at very small tile sizes
-const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00', '#388e3c', '#78909c', '#f9a825', '#e57373', '#7e57c2'];
-const TILE_NAMES  = ['grass', 'path', 'house', 'shop', 'park', 'factory', 'church', 'town hall', 'tree farm', 'stone farm', 'farm', 'row house', 'apartment'];
+const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00', '#388e3c', '#78909c', '#f9a825', '#e57373', '#7e57c2', '#4fc3f7', '#ff8a65'];
+const TILE_NAMES  = ['grass', 'path', 'house', 'market', 'park', 'factory', 'church', 'town hall', 'tree farm', 'stone farm', 'farm', 'row house', 'apartment', 'well', 'school'];
 
 // Income per second from structures built by the civilization
 const TILE_INCOME = { [FACTORY]: 30 };
@@ -37,7 +37,36 @@ const HOUR_DAWN    = 7;   // hour work starts
 const HOUR_DUSK    = 21;  // hour workers leave buildings, evening begins
 // midnight (hour 0) is when people sleep — derived from DAY_LENGTH wrap
 
-const WORKER_JOBS = new Set([FACTORY, FARM, CHURCH, TREE_FARM, STONE_FARM, PARK]);
+// ── Seasons ───────────────────────────────────────────────────────────────────
+const SEASONS       = ['spring', 'summer', 'autumn', 'winter'];
+const SEASON_DAYS   = 3;                        // in-game days per season
+const SEASON_LENGTH = SEASON_DAYS * DAY_LENGTH; // ticks per season
+function currentSeason() { return SEASONS[Math.floor(simTick / SEASON_LENGTH) % 4]; }
+
+// ── Eras ──────────────────────────────────────────────────────────────────────
+// Era is gated on peak population (never regresses). Each era unlocks buildings.
+const ERAS = [
+  { name: 'hamlet',  pop: 0   },
+  { name: 'village', pop: 15  }, // unlocks market, well, row house
+  { name: 'town',    pop: 40  }, // unlocks school, apartment
+  { name: 'city',    pop: 100 }, // win condition
+];
+
+// ── Gold powers ───────────────────────────────────────────────────────────────
+const POWER_COSTS = { road: 20, drop: 50, sway: 100, festival: 500, charter: 1000 };
+const SWAY_VOTES      = 3;   // votes added per sway purchase
+const DROP_AMOUNT     = 20;  // resource units per supply drop
+const FESTIVAL_LENGTH = DAY_LENGTH; // festival lasts one day
+
+const PERSON_NAMES = [
+  'ada','arlo','beau','bram','cleo','cora','dot','edie','ezra','faye',
+  'finn','flora','gus','hazel','ida','iris','jasper','juno','kit','lena',
+  'mabel','milo','nell','oak','opal','otis','pearl','pip','quinn','remy',
+  'rosa','rufus','sage','tess','theo','uma','vera','wren','york','zadie',
+];
+function randomName() { return PERSON_NAMES[Math.floor(Math.random() * PERSON_NAMES.length)]; }
+
+const WORKER_JOBS = new Set([FACTORY, FARM, CHURCH, TREE_FARM, STONE_FARM, PARK, SHOP]);
 const MAX_WORKERS_PER_BUILDING = 3;
 const WORKER_OUTPUT = {
   [FARM]:       { food:  2 },  // staffed farms produce 2×; unstaffed still produce 1 via farmProduceFood
@@ -59,11 +88,14 @@ const BUILD_COSTS = {
   [PARK]:       { wood: 0, stone: 0, food: 0 },
   [FACTORY]:    { wood: 5, stone: 5, food: 2 },
   [TOWN_HALL]:  { wood: 0, stone: 0, food: 0 }, // auto-placed, cost handled separately
-  [TREE_FARM]:  { wood: 3, stone: 2, food: 0 },
-  [STONE_FARM]: { wood: 2, stone: 3, food: 0 },
+  [TREE_FARM]:  { wood: 0, stone: 4, food: 0 }, // no wood cost — a wood-starved town must be able to build one
+  [STONE_FARM]: { wood: 4, stone: 0, food: 0 }, // no stone cost — mirror of the tree farm
   [FARM]:       { wood: 4, stone: 1, food: 0 },
   [ROW_HOUSE]:  { wood: 8, stone: 4, food: 0 },
   [APARTMENT]:  { wood: 6, stone: 12, food: 0 },
+  [SHOP]:       { wood: 4, stone: 2, food: 0 },
+  [WELL]:       { wood: 0, stone: 6, food: 0 },
+  [SCHOOL]:     { wood: 8, stone: 8, food: 0 },
 };
 
 const TOWN_HALL_TRIGGER = { houses: 6, wood: 20, stone: 15 };
@@ -89,6 +121,30 @@ let simTick         = 0;
 let selectedTHIndex = 0;    // which town hall is shown in stockpile/votes panels
 let lastExploreTick = -200; // cooldown: minimum ticks between explorer dispatches
 
+// ── Records, chronicle, era ───────────────────────────────────────────────────
+let records = {
+  peakPop: 0, oldestEver: 0, totalBirths: 0, totalDeaths: 0,
+  townsFounded: 0, firesSurvived: 0, won: false,
+};
+let chronicle = [];  // { day, text } — the town's history, shown in the records panel
+let eraIndex  = 0;   // index into ERAS, derived from records.peakPop
+
+// ── Live events & effects ─────────────────────────────────────────────────────
+let burningTiles = {}; // "r,c" → { r, c, ticksLeft }
+let fireActive   = false;
+let particles    = []; // { x, y, vx, vy, life, maxLife, color } in tile coords
+
+// ── Player interaction ────────────────────────────────────────────────────────
+let clickMode = 'spawn'; // 'spawn' | 'demolish' | 'road' | 'drop-wood' | 'drop-stone' | 'drop-food'
+let selectedPersonId = null;
+let followSelected   = false;
+
+// ── Trend history (sampled every 8 ticks) ─────────────────────────────────────
+const HISTORY_MAX = 160;
+let history = { pop: [], food: [], gold: [] };
+
+let muted = false;
+
 // ── Discoveries ───────────────────────────────────────────────────────────────
 
 const BUILDING_INFO = {
@@ -103,6 +159,9 @@ const BUILDING_INFO = {
   [FARM]:       { name: 'farm',       desc: 'Produces 1 food per tick directly into the nearest town hall. Built when food is low.' },
   [ROW_HOUSE]:  { name: 'row house',  desc: 'Denser housing. Holds 4 people. Upgraded automatically from a house when population is high.' },
   [APARTMENT]:  { name: 'apartment',  desc: 'Urban housing. Holds 10 people. Upgraded automatically from a row house when population is high.' },
+  [SHOP]:       { name: 'market',     desc: 'Workers trade surplus food for gold. Unlocked in the village era.' },
+  [WELL]:       { name: 'well',       desc: 'Fresh water. Reduces the chance of fires starting and spreading nearby. +3 happiness.' },
+  [SCHOOL]:     { name: 'school',     desc: 'Educated workers produce 30% more in nearby buildings. Unlocked in the town era.' },
 };
 
 // Set of tile types that have been placed at least once
@@ -128,6 +187,9 @@ function drawTileToContext(targetCtx, type, x, y, size) {
     case FARM:       drawFarm(0, 0);       break;
     case ROW_HOUSE:  drawRowHouse(0, 0);  break;
     case APARTMENT:  drawApartment(0, 0); break;
+    case SHOP:       drawShop(0, 0);      break;
+    case WELL:       drawWell(0, 0);      break;
+    case SCHOOL:     drawSchool(0, 0);    break;
     default:
       targetCtx.fillStyle = TILE_COLORS[type] || '#ccc';
       targetCtx.fillRect(0, 0, BASE, BASE);
@@ -258,6 +320,22 @@ function globalPopCap() {
   return Math.min(MAX_PEOPLE, townHalls.reduce((s, th) => s + th.popCap, 0));
 }
 
+function emptyVotes() {
+  return { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0, [SHOP]:0, [WELL]:0, [SCHOOL]:0 };
+}
+
+function makeTownHall(r, c, resources) {
+  return {
+    r, c,
+    resources: resources || { wood: 0, stone: 0, food: 0 },
+    votes: emptyVotes(),
+    popCap: 0,
+    buildTimer: TH_BUILD_INTERVAL,
+    happiness: 70,
+    festivalUntil: 0,
+  };
+}
+
 function woodWeight(th) {
   const w = th.resources.wood, s = th.resources.stone;
   if (w + s === 0) return 15;
@@ -311,8 +389,9 @@ function wouldBlockPath(r, c) {
   const queue = [neighbours[0]];
   visited.add(key(...neighbours[0]));
 
-  while (queue.length > 0) {
-    const [cr, cc] = queue.shift();
+  let head = 0;
+  while (head < queue.length) {
+    const [cr, cc] = queue[head++];
     for (const [dr, dc] of cardinals) {
       const nr = cr+dr, nc = cc+dc;
       if (!isWalkable(nr, nc) || visited.has(key(nr, nc))) continue;
@@ -357,32 +436,35 @@ function initResourceMap() {
 }
 
 function regenerateResources() {
+  const winter = currentSeason() === 'winter';
   const types = ['wood', 'stone', 'food'];
   for (let i = 0; i < 3; i++) {
     const r = Math.floor(Math.random() * MAP_ROWS);
     const c = Math.floor(Math.random() * MAP_COLS);
     if (grid[r][c] === GRASS && !resourceMap[r][c]) {
-      resourceMap[r][c] = { type: types[Math.floor(Math.random() * 3)], amount: 5 + Math.floor(Math.random() * 6) };
+      const type = types[Math.floor(Math.random() * 3)];
+      if (winter && type === 'food') continue; // nothing grows in winter
+      resourceMap[r][c] = { type, amount: 5 + Math.floor(Math.random() * 6) };
     }
   }
   for (let r = 0; r < MAP_ROWS; r++) {
     for (let c = 0; c < MAP_COLS; c++) {
       const t = grid[r][c];
-      if (t === PARK && Math.random() < 0.4) {
+      if (t === PARK && !winter && Math.random() < 0.4) {
         const site = findGrassSiteNear(r, c, 1, 3);
         if (site && !resourceMap[site.r][site.c])
           resourceMap[site.r][site.c] = { type: 'food', amount: 5 + Math.floor(Math.random() * 8) };
       }
       if (t === TREE_FARM) {
-        // Accumulate wood on the farm tile itself; people pick up from adjacent tiles
+        // Accumulate wood on the farm tile itself (capped); people pick up from adjacent tiles
         if (!resourceMap[r][c]) resourceMap[r][c] = { type: 'wood', amount: 0 };
-        if (resourceMap[r][c].type === 'wood' && Math.random() < 0.6)
+        if (resourceMap[r][c].type === 'wood' && resourceMap[r][c].amount < 40 && Math.random() < 0.6)
           resourceMap[r][c].amount += 2 + Math.floor(Math.random() * 4);
       }
       if (t === STONE_FARM) {
-        // Accumulate stone on the farm tile itself; people pick up from adjacent tiles
+        // Accumulate stone on the farm tile itself (capped); people pick up from adjacent tiles
         if (!resourceMap[r][c]) resourceMap[r][c] = { type: 'stone', amount: 0 };
-        if (resourceMap[r][c].type === 'stone' && Math.random() < 0.6)
+        if (resourceMap[r][c].type === 'stone' && resourceMap[r][c].amount < 40 && Math.random() < 0.6)
           resourceMap[r][c].amount += 2 + Math.floor(Math.random() * 4);
       }
     }
@@ -405,7 +487,8 @@ function findGrassSiteNear(r, c, minR, maxR) {
 // ── People simulation ─────────────────────────────────────────────────────────
 
 function lifespanUpgradeCost() {
-  return Math.floor(10 * Math.pow(2, lifespanLevel));
+  // Linear cost: the old doubling curve made upgrades never worth buying
+  return 10 + lifespanLevel * 5;
 }
 
 function currentMaxAge() {
@@ -413,13 +496,15 @@ function currentMaxAge() {
 }
 
 function spawnPersonFree(r, c, houseId = null, force = false) {
-  if (!inBounds(r, c) || (!force && people.length >= globalPopCap())) return;
+  if (!inBounds(r, c) || (!force && people.length >= globalPopCap())) return null;
   const p = {
     id: nextPersonId++,
+    name: randomName(),
     x: c, y: r,
     age: 0,
     maxAge: currentMaxAge(),
     wood: 0, stone: 0, food: 0,
+    sick: false, sickTicks: 0, hungry: false,
     color: PERSON_COLORS[nextPersonId % PERSON_COLORS.length],
     mode: 'gather',     // 'gather' | 'explore' | 'found' | 'home' | 'social'
     job:  'gatherer',   // 'gatherer' | 'explorer' | 'founder' | 'worker' | 'idle'
@@ -427,7 +512,7 @@ function spawnPersonFree(r, c, houseId = null, force = false) {
     insideBuilding: false,     // true when worker is hidden inside a building
     sleeping:      false,      // true from midnight until dawn
     socialTarget:  null,       // { r, c } destination during evening social phase
-    gatherFood: false,  // true when food is critically low
+    gatherPref: null,   // resource type to seek ('food'|'wood'|'stone') when the town runs short
     homeR: r, homeC: c,
     houseId: null,
     gatherTarget:  null, // { r, c } directed gather destination
@@ -440,6 +525,15 @@ function spawnPersonFree(r, c, houseId = null, force = false) {
   if (houseId != null && houseRegistry[houseId]) {
     assignHouse(p, houseId, houseRegistry[houseId]);
   }
+  return p;
+}
+
+function removePerson(p) {
+  unassignWorker(p);
+  unassignHouse(p);
+  const i = people.indexOf(p);
+  if (i !== -1) people.splice(i, 1);
+  if (selectedPersonId === p.id) { selectedPersonId = null; followSelected = false; }
 }
 
 function spawnPerson(r, c) {
@@ -452,15 +546,12 @@ function spawnPerson(r, c) {
       return;
     }
     grid[r][c] = TOWN_HALL;
-    townHalls.push({
-      r, c,
-      resources: { wood: 10, stone: 0, food: 100 },
-      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0 },
-      popCap: 0,
-      buildTimer: TH_BUILD_INTERVAL,
-    });
+    townHalls.push(makeTownHall(r, c, { wood: 10, stone: 0, food: 100 }));
     recordDiscovery(TOWN_HALL);
     gold -= SPAWN_COST;
+    records.townsFounded = Math.max(records.townsFounded, 1);
+    addChronicle('the first settlers arrived at ' + c + ', ' + r);
+    sfx('build');
     // Spawn founder on an adjacent grass tile — force=true bypasses popCap (starts at 0)
     const site = findGrassSiteNear(r, c, 1, 3);
     if (site) spawnPersonFree(site.r, site.c, null, true);
@@ -487,11 +578,13 @@ function consumeFood() {
   for (const p of people) {
     if (Math.random() >= 0.1) continue;
     const th = nearestTownHall(Math.round(p.y), Math.round(p.x));
-    if (th && th.resources.food > 0) {
+    if (th && th.resources.food >= 1) {
       th.resources.food--;
+      p.hungry = false;
     } else {
       // No food — age faster (starvation: +2 age per tick instead of 1)
       p.age++;
+      p.hungry = true; // rendered pale so trouble is visible before deaths start
     }
   }
 }
@@ -499,6 +592,11 @@ function consumeFood() {
 function agePeople() {
   people = people.filter(p => {
     p.age++;
+    if (p.sick) {
+      p.age++; // illness ages people twice as fast
+      p.sickTicks = (p.sickTicks || 0) - 1;
+      if (p.sickTicks <= 0) p.sick = false;
+    }
     if (p.age >= p.maxAge) {
       // Drop carried resources at death site
       const r = Math.round(p.y), c = Math.round(p.x);
@@ -507,10 +605,17 @@ function agePeople() {
         const dominant = p.wood >= p.stone && p.wood >= p.food ? 'wood'
                        : p.stone >= p.food ? 'stone' : 'food';
         resourceMap[r][c] = { type: dominant, amount: total };
+        logEvent('💀 ' + p.name + ' died at ' + Math.floor(p.age / DAY_LENGTH) + 'd, leaving ' + total + ' ' + dominant, 'bad');
+      } else {
+        logEvent('💀 ' + p.name + ' died at ' + Math.floor(p.age / DAY_LENGTH) + 'd', 'bad');
       }
+      records.totalDeaths++;
+      const days = p.age / DAY_LENGTH;
+      if (days > records.oldestEver) records.oldestEver = Math.round(days * 10) / 10;
       gold += 5;
       unassignWorker(p);
       unassignHouse(p);
+      if (selectedPersonId === p.id) { selectedPersonId = null; followSelected = false; }
       return false;
     }
     return true;
@@ -567,10 +672,16 @@ function updatePersonMode(p) {
   // Default: everyone who is not a worker, explorer, or founder is a gatherer.
   p.mode = 'gather';
 
-  // Food-critical flag: prioritise food nodes when TH food is very low.
+  // Seek whichever resource the town is short of: food when nearly out,
+  // otherwise the scarcer of wood/stone when the stockpile is badly lopsided.
   const th = nearestTownHall(r, c);
   const foodTicksLeft = (th && people.length > 0) ? th.resources.food / people.length : 999;
-  p.gatherFood = foodTicksLeft < 5;
+  const prev = p.gatherPref;
+  if (foodTicksLeft < 5) p.gatherPref = 'food';
+  else if (th && th.resources.wood  < 30 && th.resources.wood  * 3 < th.resources.stone) p.gatherPref = 'wood';
+  else if (th && th.resources.stone < 30 && th.resources.stone * 3 < th.resources.wood)  p.gatherPref = 'stone';
+  else p.gatherPref = null;
+  if (p.gatherPref !== prev) p.gatherTarget = null; // re-target when the need changes
 }
 
 function hasFarmResourceAdjacentTo(r, c) {
@@ -583,7 +694,9 @@ function hasFarmResourceAdjacentTo(r, c) {
   return false;
 }
 
-function findNearestResource(r, c, preferFood) {
+// prefType: 'food' | 'wood' | 'stone' | null. A matching node wins outright;
+// non-matching nodes are remembered as a fallback if nothing preferred is near.
+function findNearestResource(r, c, prefType) {
   let fallback = null;
   for (let radius = 1; radius <= 25; radius++) {
     for (let dr = -radius; dr <= radius; dr++) {
@@ -595,7 +708,7 @@ function findNearestResource(r, c, preferFood) {
         const res = resourceMap[nr][nc];
         // Walkable resource node
         if (res && res.amount > 0 && (t === GRASS || t === ROAD || t === PARK)) {
-          if (!preferFood || res.type === 'food') return { r: nr, c: nc };
+          if (!prefType || res.type === prefType) return { r: nr, c: nc };
           if (!fallback) fallback = { r: nr, c: nc };
         }
         // Farm tile: return an adjacent walkable cell
@@ -605,14 +718,14 @@ function findNearestResource(r, c, preferFood) {
             if (!inBounds(ar, ac)) continue;
             const at = grid[ar][ac];
             if (at === GRASS || at === ROAD || at === PARK) {
-              if (!preferFood) return { r: ar, c: ac };
+              if (!prefType || res.type === prefType) return { r: ar, c: ac };
               if (!fallback) fallback = { r: ar, c: ac };
             }
           }
         }
       }
     }
-    if (preferFood && radius >= 15 && fallback) return fallback;
+    if (prefType && radius >= 15 && fallback) return fallback;
   }
   return fallback;
 }
@@ -660,6 +773,11 @@ function movePerson(p) {
 
   const cardinalOffsets = [[-1,0],[1,0],[0,-1],[0,1]];
 
+  // When full, navigate directly toward the nearest town hall
+  // (direction-independent — computed once, not per candidate direction)
+  const homeTH = carried >= CARRY_CAP ? nearestTownHall(r, c) : null;
+  const thDistBefore = homeTH ? Math.abs(r - homeTH.r) + Math.abs(c - homeTH.c) : Infinity;
+
   const weights = dirs.map(d => {
     const nr = Math.round(p.y) + d.dr;
     const nc = Math.round(p.x) + d.dc;
@@ -687,10 +805,8 @@ function movePerson(p) {
       return fres && fres.amount > 0;
     });
 
-    // When full, navigate directly toward the nearest town hall
-    const th = carried >= CARRY_CAP ? nearestTownHall(Math.round(p.y), Math.round(p.x)) : null;
-    const thDistAfter  = th ? Math.abs(nr - th.r) + Math.abs(nc - th.c) : Infinity;
-    const thDistBefore = th ? Math.abs(Math.round(p.y) - th.r) + Math.abs(Math.round(p.x) - th.c) : Infinity;
+    const th = homeTH;
+    const thDistAfter = th ? Math.abs(nr - th.r) + Math.abs(nc - th.c) : Infinity;
 
     if (p.mode === 'explore') {
       // Move away from all town halls
@@ -744,8 +860,11 @@ function movePerson(p) {
       // Gather mode: directed to nearest resource, then return to TH
       if (carried < CARRY_CAP) {
         // Phase 1: navigate to nearest resource
-        if (!p.gatherTarget)
-          p.gatherTarget = findNearestResource(r, c, p.gatherFood);
+        if (!p.gatherTarget && simTick >= (p.searchCooldownUntil || 0)) {
+          p.gatherTarget = findNearestResource(r, c, p.gatherPref);
+          // A failed search scans ~2600 tiles — don't repeat it every tick
+          if (!p.gatherTarget) p.searchCooldownUntil = simTick + 8;
+        }
         // Validate target still has resources
         if (p.gatherTarget) {
           const tr = p.gatherTarget.r, tc = p.gatherTarget.c;
@@ -859,6 +978,8 @@ function depositResources() {
       th.resources.wood  += p.wood;
       th.resources.stone += p.stone;
       th.resources.food  += p.food;
+      addParticles(Math.round(p.y), Math.round(p.x),
+        p.wood >= p.stone && p.wood >= p.food ? '#66bb6a' : p.stone >= p.food ? '#90a4ae' : '#ffee58', 4);
       p.wood = 0; p.stone = 0; p.food = 0;
       p.gatherTarget = null;
       castVote(th);
@@ -1022,8 +1143,9 @@ function isTHReachable(r, c, th) {
     const t = grid[tr][tc];
     return t === GRASS || t === ROAD || t === PARK;
   };
-  while (queue.length > 0) {
-    const [cr, cc] = queue.shift();
+  let head = 0;
+  while (head < queue.length) {
+    const [cr, cc] = queue[head++];
     for (const [dr, dc] of cardinals) {
       const nr = cr+dr, nc = cc+dc;
       if (!walkable(nr,nc) || visited.has(key(nr,nc))) continue;
@@ -1063,13 +1185,11 @@ function roadScore(r, c) {
 function thRoadStep(th) {
   if (!canAffordBuild(ROAD, th)) return false;
   const candidates = [];
-  let roadExists = false;
   for (let dr = -20; dr <= 20; dr++) {
     for (let dc = -20; dc <= 20; dc++) {
       const r = th.r+dr, c = th.c+dc;
       if (!inBounds(r,c) || Math.abs(dr)+Math.abs(dc) > 20) continue;
       if (grid[r][c] !== ROAD) continue;
-      roadExists = true;
       for (const [er,ec] of [[-1,0],[1,0],[0,-1],[0,1]]) {
         const nr = r+er, nc = c+ec;
         if (!inBounds(nr,nc) || grid[nr][nc] !== GRASS) continue;
@@ -1077,7 +1197,10 @@ function thRoadStep(th) {
       }
     }
   }
-  if (!roadExists) {
+  // Seed from the TH's own neighbours when there is no road yet — or when the
+  // existing road frontier is completely walled in by buildings (houses build
+  // adjacent to roads, so a young network can get enclosed and freeze forever)
+  if (candidates.length === 0) {
     for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
       const nr = th.r+dr, nc = th.c+dc;
       if (inBounds(nr,nc) && grid[nr][nc] === GRASS)
@@ -1086,14 +1209,14 @@ function thRoadStep(th) {
   }
   if (candidates.length === 0) return false;
   candidates.sort((a,b) => b.score - a.score);
-  for (const { r, c } of candidates.slice(0, 8)) {
-    if (wouldBlockPath(r,c)) continue;
-    spendBuildCost(ROAD, th);
-    grid[r][c] = ROAD;
-    recordDiscovery(ROAD);
-    return true;
-  }
-  return false;
+  // No wouldBlockPath check here: roads are walkable, so paving grass can
+  // never sever a path. (Checking it froze road growth whenever the frontier
+  // tile backed onto a road cul-de-sac — the check saw a "sealed pocket".)
+  const { r, c } = candidates[0];
+  spendBuildCost(ROAD, th);
+  grid[r][c] = ROAD;
+  recordDiscovery(ROAD);
+  return true;
 }
 
 // Score for placing a house at (r,c): prefers road-fronted, terrace-bonus, penalises density.
@@ -1124,6 +1247,8 @@ function houseScore(r, c) {
 }
 
 // Attempt to place one house near the TH. Returns true if placed.
+// Cheap scoring filters first; the expensive flood-fill checks run lazily,
+// best-first, on at most a dozen candidates (same pattern as thRoadStep).
 function thHouseStep(th) {
   if (!canAffordBuild(HOUSE, th)) return false;
   const candidates = [];
@@ -1133,37 +1258,62 @@ function thHouseStep(th) {
       if (!inBounds(r,c) || grid[r][c] !== GRASS) continue;
       const score = houseScore(r,c);
       if (score === 0) continue;
-      if (wouldBlockPath(r,c)) continue;
       if (wouldBlockCorridor(r,c,th)) continue;
-      if (!isTHReachable(r,c,th)) continue;
       candidates.push({ r, c, score });
     }
   }
-  if (candidates.length === 0) return false;
   candidates.sort((a,b) => b.score - a.score);
-  const { r, c } = candidates[0];
-  spendBuildCost(HOUSE, th);
-  grid[r][c] = HOUSE;
-  registerHouse(r, c, th, HOUSE_POP);
-  recordDiscovery(HOUSE);
-  showMessage('house built at ' + c + ', ' + r);
-  return true;
+  for (const { r, c } of candidates.slice(0, 12)) {
+    if (wouldBlockPath(r,c)) continue;
+    if (!isTHReachable(r,c,th)) continue;
+    spendBuildCost(HOUSE, th);
+    grid[r][c] = HOUSE;
+    registerHouse(r, c, th, HOUSE_POP);
+    recordDiscovery(HOUSE);
+    showMessage('house built at ' + c + ', ' + r);
+    return true;
+  }
+  return false;
 }
 
 // Count how many valid building sites remain within the TH's radius.
-// Used to compute founding probability.
+// Used to compute founding probability. One flood-fill from the TH replaces
+// the two per-candidate flood-fills this used to run (it dominated the whole
+// sim at ~1s per call in a built-up town). Counting stops at 12 because
+// foundProb = 1 - (space/12)^0.6 saturates there.
 function thAvailableSpace(th) {
-  let count = 0;
-  for (let dr = -20; dr <= 20; dr++) {
-    for (let dc = -20; dc <= 20; dc++) {
-      const r = th.r+dr, c = th.c+dc;
-      if (!inBounds(r,c) || grid[r][c] !== GRASS) continue;
-      const hasRoad = [[-1,0],[1,0],[0,-1],[0,1]].some(([er,ec]) =>
-        inBounds(r+er,c+ec) && grid[r+er][c+ec] === ROAD);
-      if (!hasRoad) continue;
-      if (wouldBlockPath(r,c)) continue;
-      if (!isTHReachable(r,c,th)) continue;
-      count++;
+  const LIMIT = 12;
+  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
+  const key = (r, c) => r * 1000 + c;
+  const visited = new Set();
+  const queue = [];
+  for (const [dr, dc] of cardinals) {
+    const r = th.r + dr, c = th.c + dc;
+    if (!inBounds(r, c)) continue;
+    const t = grid[r][c];
+    if (t !== GRASS && t !== ROAD && t !== PARK) continue;
+    if (visited.has(key(r, c))) continue;
+    visited.add(key(r, c));
+    queue.push([r, c]);
+  }
+  let count = 0, head = 0;
+  while (head < queue.length) {
+    const [r, c] = queue[head++];
+    if (grid[r][c] === GRASS
+        && Math.abs(r - th.r) <= 20 && Math.abs(c - th.c) <= 20) {
+      const hasRoad = cardinals.some(([er, ec]) =>
+        inBounds(r+er, c+ec) && grid[r+er][c+ec] === ROAD);
+      if (hasRoad && ++count >= LIMIT) return count;
+    }
+    for (const [dr, dc] of cardinals) {
+      const nr = r + dr, nc = c + dc;
+      if (!inBounds(nr, nc) || visited.has(key(nr, nc))) continue;
+      // Keep the fill inside the TH's neighbourhood (+1 ring so edges connect)
+      if (Math.abs(nr - th.r) > 21 || Math.abs(nc - th.c) > 21) continue;
+      const t = grid[nr][nc];
+      if (t !== GRASS && t !== ROAD && t !== PARK) continue;
+      visited.add(key(nr, nc));
+      queue.push([nr, nc]);
     }
   }
   return count;
@@ -1185,12 +1335,19 @@ function findFoundingSite() {
 }
 
 // Dispatch a gatherer from th to found a new TH at a remote site.
-function tryFoundNewTH(th) {
-  if (people.some(p => p.mode === 'found')) return; // one expedition at a time
-  if (th.resources.wood  < TOWN_HALL_TRIGGER.wood)  return;
-  if (th.resources.stone < TOWN_HALL_TRIGGER.stone) return;
+// When chartered=true the resource cost is skipped (the player paid gold instead).
+// Returns true if a founder was dispatched.
+function tryFoundNewTH(th, chartered = false) {
+  if (people.some(p => p.mode === 'found')) return false; // one expedition at a time
+  if (!chartered) {
+    // A young settlement must not bleed its few citizens into expeditions —
+    // auto-founding only kicks in once the town can spare a settler
+    if (people.length < 8) return false;
+    if (th.resources.wood  < TOWN_HALL_TRIGGER.wood)  return false;
+    if (th.resources.stone < TOWN_HALL_TRIGGER.stone) return false;
+  }
   const site = findFoundingSite();
-  if (!site) return;
+  if (!site) return false;
   let best = null, bestDist = Infinity;
   for (const p of people) {
     if (p.job === 'worker' || p.mode === 'explore' || p.mode === 'found') continue;
@@ -1199,14 +1356,17 @@ function tryFoundNewTH(th) {
     const d = Math.abs(Math.round(p.y)-th.r) + Math.abs(Math.round(p.x)-th.c);
     if (d < bestDist) { bestDist = d; best = p; }
   }
-  if (!best) return;
-  th.resources.wood  -= TOWN_HALL_TRIGGER.wood;
-  th.resources.stone -= TOWN_HALL_TRIGGER.stone;
+  if (!best) return false;
+  if (!chartered) {
+    th.resources.wood  -= TOWN_HALL_TRIGGER.wood;
+    th.resources.stone -= TOWN_HALL_TRIGGER.stone;
+  }
   best.mode        = 'found';
   best.job         = 'founder';
   best.foundTarget = { r: site.r, c: site.c };
   best.gatherTarget = null;
-  showMessage('founder dispatched to ' + site.c + ', ' + site.r);
+  logEvent('🧭 ' + best.name + ' dispatched to found a town at ' + site.c + ', ' + site.r, 'info');
+  return true;
 }
 
 // Called when a founding person arrives at their target. Places the new TH.
@@ -1214,15 +1374,12 @@ function placeFoundedTH(p) {
   const fr = p.foundTarget.r, fc = p.foundTarget.c;
   if (inBounds(fr,fc) && grid[fr][fc] === GRASS) {
     grid[fr][fc] = TOWN_HALL;
-    townHalls.push({
-      r: fr, c: fc,
-      resources: { wood: 0, stone: 0, food: 0 },
-      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0 },
-      popCap: 0,
-      buildTimer: TH_BUILD_INTERVAL,
-    });
+    townHalls.push(makeTownHall(fr, fc));
     recordDiscovery(TOWN_HALL);
-    showMessage('new town hall founded at ' + fc + ', ' + fr);
+    records.townsFounded++;
+    addChronicle(p.name + ' founded a new town at ' + fc + ', ' + fr);
+    logEvent('🏛 new town hall founded at ' + fc + ', ' + fr, 'good');
+    sfx('era');
     updateUI();
   }
   p.mode = 'gather'; p.job = 'gatherer';
@@ -1239,7 +1396,12 @@ function thAutoBuild(th) {
   // otherwise build roads to open up more sites.
   const fillRatio = th.popCap > 0 ? people.length / th.popCap : 1;
   if (space > 0 && fillRatio > 0.5) {
-    if (!thHouseStep(th)) thRoadStep(th);
+    if (!thHouseStep(th)) {
+      // Only fall back to a road when the house failed for lack of a site.
+      // If it failed on cost, skip the road — a 1-wood road every cycle
+      // would forever eat the 5 wood being saved for the house.
+      if (canAffordBuild(HOUSE, th)) thRoadStep(th);
+    }
   } else {
     if (!thRoadStep(th)) thHouseStep(th);
   }
@@ -1280,7 +1442,7 @@ function tryUpgradeHousing() {
     candidates.sort((a, b) => a.dist - b.dist);
 
     for (const { nr, nc, t } of candidates) {
-      if (t === HOUSE && localHousing >= 2 && canAffordBuild(ROW_HOUSE, th)) {
+      if (t === HOUSE && eraIndex >= 1 && localHousing >= 2 && canAffordBuild(ROW_HOUSE, th)) {
         const h = findHouseRegistryEntry(nr, nc);
         if (!h) continue;
         spendBuildCost(ROW_HOUSE, th);
@@ -1292,7 +1454,7 @@ function tryUpgradeHousing() {
         return;
       }
 
-      if (t === ROW_HOUSE && localHousing >= 3 && canAffordBuild(APARTMENT, th)) {
+      if (t === ROW_HOUSE && eraIndex >= 2 && localHousing >= 3 && canAffordBuild(APARTMENT, th)) {
         const h = findHouseRegistryEntry(nr, nc);
         if (!h) continue;
         spendBuildCost(APARTMENT, th);
@@ -1310,6 +1472,7 @@ function tryUpgradeHousing() {
 
 function castVote(th) {
   let localChurches = 0, localParks = 0, localFactories = 0, localHouses = 0, localFarms = 0;
+  let localShops = 0, localWells = 0, localSchools = 0;
   for (let dr = -5; dr <= 5; dr++)
     for (let dc = -5; dc <= 5; dc++) {
       if (!inBounds(th.r+dr, th.c+dc)) continue;
@@ -1319,7 +1482,13 @@ function castVote(th) {
       if (t === FACTORY) localFactories++;
       if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) localHouses++;
       if (t === FARM)    localFarms++;
+      if (t === SHOP)    localShops++;
+      if (t === WELL)    localWells++;
+      if (t === SCHOOL)  localSchools++;
     }
+
+  // People vote for a market when food is plentiful (surplus worth trading)
+  const foodTicks = people.length > 0 ? th.resources.food / people.length : 999;
 
   const w = {
     [CHURCH]:     localChurches >= 2 ? 0 : (localChurches === 0 ? 40 : Math.max(3, 40 - localChurches * 12)),
@@ -1328,6 +1497,9 @@ function castVote(th) {
     [TREE_FARM]:  woodWeight(th),
     [STONE_FARM]: stoneWeight(th),
     [FARM]:       localFarms < 3 ? foodWeight(th) : 0,
+    [SHOP]:       eraIndex >= 1 && localShops   < 2 && foodTicks > 40  ? 25 : 0,
+    [WELL]:       eraIndex >= 1 && localWells   < 1 && localHouses >= 4 ? 20 : 0,
+    [SCHOOL]:     eraIndex >= 2 && localSchools < 1 && localHouses >= 6 ? 18 : 0,
   };
 
   const total = Object.values(w).reduce((a, b) => a + b, 0);
@@ -1345,7 +1517,7 @@ function castVote(th) {
 }
 
 function checkVoteThreshold(th) {
-  for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM, FARM]) {
+  for (const type of [CHURCH, PARK, FACTORY, TREE_FARM, STONE_FARM, FARM, SHOP, WELL, SCHOOL]) {
     if ((th.votes[type] || 0) >= VOTE_THRESHOLD) {
       if (canAffordBuild(type, th)) {
         const site = findGrassSiteNear(th.r, th.c, 2, 12);
@@ -1358,11 +1530,15 @@ function checkVoteThreshold(th) {
           }
           recordDiscovery(type);
           th.votes[type] = 0;
-          showMessage(TILE_NAMES[type] + ' built at ' + site.c + ', ' + site.r + ' (voted)');
-          updateUI();
+          logEvent('🔨 ' + TILE_NAMES[type] + ' built at ' + site.c + ', ' + site.r + ' (voted)', 'good');
+          addParticles(site.r, site.c, '#bcaaa4', 6);
+          sfx('build');
         }
       } else {
-        th.votes[type] = 0;
+        // Can't afford it yet — hold the votes at the threshold so the building
+        // goes up as soon as resources arrive. (Resetting them deadlocked wood:
+        // a tree farm could never win a vote in a wood-starved town.)
+        th.votes[type] = VOTE_THRESHOLD;
       }
     }
   }
@@ -1394,39 +1570,456 @@ function houseSpawnPeople() {
   for (const [id, h] of Object.entries(houseRegistry)) {
     if (people.length >= cap) return;
     if (h.residents.length >= h.slots) continue; // house full
-    const spawnChance = 0.003;
+    const th = nearestTownHall(h.r, h.c);
+    // Birth rate scales with local happiness; festivals triple it
+    let spawnChance = 0.003 * ((th ? th.happiness ?? 70 : 70) / 50);
+    if (th && (th.festivalUntil || 0) > simTick) spawnChance *= 3;
     if (Math.random() > spawnChance) continue;
     const site = findGrassSiteNear(h.r, h.c, 1, 2);
-    if (site) spawnPersonFree(site.r, site.c, Number(id));
+    if (site) {
+      const p = spawnPersonFree(site.r, site.c, Number(id));
+      if (p) {
+        records.totalBirths++;
+        logEvent('👶 ' + p.name + ' was born', 'good');
+        sfx('birth');
+      }
+    }
   }
+}
+
+// ── Happiness ─────────────────────────────────────────────────────────────────
+
+function computeTHHappiness(th) {
+  let parks = 0, factories = 0, wells = 0;
+  for (let dr = -10; dr <= 10; dr++)
+    for (let dc = -10; dc <= 10; dc++) {
+      if (!inBounds(th.r+dr, th.c+dc)) continue;
+      const t = grid[th.r+dr][th.c+dc];
+      if (t === PARK)         parks++;
+      else if (t === FACTORY) factories++;
+      else if (t === WELL)    wells++;
+    }
+  let h = 70 + parks * 5 + wells * 3 - factories * 10;
+  const ticksLeft = people.length > 0 ? th.resources.food / people.length : 99;
+  if      (ticksLeft < 5)  h -= 30; // hungry town
+  else if (ticksLeft < 15) h -= 10;
+  else if (ticksLeft > 30) h += 15; // well fed
+  if ((th.festivalUntil || 0) > simTick) h += 20;
+  return clamp(Math.round(h), 0, 100);
+}
+
+function refreshHappiness() {
+  for (const th of townHalls) th.happiness = computeTHHappiness(th);
+}
+
+function globalHappiness() {
+  if (townHalls.length === 0) return 100;
+  let sum = 0, weight = 0;
+  for (const th of townHalls) {
+    const w = th.popCap + 1;
+    sum += (th.happiness ?? 70) * w;
+    weight += w;
+  }
+  return Math.round(sum / weight);
+}
+
+// Unhappy towns (below 40%) slowly lose citizens
+function emigrationTick() {
+  if (people.length <= 3) return;
+  for (const p of [...people]) {
+    if (p.mode === 'found' || p.mode === 'explore') continue;
+    const th = nearestTownHall(Math.round(p.y), Math.round(p.x));
+    if (!th || (th.happiness ?? 70) >= 40) continue;
+    if (Math.random() < 0.004) {
+      removePerson(p);
+      logEvent('🧳 ' + p.name + ' left town in search of a better life', 'bad');
+    }
+  }
+}
+
+// ── Random events ─────────────────────────────────────────────────────────────
+
+function wellNear(r, c) {
+  for (let dr = -6; dr <= 6; dr++)
+    for (let dc = -6; dc <= 6; dc++) {
+      if (inBounds(r+dr, c+dc) && grid[r+dr][c+dc] === WELL) return true;
+    }
+  return false;
+}
+
+const FLAMMABLE = new Set([HOUSE, ROW_HOUSE, APARTMENT, FARM, TREE_FARM]);
+
+function igniteTile(r, c) {
+  const key = r + ',' + c;
+  if (burningTiles[key]) return false;
+  burningTiles[key] = { r, c, ticksLeft: 20 };
+  return true;
+}
+
+function fireTick() {
+  const keys = Object.keys(burningTiles);
+  if (keys.length === 0) {
+    if (fireActive) {
+      fireActive = false;
+      records.firesSurvived++;
+      logEvent('🔥 the fire has burned out', 'info');
+    }
+    return;
+  }
+  fireActive = true;
+  for (const key of keys) {
+    const b = burningTiles[key];
+    if (!b) continue;
+    b.ticksLeft--;
+    // Spread to adjacent flammable tiles every few ticks
+    if (b.ticksLeft % 5 === 0) {
+      for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+        const nr = b.r+dr, nc = b.c+dc;
+        if (!inBounds(nr, nc) || !FLAMMABLE.has(grid[nr][nc])) continue;
+        let chance = 0.35;
+        if (wellNear(nr, nc)) chance *= 0.3;
+        if (Math.random() < chance) igniteTile(nr, nc);
+      }
+    }
+    if (b.ticksLeft <= 0) {
+      addParticles(b.r, b.c, '#616161', 8); // smoke
+      demolishTile(b.r, b.c);               // burns to the ground
+      delete burningTiles[key];
+      logEvent('🔥 building at ' + b.c + ', ' + b.r + ' burned down', 'bad');
+    }
+  }
+}
+
+function eventsTick() {
+  const season = currentSeason();
+
+  // House fires — more likely in summer, rarer near wells
+  const houseList = Object.values(houseRegistry);
+  if (houseList.length > 0 && Object.keys(burningTiles).length === 0) {
+    let chance = 0.00005 * Math.min(houseList.length, 60);
+    if (season === 'summer') chance *= 2;
+    if (season === 'winter') chance *= 0.5;
+    if (Math.random() < chance) {
+      const h = houseList[Math.floor(Math.random() * houseList.length)];
+      if (!(wellNear(h.r, h.c) && Math.random() < 0.75)) {
+        if (igniteTile(h.r, h.c)) {
+          addChronicle('fire broke out at ' + h.c + ', ' + h.r);
+          logEvent('🔥 FIRE at ' + h.c + ', ' + h.r + '! demolish around it to stop the spread', 'bad');
+          sfx('fire');
+        }
+      }
+    }
+  }
+
+  // Disease — strikes crowded, unhappy towns
+  if (people.length >= 20 && globalHappiness() < 55 && !people.some(p => p.sick)
+      && Math.random() < 0.0004) {
+    let n = 0;
+    for (const p of people) {
+      if (Math.random() < 0.25) { p.sick = true; p.sickTicks = DAY_LENGTH; n++; }
+    }
+    if (n > 0) {
+      addChronicle('sickness swept through the town (' + n + ' fell ill)');
+      logEvent('🤒 sickness is spreading — ' + n + ' people fell ill', 'bad');
+      sfx('bad');
+    }
+  }
+
+  // Bumper harvest — autumn only
+  if (season === 'autumn' && Math.random() < 0.001) {
+    let placed = 0;
+    for (let r = 0; r < MAP_ROWS && placed < 6; r++) {
+      for (let c = 0; c < MAP_COLS && placed < 6; c++) {
+        if ((grid[r][c] === FARM || grid[r][c] === PARK) && Math.random() < 0.5) {
+          const site = findGrassSiteNear(r, c, 1, 3);
+          if (site && !resourceMap[site.r][site.c]) {
+            resourceMap[site.r][site.c] = { type: 'food', amount: 10 + Math.floor(Math.random() * 8) };
+            placed++;
+          }
+        }
+      }
+    }
+    if (placed > 0) logEvent('🌾 bumper harvest! ' + placed + ' food caches appeared', 'good');
+  }
+
+  // Migrants — drawn to happy towns with room to spare
+  if (globalHappiness() >= 75 && people.length >= 5 && people.length < globalPopCap()
+      && Math.random() < 0.0006) {
+    const th = townHalls[Math.floor(Math.random() * townHalls.length)];
+    const n = 2 + Math.floor(Math.random() * 2);
+    let arrived = 0;
+    for (let i = 0; i < n; i++) {
+      const site = findGrassSiteNear(th.r, th.c, 3, 8);
+      if (site && spawnPersonFree(site.r, site.c)) arrived++;
+    }
+    if (arrived > 0) {
+      logEvent('🚶 ' + arrived + ' migrants arrived, drawn by your happy town', 'good');
+      sfx('birth');
+    }
+  }
+}
+
+// ── Particles ─────────────────────────────────────────────────────────────────
+
+function addParticles(r, c, color, n = 5) {
+  for (let i = 0; i < n; i++) {
+    const life = 10 + Math.floor(Math.random() * 8);
+    particles.push({
+      x: c + 0.3 + Math.random() * 0.4,
+      y: r + 0.3 + Math.random() * 0.4,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: -0.04 - Math.random() * 0.08,
+      life, maxLife: life,
+      color,
+    });
+  }
+  if (particles.length > 400) particles.splice(0, particles.length - 400);
+}
+
+function updateParticles() {
+  for (const pt of particles) {
+    pt.x += pt.vx;
+    pt.y += pt.vy;
+    pt.life--;
+  }
+  particles = particles.filter(pt => pt.life > 0);
+}
+
+// ── Chronicle, records & era ──────────────────────────────────────────────────
+
+function addChronicle(text) {
+  chronicle.push({ day: Math.floor(simTick / DAY_LENGTH) + 1, text });
+  if (chronicle.length > 80) chronicle.shift();
+  renderChronicle();
+}
+
+function renderChronicle() {
+  const list = document.getElementById('chronicle-list');
+  if (!list) return;
+  list.innerHTML = '';
+  for (let i = chronicle.length - 1; i >= 0; i--) {
+    const entry = document.createElement('div');
+    entry.className = 'chronicle-entry';
+    entry.textContent = 'day ' + chronicle[i].day + ' — ' + chronicle[i].text;
+    list.appendChild(entry);
+  }
+}
+
+function updateRecordsAndEra() {
+  if (people.length > records.peakPop) records.peakPop = people.length;
+  let idx = 0;
+  for (let i = 0; i < ERAS.length; i++) if (records.peakPop >= ERAS[i].pop) idx = i;
+  if (idx > eraIndex) {
+    eraIndex = idx;
+    const era = ERAS[eraIndex];
+    addChronicle('the settlement grew into a ' + era.name);
+    logEvent('🎉 a new era: your settlement is now a ' + era.name + '!', 'good');
+    showBanner('🎉 ' + era.name + ' era 🎉');
+    sfx('era');
+    if (eraIndex === ERAS.length - 1 && !records.won) {
+      records.won = true;
+      addChronicle('the city thrives — the dream is complete');
+      setTimeout(() => showBanner('🏆 your civilization thrives! 🏆'), 4000);
+    }
+  }
+}
+
+function showBanner(text) {
+  const b = document.createElement('div');
+  b.className = 'era-banner';
+  b.textContent = text;
+  document.body.appendChild(b);
+  requestAnimationFrame(() => b.classList.add('show'));
+  setTimeout(() => {
+    b.classList.remove('show');
+    setTimeout(() => b.remove(), 700);
+  }, 3500);
+}
+
+// ── Trend history ─────────────────────────────────────────────────────────────
+
+function recordHistory() {
+  const totalFood = townHalls.reduce((s, th) => s + th.resources.food, 0);
+  history.pop.push(people.length);
+  history.food.push(Math.floor(totalFood));
+  history.gold.push(Math.floor(gold));
+  for (const key of ['pop', 'food', 'gold']) {
+    if (history[key].length > HISTORY_MAX) history[key].shift();
+  }
+}
+
+// ── Camera follow ─────────────────────────────────────────────────────────────
+
+function followCamera() {
+  const p = people.find(q => q.id === selectedPersonId);
+  if (!p) { followSelected = false; return; }
+  camX = p.x + 0.5 - (canvas.width  / tileSize) / 2;
+  camY = p.y + 0.5 - (canvas.height / tileSize) / 2;
+  clampCamera();
+}
+
+// ── Sound ─────────────────────────────────────────────────────────────────────
+
+let audioCtx = null;
+function ensureAudio() {
+  if (audioCtx) return;
+  try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { /* no audio */ }
+}
+document.addEventListener('pointerdown', ensureAudio, { once: true });
+
+function playTone(freq, dur, delay = 0, type = 'square', vol = 0.04) {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const g   = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  osc.connect(g).connect(audioCtx.destination);
+  osc.start(t);
+  osc.stop(t + dur + 0.02);
+}
+
+function sfx(name) {
+  if (muted || !audioCtx) return;
+  switch (name) {
+    case 'birth': playTone(880, 0.07); playTone(1320, 0.09, 0.08); break;
+    case 'build': playTone(220, 0.06, 0, 'square', 0.05); playTone(165, 0.06, 0.07, 'square', 0.05); break;
+    case 'coin':  playTone(1040, 0.05, 0, 'triangle'); playTone(1560, 0.08, 0.05, 'triangle'); break;
+    case 'fire':  playTone(440, 0.15, 0, 'sawtooth', 0.05); playTone(370, 0.15, 0.18, 'sawtooth', 0.05); playTone(440, 0.15, 0.36, 'sawtooth', 0.05); break;
+    case 'bad':   playTone(220, 0.2, 0, 'sawtooth', 0.04); playTone(175, 0.25, 0.2, 'sawtooth', 0.04); break;
+    case 'era':   [523, 659, 784, 1046].forEach((f, i) => playTone(f, 0.14, i * 0.1, 'triangle', 0.05)); break;
+  }
+}
+
+// ── Gold powers ───────────────────────────────────────────────────────────────
+
+function payRoad(r, c) {
+  if (grid[r][c] !== GRASS)          { logEvent('can only pave over grass'); return; }
+  if (gold < POWER_COSTS.road)       { logEvent('need $' + POWER_COSTS.road + ' to pave'); return; }
+  // Roads are walkable — paving can never block a path, so no check needed
+  gold -= POWER_COSTS.road;
+  grid[r][c] = ROAD;
+  recordDiscovery(ROAD);
+  sfx('build');
+  updateUI();
+}
+
+function dropSupplies(r, c, type) {
+  if (grid[r][c] !== GRASS)    { logEvent('supplies must land on grass'); return; }
+  if (resourceMap[r][c])       { logEvent('there is already something here'); return; }
+  if (gold < POWER_COSTS.drop) { logEvent('need $' + POWER_COSTS.drop + ' for a supply drop'); return; }
+  gold -= POWER_COSTS.drop;
+  resourceMap[r][c] = { type, amount: DROP_AMOUNT };
+  addParticles(r, c, type === 'wood' ? '#66bb6a' : type === 'stone' ? '#90a4ae' : '#ffee58', 6);
+  logEvent('📦 ' + DROP_AMOUNT + ' ' + type + ' dropped at ' + c + ', ' + r, 'info');
+  sfx('coin');
+  updateUI();
+}
+
+function startFestival() {
+  const th = townHalls[selectedTHIndex];
+  if (!th)                              { logEvent('no town hall yet'); return; }
+  if ((th.festivalUntil || 0) > simTick) { logEvent('a festival is already underway!'); return; }
+  if (gold < POWER_COSTS.festival)      { logEvent('need $' + POWER_COSTS.festival + ' for a festival'); return; }
+  gold -= POWER_COSTS.festival;
+  th.festivalUntil = simTick + FESTIVAL_LENGTH;
+  addChronicle('a festival was held at ' + th.c + ', ' + th.r);
+  logEvent('🎪 festival! +happiness and births near this town hall for one day', 'good');
+  sfx('era');
+  updateUI();
+}
+
+function charterExpedition() {
+  const th = townHalls[selectedTHIndex];
+  if (!th)                          { logEvent('no town hall yet'); return; }
+  if (gold < POWER_COSTS.charter)   { logEvent('need $' + POWER_COSTS.charter + ' to charter an expedition'); return; }
+  if (tryFoundNewTH(th, true)) {
+    gold -= POWER_COSTS.charter;
+    sfx('coin');
+  } else {
+    logEvent('no settler or founding site available (expedition already out?)');
+  }
+  updateUI();
+}
+
+function swayVote(type) {
+  const th = townHalls[selectedTHIndex];
+  if (!th)                       { logEvent('no town hall yet'); return; }
+  if (gold < POWER_COSTS.sway)   { logEvent('need $' + POWER_COSTS.sway + ' to sway votes'); return; }
+  if ((type === SHOP || type === WELL) && eraIndex < 1) { logEvent('unlocks in the village era'); return; }
+  if (type === SCHOOL && eraIndex < 2)                  { logEvent('unlocks in the town era'); return; }
+  gold -= POWER_COSTS.sway;
+  th.votes[type] = (th.votes[type] || 0) + SWAY_VOTES;
+  logEvent('🗳 +' + SWAY_VOTES + ' votes for ' + TILE_NAMES[type], 'info');
+  sfx('coin');
+  checkVoteThreshold(th);
+  updateUI();
 }
 
 // ── Simulation tick ───────────────────────────────────────────────────────────
 
+function schoolNear(r, c) {
+  for (let dr = -8; dr <= 8; dr++)
+    for (let dc = -8; dc <= 8; dc++) {
+      if (inBounds(r+dr, c+dc) && grid[r+dr][c+dc] === SCHOOL) return true;
+    }
+  return false;
+}
+
 function workerTick() {
+  const winter = currentSeason() === 'winter';
   for (const [, entry] of Object.entries(buildingRegistry)) {
     if (entry.workers.length === 0) continue;
     const th = nearestTownHall(entry.r, entry.c);
     if (!th) continue;
+    // Happy citizens work harder (0.5×–1.5×); schools add 30%
+    let mult = 0.5 + (th.happiness ?? 70) / 100;
+    if (schoolNear(entry.r, entry.c)) mult *= 1.3;
+
+    if (entry.type === SHOP) {
+      // Market: each worker trades 1 food for $2
+      const trades = Math.min(entry.workers.length, Math.floor(th.resources.food));
+      if (trades > 0) {
+        th.resources.food -= trades;
+        gold += trades * 2 * mult;
+      }
+      continue;
+    }
+    if (entry.type === FARM && winter) continue; // fields are frozen
+
     const out = WORKER_OUTPUT[entry.type];
     if (!out) continue;
     for (const [resource, amount] of Object.entries(out)) {
-      const total = amount * entry.workers.length;
+      const total = amount * entry.workers.length * mult;
       if (resource === 'gold') gold += total;
       else th.resources[resource] = (th.resources[resource] || 0) + total;
     }
   }
 }
 
-function farmWorkerCap(th) {
-  // How many ticks of food remain per person in this TH?
-  const food = th.resources.food || 0;
-  const pop  = people.length || 1;
-  const ticksLeft = food / pop;
-  // Scale 0–3 workers: full staff below 5 ticks, none above 30 ticks
-  if (ticksLeft >= 30) return 0;
-  if (ticksLeft >= 20) return 1;
-  if (ticksLeft >= 10) return 2;
+// Dynamic staffing caps: production buildings wind down as their stockpile
+// grows, freeing citizens to gather whatever the town actually needs.
+function neededWorkerCap(th, type) {
+  if (type === FARM) {
+    // How many ticks of food remain per person in this TH?
+    const ticksLeft = (th.resources.food || 0) / (people.length || 1);
+    if (ticksLeft >= 30) return 0;
+    if (ticksLeft >= 20) return 1;
+    if (ticksLeft >= 10) return 2;
+    return MAX_WORKERS_PER_BUILDING;
+  }
+  if (type === TREE_FARM || type === STONE_FARM) {
+    const res   = type === TREE_FARM ? 'wood' : 'stone';
+    const other = type === TREE_FARM ? 'stone' : 'wood';
+    const amt = th.resources[res] || 0;
+    // A large pile, or a big lead over the sister resource → stop staffing
+    if (amt >= 200 || amt > (th.resources[other] || 0) * 3 + 60) return 0;
+    if (amt >= 100) return 1;
+    if (amt >= 40)  return 2;
+    return MAX_WORKERS_PER_BUILDING;
+  }
   return MAX_WORKERS_PER_BUILDING;
 }
 
@@ -1435,28 +2028,27 @@ function autoAssignWorkers(th) {
     if (!WORKER_JOBS.has(entry.type)) continue;
     const closestTH = nearestTownHall(entry.r, entry.c);
     if (!closestTH || closestTH.r !== th.r || closestTH.c !== th.c) continue;
-    // Farms get a dynamic cap based on food scarcity; other buildings use the standard max
-    const cap = entry.type === FARM ? farmWorkerCap(th) : MAX_WORKERS_PER_BUILDING;
-    // Release excess farm workers if food situation improved
-    if (entry.type === FARM && entry.workers.length > cap) {
-      while (entry.workers.length > cap) {
-        const pid = entry.workers[entry.workers.length - 1];
-        const p = people.find(q => q.id === pid);
-        if (p) unassignWorker(p);
-        else entry.workers.pop();
-      }
+    const cap = neededWorkerCap(th, entry.type);
+    // Release excess workers once the need has passed
+    while (entry.workers.length > cap) {
+      const pid = entry.workers[entry.workers.length - 1];
+      const p = people.find(q => q.id === pid);
+      if (p) unassignWorker(p);
+      else entry.workers.pop();
     }
     while (entry.workers.length < cap) {
-      let best = null, bestDist = Infinity;
+      let best = null, bestDist = Infinity, free = 0;
       for (const p of people) {
         if (p.job === 'worker' || p.mode === 'explore' || p.mode === 'found') continue;
         const pr = Math.round(p.y), pc = Math.round(p.x);
         const myTH = nearestTownHall(pr, pc);
         if (!myTH || myTH.r !== th.r || myTH.c !== th.c) continue;
+        free++;
         const d = Math.abs(pr - entry.r) + Math.abs(pc - entry.c);
         if (d < bestDist) { bestDist = d; best = p; }
       }
-      if (!best) break;
+      // Never conscript the last free citizens — someone must gather and haul
+      if (!best || free <= 2) break;
       assignWorker(best, entry.r, entry.c);
     }
   }
@@ -1521,17 +2113,23 @@ function applyTimeOfDay() {
 }
 
 function farmProduceFood() {
-  for (let r = 0; r < MAP_ROWS; r++) {
-    for (let c = 0; c < MAP_COLS; c++) {
-      if (grid[r][c] !== FARM) continue;
-      // Skip if this farm has workers — workerTick() handles its output
-      const key = r + ',' + c;
-      if (buildingRegistry[key] && buildingRegistry[key].workers.length > 0) continue;
-      const th = nearestTownHall(r, c);
-      if (th) th.resources.food++;
-    }
+  if (currentSeason() === 'winter') return; // fields are frozen — stockpile ahead!
+  // Every farm has a registry entry (built via votes; reconciled on load),
+  // so iterate the registry instead of scanning all 10,000 tiles each tick.
+  for (const entry of Object.values(buildingRegistry)) {
+    if (entry.type !== FARM) continue;
+    if (entry.workers.length > 0) continue; // workerTick() handles staffed farms
+    const th = nearestTownHall(entry.r, entry.c);
+    if (th) th.resources.food++;
   }
 }
+
+const SEASON_NOTES = {
+  spring: '🌱 spring — the land grows green again',
+  summer: '☀️ summer — beware of fires',
+  autumn: '🍂 autumn — harvest season',
+  winter: '❄️ winter — the farms freeze over',
+};
 
 function simulationTick() {
   simTick++;
@@ -1552,9 +2150,21 @@ function simulationTick() {
   }
   tryUpgradeHousing();
   houseSpawnPeople();
+  fireTick();
+  eventsTick();
+  updateParticles();
+  if (simTick % SEASON_LENGTH === 0 && townHalls.length > 0)
+    logEvent(SEASON_NOTES[currentSeason()], 'info');
+  if (simTick % 8 === 0) {
+    refreshHappiness();
+    emigrationTick();
+    recordHistory();
+  }
   if (simTick % 50  === 0) for (const th of townHalls) autoAssignWorkers(th);
   if (simTick % 100 === 0) regenerateResources();
-  updateUI();
+  updateRecordsAndEra();
+  if (followSelected) followCamera();
+  updateUIThrottled();
   render();
 }
 
@@ -1574,7 +2184,36 @@ function setSimSpeed(value) {
 
 // ── UI ────────────────────────────────────────────────────────────────────────
 
+// Building counts are cached and refreshed every few UI ticks — scanning all
+// 10,000 tiles every 250ms tick was wasteful at high sim speeds.
+let uiTickCounter = 0;
+let cachedCounts = null;
+
+// The sim can tick 40×/s at 10× speed; the DOM only needs a few refreshes per
+// second. simulationTick uses this throttled entry point — direct updateUI()
+// calls from user actions still refresh immediately.
+let lastUIRefreshAt = 0;
+const UI_REFRESH_MS = 150;
+
+function updateUIThrottled() {
+  if (performance.now() - lastUIRefreshAt >= UI_REFRESH_MS) updateUI();
+}
+
+function recomputeTileCounts() {
+  let buildings = 0, factories = 0;
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const t = grid[r][c];
+      if (t !== GRASS) buildings++;
+      if (t === FACTORY) factories++;
+    }
+  }
+  cachedCounts = { buildings, factories };
+}
+
 function updateUI() {
+  lastUIRefreshAt = performance.now();
+  uiTickCounter++;
   document.getElementById('gold').textContent = '$' + Math.floor(gold);
 
   const { hour, minute } = timeOfDay();
@@ -1585,18 +2224,13 @@ function updateUI() {
 
   const day = Math.floor(simTick / DAY_LENGTH) + 1;
   document.getElementById('sim-day').textContent = day;
+  document.getElementById('season-val').textContent = currentSeason();
+  document.getElementById('era-val').textContent = ERAS[eraIndex].name;
 
-  let buildings = 0, parks = 0, factories = 0;
-  for (let r = 0; r < MAP_ROWS; r++) {
-    for (let c = 0; c < MAP_COLS; c++) {
-      if (grid[r][c] !== GRASS) buildings++;
-      if (grid[r][c] === PARK)    parks++;
-      if (grid[r][c] === FACTORY) factories++;
-    }
-  }
-  document.getElementById('stat-buildings').textContent = buildings;
+  if (!cachedCounts || uiTickCounter % 4 === 1) recomputeTileCounts();
+  document.getElementById('stat-buildings').textContent = cachedCounts.buildings;
 
-  const happy = clamp(100 + parks * 5 - factories * 10, 0, 100);
+  const happy = townHalls.length > 0 ? globalHappiness() : 100;
   const hapEl = document.getElementById('happiness');
   hapEl.textContent = happy + '%';
   hapEl.className = 'value ' + (happy >= 70 ? 'pos' : happy >= 40 ? '' : 'neg');
@@ -1608,9 +2242,14 @@ function updateUI() {
   // Per-TH stockpile display
   if (selectedTHIndex >= townHalls.length) selectedTHIndex = Math.max(0, townHalls.length - 1);
   const selectedTH = townHalls[selectedTHIndex] || null;
-  document.getElementById('res-wood').textContent  = selectedTH ? selectedTH.resources.wood  : 0;
-  document.getElementById('res-stone').textContent = selectedTH ? selectedTH.resources.stone : 0;
-  document.getElementById('res-food').textContent  = selectedTH ? selectedTH.resources.food  : 0;
+  document.getElementById('res-wood').textContent  = selectedTH ? Math.floor(selectedTH.resources.wood)  : 0;
+  document.getElementById('res-stone').textContent = selectedTH ? Math.floor(selectedTH.resources.stone) : 0;
+  document.getElementById('res-food').textContent  = selectedTH ? Math.floor(selectedTH.resources.food)  : 0;
+  const thHappyEl = document.getElementById('res-happiness');
+  if (thHappyEl) {
+    thHappyEl.textContent = selectedTH ? (selectedTH.happiness ?? 70) + '%' : '—';
+    thHappyEl.className = 'value ' + (selectedTH && selectedTH.happiness >= 70 ? 'pos' : selectedTH && selectedTH.happiness < 40 ? 'neg' : '');
+  }
   document.getElementById('stockpile-th-label').textContent = townHalls.length > 1
     ? 'TH ' + (selectedTHIndex + 1) + ' / ' + townHalls.length + ' (' + (selectedTH ? selectedTH.c + ',' + selectedTH.r : '—') + ')'
     : 'town hall';
@@ -1627,10 +2266,6 @@ function updateUI() {
     upgBtn.textContent = 'upgrade lifespan (' + upgCost + ' food)';
     upgBtn.disabled = maxFood < upgCost;
   }
-
-  const spawnBtn = document.getElementById('spawn-btn');
-  spawnBtn.textContent = 'spawn person ($' + SPAWN_COST + ' gold)';
-  spawnBtn.disabled = gold < SPAWN_COST || people.length >= cap;
 
   // Workforce breakdown
   const jobCounts = { founder: 0, gatherer: 0, explorer: 0, worker: 0, idle: 0 };
@@ -1649,6 +2284,21 @@ function updateUI() {
   const centerR = Math.floor(camY + (canvas.height / tileSize) / 2);
   document.getElementById('cam-pos').textContent = centerC + ', ' + centerR;
 
+  // Powers panel button states
+  const modeSpawn = document.getElementById('mode-spawn');
+  modeSpawn.disabled = townHalls.length > 0 && (gold < SPAWN_COST || people.length >= cap);
+  document.getElementById('mode-road').disabled       = gold < POWER_COSTS.road;
+  document.getElementById('mode-drop-wood').disabled  = gold < POWER_COSTS.drop;
+  document.getElementById('mode-drop-stone').disabled = gold < POWER_COSTS.drop;
+  document.getElementById('mode-drop-food').disabled  = gold < POWER_COSTS.drop;
+  const festBtn = document.getElementById('festival-btn');
+  const festActive = selectedTH && (selectedTH.festivalUntil || 0) > simTick;
+  festBtn.disabled = !selectedTH || gold < POWER_COSTS.festival || festActive;
+  festBtn.textContent = festActive ? '🎪 festival underway!' : 'festival ($' + POWER_COSTS.festival + ')';
+  document.getElementById('charter-btn').disabled =
+    !selectedTH || gold < POWER_COSTS.charter || people.some(p => p.mode === 'found');
+
+  // Votes panel
   document.getElementById('votes-panel').style.display = townHalls.length > 0 ? '' : 'none';
   const voteTH = townHalls[selectedTHIndex] || null;
   const v = voteTH ? voteTH.votes : {};
@@ -1657,26 +2307,241 @@ function updateUI() {
     : 'town hall';
   document.getElementById('votes-prev').disabled = selectedTHIndex === 0;
   document.getElementById('votes-next').disabled = selectedTHIndex >= townHalls.length - 1;
-  document.getElementById('votes-church').textContent     = (v[CHURCH]     || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-park').textContent       = (v[PARK]       || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-factory').textContent    = (v[FACTORY]    || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-tree-farm').textContent  = (v[TREE_FARM]  || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-stone-farm').textContent = (v[STONE_FARM] || 0) + ' / ' + VOTE_THRESHOLD;
-  document.getElementById('votes-farm').textContent       = (v[FARM]       || 0) + ' / ' + VOTE_THRESHOLD;
+  const voteRows = [
+    ['votes-church',     CHURCH,     0],
+    ['votes-park',       PARK,       0],
+    ['votes-factory',    FACTORY,    0],
+    ['votes-tree-farm',  TREE_FARM,  0],
+    ['votes-stone-farm', STONE_FARM, 0],
+    ['votes-farm',       FARM,       0],
+    ['votes-shop',       SHOP,       1],
+    ['votes-well',       WELL,       1],
+    ['votes-school',     SCHOOL,     2],
+  ];
+  for (const [elId, type, minEra] of voteRows) {
+    const el = document.getElementById(elId);
+    if (!el) continue;
+    const locked = eraIndex < minEra;
+    el.textContent = locked
+      ? '🔒 ' + ERAS[minEra].name
+      : (v[type] || 0) + ' / ' + VOTE_THRESHOLD;
+    const btn = document.querySelector('.sway-btn[data-type="' + type + '"]');
+    if (btn) btn.disabled = locked || !voteTH || gold < POWER_COSTS.sway;
+  }
+
+  // Inspector panel
+  updateInspector();
+
+  // Records panel
+  document.getElementById('rec-peak-pop').textContent  = records.peakPop;
+  document.getElementById('rec-oldest').textContent    = records.oldestEver + 'd';
+  document.getElementById('rec-births').textContent    = records.totalBirths;
+  document.getElementById('rec-deaths').textContent    = records.totalDeaths;
+  document.getElementById('rec-towns').textContent     = records.townsFounded;
+  document.getElementById('rec-fires').textContent     = records.firesSurvived;
+
+  // Minimap & trend graphs (throttled — they redraw whole canvases)
+  if (uiTickCounter % 4 === 1) drawMinimap();
+  if (uiTickCounter % 8 === 1) drawTrends();
+}
+
+function updateInspector() {
+  const panel = document.getElementById('inspector-panel');
+  const p = selectedPersonId != null ? people.find(q => q.id === selectedPersonId) : null;
+  if (!p) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+  document.getElementById('insp-name').textContent = p.name;
+  const days = (p.age / DAY_LENGTH).toFixed(1);
+  const maxDays = Math.round(p.maxAge / DAY_LENGTH);
+  document.getElementById('insp-age').textContent = days + 'd / ' + maxDays + 'd';
+  document.getElementById('insp-job').textContent = p.job + (p.sick ? ' (sick 🤒)' : p.hungry ? ' (hungry)' : '');
+  document.getElementById('insp-mode').textContent =
+    p.insideBuilding ? 'inside a building' : p.sleeping ? 'sleeping' : p.mode;
+  document.getElementById('insp-carrying').textContent =
+    (p.wood || p.stone || p.food)
+      ? [p.wood && p.wood + ' wood', p.stone && p.stone + ' stone', p.food && p.food + ' food'].filter(Boolean).join(', ')
+      : 'nothing';
+  document.getElementById('insp-home').textContent =
+    p.houseId != null && houseRegistry[p.houseId] ? houseRegistry[p.houseId].c + ', ' + houseRegistry[p.houseId].r : 'homeless';
+  const followBtn = document.getElementById('follow-btn');
+  followBtn.textContent = followSelected ? '📷 following (stop)' : '📷 follow';
+  followBtn.classList.toggle('selected', followSelected);
+}
+
+// ── Minimap ───────────────────────────────────────────────────────────────────
+
+const minimapCanvas = document.getElementById('minimap');
+const minimapCtx = minimapCanvas ? minimapCanvas.getContext('2d') : null;
+const miniBuffer = document.createElement('canvas');
+miniBuffer.width = MAP_COLS; miniBuffer.height = MAP_ROWS;
+const miniBufCtx = miniBuffer.getContext('2d');
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+const TILE_RGB = TILE_COLORS.map(hexToRgb);
+
+function drawMinimap() {
+  if (!minimapCtx) return;
+  const img = miniBufCtx.createImageData(MAP_COLS, MAP_ROWS);
+  const data = img.data;
+  const grassRgb = hexToRgb(grassPalette()[0]);
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const i = (r * MAP_COLS + c) * 4;
+      const t = grid[r][c];
+      const rgb = t === GRASS ? grassRgb : (TILE_RGB[t] || TILE_RGB[0]);
+      data[i] = rgb[0]; data[i+1] = rgb[1]; data[i+2] = rgb[2]; data[i+3] = 255;
+    }
+  }
+  // Burning tiles pulse red-orange
+  for (const key of Object.keys(burningTiles)) {
+    const b = burningTiles[key];
+    const i = (b.r * MAP_COLS + b.c) * 4;
+    data[i] = 255; data[i+1] = 80; data[i+2] = 0;
+  }
+  // People as white dots
+  for (const p of people) {
+    if (p.insideBuilding) continue;
+    const i = (Math.round(p.y) * MAP_COLS + Math.round(p.x)) * 4;
+    data[i] = 255; data[i+1] = 255; data[i+2] = 255;
+  }
+  miniBufCtx.putImageData(img, 0, 0);
+  minimapCtx.imageSmoothingEnabled = false;
+  minimapCtx.drawImage(miniBuffer, 0, 0, minimapCanvas.width, minimapCanvas.height);
+  // Viewport rectangle
+  const sx = minimapCanvas.width  / MAP_COLS;
+  const sy = minimapCanvas.height / MAP_ROWS;
+  minimapCtx.strokeStyle = '#fff';
+  minimapCtx.lineWidth = 1;
+  minimapCtx.strokeRect(
+    camX * sx, camY * sy,
+    (canvas.width / tileSize) * sx, (canvas.height / tileSize) * sy
+  );
+}
+
+// ── Trend graphs ──────────────────────────────────────────────────────────────
+
+const trendsCanvas = document.getElementById('trends');
+const trendsCtx = trendsCanvas ? trendsCanvas.getContext('2d') : null;
+
+function drawSparkline(series, color, label, top, height) {
+  const w = trendsCanvas.width, pad = 2;
+  const max = Math.max(1, ...series);
+  trendsCtx.strokeStyle = color;
+  trendsCtx.lineWidth = 1.5;
+  trendsCtx.beginPath();
+  const n = series.length;
+  for (let i = 0; i < n; i++) {
+    const x = pad + (i / Math.max(1, HISTORY_MAX - 1)) * (w - pad * 2);
+    const y = top + height - pad - (series[i] / max) * (height - pad * 2);
+    if (i === 0) trendsCtx.moveTo(x, y);
+    else trendsCtx.lineTo(x, y);
+  }
+  trendsCtx.stroke();
+  trendsCtx.font = '9px Monaco,monospace';
+  trendsCtx.fillStyle = color;
+  const latest = series.length > 0 ? series[series.length - 1] : 0;
+  trendsCtx.fillText(label + ' ' + latest, 4, top + 10);
+}
+
+function drawTrends() {
+  if (!trendsCtx || history.pop.length < 2) return;
+  trendsCtx.fillStyle = '#fafafa';
+  trendsCtx.fillRect(0, 0, trendsCanvas.width, trendsCanvas.height);
+  const rowH = trendsCanvas.height / 3;
+  trendsCtx.strokeStyle = '#eee';
+  trendsCtx.beginPath();
+  trendsCtx.moveTo(0, rowH);     trendsCtx.lineTo(trendsCanvas.width, rowH);
+  trendsCtx.moveTo(0, rowH * 2); trendsCtx.lineTo(trendsCanvas.width, rowH * 2);
+  trendsCtx.stroke();
+  drawSparkline(history.pop,  '#1e88e5', 'pop',  0,        rowH);
+  drawSparkline(history.food, '#f9a825', 'food', rowH,     rowH);
+  drawSparkline(history.gold, '#43a047', 'gold', rowH * 2, rowH);
 }
 
 // ── Pixel-art draw functions (all authored at 32×32, origin at top-left) ──────
 
+// Grass shifts colour with the seasons: [base, light tufts, dark tufts]
+const GRASS_PALETTES = {
+  spring: ['#4caf50', '#66bb6a', '#388e3c'],
+  summer: ['#66a94c', '#85c162', '#4a8a38'],
+  autumn: ['#94964a', '#adaf62', '#6e7136'],
+  winter: ['#cfd8dc', '#eceff1', '#a7bcc4'],
+};
+
+function grassPalette() { return GRASS_PALETTES[currentSeason()]; }
+
 function drawGrass(x, y) {
-  ctx.fillStyle = '#4caf50'; ctx.fillRect(x, y, BASE, BASE);
-  ctx.fillStyle = '#66bb6a';
+  const pal = grassPalette();
+  ctx.fillStyle = pal[0]; ctx.fillRect(x, y, BASE, BASE);
+  ctx.fillStyle = pal[1];
   ctx.fillRect(x+4,  y+6,  4, 4);
   ctx.fillRect(x+20, y+14, 4, 4);
   ctx.fillRect(x+10, y+22, 4, 4);
-  ctx.fillStyle = '#388e3c';
+  ctx.fillStyle = pal[2];
   ctx.fillRect(x+14, y+4,  2, 2);
   ctx.fillRect(x+26, y+18, 2, 2);
   ctx.fillRect(x+6,  y+27, 2, 2);
+}
+
+function drawWell(x, y) {
+  const pal = grassPalette();
+  ctx.fillStyle = pal[0]; ctx.fillRect(x, y, BASE, BASE);
+  // Stone ring
+  ctx.fillStyle = '#90a4ae';
+  ctx.fillRect(x+8,  y+14, 16, 12);
+  ctx.fillStyle = '#78909c';
+  ctx.fillRect(x+8,  y+24, 16, 2);
+  // Water
+  ctx.fillStyle = '#4fc3f7';
+  ctx.fillRect(x+11, y+16, 10, 7);
+  ctx.fillStyle = '#b3e5fc';
+  ctx.fillRect(x+12, y+17, 4, 2);
+  // Posts and little roof
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(x+8,  y+6, 2, 10);
+  ctx.fillRect(x+22, y+6, 2, 10);
+  ctx.fillStyle = '#8d6e63';
+  ctx.fillRect(x+6,  y+4, 20, 3);
+  ctx.fillStyle = '#6d4c41';
+  ctx.fillRect(x+10, y+7, 12, 1); // crossbar
+  // Bucket rope
+  ctx.fillStyle = '#3e2723';
+  ctx.fillRect(x+15, y+7, 1, 6);
+  ctx.fillStyle = '#795548';
+  ctx.fillRect(x+13, y+12, 5, 3);
+}
+
+function drawSchool(x, y) {
+  // Red schoolhouse with a bell tower
+  ctx.fillStyle = '#c62828'; ctx.fillRect(x+2, y+12, 28, 18);
+  // Roof
+  ctx.fillStyle = '#8d6e63';
+  ctx.fillRect(x+4,  y+8,  24, 4);
+  ctx.fillRect(x+8,  y+6,  16, 2);
+  // Bell tower
+  ctx.fillStyle = '#efebe9';
+  ctx.fillRect(x+13, y+0,  6, 8);
+  ctx.fillStyle = '#8d6e63';
+  ctx.fillRect(x+12, y+0,  8, 2);
+  ctx.fillStyle = '#ff8f00'; // bell
+  ctx.fillRect(x+15, y+3,  2, 3);
+  // Windows
+  ctx.fillStyle = '#b3e5fc';
+  ctx.fillRect(x+5,  y+16, 6, 6);
+  ctx.fillRect(x+21, y+16, 6, 6);
+  ctx.fillStyle = '#1565c0';
+  ctx.fillRect(x+7,  y+16, 2, 6);
+  ctx.fillRect(x+23, y+16, 2, 6);
+  // Door
+  ctx.fillStyle = '#4e342e'; ctx.fillRect(x+13, y+22, 6, 8);
+  // Chalkboard sign
+  ctx.fillStyle = '#fff'; ctx.fillRect(x+13, y+14, 6, 4);
 }
 
 function drawRoad(x, y) {
@@ -1939,7 +2804,8 @@ function drawFarm(x, y) {
 
 function drawTile(r, c, x, y, ts) {
   if (ts <= 12) {
-    ctx.fillStyle = TILE_COLORS[grid[r][c]] || TILE_COLORS[0];
+    const t = grid[r][c];
+    ctx.fillStyle = t === GRASS ? grassPalette()[0] : (TILE_COLORS[t] || TILE_COLORS[0]);
     ctx.fillRect(x, y, ts, ts);
   } else {
     ctx.save();
@@ -1959,6 +2825,8 @@ function drawTile(r, c, x, y, ts) {
       case FARM:       drawFarm(0, 0);       break;
       case ROW_HOUSE:  drawRowHouse(0, 0);  break;
       case APARTMENT:  drawApartment(0, 0); break;
+      case WELL:       drawWell(0, 0);      break;
+      case SCHOOL:     drawSchool(0, 0);    break;
     }
     ctx.restore();
   }
@@ -1998,6 +2866,13 @@ function drawPeople() {
 
     const carried = p.wood + p.stone + p.food;
 
+    // Selection ring around the inspected citizen
+    if (p.id === selectedPersonId) {
+      ctx.strokeStyle = '#ffee58';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(px + 1, py + 1, tileSize - 2, tileSize - 2);
+    }
+
     if (tileSize <= 12) {
       // Tiny dot: cyan = gather mode, player colour = build mode, yellow = carrying
       ctx.fillStyle = carried > 0 ? '#ffee58' : (p.mode === 'gather' ? '#4dd0e1' : p.color);
@@ -2030,8 +2905,8 @@ function drawPeople() {
       px_(-6, -12 + legSwing,  2, 4); // left arm
       px_( 4, -12 - legSwing,  2, 4); // right arm
 
-      // Head (skin tone)
-      ctx.fillStyle = '#ffcc80';
+      // Head — pale when hungry, green-tinged when sick, so trouble is visible
+      ctx.fillStyle = p.sick ? '#c5e1a5' : p.hungry ? '#e8e0d8' : '#ffcc80';
       px_(-3, -19, 6, 6);
 
       // Eyes
@@ -2110,7 +2985,24 @@ function drawDayNight() {
   ctx.textAlign = 'left';
 }
 
-function render() {
+// render() only marks the frame dirty; the actual draw happens at most once
+// per display frame in the rAF loop below. At 10× sim speed this stops the
+// canvas from being redrawn synchronously inside every 25ms sim tick, and
+// coalesces the flood of render() calls from mousemove/drag handlers.
+let renderDirty = true;
+
+function render() { renderDirty = true; }
+
+function frameLoop() {
+  if (renderDirty) {
+    renderDirty = false;
+    renderNow();
+  }
+  requestAnimationFrame(frameLoop);
+}
+requestAnimationFrame(frameLoop);
+
+function renderNow() {
   ctx.fillStyle = '#1a2633';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -2133,8 +3025,60 @@ function render() {
   }
 
   drawResourceNodes();
+  drawFires();
   drawPeople();
+  drawParticles();
   drawDayNight();
+  drawLanterns();
+}
+
+function drawFires() {
+  for (const key of Object.keys(burningTiles)) {
+    const b = burningTiles[key];
+    const { x, y } = tileToCanvas(b.r, b.c);
+    if (x < -tileSize || x > canvas.width || y < -tileSize || y > canvas.height) continue;
+    // Flickering flame overlay
+    const flick = (simTick + b.r + b.c) % 3;
+    ctx.fillStyle = flick === 0 ? 'rgba(255,111,0,0.55)' : flick === 1 ? 'rgba(255,152,0,0.55)' : 'rgba(255,193,7,0.5)';
+    ctx.fillRect(x, y, tileSize, tileSize);
+    // Flame tongues
+    ctx.fillStyle = flick === 0 ? '#ffee58' : '#ff9800';
+    const s = Math.max(2, Math.floor(tileSize / 5));
+    ctx.fillRect(x + tileSize * 0.2, y + tileSize * 0.15 + flick, s, s * 2);
+    ctx.fillRect(x + tileSize * 0.6, y + tileSize * 0.35 - flick, s, s * 2);
+  }
+}
+
+function drawParticles() {
+  for (const pt of particles) {
+    const { x, y } = tileToCanvas(pt.y, pt.x);
+    if (x < -tileSize || x > canvas.width || y < -tileSize || y > canvas.height) continue;
+    ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+    ctx.fillStyle = pt.color;
+    const s = Math.max(2, Math.floor(tileSize / 10));
+    ctx.fillRect(Math.round(x), Math.round(y), s, s);
+  }
+  ctx.globalAlpha = 1;
+}
+
+// Warm lantern glows on people out after dark — drawn above the night overlay
+function drawLanterns() {
+  if (nightOverlayAlpha() < 0.3) return;
+  for (const p of people) {
+    if (p.insideBuilding) continue;
+    const { x: px, y: py } = tileToCanvas(p.y, p.x);
+    if (px < -tileSize || px > canvas.width || py < -tileSize || py > canvas.height) continue;
+    const cx = px + tileSize / 2, cy = py + tileSize / 2;
+    const rad = Math.max(3, tileSize * 0.45);
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+    grad.addColorStop(0, 'rgba(255,200,90,0.35)');
+    grad.addColorStop(1, 'rgba(255,200,90,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(cx - rad, cy - rad, rad * 2, rad * 2);
+    ctx.fillStyle = '#ffd54f';
+    const s = Math.max(1, Math.floor(tileSize / 12));
+    ctx.fillRect(Math.round(cx), Math.round(cy - s), s, s);
+  }
 }
 
 // ── Zoom ──────────────────────────────────────────────────────────────────────
@@ -2153,26 +3097,30 @@ function applyZoom(newIdx, pivotPx, pivotPy) {
   updateUI();
 }
 
-// ── Demolish ──────────────────────────────────────────────────────────────────
+// ── Click modes & demolish ────────────────────────────────────────────────────
 
-let demolishMode = false;
+const MODE_BUTTONS = {
+  'spawn':      'mode-spawn',
+  'road':       'mode-road',
+  'drop-wood':  'mode-drop-wood',
+  'drop-stone': 'mode-drop-stone',
+  'drop-food':  'mode-drop-food',
+  'demolish':   'mode-demolish',
+};
 
-function setDemolishMode(on) {
-  demolishMode = on;
-  const btn = document.getElementById('demolish-btn');
-  if (on) {
-    btn.textContent = 'stop demolishing';
-    btn.style.background = '#ef9a9a';
-    canvas.classList.add('demolish');
-  } else {
-    btn.textContent = 'demolish (right-click)';
-    btn.style.background = '#ffebee';
-    canvas.classList.remove('demolish');
+function setClickMode(mode) {
+  clickMode = mode;
+  for (const [m, id] of Object.entries(MODE_BUTTONS)) {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.toggle('selected', m === mode);
   }
+  canvas.classList.toggle('demolish', mode === 'demolish');
 }
 
 function demolishTile(r, c) {
   const t = grid[r][c];
+  // Demolishing a burning tile snuffs the fire (firebreak) even if it clears the tile
+  delete burningTiles[r + ',' + c];
   if (t === GRASS) return;
 
   if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) {
@@ -2218,6 +3166,8 @@ canvas.addEventListener('mousedown', (e) => {
 
 canvas.addEventListener('mousemove', (e) => {
   const { px, py } = getCanvasPos(e);
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
 
   if (e.buttons === 1) {
     const dx = e.clientX - mouseDownX;
@@ -2225,6 +3175,7 @@ canvas.addEventListener('mousemove', (e) => {
 
     if (!dragMoved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
       dragMoved = true;
+      followSelected = false; // dragging cancels follow-cam
       canvas.style.cursor = 'grabbing';
     }
 
@@ -2234,6 +3185,7 @@ canvas.addEventListener('mousemove', (e) => {
       clampCamera();
       const { r, c } = canvasToTile(px, py);
       hoverR = r; hoverC = c;
+      clearHoverInfo();
       render();
       updateUI();
       return;
@@ -2249,7 +3201,7 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 window.addEventListener('mouseup', () => {
-  canvas.style.cursor = demolishMode ? '' : 'crosshair';
+  canvas.style.cursor = clickMode === 'demolish' ? '' : 'crosshair';
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -2267,10 +3219,21 @@ canvas.addEventListener('click', (e) => {
   const { r, c }   = canvasToTile(px, py);
   if (!inBounds(r, c)) return;
 
-  if (demolishMode) {
+  if (clickMode === 'demolish') {
     demolishTile(r, c);
+  } else if (clickMode === 'road') {
+    payRoad(r, c);
+  } else if (clickMode.startsWith('drop-')) {
+    dropSupplies(r, c, clickMode.slice(5));
   } else {
-    spawnPerson(r, c);
+    // Spawn mode: clicking a citizen inspects them; clicking open ground spawns
+    const clicked = people.find(p => !p.insideBuilding && Math.round(p.y) === r && Math.round(p.x) === c);
+    if (clicked) {
+      selectedPersonId = clicked.id;
+      updateInspector();
+    } else {
+      spawnPerson(r, c);
+    }
   }
   render();
 });
@@ -2314,17 +3277,80 @@ document.getElementById('speed-pause').addEventListener('click', () => {
   document.getElementById('speed-pause').classList.toggle('selected', parseInt(slider.value) === 0);
 });
 
-document.getElementById('spawn-btn').addEventListener('click', () => {
-  showMessage('click the map to spawn a person');
-});
-
 document.getElementById('upgrade-btn').addEventListener('click', () => {
   upgradeLifespan();
 });
 
-document.getElementById('demolish-btn').addEventListener('click', () => {
-  setDemolishMode(!demolishMode);
+// Power mode buttons — clicking the active one switches back to spawn mode
+for (const [mode, id] of Object.entries(MODE_BUTTONS)) {
+  const btn = document.getElementById(id);
+  if (btn) btn.addEventListener('click', () => {
+    setClickMode(clickMode === mode ? 'spawn' : mode);
+  });
+}
+
+document.getElementById('festival-btn').addEventListener('click', startFestival);
+document.getElementById('charter-btn').addEventListener('click', charterExpedition);
+
+for (const btn of document.querySelectorAll('.sway-btn')) {
+  btn.addEventListener('click', () => swayVote(parseInt(btn.dataset.type)));
+}
+
+document.getElementById('follow-btn').addEventListener('click', () => {
+  followSelected = !followSelected;
+  if (followSelected) followCamera();
+  updateInspector();
+  render();
 });
+
+document.getElementById('deselect-btn').addEventListener('click', () => {
+  selectedPersonId = null;
+  followSelected = false;
+  updateInspector();
+  render();
+});
+
+// ── Sidebar tabs ──────────────────────────────────────────────────────────────
+
+for (const btn of document.querySelectorAll('.tab-btn')) {
+  btn.addEventListener('click', () => {
+    for (const b of document.querySelectorAll('.tab-btn'))
+      b.classList.toggle('selected', b === btn);
+    for (const page of document.querySelectorAll('.tab-page'))
+      page.style.display = page.id === btn.dataset.tab ? '' : 'none';
+  });
+}
+
+document.getElementById('mute-btn').addEventListener('click', () => {
+  muted = !muted;
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+});
+
+// Minimap: click or drag to jump the camera
+if (minimapCanvas) {
+  const minimapJump = (e) => {
+    const rect = minimapCanvas.getBoundingClientRect();
+    const mc = (e.clientX - rect.left) / rect.width  * MAP_COLS;
+    const mr = (e.clientY - rect.top)  / rect.height * MAP_ROWS;
+    camX = mc - (canvas.width  / tileSize) / 2;
+    camY = mr - (canvas.height / tileSize) / 2;
+    followSelected = false;
+    clampCamera();
+    render();
+    drawMinimap();
+    updateUI();
+  };
+  minimapCanvas.addEventListener('mousedown', (e) => {
+    minimapJump(e);
+    const move = (ev) => minimapJump(ev);
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  });
+}
 
 window.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -2337,47 +3363,124 @@ window.addEventListener('keydown', (e) => {
     case 'ArrowDown':  case 's': dy =  3; break;
     case '+': case '=': applyZoom(zoomIndex + 1, canvas.width/2, canvas.height/2); e.preventDefault(); return;
     case '-':           applyZoom(zoomIndex - 1, canvas.width/2, canvas.height/2); e.preventDefault(); return;
+    case 'Escape':
+      setClickMode('spawn');
+      selectedPersonId = null;
+      followSelected = false;
+      updateInspector();
+      render();
+      return;
     default: return;
   }
 
   e.preventDefault();
+  followSelected = false; // manual camera movement cancels follow-cam
   camX = clamp(camX + dx, 0, Math.max(0, MAP_COLS - canvas.width  / tileSize));
   camY = clamp(camY + dy, 0, Math.max(0, MAP_ROWS - canvas.height / tileSize));
   render();
   updateUI();
 });
 
-// ── Messages ──────────────────────────────────────────────────────────────────
+// ── Messages & event log ──────────────────────────────────────────────────────
 
-function showMessage(msg) {
+// cls: undefined (neutral) | 'good' (green) | 'bad' (red) | 'info' (blue)
+function logEvent(msg, cls) {
   const log = document.getElementById('event-log');
   if (!log) return;
   const entry = document.createElement('div');
-  entry.className = 'log-entry';
+  entry.className = 'log-entry' + (cls ? ' log-' + cls : '');
   entry.textContent = msg;
   log.prepend(entry);
-  // Keep at most 30 entries
-  while (log.children.length > 30) log.removeChild(log.lastChild);
+  // Keep at most 40 entries
+  while (log.children.length > 40) log.removeChild(log.lastChild);
 }
 
-function showHoverInfo() {
-  // Hover info removed with message element
+function showMessage(msg) { logEvent(msg); }
+
+// ── Hover tooltip ─────────────────────────────────────────────────────────────
+
+const tooltip = document.createElement('div');
+tooltip.id = 'tile-tooltip';
+document.body.appendChild(tooltip);
+
+let lastMouseX = 0, lastMouseY = 0;
+
+function showHoverInfo(r, c) {
+  const lines = [];
+
+  // Citizens standing here
+  for (const p of people) {
+    if (p.insideBuilding) continue;
+    if (Math.round(p.y) === r && Math.round(p.x) === c) {
+      lines.push('🧍 ' + p.name + ' — ' + p.job + (p.sick ? ' (sick)' : p.hungry ? ' (hungry)' : ''));
+    }
+  }
+
+  const t = grid[r][c];
+  if (burningTiles[r + ',' + c]) {
+    lines.push('🔥 ' + TILE_NAMES[t] + ' — ON FIRE!');
+  } else if (t !== GRASS) {
+    lines.push(TILE_NAMES[t]);
+  }
+
+  // House occupancy
+  if (t === HOUSE || t === ROW_HOUSE || t === APARTMENT) {
+    const h = findHouseRegistryEntry(r, c);
+    if (h) lines.push('residents: ' + h.residents.length + ' / ' + h.slots);
+  }
+
+  // Workplace staffing
+  const bEntry = buildingRegistry[r + ',' + c];
+  if (bEntry) lines.push('workers: ' + bEntry.workers.length + ' / ' + MAX_WORKERS_PER_BUILDING);
+
+  // Town hall stockpile
+  if (t === TOWN_HALL) {
+    const th = townHalls.find(x => x.r === r && x.c === c);
+    if (th) {
+      lines.push('wood ' + Math.floor(th.resources.wood) + ' · stone ' + Math.floor(th.resources.stone) + ' · food ' + Math.floor(th.resources.food));
+      lines.push('happiness ' + (th.happiness ?? 70) + '%' + ((th.festivalUntil || 0) > simTick ? ' 🎪' : ''));
+    }
+  }
+
+  // Resource node
+  const res = resourceMap[r][c];
+  if (res && res.amount > 0) lines.push(res.type + ' ×' + Math.floor(res.amount));
+
+  if (lines.length === 0) {
+    clearHoverInfo();
+    return;
+  }
+  tooltip.innerHTML = '';
+  for (const line of lines) {
+    const div = document.createElement('div');
+    div.textContent = line;
+    tooltip.appendChild(div);
+  }
+  tooltip.style.display = 'block';
+  positionTooltip();
+}
+
+function positionTooltip() {
+  const pad = 14;
+  let tx = lastMouseX + pad, ty = lastMouseY + pad;
+  const w = tooltip.offsetWidth, h = tooltip.offsetHeight;
+  if (tx + w > window.innerWidth  - 4) tx = lastMouseX - w - 6;
+  if (ty + h > window.innerHeight - 4) ty = lastMouseY - h - 6;
+  tooltip.style.left = tx + 'px';
+  tooltip.style.top  = ty + 'px';
 }
 
 function clearHoverInfo() {
-  const el = document.getElementById('message');
-  clearTimeout(el._t);
-  el.style.opacity = '0';
-  el.style.color = '#c62828';
+  tooltip.style.display = 'none';
 }
 
 // ── Income tick ───────────────────────────────────────────────────────────────
 
 setInterval(() => {
-  let income = 0;
-  for (let r = 0; r < MAP_ROWS; r++)
-    for (let c = 0; c < MAP_COLS; c++)
-      income += TILE_INCOME[grid[r][c]] || 0;
+  // Factory count comes from the cached tile counts (refreshed by updateUI)
+  // instead of scanning all 10,000 tiles every second
+  if (!cachedCounts) recomputeTileCounts();
+  const income = (TILE_INCOME[FACTORY] || 0) * cachedCounts.factories;
   if (income !== 0) {
     gold = Math.max(0, gold + income);
     updateUI();
@@ -2390,7 +3493,7 @@ const SAVE_KEY = 'citybuilder_save';
 
 function saveGame() {
   const data = {
-    v: 4,
+    v: 5,
     gold, lifespanLevel, simTick, nextPersonId, nextHouseId, lastExploreTick,
     grid:        grid.map(row => [...row]),
     resourceMap: resourceMap.map(row => row.map(cell => cell ? { ...cell } : null)),
@@ -2400,11 +3503,16 @@ function saveGame() {
       votes: { ...th.votes },
       popCap: th.popCap,
       buildTimer: th.buildTimer ?? TH_BUILD_INTERVAL,
+      happiness: th.happiness ?? 70,
+      festivalUntil: th.festivalUntil ?? 0,
     })),
     houseRegistry: JSON.parse(JSON.stringify(houseRegistry)),
     buildingRegistry: JSON.parse(JSON.stringify(buildingRegistry)),
     people: people.map(p => ({ ...p })),
     discovered: [...discovered],
+    records: { ...records },
+    chronicle: chronicle.map(e => ({ ...e })),
+    burningTiles: JSON.parse(JSON.stringify(burningTiles)),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
   showMessage('game saved!');
@@ -2415,7 +3523,7 @@ function loadGame() {
   if (!raw) { showMessage('no save found.'); return false; }
   try {
     const data = JSON.parse(raw);
-    if (data.v !== 1 && data.v !== 2 && data.v !== 3 && data.v !== 4) { showMessage('save version mismatch.'); return false; }
+    if (!(data.v >= 1 && data.v <= 5)) { showMessage('save version mismatch.'); return false; }
 
     gold             = data.gold;
     lifespanLevel    = data.lifespanLevel;
@@ -2423,6 +3531,20 @@ function loadGame() {
     nextPersonId     = data.nextPersonId;
     nextHouseId      = data.nextHouseId;
     lastExploreTick  = data.lastExploreTick ?? -200;
+
+    // v5 additions — default sensibly for older saves
+    records = {
+      peakPop: 0, oldestEver: 0, totalBirths: 0, totalDeaths: 0,
+      townsFounded: (data.townHalls || []).length, firesSurvived: 0, won: false,
+      ...(data.records || {}),
+    };
+    chronicle    = data.chronicle || [];
+    burningTiles = data.burningTiles || {};
+    fireActive   = Object.keys(burningTiles).length > 0;
+    particles    = [];
+    history      = { pop: [], food: [], gold: [] };
+    selectedPersonId = null;
+    followSelected   = false;
 
     for (let r = 0; r < MAP_ROWS; r++)
       for (let c = 0; c < MAP_COLS; c++) {
@@ -2433,8 +3555,10 @@ function loadGame() {
     townHalls    = data.townHalls.map(th => ({
       ...th,
       buildTimer: th.buildTimer ?? TH_BUILD_INTERVAL,
-      // Ensure FARM vote key exists for old saves
-      votes: { [CHURCH]:0, [PARK]:0, [FACTORY]:0, [TREE_FARM]:0, [STONE_FARM]:0, [FARM]:0, ...(th.votes || {}) },
+      happiness: th.happiness ?? 70,
+      festivalUntil: th.festivalUntil ?? 0,
+      // Ensure all vote keys exist for old saves
+      votes: { ...emptyVotes(), ...(th.votes || {}) },
     }));
     houseRegistry = data.houseRegistry;
     // Migrate old saves that lack the `slots` or `residents` fields
@@ -2447,21 +3571,27 @@ function loadGame() {
       }
       if (!Array.isArray(h.residents)) h.residents = [];
     }
-    // Restore buildingRegistry (v2+), or reconstruct from grid for v1 saves
+    // Restore buildingRegistry (v2+), then reconcile against the grid so every
+    // worker-capable building has an entry (also reconstructs v1 saves, and
+    // farmProduceFood relies on farms being registered)
     buildingRegistry = data.buildingRegistry || {};
-    if (data.v === 1) {
-      buildingRegistry = {};
-      for (let r = 0; r < MAP_ROWS; r++)
-        for (let c = 0; c < MAP_COLS; c++) {
-          const t = grid[r][c];
-          if (WORKER_JOBS.has(t)) buildingRegistry[r + ',' + c] = { r, c, type: t, workers: [] };
-        }
-    }
+    for (let r = 0; r < MAP_ROWS; r++)
+      for (let c = 0; c < MAP_COLS; c++) {
+        const t = grid[r][c];
+        if (WORKER_JOBS.has(t) && !buildingRegistry[r + ',' + c])
+          buildingRegistry[r + ',' + c] = { r, c, type: t, workers: [] };
+      }
 
     people       = data.people;
     // Migrate people fields added after initial save
     for (const p of people) {
+      if (p.name  === undefined) p.name  = randomName();
+      if (p.sick  === undefined) p.sick  = false;
+      if (p.sickTicks === undefined) p.sickTicks = 0;
+      if (p.hungry === undefined) p.hungry = false;
       if (p.gatherTarget        === undefined) p.gatherTarget        = null;
+      if (p.gatherPref          === undefined) p.gatherPref          = p.gatherFood ? 'food' : null;
+      delete p.gatherFood;
       if (p.exploreWood         === undefined) p.exploreWood         = 0;
       if (p.exploreStone        === undefined) p.exploreStone        = 0;
       if (p.exploreTick         === undefined) p.exploreTick         = 0;
@@ -2520,6 +3650,13 @@ function loadGame() {
     discovered.clear();
     for (const t of data.discovered) discovered.add(t);
 
+    // Recompute era from restored records (never regresses within a save)
+    if (records.peakPop < people.length) records.peakPop = people.length;
+    eraIndex = 0;
+    for (let i = 0; i < ERAS.length; i++) if (records.peakPop >= ERAS[i].pop) eraIndex = i;
+
+    refreshHappiness();
+    renderChronicle();
     renderDiscoveries();
     clampCamera();
     render();
