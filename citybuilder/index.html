@@ -52,6 +52,7 @@
         <div class="tab-bar">
           <button class="tab-btn selected" data-tab="tab-city">🏘 city</button>
           <button class="tab-btn" data-tab="tab-powers">⚡ powers</button>
+          <button class="tab-btn" data-tab="tab-research">🔬 research</button>
           <button class="tab-btn" data-tab="tab-story">📖 story</button>
           <button class="tab-btn" data-tab="tab-save">💾 save</button>
         </div>
@@ -61,6 +62,7 @@
           <div class="stat-row"><span>name</span><span class="value" id="insp-name">—</span></div>
           <div class="stat-row"><span>age</span><span class="value" id="insp-age">—</span></div>
           <div class="stat-row"><span>job</span><span class="value" id="insp-job">—</span></div>
+          <div class="stat-row"><span>level</span><span class="value" id="insp-level">—</span></div>
           <div class="stat-row"><span>doing</span><span class="value" id="insp-mode">—</span></div>
           <div class="stat-row"><span>carrying</span><span class="value" id="insp-carrying">—</span></div>
           <div class="stat-row"><span>home</span><span class="value" id="insp-home">—</span></div>
@@ -78,7 +80,8 @@
               <div class="stat-row"><span>day</span><span class="value" id="sim-day">1</span></div>
               <div class="stat-row"><span>season</span><span class="value" id="season-val">spring</span></div>
               <div class="stat-row"><span>time</span><span class="value" id="sim-time">7:00am</span></div>
-              <div class="stat-row"><span>gold</span><span class="value" id="gold">$200</span></div>
+              <div class="stat-row"><span>souls</span><span class="value pos" id="souls">✨ 10</span></div>
+              <div class="stat-row"><span>gold</span><span class="value" id="gold">$5</span></div>
               <div class="stat-row"><span>buildings</span><span class="value" id="stat-buildings">0</span></div>
               <div class="stat-row"><span>happiness</span><span class="value" id="happiness">100%</span></div>
             </div>
@@ -93,6 +96,9 @@
               <div class="stat-row"><span>wood</span><span class="value" id="res-wood">0</span></div>
               <div class="stat-row"><span>stone</span><span class="value" id="res-stone">0</span></div>
               <div class="stat-row"><span>food</span><span class="value" id="res-food">0</span></div>
+              <div class="stat-row"><span>clay</span><span class="value" id="res-clay">0</span></div>
+              <div class="stat-row"><span>ore</span><span class="value" id="res-ore">0</span></div>
+              <div class="stat-row"><span>hall level</span><span class="value" id="res-level">—</span></div>
               <div class="stat-row"><span>happiness</span><span class="value" id="res-happiness">—</span></div>
             </div>
           </div>
@@ -101,9 +107,10 @@
             <div class="panel">
               <h2>people</h2>
               <div class="stat-row"><span>alive</span><span class="value" id="people-count">0 / 0</span></div>
+              <div class="stat-row"><span>homeless</span><span class="value" id="people-homeless">0</span></div>
+              <div class="stat-row"><span>empty beds</span><span class="value" id="people-vacancy">0</span></div>
               <div class="stat-row"><span>lifespan</span><span class="value" id="lifespan-val">10d</span></div>
-              <button id="upgrade-btn" class="action-btn upgrade">upgrade lifespan (10 food)</button>
-              <p class="hint">click the map to spawn · click a person to inspect</p>
+              <p class="hint">click to spawn · <b>hold</b> to spawn a crowd · hold <b>space</b> to spawn at the town hall · click a person to inspect</p>
             </div>
 
             <div class="panel">
@@ -116,17 +123,30 @@
               <div class="stat-row" style="margin-top:4px;border-top:1px solid #eee;padding-top:4px"><span>staffed</span><span class="value" id="buildings-staffed">0 / 0</span></div>
             </div>
           </div>
+
+          <div class="panel">
+            <h2>soul upgrades</h2>
+            <div class="upgrade-grid">
+              <button id="upg-life" class="action-btn upgrade" title="everyone lives one day longer">❤️ life</button>
+              <button id="upg-speed" class="action-btn upgrade" title="everyone walks faster">👟 speed</button>
+              <button id="upg-sight" class="action-btn upgrade" title="everyone spots resources from further away">👁 sight</button>
+              <button id="upg-land" class="action-btn upgrade" title="push back the wilderness">🗺 land</button>
+            </div>
+            <p class="hint">souls are harvested when citizens die — wiser lives in happier towns yield more</p>
+          </div>
         </div>
 
         <div class="tab-page" id="tab-powers" style="display:none">
           <div class="panel">
             <h2>powers</h2>
             <div class="powers-grid">
-              <button id="mode-spawn" class="action-btn mode-btn selected">🧍 spawn ($5)</button>
+              <button id="mode-spawn" class="action-btn mode-btn selected">🧍 spawn (✨1)</button>
               <button id="mode-road" class="action-btn mode-btn">🛤 pave road ($20)</button>
               <button id="mode-drop-wood" class="action-btn mode-btn">🌲 drop wood ($50)</button>
               <button id="mode-drop-stone" class="action-btn mode-btn">🪨 drop stone ($50)</button>
               <button id="mode-drop-food" class="action-btn mode-btn">🌾 drop food ($50)</button>
+              <button id="mode-drop-clay" class="action-btn mode-btn">🧱 drop clay ($50)</button>
+              <button id="mode-drop-ore" class="action-btn mode-btn">⛏️ drop ore ($50)</button>
               <button id="mode-demolish" class="action-btn mode-btn" style="background:#ffebee">💥 demolish</button>
               <button id="festival-btn" class="action-btn">festival ($500)</button>
               <button id="charter-btn" class="action-btn">charter expedition ($1000)</button>
@@ -154,6 +174,20 @@
           </div>
         </div>
 
+        <div class="tab-page" id="tab-research" style="display:none">
+          <div class="panel">
+            <h2>research — the tree of trades</h2>
+            <div id="research-list"></div>
+            <p class="hint">spend souls to teach your people new trades — each unlocks a building the town can vote for and staff</p>
+          </div>
+          <div class="panel">
+            <h2>hall upgrades</h2>
+            <p class="hint">town halls upgrade themselves when the town prospers (era reached, happiness ≥ 55%, and clay &amp; ore stockpiled).
+              a level 2 hall unlocks markets, wells &amp; factories · level 3 unlocks schools &amp; apartments.
+              when no open ground remains, a winning vote may raze a lower building to make room</p>
+          </div>
+        </div>
+
         <div class="tab-page" id="tab-story" style="display:none">
           <div class="panel">
             <h2>trends</h2>
@@ -169,6 +203,7 @@
               <div class="stat-row"><span>deaths</span><span class="value" id="rec-deaths">0</span></div>
               <div class="stat-row"><span>towns founded</span><span class="value" id="rec-towns">0</span></div>
               <div class="stat-row"><span>fires survived</span><span class="value" id="rec-fires">0</span></div>
+              <div class="stat-row"><span>souls harvested</span><span class="value" id="rec-souls">0</span></div>
             </div>
             <h2 style="margin-top:10px">chronicle</h2>
             <div id="chronicle-list"><p class="hint">the town's story will be written here</p></div>
