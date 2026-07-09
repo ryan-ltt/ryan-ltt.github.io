@@ -277,6 +277,25 @@
     </div>
   </div>
 
-  <script src="citybuilder.js"></script>
+  <!-- Classic scripts sharing one global scope — load order matters.
+       Keep this list in sync with citybuilder/js/ and CLAUDE.md. -->
+  <script src="js/01-config.js"></script>
+  <script src="js/02-state.js"></script>
+  <script src="js/03-world.js"></script>
+  <script src="js/04-people.js"></script>
+  <script src="js/05-townhall.js"></script>
+  <script src="js/06-progression.js"></script>
+  <script src="js/07-politics.js"></script>
+  <script src="js/08-war.js"></script>
+  <script src="js/09-events.js"></script>
+  <script src="js/10-effects.js"></script>
+  <script src="js/11-powers.js"></script>
+  <script src="js/12-sim.js"></script>
+  <script src="js/13-ui.js"></script>
+  <script src="js/14-render.js"></script>
+  <script src="js/15-input.js"></script>
+  <script src="js/16-ui-shell.js"></script>
+  <script src="js/17-save.js"></script>
+  <script src="js/18-main.js"></script>
 </body>
 </html>
