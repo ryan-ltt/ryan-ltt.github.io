@@ -163,6 +163,10 @@ h1 {
 .pos { color: #2e7d32; }
 .neg { color: #c62828; }
 
+/* Laws in force — hover for the full effect card */
+.law-row { cursor: help; }
+.law-row:hover { background: #f5f5f5; }
+
 .tool-btn {
   width: 100%;
   padding: 7px 8px;

@@ -134,7 +134,7 @@ const BUILDING_TIER = {
 };
 
 // ── Gold powers ───────────────────────────────────────────────────────────────
-const POWER_COSTS = { road: 20, drop: 50, sway: 100, festival: 500, charter: 1000 };
+const POWER_COSTS = { road: 20, drop: 50, sway: 100, campaign: 150, festival: 500, charter: 1000 };
 const SWAY_VOTES      = 3;   // votes added per sway purchase
 const DROP_AMOUNT     = 20;  // resource units per supply drop
 const FESTIVAL_LENGTH = DAY_LENGTH; // festival lasts one day
@@ -195,6 +195,150 @@ const VOTE_THRESHOLD    = 10;
 const UNHAPPY_RAZE_BELOW  = 50;
 const UNHAPPY_BUILD_BELOW = 60;
 const HAPPY_FACTORY_MIN   = 65;
+
+// ── Politics: direct democracy ────────────────────────────────────────────────
+// Once the settlement is big enough, the people hold referendums: every two
+// days one measure goes to the ballot — a new law, or the repeal of one that
+// has soured. Every citizen votes their own interest, so the law of the land
+// drifts with the town's fortunes: rationing passes in a famine and is thrown
+// out again once bellies are full. The player can't dictate outcomes, only
+// spend gold on campaigns that sway the undecided.
+const POLITICS_MIN_POP    = 10;
+const REFERENDUM_INTERVAL = 2 * DAY_LENGTH; // one measure every two days
+const BALLOT_NOTICE       = DAY_LENGTH;     // announced a day ahead — time to campaign
+const CAMPAIGN_SWING      = 0.12;           // support shift per campaign purchase
+const CAMPAIGN_MAX        = 3;              // purchases per side per ballot
+const VOTE_NOISE          = 0.25;           // private wobble in every voter's mind
+const FEAST_FOOD_COST     = 15;             // food a town spends per public feast
+
+// Each policy: what it does to the sim (wired into the relevant tick
+// functions via lawActive), when it can appear on a ballot, and how a single
+// citizen leans on it given their own circumstances (roughly -1 … 1).
+const POLICIES = {
+  eight_hour_day: {
+    name: 'eight-hour day', emoji: '⏳', cat: 'labor',
+    desc: 'workers down tools earlier: +6 happiness everywhere, but staffed buildings produce 25% less',
+    unlocked: () => eraIndex >= 1,
+    support(p, th) {
+      let s = 0.1;
+      if (p.job === 'worker') s += 0.5;
+      if (foodTicksFor(th) < 15) s -= 0.5;      // a hungry town can't afford short shifts
+      if ((th.happiness ?? 70) < 55) s += 0.2;
+      return s;
+    },
+  },
+  guild_charters: {
+    name: 'guild charters', emoji: '📜', cat: 'labor',
+    desc: 'formal apprenticeships: workers learn twice as fast on the job, but output falls 15%',
+    unlocked: () => eraIndex >= 1,
+    support(p, th) {
+      let s = 0;
+      if ((p.level || 0) < 3) s += 0.4;         // the unskilled want a way up
+      if ((p.level || 0) >= 5) s -= 0.2;        // masters see nothing in it for them
+      if (p.job === 'worker') s += 0.3;
+      if (foodTicksFor(th) < 15) s -= 0.3;
+      return s;
+    },
+  },
+  open_borders: {
+    name: 'open borders', emoji: '🚶', cat: 'growth',
+    desc: 'the town welcomes outsiders: migrants arrive far more often and births rise',
+    unlocked: () => eraIndex >= 1,
+    support(p, th) {
+      let s = 0.05 + housingVacancy().ratio * 0.7; // empty beds want neighbours
+      if (p.houseId == null) s -= 0.7;             // the homeless fear more competition
+      if ((th.happiness ?? 70) < 50) s -= 0.3;
+      return s;
+    },
+  },
+  homestead_act: {
+    name: 'homestead act', emoji: '🏠', cat: 'growth',
+    desc: 'housing is subsidised: houses cost half and town halls build them sooner',
+    unlocked: () => true,
+    support(p, th) {
+      let s = 0;
+      if (p.houseId == null) s += 0.9;
+      if (housingVacancy().empty === 0) s += 0.4;
+      if ((th.resources.wood || 0) < 20) s -= 0.25; // subsidies drain a lean woodpile
+      return s;
+    },
+  },
+  public_feasts: {
+    name: 'public feasts', emoji: '🎪', cat: 'culture',
+    desc: 'every new season each town spends ' + FEAST_FOOD_COST + ' food on a free festival',
+    unlocked: () => eraIndex >= 1,
+    support(p, th) {
+      let s = 0.4;
+      if (p.hungry) s -= 0.8;
+      if (foodTicksFor(th) < 20) s -= 0.5;
+      if ((th.happiness ?? 70) < 60) s += 0.2;
+      return s;
+    },
+  },
+  church_tithe: {
+    name: 'church tithe', emoji: '⛪', cat: 'culture',
+    desc: 'the faithful give more: deaths near a church release 2× souls, but the obligation costs −3 happiness',
+    unlocked: () => researched.has('worship'),
+    support(p, th) {
+      let s = -0.1;
+      if (p.age > p.maxAge * 0.7) s += 0.6;  // the old think of their legacy
+      if (p.age < p.maxAge * 0.3) s -= 0.25; // the young resent the collection plate
+      if (jobTitle(p) === 'priest') s += 0.7;
+      return s;
+    },
+  },
+  rationing: {
+    name: 'rationing', emoji: '🍞', cat: 'welfare',
+    desc: 'meals are stretched: citizens eat 30% less food, at −6 happiness',
+    unlocked: () => true,
+    support(p, th) {
+      let s = -0.25;
+      if (p.hungry) s += 0.9;
+      const ft = foodTicksFor(th);
+      if (ft < 10) s += 0.7;
+      else if (ft > 30) s -= 0.4;
+      return s;
+    },
+  },
+  clean_air_act: {
+    name: 'clean air act', emoji: '🌫', cat: 'environment',
+    desc: 'scrubbers on every stack: factories drag happiness down far less, but earn 40% less gold',
+    unlocked: () => researched.has('industry'),
+    support(p, th) {
+      if (jobTitle(p) === 'machinist') return -0.6;   // fears for the payroll
+      const factories = th.nearFactories || 0;
+      if (factories === 0) return -0.05;              // someone else's problem
+      return Math.min(0.7, 0.2 + factories * 0.15);   // the smoke is personal
+    },
+  },
+  greenbelt: {
+    name: 'greenbelt', emoji: '🌳', cat: 'environment',
+    desc: 'the woods are protected: parks give +8 happiness, but tree farms yield 25% less wood',
+    unlocked: () => eraIndex >= 1,
+    support(p, th) {
+      let s = 0.1;
+      const job = jobTitle(p);
+      if (job === 'groundskeeper') s += 0.5;
+      if (job === 'forester') s -= 0.6;
+      if ((th.happiness ?? 70) < 65) s += 0.25;
+      if ((th.resources.wood || 0) < 30) s -= 0.35;
+      return s;
+    },
+  },
+};
+
+let politics = {
+  enacted: [],            // keys of laws in force
+  ballot: null,           // { key, kind: 'enact'|'repeal', for: 0, against: 0 }
+  nextReferendumTick: 0,  // 0 = the assembly hasn't formed yet
+  announcedFor: -1,       // referendum tick whose ballot has been drawn (or skipped)
+};
+
+function lawActive(key) { return politics.enacted.includes(key); }
+
+function foodTicksFor(th) {
+  return people.length > 0 ? (th.resources.food || 0) / people.length : 99;
+}
 
 // ── Game state ────────────────────────────────────────────────────────────────
 
@@ -574,7 +718,9 @@ function regenerateResources() {
         // adjacent tiles. A drained node of another type (e.g. the stone the
         // farm was built over) makes way for the farm's own produce.
         if (!resourceMap[r][c] || resourceMap[r][c].amount <= 0) resourceMap[r][c] = { type: 'wood', amount: 0 };
-        if (resourceMap[r][c].type === 'wood' && resourceMap[r][c].amount < 40 && Math.random() < 0.6)
+        // The greenbelt protects the woods — tree farms replenish more slowly
+        if (resourceMap[r][c].type === 'wood' && resourceMap[r][c].amount < 40
+            && Math.random() < (lawActive('greenbelt') ? 0.45 : 0.6))
           resourceMap[r][c].amount += 2 + Math.floor(Math.random() * 4);
       }
       if (t === STONE_FARM) {
@@ -623,7 +769,7 @@ function soulYield(p) {
   const th = nearestTownHall(r, c);
   const happy = th ? (th.happiness ?? 70) : 50;
   let y = (1 + (p.level || 0)) * (happy / 70);
-  if (churchNear(r, c)) y *= CHURCH_SOUL_MULT;
+  if (churchNear(r, c)) y *= lawActive('church_tithe') ? 2 : CHURCH_SOUL_MULT;
   return Math.max(1, Math.round(y));
 }
 
@@ -732,8 +878,9 @@ function spawnPerson(r, c, quiet = false) {
 }
 
 function consumeFood() {
+  const eatChance = lawActive('rationing') ? 0.07 : 0.1;
   for (const p of people) {
-    if (Math.random() >= 0.1) continue;
+    if (Math.random() >= eatChance) continue;
     const th = nearestTownHall(Math.round(p.y), Math.round(p.x));
     if (th && th.resources.food >= 1) {
       th.resources.food--;
@@ -1197,14 +1344,25 @@ function depositResources() {
 }
 
 
+const HOUSING_TYPES = new Set([HOUSE, ROW_HOUSE, APARTMENT]);
+
+// The homestead act halves the cost of housing
+function buildCostFor(type) {
+  const cost = BUILD_COSTS[type];
+  if (!HOUSING_TYPES.has(type) || !lawActive('homestead_act')) return cost;
+  const subsidised = {};
+  for (const [k, v] of Object.entries(cost)) subsidised[k] = Math.ceil(v / 2);
+  return subsidised;
+}
+
 function canAffordBuild(type, th) {
   if (!th) return false;
-  const cost = BUILD_COSTS[type];
+  const cost = buildCostFor(type);
   return Object.entries(cost).every(([k, v]) => (th.resources[k] || 0) >= v);
 }
 
 function spendBuildCost(type, th) {
-  const cost = BUILD_COSTS[type];
+  const cost = buildCostFor(type);
   for (const [k, v] of Object.entries(cost)) th.resources[k] = (th.resources[k] || 0) - v;
 }
 
@@ -1798,7 +1956,7 @@ function thAutoBuild(th) {
   // otherwise build roads to open up more sites. Homeless citizens jump the
   // queue: any homelessness means housing comes before everything else.
   const fillRatio = th.popCap > 0 ? people.length / th.popCap : 1;
-  if (space > 0 && (homelessCount() > 0 || fillRatio > 0.5)) {
+  if (space > 0 && (homelessCount() > 0 || fillRatio > (lawActive('homestead_act') ? 0.3 : 0.5))) {
     if (!thHouseStep(th)) {
       // Only fall back to a road when the house failed for lack of a site.
       // If it failed on cost, skip the road — a 1-wood road every cycle
@@ -2198,6 +2356,7 @@ function houseSpawnPeople() {
     // Birth rate scales with local happiness; festivals triple it.
     // Kept modest so the player's spawn waves stay the main population lever.
     let spawnChance = 0.0015 * ((th ? th.happiness ?? 70 : 70) / 50) * vacancyBoost;
+    if (lawActive('open_borders')) spawnChance *= 1.5;
     if (th && (th.festivalUntil || 0) > simTick) spawnChance *= 3;
     if (Math.random() > spawnChance) continue;
     const site = findGrassSiteNear(h.r, h.c, 1, 2);
@@ -2224,7 +2383,13 @@ function computeTHHappiness(th) {
       else if (t === FACTORY) factories++;
       else if (t === WELL)    wells++;
     }
-  let h = 70 + parks * 5 + wells * 3 - factories * 10;
+  th.nearFactories = factories; // cached for policy support checks
+  const parkBonus   = lawActive('greenbelt')     ? 8 : 5;
+  const factoryCost = lawActive('clean_air_act') ? 4 : 10;
+  let h = 70 + parks * parkBonus + wells * 3 - factories * factoryCost;
+  if (lawActive('eight_hour_day')) h += 6;
+  if (lawActive('rationing'))      h -= 6;
+  if (lawActive('church_tithe'))   h -= 3;
   // Homelessness weighs on the whole town
   let homelessHere = 0;
   for (const p of people) {
@@ -2267,6 +2432,147 @@ function emigrationTick() {
       logEvent('🧳 ' + p.name + ' left town in search of a better life', 'bad');
     }
   }
+}
+
+// ── Politics: referendums ─────────────────────────────────────────────────────
+
+// A citizen's leaning on a policy, judged from their own circumstances (-1 … 1)
+function policySupport(key, p) {
+  const th = nearestTownHall(Math.round(p.y), Math.round(p.x));
+  if (!th) return 0;
+  return clamp(POLICIES[key].support(p, th), -1, 1);
+}
+
+function avgSupport(key) {
+  if (people.length === 0) return 0;
+  let sum = 0;
+  for (const p of people) sum += policySupport(key, p);
+  return sum / people.length;
+}
+
+// A citizen's yes-leaning on the current ballot: a repeal measure passes on the
+// votes of those who dislike the law, so the sign flips. Campaigns shift everyone.
+function ballotLeaning(p) {
+  const b = politics.ballot;
+  const s = policySupport(b.key, p);
+  return (b.kind === 'repeal' ? -s : s) + (b.for - b.against) * CAMPAIGN_SWING;
+}
+
+// Poll: projected yes share (%). The real vote adds private noise per voter.
+function pollBallot() {
+  if (!politics.ballot || people.length === 0) return 50;
+  let yes = 0;
+  for (const p of people) if (ballotLeaning(p) > 0) yes++;
+  return Math.round((yes / people.length) * 100);
+}
+
+function announceBallot() {
+  politics.announcedFor = politics.nextReferendumTick;
+
+  // Retraction comes first: any law the people have turned against goes back
+  // to the ballot before anything new is proposed — bad laws correct themselves.
+  let measure = null, worstAvg = -0.05;
+  for (const key of politics.enacted) {
+    const a = avgSupport(key);
+    if (a < worstAvg) { worstAvg = a; measure = { key, kind: 'repeal' }; }
+  }
+  if (!measure) {
+    // Otherwise the most-wanted new law is proposed
+    let bestAvg = -0.15; // nothing wildly unpopular reaches the ballot
+    for (const [key, pol] of Object.entries(POLICIES)) {
+      if (politics.enacted.includes(key) || !pol.unlocked()) continue;
+      const a = avgSupport(key);
+      if (a > bestAvg) { bestAvg = a; measure = { key, kind: 'enact' }; }
+    }
+  }
+  if (!measure) return; // nothing worth voting on this cycle
+  politics.ballot = { ...measure, for: 0, against: 0 };
+  const pol = POLICIES[measure.key];
+  logEvent('🗳 on tomorrow\'s ballot: ' + (measure.kind === 'repeal' ? 'repeal the ' : 'the ')
+    + pol.emoji + ' ' + pol.name, 'info');
+}
+
+function holdReferendum() {
+  const b = politics.ballot;
+  politics.ballot = null;
+  if (!b) return;
+  const pol = POLICIES[b.key];
+  let yes = 0, no = 0;
+  const shift = (b.for - b.against) * CAMPAIGN_SWING;
+  for (const p of people) {
+    const s = (b.kind === 'repeal' ? -1 : 1) * policySupport(b.key, p)
+            + shift + (Math.random() * 2 - 1) * VOTE_NOISE;
+    if (s > 0) yes++; else no++;
+  }
+  const passed = yes > no;
+  const tally = yes + '–' + no;
+  if (b.kind === 'enact') {
+    if (passed) {
+      politics.enacted.push(b.key);
+      addChronicle('the people enacted the ' + pol.name + ' (' + tally + ')');
+      logEvent('🗳 the ' + pol.name + ' passes, ' + tally + ' — it is now law', 'good');
+      showBanner(pol.emoji + ' ' + pol.name + ' enacted ' + pol.emoji);
+      sfx('era');
+    } else {
+      logEvent('🗳 the ' + pol.name + ' fails at the ballot box, ' + tally, 'info');
+    }
+  } else if (passed) {
+    politics.enacted = politics.enacted.filter(k => k !== b.key);
+    addChronicle('the people repealed the ' + pol.name + ' (' + tally + ')');
+    logEvent('🗳 the ' + pol.name + ' is repealed, ' + tally + ' — the law is struck down', 'info');
+    showBanner('🗳 ' + pol.name + ' repealed 🗳');
+    sfx('bad');
+  } else {
+    logEvent('🗳 the ' + pol.name + ' survives its repeal vote, ' + tally, 'info');
+  }
+}
+
+function politicsTick() {
+  if (townHalls.length === 0) return;
+  if (politics.nextReferendumTick === 0) {
+    if (people.length < POLITICS_MIN_POP) return;
+    politics.nextReferendumTick = simTick + REFERENDUM_INTERVAL;
+    addChronicle("the people formed a citizens' assembly");
+    logEvent('🗳 the town is big enough to talk politics — the first referendum is in 2 days', 'good');
+    return;
+  }
+  if (!politics.ballot && politics.announcedFor !== politics.nextReferendumTick
+      && simTick >= politics.nextReferendumTick - BALLOT_NOTICE) {
+    announceBallot();
+  }
+  if (simTick >= politics.nextReferendumTick) {
+    holdReferendum();
+    politics.nextReferendumTick = simTick + REFERENDUM_INTERVAL;
+  }
+}
+
+// Under the public feasts law, every town that can spare the food opens the
+// new season with a free festival (same effect as the paid power)
+function holdPublicFeasts() {
+  let held = 0;
+  for (const th of townHalls) {
+    if (th.resources.food >= FEAST_FOOD_COST && (th.festivalUntil || 0) <= simTick) {
+      th.resources.food -= FEAST_FOOD_COST;
+      th.festivalUntil = simTick + FESTIVAL_LENGTH;
+      held++;
+    }
+  }
+  if (held > 0) logEvent('🎪 public feast day — the new season opens with festivals, as the law demands', 'good');
+}
+
+// Player nudge: gold buys rallies for or against the measure on the ballot
+function campaign(side) {
+  const b = politics.ballot;
+  if (!b) { logEvent('no measure is on the ballot right now'); return; }
+  if (b[side] >= CAMPAIGN_MAX) { logEvent('the streets are already saturated with that message'); return; }
+  if (gold < POWER_COSTS.campaign) { logEvent('need $' + POWER_COSTS.campaign + ' to campaign'); return; }
+  gold -= POWER_COSTS.campaign;
+  b[side]++;
+  const pol = POLICIES[b.key];
+  logEvent('📣 rallies ' + side + ' the ' + (b.kind === 'repeal' ? 'repeal of the ' : '')
+    + pol.name + ' fill the squares', 'info');
+  sfx('coin');
+  updateUI();
 }
 
 // ── Random events ─────────────────────────────────────────────────────────────
@@ -2374,9 +2680,11 @@ function eventsTick() {
     if (placed > 0) logEvent('🌾 bumper harvest! ' + placed + ' food caches appeared', 'good');
   }
 
-  // Migrants — drawn to happy towns with room to spare
-  if (globalHappiness() >= 75 && people.length >= 5 && people.length < globalPopCap()
-      && Math.random() < 0.0006) {
+  // Migrants — drawn to happy towns with room to spare. Open borders draws
+  // them in far more often, and even merely content towns will do.
+  const openBorders = lawActive('open_borders');
+  if (globalHappiness() >= (openBorders ? 60 : 75) && people.length >= 5 && people.length < globalPopCap()
+      && Math.random() < 0.0006 * (openBorders ? 4 : 1)) {
     const th = townHalls[Math.floor(Math.random() * townHalls.length)];
     const n = 2 + Math.floor(Math.random() * 2);
     let arrived = 0;
@@ -2637,11 +2945,16 @@ function workerTick() {
     const nearSchool = schoolNear(entry.r, entry.c);
     let mult = 0.5 + (th.happiness ?? 70) / 100;
     if (nearSchool) mult *= 1.3;
+    if (lawActive('eight_hour_day')) mult *= 0.75;
+    if (lawActive('guild_charters')) mult *= 0.85;
+    if (entry.type === FACTORY   && lawActive('clean_air_act')) mult *= 0.6;
+    if (entry.type === TREE_FARM && lawActive('greenbelt'))     mult *= 0.75;
 
-    // Working is how citizens learn a trade
+    // Working is how citizens learn a trade — guild charters teach twice as fast
+    const xpMult = lawActive('guild_charters') ? 2 : 1;
     for (const pid of entry.workers) {
       const wp = byId.get(pid);
-      if (wp) grantXP(wp, 0.25, nearSchool);
+      if (wp) grantXP(wp, 0.25 * xpMult, nearSchool);
     }
 
     if (entry.type === SHOP) {
@@ -2825,9 +3138,12 @@ function simulationTick() {
   houseSpawnPeople();
   fireTick();
   eventsTick();
+  politicsTick();
   updateParticles();
-  if (simTick % SEASON_LENGTH === 0 && townHalls.length > 0)
+  if (simTick % SEASON_LENGTH === 0 && townHalls.length > 0) {
     logEvent(SEASON_NOTES[currentSeason()], 'info');
+    if (lawActive('public_feasts')) holdPublicFeasts();
+  }
   if (simTick % 8 === 0) {
     rehouseHomeless();
     refreshHappiness();
@@ -3038,6 +3354,9 @@ function updateUI() {
   // Research panel
   renderResearch();
 
+  // Politics panel
+  updatePoliticsUI();
+
   // Inspector panel
   updateInspector();
 
@@ -3054,6 +3373,120 @@ function updateUI() {
   // Minimap & trend graphs (throttled — they redraw whole canvases)
   if (uiTickCounter % 4 === 1) drawMinimap();
   if (uiTickCounter % 8 === 1) drawTrends();
+}
+
+// ── Politics UI ───────────────────────────────────────────────────────────────
+
+// Polling every citizen on every UI refresh would be wasteful — cache results
+// and refresh every couple of seconds (or immediately when the ballot changes)
+let cachedPoll       = { tick: -1, value: 50, key: null };
+let cachedLawSupport = { tick: -1, values: {} };
+
+function updatePoliticsUI() {
+  const lockedEl = document.getElementById('politics-locked');
+  const boxEl    = document.getElementById('referendum-box');
+  if (!lockedEl || !boxEl) return;
+  const awake = politics.nextReferendumTick > 0;
+  lockedEl.style.display = awake ? 'none' : '';
+  boxEl.style.display    = awake ? '' : 'none';
+
+  if (awake) {
+    const ticksLeft = Math.max(0, politics.nextReferendumTick - simTick);
+    document.getElementById('ballot-when').textContent = ticksLeft >= DAY_LENGTH
+      ? (ticksLeft / DAY_LENGTH).toFixed(1) + 'd'
+      : Math.max(1, Math.ceil(ticksLeft / 4)) + 'h';
+    const b = politics.ballot;
+    const pol = b ? POLICIES[b.key] : null;
+    document.getElementById('ballot-measure').textContent =
+      b ? (b.kind === 'repeal' ? 'repeal ' : '') + pol.emoji + ' ' + pol.name : 'being drafted…';
+    document.getElementById('ballot-desc').textContent = b ? pol.desc : '';
+    const pollEl = document.getElementById('ballot-poll');
+    if (b) {
+      const pollKey = b.key + b.kind + b.for + b.against;
+      if (cachedPoll.key !== pollKey || simTick - cachedPoll.tick >= 8) {
+        cachedPoll = { tick: simTick, value: pollBallot(), key: pollKey };
+      }
+      pollEl.textContent = cachedPoll.value + '% in favour';
+      pollEl.className = 'value ' + (cachedPoll.value >= 50 ? 'pos' : 'neg');
+    } else {
+      pollEl.textContent = '—';
+      pollEl.className = 'value';
+    }
+    document.getElementById('campaign-for').disabled =
+      !b || gold < POWER_COSTS.campaign || b.for >= CAMPAIGN_MAX;
+    document.getElementById('campaign-against').disabled =
+      !b || gold < POWER_COSTS.campaign || b.against >= CAMPAIGN_MAX;
+  }
+
+  // Laws in force, with how the people feel about each — a resented law is
+  // headed for a repeal vote
+  const list = document.getElementById('laws-list');
+  if (!list) return;
+  if (politics.enacted.length === 0) {
+    if (list.dataset.sig !== 'none') {
+      list.dataset.sig = 'none';
+      list.innerHTML = '<p class="hint">no laws have been enacted yet</p>';
+    }
+    return;
+  }
+  if (simTick - cachedLawSupport.tick >= 32
+      || Object.keys(cachedLawSupport.values).length !== politics.enacted.length) {
+    const values = {};
+    for (const key of politics.enacted) values[key] = avgSupport(key);
+    cachedLawSupport = { tick: simTick, values };
+  }
+  const moodOf = a => a >= 0.05 ? 'popular' : a <= -0.05 ? 'resented' : 'tolerated';
+  // Rebuild the rows only when the laws or their moods change — rebuilding on
+  // every UI refresh would tear the hover tooltips down as they appear
+  const sig = politics.enacted.map(k => k + ':' + moodOf(cachedLawSupport.values[k] ?? 0)).join('|');
+  if (list.dataset.sig === sig) return;
+  list.dataset.sig = sig;
+  if (lawTooltipKey) clearHoverInfo(); // the hovered row is about to be replaced
+  list.innerHTML = '';
+  for (const key of politics.enacted) {
+    const pol = POLICIES[key];
+    const row = document.createElement('div');
+    row.className = 'stat-row law-row';
+    const name = document.createElement('span');
+    name.textContent = pol.emoji + ' ' + pol.name;
+    const val = document.createElement('span');
+    const a = cachedLawSupport.values[key] ?? 0;
+    val.className = 'value ' + (a >= 0.05 ? 'pos' : a <= -0.05 ? 'neg' : '');
+    val.textContent = moodOf(a);
+    row.appendChild(name);
+    row.appendChild(val);
+    row.addEventListener('mouseenter', (e) => showLawTooltip(key, e));
+    row.addEventListener('mousemove',  (e) => showLawTooltip(key, e));
+    row.addEventListener('mouseleave', clearHoverInfo);
+    list.appendChild(row);
+  }
+}
+
+// Rich hover card for a law in force: what it does and where opinion stands
+let lawTooltipKey = null;
+
+function showLawTooltip(key, e) {
+  const pol = POLICIES[key];
+  lawTooltipKey = key;
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
+  let favour = 0;
+  for (const p of people) if (policySupport(key, p) > 0) favour++;
+  const share = people.length > 0 ? Math.round((favour / people.length) * 100) : 0;
+  const lines = [
+    pol.emoji + ' ' + pol.name + ' — law in force',
+    pol.desc,
+    share + '% of citizens favour keeping it'
+      + (share < 50 ? ' — a repeal vote is coming' : ''),
+  ];
+  tooltip.innerHTML = '';
+  for (const line of lines) {
+    const div = document.createElement('div');
+    div.textContent = line;
+    tooltip.appendChild(div);
+  }
+  tooltip.style.display = 'block';
+  positionTooltip();
 }
 
 // Workers show their trade (forester, mason, priest…) instead of plain "worker"
@@ -3090,6 +3523,19 @@ function updateInspector() {
   document.getElementById('insp-carrying').textContent = carryParts.length ? carryParts.join(', ') : 'nothing';
   document.getElementById('insp-home').textContent =
     p.houseId != null && houseRegistry[p.houseId] ? houseRegistry[p.houseId].c + ', ' + houseRegistry[p.houseId].r : 'homeless';
+  const stanceEl = document.getElementById('insp-politics');
+  if (stanceEl) {
+    const b = politics.ballot;
+    if (b) {
+      const lean = ballotLeaning(p);
+      const measure = (b.kind === 'repeal' ? 'repealing ' : '') + POLICIES[b.key].name;
+      stanceEl.textContent = lean > 0.05 ? '👍 for ' + measure
+                           : lean < -0.05 ? '👎 against ' + measure
+                           : '🤷 unsure on ' + measure;
+    } else {
+      stanceEl.textContent = '—';
+    }
+  }
   const followBtn = document.getElementById('follow-btn');
   followBtn.textContent = followSelected ? '📷 following (stop)' : '📷 follow';
   followBtn.classList.toggle('selected', followSelected);
@@ -4092,6 +4538,8 @@ for (const [mode, id] of Object.entries(MODE_BUTTONS)) {
 
 document.getElementById('festival-btn').addEventListener('click', startFestival);
 document.getElementById('charter-btn').addEventListener('click', charterExpedition);
+document.getElementById('campaign-for').addEventListener('click', () => campaign('for'));
+document.getElementById('campaign-against').addEventListener('click', () => campaign('against'));
 
 for (const btn of document.querySelectorAll('.sway-btn')) {
   btn.addEventListener('click', () => swayVote(parseInt(btn.dataset.type)));
@@ -4305,6 +4753,7 @@ function positionTooltip() {
 }
 
 function clearHoverInfo() {
+  lawTooltipKey = null;
   tooltip.style.display = 'none';
 }
 
@@ -4314,7 +4763,8 @@ setInterval(() => {
   // Factory count comes from the cached tile counts (refreshed by updateUI)
   // instead of scanning all 10,000 tiles every second
   if (!cachedCounts) recomputeTileCounts();
-  const income = (TILE_INCOME[FACTORY] || 0) * cachedCounts.factories;
+  const income = (TILE_INCOME[FACTORY] || 0) * cachedCounts.factories
+    * (lawActive('clean_air_act') ? 0.6 : 1);
   if (income !== 0) {
     gold = Math.max(0, gold + income);
     updateUI();
@@ -4327,7 +4777,7 @@ const SAVE_KEY = 'citybuilder_save';
 
 function saveGame() {
   const data = {
-    v: 7,
+    v: 8,
     gold, souls, lifespanLevel, speedLevel, sightLevel, landLevel,
     simTick, nextPersonId, nextHouseId, lastExploreTick,
     researched: [...researched],
@@ -4350,6 +4800,7 @@ function saveGame() {
     records: { ...records },
     chronicle: chronicle.map(e => ({ ...e })),
     burningTiles: JSON.parse(JSON.stringify(burningTiles)),
+    politics: JSON.parse(JSON.stringify(politics)),
   };
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
   showMessage('game saved!');
@@ -4360,7 +4811,7 @@ function loadGame() {
   if (!raw) { showMessage('no save found.'); return false; }
   try {
     const data = JSON.parse(raw);
-    if (!(data.v >= 1 && data.v <= 7)) { showMessage('save version mismatch.'); return false; }
+    if (!(data.v >= 1 && data.v <= 8)) { showMessage('save version mismatch.'); return false; }
 
     gold             = data.gold;
     souls            = data.souls ?? 10;
@@ -4381,6 +4832,15 @@ function loadGame() {
     };
     chronicle    = data.chronicle || [];
     burningTiles = data.burningTiles || {};
+
+    // Politics (v8) — older saves start with a fresh slate; drop any law or
+    // ballot whose policy no longer exists
+    politics = {
+      enacted: [], ballot: null, nextReferendumTick: 0, announcedFor: -1,
+      ...(data.politics || {}),
+    };
+    politics.enacted = (politics.enacted || []).filter(k => POLICIES[k]);
+    if (politics.ballot && !POLICIES[politics.ballot.key]) politics.ballot = null;
     fireActive   = Object.keys(burningTiles).length > 0;
     particles    = [];
     history      = { pop: [], food: [], gold: [], souls: [] };

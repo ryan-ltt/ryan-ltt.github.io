@@ -52,6 +52,7 @@
         <div class="tab-bar">
           <button class="tab-btn selected" data-tab="tab-city">🏘 city</button>
           <button class="tab-btn" data-tab="tab-powers">⚡ powers</button>
+          <button class="tab-btn" data-tab="tab-politics">🗳 politics</button>
           <button class="tab-btn" data-tab="tab-research">🔬 research</button>
           <button class="tab-btn" data-tab="tab-story">📖 story</button>
           <button class="tab-btn" data-tab="tab-save">💾 save</button>
@@ -66,6 +67,7 @@
           <div class="stat-row"><span>doing</span><span class="value" id="insp-mode">—</span></div>
           <div class="stat-row"><span>carrying</span><span class="value" id="insp-carrying">—</span></div>
           <div class="stat-row"><span>home</span><span class="value" id="insp-home">—</span></div>
+          <div class="stat-row"><span>politics</span><span class="value" id="insp-politics">—</span></div>
           <div class="inspector-buttons">
             <button id="follow-btn" class="action-btn">📷 follow</button>
             <button id="deselect-btn" class="action-btn">close</button>
@@ -171,6 +173,29 @@
             <div class="stat-row vote-row"><span>well</span><span class="value" id="votes-well">🔒 village</span><button class="sway-btn" data-type="13" title="sway +3 votes ($100)">+3</button></div>
             <div class="stat-row vote-row"><span>school</span><span class="value" id="votes-school">🔒 town</span><button class="sway-btn" data-type="14" title="sway +3 votes ($100)">+3</button></div>
             <p class="hint">votes cast when depositing at town hall · +3 buttons bribe voters for $100</p>
+          </div>
+        </div>
+
+        <div class="tab-page" id="tab-politics" style="display:none">
+          <div class="panel">
+            <h2>referendum</h2>
+            <p class="hint" id="politics-locked">the citizens' assembly forms once 10 people live under your care — from then on, one measure goes to a vote every two days</p>
+            <div id="referendum-box" style="display:none">
+              <div class="stat-row"><span>next vote</span><span class="value" id="ballot-when">—</span></div>
+              <div class="stat-row"><span>on the ballot</span><span class="value" id="ballot-measure">—</span></div>
+              <p class="hint" id="ballot-desc"></p>
+              <div class="stat-row"><span>the polls say</span><span class="value" id="ballot-poll">—</span></div>
+              <div class="powers-grid">
+                <button id="campaign-for" class="action-btn">📣 campaign for ($150)</button>
+                <button id="campaign-against" class="action-btn">📣 campaign against ($150)</button>
+              </div>
+              <p class="hint">citizens vote their own interests — rallies sway the undecided (3 per side per ballot)</p>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>laws in force</h2>
+            <div id="laws-list"><p class="hint">no laws have been enacted yet</p></div>
+            <p class="hint">laws the people turn against face repeal votes of their own accord</p>
           </div>
         </div>
 
