@@ -62,14 +62,38 @@ h1 {
   display: flex;
   gap: 16px;
   align-items: flex-start;
+  width: 100%;
+  max-width: 2000px;
 }
 
+/* The canvas flexes to fill the space between the panels; a ResizeObserver in
+   the JS keeps the drawing buffer matched to the on-screen size. */
 #gameCanvas {
   border: 3px solid #000;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   cursor: crosshair;
   display: block;
+  flex: 1 1 auto;
+  min-width: 320px;
+  height: calc(100vh - 200px);
+  min-height: 480px;
+}
+
+/* ── Fullscreen: hide the chrome, let the game fill the screen ── */
+
+body.fullscreen h1,
+body.fullscreen .top-left-buttons {
+  display: none;
+}
+
+body.fullscreen .game-wrapper {
+  padding: 10px;
+}
+
+body.fullscreen #gameCanvas {
+  height: calc(100vh - 26px);
+  min-height: 0;
 }
 
 #gameCanvas.demolish {
