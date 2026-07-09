@@ -11,11 +11,11 @@ const MAP_ROWS = 100;
 const ZOOM_LEVELS = [8, 12, 16, 24, 32, 48, 64];
 const ZOOM_LABELS  = ['25%', '37%', '50%', '75%', '100%', '150%', '200%'];
 
-const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7, TREE_FARM = 8, STONE_FARM = 9, FARM = 10, ROW_HOUSE = 11, APARTMENT = 12, WELL = 13, SCHOOL = 14;
+const GRASS = 0, ROAD = 1, HOUSE = 2, SHOP = 3, PARK = 4, FACTORY = 5, CHURCH = 6, TOWN_HALL = 7, TREE_FARM = 8, STONE_FARM = 9, FARM = 10, ROW_HOUSE = 11, APARTMENT = 12, WELL = 13, SCHOOL = 14, WALL = 15;
 
 // Flat colours used for LOD / minimap-like rendering at very small tile sizes
-const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00', '#388e3c', '#78909c', '#f9a825', '#e57373', '#7e57c2', '#4fc3f7', '#ff8a65'];
-const TILE_NAMES  = ['grass', 'path', 'house', 'market', 'park', 'factory', 'church', 'town hall', 'tree farm', 'stone farm', 'farm', 'row house', 'apartment', 'well', 'school'];
+const TILE_COLORS = ['#4caf50', '#a1887f', '#1e88e5', '#ffe082', '#66bb6a', '#616161', '#9c27b0', '#ff6f00', '#388e3c', '#78909c', '#f9a825', '#e57373', '#7e57c2', '#4fc3f7', '#ff8a65', '#8a939c'];
+const TILE_NAMES  = ['grass', 'path', 'house', 'market', 'park', 'factory', 'church', 'town hall', 'tree farm', 'stone farm', 'farm', 'row house', 'apartment', 'well', 'school', 'wall'];
 
 // Income per second from structures built by the civilization
 const TILE_INCOME = { [FACTORY]: 30 };
@@ -130,7 +130,7 @@ const BUILDING_TIER = {
   [HOUSE]: 1, [PARK]: 1, [TREE_FARM]: 1, [STONE_FARM]: 1, [FARM]: 1,
   [CHURCH]: 2, [SHOP]: 2, [WELL]: 2, [ROW_HOUSE]: 2,
   [FACTORY]: 3, [SCHOOL]: 3, [APARTMENT]: 3,
-  [TOWN_HALL]: 9,
+  [TOWN_HALL]: 9, [WALL]: 9, // never redeveloped — walls come down by war or demolition only
 };
 
 // ── Gold powers ───────────────────────────────────────────────────────────────
@@ -340,6 +340,100 @@ function foodTicksFor(th) {
   return people.length > 0 ? (th.resources.food || 0) / people.length : 99;
 }
 
+// ── War & military: town measures ─────────────────────────────────────────────
+// Every citizen belongs to a town (their townId points at a hall). Alongside
+// the civilization-wide laws above, each town of 8+ holds its own vote every
+// two days on matters of walls and war: raise a wall ring, muster a militia,
+// march on a neighbouring town to steal its stockpile, or sue for peace.
+// The player never orders a war — towns talk themselves into them.
+const TOWN_MIN_POP          = 8;               // citizens needed for a town meeting
+const TOWN_MEASURE_INTERVAL = 2 * DAY_LENGTH;  // one town measure every two days
+const WAR_LENGTH            = 2 * DAY_LENGTH;  // wars burn out after two days
+const SOLDIER_RATIO         = 5;               // 1 soldier per 5 citizens…
+const MAX_SOLDIERS          = 6;               // …capped per town
+const WALL_STONE_COST       = 1;               // stone per wall segment
+const PATROL_RADIUS         = 8;               // peacetime soldiers loiter this close to their hall
+const GRUDGE_MEMORY         = 6 * DAY_LENGTH;  // how long a raided town resents its attacker
+
+function raidedRecently(th) { return simTick - (th.lastRaidedTick ?? -99999) < 3 * DAY_LENGTH; }
+
+// Each measure: when a town may consider it, and how one citizen leans (-1 … 1)
+const TOWN_MEASURES = {
+  walls: {
+    name: 'raise the walls', emoji: '🧱',
+    desc: 'ring the town in a stone wall — roads become gates, raiders must funnel through them',
+    available: (th) => eraIndex >= 1 && !th.wallPlan,
+    support(p, th) {
+      let s = 0.15;
+      if (raidedRecently(th)) s += 0.6;               // once bitten
+      if (wars.length > 0)    s += 0.25;              // war is in the air
+      if ((th.resources.stone || 0) < 30) s -= 0.45;  // can't spare the stone
+      if (foodTicksFor(th) < 10) s -= 0.3;
+      return s;
+    },
+  },
+  militia: {
+    name: 'muster a militia', emoji: '🛡',
+    desc: 'the town drafts its ablest into soldiers — they patrol in peace and fight in war, but gather nothing',
+    available: (th) => eraIndex >= 1 && !th.militia,
+    support(p, th) {
+      let s = 0.05;
+      if (raidedRecently(th)) s += 0.55;
+      if (wars.length > 0)    s += 0.25;
+      if (townHalls.some(o => o !== th && o.militia)) s += 0.2; // the neighbours are arming
+      if (foodTicksFor(th) < 15) s -= 0.5;            // idle mouths in a famine
+      if ((p.level || 0) >= 3) s += 0.15;             // the able fancy a rank
+      return s;
+    },
+  },
+  disband: {
+    name: 'disband the militia', emoji: '🕊',
+    desc: 'the soldiers hang up their spears and go back to gathering',
+    available: (th) => th.militia && !isAtWar(th),
+    support(p, th) {
+      let s = simTick - (th.lastRaidedTick ?? -99999) > GRUDGE_MEMORY ? 0.15 : -0.6;
+      if (foodTicksFor(th) < 10) s += 0.45;           // hungry towns want hands, not spears
+      if (wars.length > 0) s -= 0.35;
+      if (p.job === 'soldier') s -= 0.4;              // no one votes away their own post
+      return s;
+    },
+  },
+  raid: {
+    name: 'march to war', emoji: '⚔️',
+    desc: 'the militia marches on a neighbouring town to raid its stockpile',
+    available: (th) => th.militia && soldiersOf(th).length > 0 && !isAtWar(th) && townHalls.length > 1,
+    support(p, th, target) {
+      if (!target) return -1;
+      let s = -0.25; // war is frightening
+      const loot = RES_KINDS.reduce((sum, k) => sum + (target.resources[k] || 0), 0);
+      s += Math.min(0.7, loot / 400);                  // greed scales with their piles
+      if (th.grudgeAgainst === target.id) s += 0.6;    // they raided us first
+      if (foodTicksFor(th) < 8) s += 0.45;             // desperation
+      if ((th.happiness ?? 70) < 45) s += 0.15;
+      const mine = soldiersOf(th).length, theirs = soldiersOf(target).length;
+      if (mine >= theirs + 2)      s += 0.2;           // easy pickings
+      else if (theirs > mine)      s -= 0.35;          // we'd be outmatched
+      if (p.job === 'soldier') s += 0.2;               // glory
+      return s;
+    },
+  },
+  peace: {
+    name: 'sue for peace', emoji: '🏳',
+    desc: 'the town calls its soldiers home and ends the war',
+    available: (th) => wars.some(w => w.attackerId === th.id),
+    support(p, th) {
+      const war = wars.find(w => w.attackerId === th.id);
+      if (!war) return 0;
+      let s = 0.1;
+      s += (war.attackerLosses || 0) * 0.12;           // every funeral weighs
+      if (simTick - war.startTick > DAY_LENGTH) s += 0.2;
+      if (foodTicksFor(th) < 10) s += 0.35;
+      if ((war.loot || 0) >= 30) s -= 0.3;             // the raids are paying
+      return s;
+    },
+  },
+};
+
 // ── Game state ────────────────────────────────────────────────────────────────
 
 const grid = [];
@@ -363,11 +457,14 @@ let landLevel       = 0;
 let simTick         = 0;
 let selectedTHIndex = 0;    // which town hall is shown in stockpile/votes panels
 let lastExploreTick = -200; // cooldown: minimum ticks between explorer dispatches
+let nextTownId      = 0;    // stable town-hall ids — citizenship survives hall removal
+let wars            = [];   // { attackerId, defenderId, startTick, endTick, loot, attackerLosses, defenderLosses }
 
 // ── Records, chronicle, era ───────────────────────────────────────────────────
 let records = {
   peakPop: 0, oldestEver: 0, totalBirths: 0, totalDeaths: 0,
   townsFounded: 0, firesSurvived: 0, won: false, soulsHarvested: 0,
+  warsWaged: 0, battleDeaths: 0,
 };
 let chronicle = [];  // { day, text } — the town's history, shown in the records panel
 let eraIndex  = 0;   // index into ERAS, derived from records.peakPop
@@ -405,6 +502,7 @@ const BUILDING_INFO = {
   [SHOP]:       { name: 'market',     desc: 'Workers trade surplus food for gold. Needs trade research and a level 2 hall (village era).' },
   [WELL]:       { name: 'well',       desc: 'Fresh water. Reduces the chance of fires starting and spreading nearby. +3 happiness. Needs a level 2 hall.' },
   [SCHOOL]:     { name: 'school',     desc: 'Nearby workers produce 30% more and citizens learn 50% faster. Needs education research and a level 3 hall (town era).' },
+  [WALL]:       { name: 'wall',       desc: 'Stone town wall, voted in at a town meeting and built a segment at a time. Roads through it become gates. Defenders fight harder inside their own walls.' },
 };
 
 // Set of tile types that have been placed at least once
@@ -433,6 +531,7 @@ function drawTileToContext(targetCtx, type, x, y, size) {
     case SHOP:       drawShop(0, 0);      break;
     case WELL:       drawWell(0, 0);      break;
     case SCHOOL:     drawSchool(0, 0);    break;
+    case WALL:       drawWall(0, 0);      break;
     default:
       targetCtx.fillStyle = TILE_COLORS[type] || '#ccc';
       targetCtx.fillRect(0, 0, BASE, BASE);
@@ -559,6 +658,45 @@ function nearestTownHall(r, c) {
   return best;
 }
 
+// ── Citizenship ───────────────────────────────────────────────────────────────
+// Every citizen belongs to one town for life's civic matters: assigned at
+// birth/spawn to the nearest hall, updated when they move house, inherited
+// from the hall a founder raises. Politics — laws, town measures, wars — is
+// always judged from the citizen's own town, never whichever hall they happen
+// to be walking past.
+
+function townById(id) {
+  if (id == null) return null;
+  for (const th of townHalls) if (th.id === id) return th;
+  return null;
+}
+
+function townOf(p) {
+  let th = townById(p.townId);
+  if (!th) { // orphaned (hall demolished, old save) — adopt the nearest hall
+    th = nearestTownHall(Math.round(p.y), Math.round(p.x));
+    p.townId = th ? th.id : null;
+  }
+  return th;
+}
+
+function citizensOf(th) {
+  return people.filter(p => townOf(p) === th);
+}
+
+function soldiersOf(th) {
+  return people.filter(p => p.job === 'soldier' && townOf(p) === th);
+}
+
+function isAtWar(th) {
+  return wars.some(w => w.attackerId === th.id || w.defenderId === th.id);
+}
+
+function soldierOnCampaign(p) {
+  const th = townOf(p);
+  return !!(th && isAtWar(th));
+}
+
 function globalPopCap() {
   return Math.min(MAX_PEOPLE, townHalls.reduce((s, th) => s + th.popCap, 0));
 }
@@ -570,6 +708,7 @@ function emptyVotes() {
 function makeTownHall(r, c, resources) {
   return {
     r, c,
+    id: nextTownId++,
     resources: { wood: 0, stone: 0, food: 0, clay: 0, ore: 0, ...(resources || {}) },
     level: 1,
     votes: emptyVotes(),
@@ -577,6 +716,12 @@ function makeTownHall(r, c, resources) {
     buildTimer: TH_BUILD_INTERVAL,
     happiness: 70,
     festivalUntil: 0,
+    // War & politics: town meetings, walls, militia, grudges
+    nextMeasureTick: 0,   // 0 = the town meeting hasn't formed yet
+    militia: false,
+    wallPlan: null,       // { radius, idx, built, done } — set by a walls vote
+    lastRaidedTick: -99999,
+    grudgeAgainst: null,  // id of the town that last raided this one
   };
 }
 
@@ -801,8 +946,10 @@ function spawnPersonFree(r, c, houseId = null, force = false) {
     wood: 0, stone: 0, food: 0, clay: 0, ore: 0,
     sick: false, sickTicks: 0, hungry: false,
     color: PERSON_COLORS[id % PERSON_COLORS.length],
-    mode: 'gather',     // 'gather' | 'explore' | 'found' | 'home' | 'social'
-    job:  'gatherer',   // 'gatherer' | 'explorer' | 'founder' | 'worker' | 'idle'
+    mode: 'gather',     // 'gather' | 'explore' | 'found' | 'home' | 'social' | 'patrol' | 'war' | 'defend'
+    job:  'gatherer',   // 'gatherer' | 'explorer' | 'founder' | 'worker' | 'soldier' | 'idle'
+    townId: nearestTownHall(r, c)?.id ?? null, // civic home — politics is voted here
+    warTarget: null,    // { r, c } destination while soldiering (patrol/war/defend)
     assignedBuildingKey: null, // "${r},${c}" of assigned building, or null
     insideBuilding: false,     // true when worker is hidden inside a building
     sleeping:      false,      // true from midnight until dawn
@@ -932,8 +1079,9 @@ function agePeople() {
 }
 
 function updatePersonMode(p) {
-  if (p.job === 'worker') return; // workers are managed by workerTick
-  if (p.mode === 'found') return; // founder manages their own mode
+  if (p.job === 'worker') return;  // workers are managed by workerTick
+  if (p.job === 'soldier') return; // soldiers are managed by militaryTick
+  if (p.mode === 'found') return;  // founder manages their own mode
   if (p.sleeping || p.mode === 'home' || p.mode === 'social') return; // time-of-day modes
   const r = Math.round(p.y), c = Math.round(p.x);
 
@@ -1191,6 +1339,23 @@ function movePerson(p) {
       }
       if (t === ROAD) w *= 1.5;
 
+    } else if (p.mode === 'patrol' || p.mode === 'war' || p.mode === 'defend') {
+      // Soldiers: march on the target militaryTick set, or walk the beat near home
+      if (p.warTarget) {
+        const td  = Math.abs(nr - p.warTarget.r) + Math.abs(nc - p.warTarget.c);
+        const td0 = Math.abs(r  - p.warTarget.r) + Math.abs(c  - p.warTarget.c);
+        if (td < td0)      w *= 40;
+        else if (td > td0) w *= 0.05;
+        if (t === ROAD) w *= 1.3;
+      } else {
+        // Patrol: loiter inside the town, drifting back when they stray
+        const home = townOf(p);
+        if (home) {
+          const da = Math.max(Math.abs(nr - home.r), Math.abs(nc - home.c));
+          w *= da <= PATROL_RADIUS ? 1.0 : 0.15;
+        }
+      }
+
     } else {
       // Gather mode: directed to nearest resource, then return to TH
       if (carried < carryCap(p)) {
@@ -1280,7 +1445,8 @@ function canPersonCarry(p, type) {
 function gatherResources() {
   const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
   for (const p of people) {
-    if (p.mode === 'explore') continue; // explorers don't gather while en route
+    if (p.mode === 'explore') continue;  // explorers don't gather while en route
+    if (p.job === 'soldier') continue;   // soldiers carry loot, not harvests
     const r = Math.round(p.y), c = Math.round(p.x);
     const carried = carriedTotal(p);
     if (carried >= carryCap(p)) continue;
@@ -1320,6 +1486,9 @@ function gatherResources() {
 function depositResources() {
   const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
   for (const p of people) {
+    // Soldiers deposit via militaryTick, and only at their own hall — the
+    // generic "nearest hall" rule would hand a raider's loot straight back
+    if (p.job === 'soldier') continue;
     const r = Math.round(p.y), c = Math.round(p.x);
     const carried = carriedTotal(p);
     if (carried === 0) continue;
@@ -1407,6 +1576,9 @@ function assignHouse(p, id, h) {
   p.homeR = homeR;
   p.homeC = homeC;
   if (!h.residents.includes(p.id)) h.residents.push(p.id);
+  // Moving house moves your citizenship: politics follows where you live
+  const th = nearestTownHall(h.r, h.c);
+  if (th) p.townId = th.id;
 }
 
 function unassignHouse(p) {
@@ -1815,7 +1987,9 @@ function placeFoundedTH(p) {
   if (inBounds(fr,fc) && grid[fr][fc] === GRASS) {
     grid[fr][fc] = TOWN_HALL;
     clearBuriedResource(fr, fc);
-    townHalls.push(makeTownHall(fr, fc));
+    const nth = makeTownHall(fr, fc);
+    townHalls.push(nth);
+    p.townId = nth.id; // the founder is the new town's first citizen
     recordDiscovery(TOWN_HALL);
     records.townsFounded++;
     addChronicle(p.name + ' founded a new town at ' + fc + ', ' + fr);
@@ -1860,6 +2034,7 @@ function tryFoundHere(p, r, c) {
   const nth = makeTownHall(site.r, site.c);
   for (const k of RES_KINDS) { nth.resources[k] += p[k] || 0; p[k] = 0; }
   townHalls.push(nth);
+  p.townId = nth.id; // the founder settles in the town they raised
   recordDiscovery(TOWN_HALL);
   records.townsFounded++;
   grantXP(p, 10);
@@ -2402,6 +2577,9 @@ function computeTHHappiness(th) {
   else if (ticksLeft < 15) h -= 10;
   else if (ticksLeft > 30) h += 15; // well fed
   if ((th.festivalUntil || 0) > simTick) h += 20;
+  if (isAtWar(th)) h -= 8;                                    // war weariness
+  if (simTick - (th.lastRaidedTick ?? -99999) < DAY_LENGTH) h -= 5; // raided within the day
+  if (hasWalls(th)) h += 3;                                   // safe behind the stones
   return clamp(Math.round(h), 0, 100);
 }
 
@@ -2436,9 +2614,11 @@ function emigrationTick() {
 
 // ── Politics: referendums ─────────────────────────────────────────────────────
 
-// A citizen's leaning on a policy, judged from their own circumstances (-1 … 1)
+// A citizen's leaning on a policy, judged from their own circumstances (-1 … 1).
+// Circumstances means their own town's — a citizen votes their home hall's
+// fortunes even when the day's gathering has carried them somewhere else.
 function policySupport(key, p) {
-  const th = nearestTownHall(Math.round(p.y), Math.round(p.x));
+  const th = townOf(p);
   if (!th) return 0;
   return clamp(POLICIES[key].support(p, th), -1, 1);
 }
@@ -2573,6 +2753,402 @@ function campaign(side) {
     + pol.name + ' fill the squares', 'info');
   sfx('coin');
   updateUI();
+}
+
+// ── Town measures: walls, militia & war ───────────────────────────────────────
+// Per-town direct democracy. Every two days each town of 8+ picks the measure
+// its citizens want most (walls / militia / disband / raid / peace) and votes
+// it up or down on the spot. Passed measures act immediately.
+
+function townMeasureAvg(key, th, citizens, target) {
+  if (citizens.length === 0) return 0;
+  let sum = 0;
+  for (const p of citizens) sum += clamp(TOWN_MEASURES[key].support(p, th, target), -1, 1);
+  return sum / citizens.length;
+}
+
+// The richest other town — raids follow the fattest stockpile
+function pickRaidTarget(th) {
+  let best = null, bestLoot = 0;
+  for (const other of townHalls) {
+    if (other === th) continue;
+    const loot = RES_KINDS.reduce((s, k) => s + (other.resources[k] || 0), 0);
+    if (loot > bestLoot) { bestLoot = loot; best = other; }
+  }
+  return best;
+}
+
+function townLabel(th) {
+  const idx = townHalls.indexOf(th);
+  return 'the town at ' + th.c + ', ' + th.r + (townHalls.length > 1 ? ' (TH ' + (idx + 1) + ')' : '');
+}
+
+function townMeasureTick() {
+  if (simTick % 8 !== 3) return; // cheap: off-beat from the other 8-tick jobs
+  for (const th of townHalls) {
+    const pop = citizensOf(th).length;
+    if (th.nextMeasureTick === 0) {
+      if (pop < TOWN_MIN_POP) continue;
+      // Stagger the first meeting so towns don't all vote on the same tick
+      th.nextMeasureTick = simTick + TOWN_MEASURE_INTERVAL + Math.floor(Math.random() * DAY_LENGTH);
+      logEvent('🏛 ' + townLabel(th) + ' now holds town meetings — walls and war are on the table', 'info');
+      continue;
+    }
+    if (simTick < th.nextMeasureTick) continue;
+    th.nextMeasureTick = simTick + TOWN_MEASURE_INTERVAL;
+    if (pop < TOWN_MIN_POP) continue;
+
+    // The measure the town most wants goes to an immediate show of hands
+    const citizens = citizensOf(th);
+    let bestKey = null, bestAvg = 0.05, bestTarget = null;
+    for (const [key, m] of Object.entries(TOWN_MEASURES)) {
+      if (!m.available(th)) continue;
+      const target = key === 'raid' ? pickRaidTarget(th) : null;
+      if (key === 'raid' && !target) continue;
+      const a = townMeasureAvg(key, th, citizens, target);
+      if (a > bestAvg) { bestAvg = a; bestKey = key; bestTarget = target; }
+    }
+    if (!bestKey) continue;
+
+    let yes = 0, no = 0;
+    for (const p of citizens) {
+      const s = clamp(TOWN_MEASURES[bestKey].support(p, th, bestTarget), -1, 1)
+              + (Math.random() * 2 - 1) * VOTE_NOISE;
+      if (s > 0) yes++; else no++;
+    }
+    const m = TOWN_MEASURES[bestKey];
+    const tally = yes + '–' + no;
+    if (yes <= no) {
+      logEvent(m.emoji + ' ' + townLabel(th) + ' voted down "' + m.name + '", ' + tally, 'info');
+      continue;
+    }
+    logEvent(m.emoji + ' ' + townLabel(th) + ' voted to ' + m.name + ', ' + tally, 'info');
+    enactTownMeasure(bestKey, th, bestTarget);
+  }
+}
+
+function enactTownMeasure(key, th, target) {
+  switch (key) {
+    case 'walls':
+      th.wallPlan = makeWallPlan(th);
+      addChronicle(townLabel(th) + ' voted to raise walls');
+      sfx('build');
+      break;
+    case 'militia':
+      th.militia = true;
+      addChronicle(townLabel(th) + ' mustered a militia');
+      draftSoldiers(th);
+      sfx('era');
+      break;
+    case 'disband':
+      th.militia = false;
+      draftSoldiers(th); // target drops to 0 — everyone stands down
+      addChronicle(townLabel(th) + ' disbanded its militia');
+      break;
+    case 'raid':
+      startWar(th, target);
+      break;
+    case 'peace': {
+      const war = wars.find(w => w.attackerId === th.id);
+      if (war) endWar(war, 'peace');
+      break;
+    }
+  }
+}
+
+// ── Walls ─────────────────────────────────────────────────────────────────────
+// A walls vote plans a stone ring around the hall, sized to the town's sprawl.
+// The build engine lays a few segments per cycle (1 stone each). Roads are
+// skipped — they become the gates — and any segment that would sever the
+// walkable world is skipped too, so a wall can never seal anyone in.
+
+function makeWallPlan(th) {
+  // Ring just beyond the furthest building of the town core
+  let extent = 3;
+  for (let dr = -12; dr <= 12; dr++)
+    for (let dc = -12; dc <= 12; dc++) {
+      const r = th.r + dr, c = th.c + dc;
+      if (!inBounds(r, c)) continue;
+      const t = grid[r][c];
+      if (t === GRASS || t === ROAD || t === WALL) continue;
+      extent = Math.max(extent, Math.max(Math.abs(dr), Math.abs(dc)));
+    }
+  return { radius: clamp(extent + 2, 5, 11), idx: 0, built: 0, done: false };
+}
+
+// Perimeter of the Chebyshev ring at `radius` around (r0, c0), in walking order
+function ringPositions(r0, c0, radius) {
+  const out = [];
+  for (let c = c0 - radius; c <= c0 + radius; c++) out.push([r0 - radius, c]); // top
+  for (let r = r0 - radius + 1; r <= r0 + radius; r++) out.push([r, c0 + radius]); // right
+  for (let c = c0 + radius - 1; c >= c0 - radius; c--) out.push([r0 + radius, c]); // bottom
+  for (let r = r0 + radius - 1; r >= r0 - radius + 1; r--) out.push([r, c0 - radius]); // left
+  return out;
+}
+
+function hasWalls(th) {
+  return !!(th.wallPlan && th.wallPlan.done && th.wallPlan.built >= 8);
+}
+
+function thWallStep(th) {
+  const plan = th.wallPlan;
+  if (!plan || plan.done) return false;
+  const ring = ringPositions(th.r, th.c, plan.radius);
+  let placed = 0, scanned = 0;
+  // wouldBlockPath flood-fills the map — bound the work per cycle
+  while (plan.idx < ring.length && placed < 2 && scanned < 8) {
+    const [r, c] = ring[plan.idx];
+    scanned++;
+    if (!inBounds(r, c) || !inLand(r, c) || grid[r][c] !== GRASS) { plan.idx++; continue; }
+    if ((th.resources.stone || 0) < WALL_STONE_COST) return placed > 0; // wait for stone
+    if (wouldBlockPath(r, c)) { plan.idx++; continue; } // this spot stays a gate
+    th.resources.stone -= WALL_STONE_COST;
+    grid[r][c] = WALL;
+    clearBuriedResource(r, c);
+    recordDiscovery(WALL);
+    plan.idx++; plan.built++; placed++;
+  }
+  if (plan.idx >= ring.length && !plan.done) {
+    plan.done = true;
+    addParticles(th.r, th.c, '#b0bec5', 8);
+    addChronicle(townLabel(th) + ' finished its walls (' + plan.built + ' segments)');
+    logEvent('🧱 ' + townLabel(th) + ' finished its walls — raiders must take the gates', 'good');
+    sfx('build');
+  }
+  return placed > 0;
+}
+
+// ── Military ──────────────────────────────────────────────────────────────────
+// A militia town drafts 1 soldier per 5 citizens (max 6), ablest first.
+// Soldiers gather nothing: they patrol near the hall in peace, march on the
+// enemy hall in war, and haul stolen stockpile home. When soldiers of warring
+// towns meet, they skirmish — the fallen release souls like any other death.
+
+function militiaTargetCount(th) {
+  if (!th.militia) return 0;
+  const pop = citizensOf(th).length;
+  if (pop < TOWN_MIN_POP) return 0;         // too few hands to spare
+  if (foodTicksFor(th) < 5 && !isAtWar(th)) return 0; // famine: spears down, baskets up
+  return clamp(Math.floor(pop / SOLDIER_RATIO), 1, MAX_SOLDIERS);
+}
+
+function draftSoldiers(th) {
+  const target = militiaTargetCount(th);
+  const soldiers = soldiersOf(th);
+  // Stand down the surplus
+  while (soldiers.length > target) {
+    const p = soldiers.pop();
+    p.job = 'gatherer'; p.mode = 'gather'; p.warTarget = null;
+  }
+  if (soldiers.length >= target) return;
+  // Draft the ablest free citizens (never workers mid-shift, missions, or the last gatherers)
+  const candidates = citizensOf(th).filter(p =>
+    p.job !== 'soldier' && p.job !== 'worker'
+    && p.mode !== 'explore' && p.mode !== 'found');
+  candidates.sort((a, b) => (b.level || 0) - (a.level || 0));
+  let need = target - soldiers.length;
+  let drafted = 0;
+  for (const p of candidates) {
+    if (need <= 0) break;
+    if (candidates.length - drafted <= 2) break; // leave hands to gather
+    p.job = 'soldier';
+    p.mode = 'patrol';
+    p.gatherTarget = null; p.warTarget = null;
+    need--; drafted++;
+  }
+}
+
+// ── Wars ──────────────────────────────────────────────────────────────────────
+
+function startWar(attTh, defTh) {
+  wars.push({
+    attackerId: attTh.id, defenderId: defTh.id,
+    startTick: simTick, endTick: simTick + WAR_LENGTH,
+    loot: 0, attackerLosses: 0, defenderLosses: 0,
+  });
+  records.warsWaged++;
+  addChronicle(townLabel(attTh) + ' declared war on ' + townLabel(defTh));
+  logEvent('⚔️ ' + townLabel(attTh) + ' marches to war on ' + townLabel(defTh) + '!', 'bad');
+  showBanner('⚔️ WAR ⚔️');
+  sfx('bad');
+}
+
+function endWar(war, reason) {
+  const i = wars.indexOf(war);
+  if (i !== -1) wars.splice(i, 1);
+  const att = townById(war.attackerId), def = townById(war.defenderId);
+  const attName = att ? townLabel(att) : 'a fallen town';
+  const defName = def ? townLabel(def) : 'a fallen town';
+  const fallen = (war.attackerLosses || 0) + (war.defenderLosses || 0);
+  const summary = Math.floor(war.loot || 0) + ' plundered, ' + fallen + ' fallen';
+  const text = reason === 'peace'    ? attName + ' sued for peace with ' + defName
+             : reason === 'routed'   ? 'the attackers from ' + attName + ' were wiped out'
+             : 'the war between ' + attName + ' and ' + defName + ' burned out';
+  addChronicle(text + ' (' + summary + ')');
+  logEvent('🏳 ' + text + ' — ' + summary, 'info');
+  showBanner('🏳 peace 🏳');
+  // Soldiers heading home with loot keep hauling; the rest fall back to patrol next tick
+}
+
+// A soldier's death in battle is still a harvest — souls flow home regardless
+function fallInBattle(p, war, wasAttacker) {
+  const r = Math.round(p.y), c = Math.round(p.x);
+  const yield_ = soulYield(p);
+  souls += yield_;
+  records.soulsHarvested += yield_;
+  records.totalDeaths++;
+  records.battleDeaths++;
+  if (wasAttacker) war.attackerLosses++; else war.defenderLosses++;
+  addSoulWisp(r, c, Math.min(yield_, 8));
+  addParticles(r, c, '#e53935', 6);
+  // Loot they carried spills where they fell
+  const total = carriedTotal(p);
+  if (total > 0 && inBounds(r, c) && !resourceMap[r][c]) {
+    const dominant = RES_KINDS.reduce((a, b) => ((p[a] || 0) >= (p[b] || 0) ? a : b));
+    resourceMap[r][c] = { type: dominant, amount: total };
+  }
+  logEvent('⚔️ ' + p.name + (p.level ? ' (lv ' + p.level + ')' : '') + ' fell in battle — ✨ +' + yield_ + ' souls', 'bad');
+  removePerson(p);
+  sfx('soul');
+}
+
+// Raiders adjacent to the enemy hall stuff their packs from its stockpile
+function raidSteal(p, defTh, attTh, war) {
+  let space = carryCap(p) - carriedTotal(p);
+  let taken = 0;
+  const kinds = [...RES_KINDS].sort((a, b) => (defTh.resources[b] || 0) - (defTh.resources[a] || 0));
+  for (const k of kinds) {
+    if (space <= 0) break;
+    const grab = Math.min(space, Math.floor(defTh.resources[k] || 0));
+    if (grab <= 0) continue;
+    defTh.resources[k] -= grab;
+    p[k] = (p[k] || 0) + grab;
+    space -= grab; taken += grab;
+  }
+  if (taken > 0) {
+    defTh.lastRaidedTick = simTick;
+    defTh.grudgeAgainst = attTh.id; // the seed of the next war
+    addParticles(defTh.r, defTh.c, '#e53935', 5);
+    logEvent('💰 raiders from ' + townLabel(attTh) + ' looted ' + taken + ' from ' + townLabel(defTh), 'bad');
+  }
+  return taken;
+}
+
+// One skirmish: level, home walls, and luck decide who falls
+function skirmish(a, b, war) {
+  const power = (p) => {
+    let pw = 2 + (p.level || 0) + Math.random() * 4;
+    const th = townOf(p);
+    // Fighting inside your own finished walls: the stones fight with you
+    if (th && hasWalls(th)
+        && Math.max(Math.abs(Math.round(p.y) - th.r), Math.abs(Math.round(p.x) - th.c)) <= th.wallPlan.radius)
+      pw += 2;
+    return pw;
+  };
+  const aIsAtt = townOf(a)?.id === war.attackerId;
+  if (power(a) >= power(b)) fallInBattle(b, war, !aIsAtt);
+  else                      fallInBattle(a, war, aIsAtt);
+}
+
+// Per-tick military brain: drafts, soldier orders, skirmishes, war endings.
+// Soldier counts are tiny (≤6 per town), so this stays cheap.
+function militaryTick() {
+  if (townHalls.length === 0) return;
+  if (simTick % 8 === 5) for (const th of townHalls) if (th.militia || soldiersOf(th).length > 0) draftSoldiers(th);
+
+  // End wars whose time is up, whose towns fell, or whose attackers were routed
+  for (const war of [...wars]) {
+    const att = townById(war.attackerId), def = townById(war.defenderId);
+    if (!att || !def) { endWar(war, 'over'); continue; }
+    if (simTick >= war.endTick) { endWar(war, 'over'); continue; }
+    if (att.militia && soldiersOf(att).length === 0 && simTick - war.startTick > 8)
+      endWar(war, 'routed');
+  }
+
+  // Orders for every soldier
+  const soldiers = people.filter(p => p.job === 'soldier');
+  for (const p of soldiers) {
+    const th = townOf(p);
+    if (!th) { p.job = 'gatherer'; p.mode = 'gather'; p.warTarget = null; continue; }
+    const attackWar = wars.find(w => w.attackerId === th.id);
+    const defendWar = wars.find(w => w.defenderId === th.id);
+
+    if (attackWar) {
+      // March on the enemy hall; haul any loot home first
+      const enemy = townById(attackWar.defenderId);
+      p.sleeping = false; p.insideBuilding = false;
+      p.mode = 'war';
+      p.warTarget = carriedTotal(p) > 0 ? { r: th.r, c: th.c }
+                  : enemy ? { r: enemy.r, c: enemy.c } : null;
+    } else if (defendWar) {
+      // Meet the raiders: intercept the nearest enemy soldier near home, else hold the hall
+      const enemy = townById(defendWar.attackerId);
+      p.sleeping = false; p.insideBuilding = false;
+      p.mode = 'defend';
+      let target = null, bestDist = Infinity;
+      if (enemy) {
+        for (const q of soldiers) {
+          if (townOf(q) !== enemy) continue;
+          const d = Math.abs(Math.round(q.y) - th.r) + Math.abs(Math.round(q.x) - th.c);
+          if (d < 20 && d < bestDist) { bestDist = d; target = { r: Math.round(q.y), c: Math.round(q.x) }; }
+        }
+      }
+      p.warTarget = target || { r: th.r, c: th.c };
+    } else if (p.mode === 'war' || p.mode === 'defend'
+               || (p.mode !== 'social' && p.mode !== 'home' && !p.sleeping)) {
+      // Peacetime: finish hauling loot, then walk the walls
+      p.mode = 'patrol';
+      p.warTarget = carriedTotal(p) > 0 ? { r: th.r, c: th.c } : null;
+      grantXP(p, 0.05); // drilling keeps the spear arm strong
+    }
+  }
+
+  // Raiding and looting happen where soldiers stand
+  const cardinals = [[-1,0],[1,0],[0,-1],[0,1]];
+  for (const p of soldiers) {
+    if (!people.includes(p)) continue; // fell in a skirmish this tick
+    const th = townOf(p);
+    if (!th) continue;
+    const attackWar = wars.find(w => w.attackerId === th.id);
+    const r = Math.round(p.y), c = Math.round(p.x);
+    const adjacentToHall = (hall) => hall && cardinals.some(([dr, dc]) =>
+      r + dr === hall.r && c + dc === hall.c);
+    // Deposit (loot or otherwise) only at their OWN hall — never the enemy's
+    if (carriedTotal(p) > 0 && adjacentToHall(th)) {
+      let hauled = 0;
+      for (const k of RES_KINDS) { hauled += p[k] || 0; th.resources[k] = (th.resources[k] || 0) + (p[k] || 0); p[k] = 0; }
+      if (attackWar) attackWar.loot += hauled;
+      addParticles(r, c, '#ffd54f', 4);
+      grantXP(p, 2);
+    } else if (attackWar && carriedTotal(p) < carryCap(p)) {
+      const enemy = townById(attackWar.defenderId);
+      if (enemy && adjacentToHall(enemy)) raidSteal(p, enemy, th, attackWar);
+    }
+  }
+
+  // Skirmishes: soldiers of warring towns within a tile of each other fight
+  if (wars.length > 0) {
+    const fought = new Set();
+    for (const a of soldiers) {
+      if (fought.has(a.id) || !people.includes(a)) continue;
+      const aTh = townOf(a);
+      if (!aTh) continue;
+      for (const b of soldiers) {
+        if (a === b || fought.has(b.id) || !people.includes(b) || !people.includes(a)) continue;
+        const bTh = townOf(b);
+        if (!bTh || bTh === aTh) continue;
+        const war = wars.find(w =>
+          (w.attackerId === aTh.id && w.defenderId === bTh.id) ||
+          (w.attackerId === bTh.id && w.defenderId === aTh.id));
+        if (!war) continue;
+        const dist = Math.abs(Math.round(a.y) - Math.round(b.y)) + Math.abs(Math.round(a.x) - Math.round(b.x));
+        if (dist > 1) continue;
+        fought.add(a.id); fought.add(b.id);
+        skirmish(a, b, war);
+        break;
+      }
+    }
+  }
 }
 
 // ── Random events ─────────────────────────────────────────────────────────────
@@ -3021,7 +3597,7 @@ function autoAssignWorkers(th) {
     while (entry.workers.length < cap) {
       let best = null, bestDist = Infinity, free = 0;
       for (const p of people) {
-        if (p.job === 'worker' || p.mode === 'explore' || p.mode === 'found') continue;
+        if (p.job === 'worker' || p.job === 'soldier' || p.mode === 'explore' || p.mode === 'found') continue;
         // Factories need skilled hands
         if (entry.type === FACTORY && (p.level || 0) < FACTORY_LEVEL) continue;
         const pr = Math.round(p.y), pc = Math.round(p.x);
@@ -3070,6 +3646,7 @@ function applyTimeOfDay() {
     for (const p of people) {
       if (p.sleeping) continue;
       if (p.mode === 'found' || p.mode === 'explore') continue; // missions travel through the night
+      if (p.job === 'soldier' && soldierOnCampaign(p)) continue; // wars don't pause at dusk
       p.mode = 'social';
       p.socialTarget = null; // will be recomputed in movePerson
       p.gatherTarget = null;
@@ -3081,6 +3658,7 @@ function applyTimeOfDay() {
     for (const p of people) {
       if (p.sleeping) continue;
       if (p.mode === 'found' || p.mode === 'explore') continue;
+      if (p.job === 'soldier' && soldierOnCampaign(p)) continue; // sentries hold the night watch
       p.sleeping = true;
       p.mode = 'home';
       p.gatherTarget = null;
@@ -3124,6 +3702,7 @@ function simulationTick() {
   applyTimeOfDay();
   workerTick();
   farmProduceFood();
+  militaryTick(); // orders before movement — soldiers march on fresh targets
   movePeople();
   gatherResources();
   depositResources();
@@ -3131,6 +3710,7 @@ function simulationTick() {
     th.buildTimer = (th.buildTimer || 0) - 1;
     if (th.buildTimer <= 0) {
       thAutoBuild(th);
+      thWallStep(th); // wall segments rise alongside the normal build cycle
       th.buildTimer = TH_BUILD_INTERVAL;
     }
   }
@@ -3139,6 +3719,7 @@ function simulationTick() {
   fireTick();
   eventsTick();
   politicsTick();
+  townMeasureTick();
   updateParticles();
   if (simTick % SEASON_LENGTH === 0 && townHalls.length > 0) {
     logEvent(SEASON_NOTES[currentSeason()], 'info');
@@ -3283,12 +3864,14 @@ function updateUI() {
   }
 
   // Workforce breakdown
-  const jobCounts = { founder: 0, gatherer: 0, explorer: 0, worker: 0, idle: 0 };
+  const jobCounts = { founder: 0, gatherer: 0, explorer: 0, worker: 0, soldier: 0, idle: 0 };
   for (const p of people) jobCounts[p.job] = (jobCounts[p.job] || 0) + 1;
   document.getElementById('job-founder').textContent  = jobCounts.founder;
   document.getElementById('job-gatherer').textContent = jobCounts.gatherer;
   document.getElementById('job-explorer').textContent = jobCounts.explorer;
   document.getElementById('job-worker').textContent   = jobCounts.worker;
+  const soldierEl = document.getElementById('job-soldier');
+  if (soldierEl) soldierEl.textContent = jobCounts.soldier;
   document.getElementById('job-idle').textContent     = jobCounts.idle;
   const bEntries = Object.values(buildingRegistry);
   const staffed = bEntries.filter(e => e.workers.length > 0).length;
@@ -3356,6 +3939,7 @@ function updateUI() {
 
   // Politics panel
   updatePoliticsUI();
+  updateTownAffairsUI();
 
   // Inspector panel
   updateInspector();
@@ -3369,6 +3953,10 @@ function updateUI() {
   document.getElementById('rec-fires').textContent     = records.firesSurvived;
   const recSouls = document.getElementById('rec-souls');
   if (recSouls) recSouls.textContent = Math.floor(records.soulsHarvested);
+  const recWars = document.getElementById('rec-wars');
+  if (recWars) recWars.textContent = records.warsWaged || 0;
+  const recBattle = document.getElementById('rec-battle-deaths');
+  if (recBattle) recBattle.textContent = records.battleDeaths || 0;
 
   // Minimap & trend graphs (throttled — they redraw whole canvases)
   if (uiTickCounter % 4 === 1) drawMinimap();
@@ -3462,6 +4050,65 @@ function updatePoliticsUI() {
   }
 }
 
+// Town affairs: the selected town's militia, walls, and wars (politics tab)
+function updateTownAffairsUI() {
+  const label = document.getElementById('town-th-label');
+  if (!label) return;
+  const th = townHalls[selectedTHIndex] || null;
+  label.textContent = townHalls.length > 1
+    ? 'TH ' + (selectedTHIndex + 1) + ' / ' + townHalls.length + ' (' + (th ? th.c + ',' + th.r : '—') + ')'
+    : 'town hall';
+  document.getElementById('town-prev').disabled = selectedTHIndex === 0;
+  document.getElementById('town-next').disabled = selectedTHIndex >= townHalls.length - 1;
+
+  const czEl = document.getElementById('town-citizens');
+  const miEl = document.getElementById('town-militia');
+  const waEl = document.getElementById('town-walls');
+  const wrEl = document.getElementById('town-war');
+  if (!th) {
+    czEl.textContent = '—'; miEl.textContent = '—'; waEl.textContent = '—'; wrEl.textContent = '—';
+  } else {
+    const pop = citizensOf(th).length;
+    czEl.textContent = pop + (pop < TOWN_MIN_POP ? ' (meets at ' + TOWN_MIN_POP + ')' : '');
+    miEl.textContent = th.militia ? '🛡 ' + soldiersOf(th).length + ' soldiers' : 'none';
+    const plan = th.wallPlan;
+    waEl.textContent = !plan ? 'none'
+      : plan.done ? '🧱 standing (' + plan.built + ' segments)'
+      : '🧱 building… (' + plan.built + ' laid)';
+    const attacking = wars.find(w => w.attackerId === th.id);
+    const defending = wars.find(w => w.defenderId === th.id);
+    wrEl.textContent = attacking ? '⚔️ raiding ' + (townById(attacking.defenderId) ? townById(attacking.defenderId).c + ',' + townById(attacking.defenderId).r : '?')
+                     : defending ? '🛡 under attack!'
+                     : raidedRecently(th) ? 'at peace (recently raided)'
+                     : 'at peace';
+    wrEl.className = 'value ' + (attacking || defending ? 'neg' : 'pos');
+  }
+
+  // All active wars, with time left and the running tally
+  const list = document.getElementById('wars-list');
+  if (!list) return;
+  const sig = wars.map(w => w.attackerId + '>' + w.defenderId + ':' + Math.floor(w.loot) + ':'
+    + w.attackerLosses + ':' + w.defenderLosses + ':' + Math.ceil((w.endTick - simTick) / 4)).join('|');
+  if (list.dataset.sig === sig) return;
+  list.dataset.sig = sig;
+  list.innerHTML = '';
+  for (const w of wars) {
+    const att = townById(w.attackerId), def = townById(w.defenderId);
+    const row = document.createElement('div');
+    row.className = 'stat-row';
+    const name = document.createElement('span');
+    name.textContent = '⚔️ TH' + (townHalls.indexOf(att) + 1) + ' → TH' + (townHalls.indexOf(def) + 1);
+    const val = document.createElement('span');
+    val.className = 'value neg';
+    const hoursLeft = Math.max(0, Math.ceil((w.endTick - simTick) / 4));
+    val.textContent = Math.floor(w.loot) + ' looted · ' + (w.attackerLosses + w.defenderLosses)
+      + ' fallen · ' + (hoursLeft >= 24 ? (hoursLeft / 24).toFixed(1) + 'd' : hoursLeft + 'h') + ' left';
+    row.appendChild(name);
+    row.appendChild(val);
+    list.appendChild(row);
+  }
+}
+
 // Rich hover card for a law in force: what it does and where opinion stands
 let lawTooltipKey = null;
 
@@ -3523,6 +4170,13 @@ function updateInspector() {
   document.getElementById('insp-carrying').textContent = carryParts.length ? carryParts.join(', ') : 'nothing';
   document.getElementById('insp-home').textContent =
     p.houseId != null && houseRegistry[p.houseId] ? houseRegistry[p.houseId].c + ', ' + houseRegistry[p.houseId].r : 'homeless';
+  const townEl = document.getElementById('insp-town');
+  if (townEl) {
+    const homeTown = townOf(p);
+    townEl.textContent = homeTown
+      ? 'TH ' + (townHalls.indexOf(homeTown) + 1) + ' (' + homeTown.c + ', ' + homeTown.r + ')'
+      : '—';
+  }
   const stanceEl = document.getElementById('insp-politics');
   if (stanceEl) {
     const b = politics.ballot;
@@ -3976,6 +4630,35 @@ function drawFarm(x, y) {
   ctx.fillRect(x+26, y+7,  2, 3);
 }
 
+function drawWall(x, y) {
+  // Stone curtain wall with battlements
+  ctx.fillStyle = '#8a939c'; ctx.fillRect(x, y, BASE, BASE);
+  // Crenellated top
+  ctx.fillStyle = '#aab4bd';
+  ctx.fillRect(x,    y, 6, 6);
+  ctx.fillRect(x+9,  y, 6, 6);
+  ctx.fillRect(x+18, y, 6, 6);
+  ctx.fillRect(x+27, y, 5, 6);
+  // Mortar courses
+  ctx.fillStyle = '#6d767f';
+  ctx.fillRect(x, y+10, BASE, 1);
+  ctx.fillRect(x, y+17, BASE, 1);
+  ctx.fillRect(x, y+24, BASE, 1);
+  // Staggered vertical joints
+  ctx.fillRect(x+8,  y+6,  1, 4);
+  ctx.fillRect(x+20, y+6,  1, 4);
+  ctx.fillRect(x+14, y+11, 1, 6);
+  ctx.fillRect(x+26, y+11, 1, 6);
+  ctx.fillRect(x+6,  y+18, 1, 6);
+  ctx.fillRect(x+18, y+18, 1, 6);
+  ctx.fillRect(x+12, y+25, 1, 7);
+  ctx.fillRect(x+24, y+25, 1, 7);
+  // Weathered highlights
+  ctx.fillStyle = '#9aa4ad';
+  ctx.fillRect(x+2,  y+12, 5, 3);
+  ctx.fillRect(x+21, y+19, 5, 3);
+}
+
 // ── Tile & entity renderers ────────────────────────────────────────────────────
 
 function drawTile(r, c, x, y, ts) {
@@ -4018,6 +4701,7 @@ function drawTile(r, c, x, y, ts) {
       case APARTMENT:  drawApartment(0, 0); break;
       case WELL:       drawWell(0, 0);      break;
       case SCHOOL:     drawSchool(0, 0);    break;
+      case WALL:       drawWall(0, 0);      break;
     }
     ctx.restore();
     // Level pips on upgraded town halls
@@ -4108,11 +4792,23 @@ function drawPeople() {
       ctx.fillStyle = p.sick ? '#c5e1a5' : p.hungry ? '#e8e0d8' : '#ffcc80';
       px_(-3, -19, 6, 6);
 
-      // Level headband: bronze → silver → gold as citizens master their craft
-      const lv = p.level || 0;
-      if (lv >= 1) {
-        ctx.fillStyle = lv >= 5 ? '#ffd54f' : lv >= 3 ? '#cfd8dc' : '#a1887f';
-        px_(-4, -20, 8, 1);
+      const isSoldier = p.job === 'soldier';
+      if (isSoldier) {
+        // Iron helmet and a spear at the shoulder mark the militia
+        ctx.fillStyle = '#78909c';
+        px_(-4, -20, 8, 2);
+        px_(-3, -21, 6, 1);
+        ctx.fillStyle = '#8d6e63';
+        px_(6, -22, 1, 12); // spear shaft
+        ctx.fillStyle = '#cfd8dc';
+        px_(5, -24, 3, 2);  // spearhead
+      } else {
+        // Level headband: bronze → silver → gold as citizens master their craft
+        const lv = p.level || 0;
+        if (lv >= 1) {
+          ctx.fillStyle = lv >= 5 ? '#ffd54f' : lv >= 3 ? '#cfd8dc' : '#a1887f';
+          px_(-4, -20, 8, 1);
+        }
       }
 
       // Eyes
@@ -4121,12 +4817,17 @@ function drawPeople() {
       px_( 1, -17, 1, 1);
 
       // Mode indicator above head
-      if (p.mode === 'gather') {
+      if (isSoldier && (p.mode === 'war' || p.mode === 'defend')) {
+        // Red war pennant — this soldier is fighting
+        ctx.fillStyle = '#e53935';
+        px_(-1, -26, 1, 4); // staff
+        px_(0, -26, 3, 2);  // pennant
+      } else if (p.mode === 'gather') {
         // Cyan arrow pointing away from home (outward)
         ctx.fillStyle = '#4dd0e1';
         px_(-1, -23, 2, 3); // arrow shaft
         px_(-2, -24, 4, 1); // arrow head
-      } else {
+      } else if (!isSoldier) {
         // Orange hammer icon (build mode)
         ctx.fillStyle = '#ff8f00';
         px_(-1, -23, 1, 3); // handle
@@ -4721,6 +5422,10 @@ function showHoverInfo(r, c) {
       lines.push('wood ' + Math.floor(th.resources.wood) + ' · stone ' + Math.floor(th.resources.stone) + ' · food ' + Math.floor(th.resources.food));
       lines.push('clay ' + Math.floor(th.resources.clay || 0) + ' · ore ' + Math.floor(th.resources.ore || 0));
       lines.push('happiness ' + (th.happiness ?? 70) + '%' + ((th.festivalUntil || 0) > simTick ? ' 🎪' : ''));
+      lines.push('citizens ' + citizensOf(th).length
+        + (th.militia ? ' · 🛡 ' + soldiersOf(th).length + ' soldiers' : '')
+        + (hasWalls(th) ? ' · 🧱 walled' : th.wallPlan ? ' · 🧱 walls rising' : ''));
+      if (isAtWar(th)) lines.push('⚔️ at war!');
     }
   }
 
@@ -4777,14 +5482,15 @@ const SAVE_KEY = 'citybuilder_save';
 
 function saveGame() {
   const data = {
-    v: 8,
+    v: 9,
     gold, souls, lifespanLevel, speedLevel, sightLevel, landLevel,
-    simTick, nextPersonId, nextHouseId, lastExploreTick,
+    simTick, nextPersonId, nextHouseId, lastExploreTick, nextTownId,
     researched: [...researched],
     grid:        grid.map(row => [...row]),
     resourceMap: resourceMap.map(row => row.map(cell => cell ? { ...cell } : null)),
     townHalls:   townHalls.map(th => ({
       r: th.r, c: th.c,
+      id: th.id,
       resources: { ...th.resources },
       level: th.level ?? 1,
       votes: { ...th.votes },
@@ -4792,7 +5498,13 @@ function saveGame() {
       buildTimer: th.buildTimer ?? TH_BUILD_INTERVAL,
       happiness: th.happiness ?? 70,
       festivalUntil: th.festivalUntil ?? 0,
+      nextMeasureTick: th.nextMeasureTick ?? 0,
+      militia: th.militia ?? false,
+      wallPlan: th.wallPlan ? { ...th.wallPlan } : null,
+      lastRaidedTick: th.lastRaidedTick ?? -99999,
+      grudgeAgainst: th.grudgeAgainst ?? null,
     })),
+    wars: wars.map(w => ({ ...w })),
     houseRegistry: JSON.parse(JSON.stringify(houseRegistry)),
     buildingRegistry: JSON.parse(JSON.stringify(buildingRegistry)),
     people: people.map(p => ({ ...p })),
@@ -4811,7 +5523,7 @@ function loadGame() {
   if (!raw) { showMessage('no save found.'); return false; }
   try {
     const data = JSON.parse(raw);
-    if (!(data.v >= 1 && data.v <= 8)) { showMessage('save version mismatch.'); return false; }
+    if (!(data.v >= 1 && data.v <= 9)) { showMessage('save version mismatch.'); return false; }
 
     gold             = data.gold;
     souls            = data.souls ?? 10;
@@ -4827,7 +5539,7 @@ function loadGame() {
     records = {
       peakPop: 0, oldestEver: 0, totalBirths: 0, totalDeaths: 0,
       townsFounded: (data.townHalls || []).length, firesSurvived: 0, won: false,
-      soulsHarvested: 0,
+      soulsHarvested: 0, warsWaged: 0, battleDeaths: 0,
       ...(data.records || {}),
     };
     chronicle    = data.chronicle || [];
@@ -4878,7 +5590,24 @@ function loadGame() {
       festivalUntil: th.festivalUntil ?? 0,
       // Ensure all vote keys exist for old saves
       votes: { ...emptyVotes(), ...(th.votes || {}) },
+      // War & politics (v9) — pre-v9 towns start unarmed and at peace
+      nextMeasureTick: th.nextMeasureTick ?? 0,
+      militia: th.militia ?? false,
+      wallPlan: th.wallPlan ?? null,
+      lastRaidedTick: th.lastRaidedTick ?? -99999,
+      grudgeAgainst: th.grudgeAgainst ?? null,
     }));
+    // Stable town ids (v9): assign fresh ids to older saves
+    nextTownId = data.nextTownId ?? 0;
+    for (const th of townHalls) {
+      if (th.id == null) th.id = nextTownId++;
+      else nextTownId = Math.max(nextTownId, th.id + 1);
+    }
+    // Wars (v9): drop any war whose towns no longer stand
+    wars = (data.wars || []).filter(w => townHalls.some(t => t.id === w.attackerId)
+                                      && townHalls.some(t => t.id === w.defenderId));
+    for (const th of townHalls) if (th.grudgeAgainst != null
+      && !townHalls.some(t => t.id === th.grudgeAgainst)) th.grudgeAgainst = null;
     houseRegistry = data.houseRegistry;
     // Migrate old saves that lack the `slots` or `residents` fields
     for (const [, h] of Object.entries(houseRegistry)) {
@@ -4923,6 +5652,11 @@ function loadGame() {
       if (p.sleeping            === undefined) p.sleeping            = false;
       if (p.socialTarget        === undefined) p.socialTarget        = null;
       if (p.foundTarget         === undefined) p.foundTarget         = null;
+      // Citizenship (v9): adopt the nearest hall for older saves
+      if (p.townId === undefined || !townHalls.some(t => t.id === p.townId)) {
+        p.townId = nearestTownHall(Math.round(p.y), Math.round(p.x))?.id ?? null;
+      }
+      p.warTarget = null; // militaryTick re-issues orders every tick
       // Migrate old job/mode values
       if (p.job  === 'builder') p.job  = 'gatherer';
       if (p.job  === undefined) p.job  = 'gatherer';
@@ -4930,9 +5664,16 @@ function loadGame() {
       if (p.mode === undefined) p.mode = 'gather';
       delete p.buildCooldown;
       // Reset non-standard modes that can't safely resume across loads
-      if (p.mode === 'explore' || p.mode === 'social' || p.mode === 'home' || p.mode === 'found') {
+      if (p.mode === 'explore' || p.mode === 'social' || p.mode === 'home' || p.mode === 'found'
+          || p.mode === 'patrol' || p.mode === 'war' || p.mode === 'defend') {
         p.mode = 'gather';
         p.foundTarget = null;
+      }
+      // Soldiers of a disbanded (or vanished) militia stand down
+      if (p.job === 'soldier') {
+        const th = townHalls.find(t => t.id === p.townId);
+        if (!th || !th.militia) p.job = 'gatherer';
+        else p.mode = 'patrol';
       }
       // Validate worker links — drop stale references
       if (p.job === 'worker' && !buildingRegistry[p.assignedBuildingKey]) {
@@ -5044,6 +5785,12 @@ document.getElementById('votes-prev').addEventListener('click', () => {
   if (selectedTHIndex > 0) { selectedTHIndex--; updateUI(); }
 });
 document.getElementById('votes-next').addEventListener('click', () => {
+  if (selectedTHIndex < townHalls.length - 1) { selectedTHIndex++; updateUI(); }
+});
+document.getElementById('town-prev').addEventListener('click', () => {
+  if (selectedTHIndex > 0) { selectedTHIndex--; updateUI(); }
+});
+document.getElementById('town-next').addEventListener('click', () => {
   if (selectedTHIndex < townHalls.length - 1) { selectedTHIndex++; updateUI(); }
 });
 

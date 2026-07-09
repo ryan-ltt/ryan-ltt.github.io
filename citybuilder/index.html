@@ -67,6 +67,7 @@
           <div class="stat-row"><span>doing</span><span class="value" id="insp-mode">—</span></div>
           <div class="stat-row"><span>carrying</span><span class="value" id="insp-carrying">—</span></div>
           <div class="stat-row"><span>home</span><span class="value" id="insp-home">—</span></div>
+          <div class="stat-row"><span>town</span><span class="value" id="insp-town">—</span></div>
           <div class="stat-row"><span>politics</span><span class="value" id="insp-politics">—</span></div>
           <div class="inspector-buttons">
             <button id="follow-btn" class="action-btn">📷 follow</button>
@@ -121,6 +122,7 @@
               <div class="stat-row"><span>gatherers</span><span class="value" id="job-gatherer">0</span></div>
               <div class="stat-row"><span>explorers</span><span class="value" id="job-explorer">0</span></div>
               <div class="stat-row"><span>workers</span><span class="value" id="job-worker">0</span></div>
+              <div class="stat-row"><span>soldiers</span><span class="value" id="job-soldier">0</span></div>
               <div class="stat-row"><span>idle</span><span class="value" id="job-idle">0</span></div>
               <div class="stat-row" style="margin-top:4px;border-top:1px solid #eee;padding-top:4px"><span>staffed</span><span class="value" id="buildings-staffed">0 / 0</span></div>
             </div>
@@ -197,6 +199,20 @@
             <div id="laws-list"><p class="hint">no laws have been enacted yet</p></div>
             <p class="hint">laws the people turn against face repeal votes of their own accord</p>
           </div>
+          <div class="panel">
+            <h2>town affairs</h2>
+            <div class="th-nav">
+              <button class="th-nav-btn" id="town-prev">‹</button>
+              <span class="th-nav-label" id="town-th-label">town hall</span>
+              <button class="th-nav-btn" id="town-next">›</button>
+            </div>
+            <div class="stat-row"><span>citizens</span><span class="value" id="town-citizens">0</span></div>
+            <div class="stat-row"><span>militia</span><span class="value" id="town-militia">none</span></div>
+            <div class="stat-row"><span>walls</span><span class="value" id="town-walls">none</span></div>
+            <div class="stat-row"><span>standing</span><span class="value" id="town-war">at peace</span></div>
+            <div id="wars-list"></div>
+            <p class="hint">every citizen votes with their home town — towns of 8+ hold a meeting every two days and may vote to raise walls, muster a militia, or march on a richer neighbour and steal its stockpile</p>
+          </div>
         </div>
 
         <div class="tab-page" id="tab-research" style="display:none">
@@ -229,6 +245,8 @@
               <div class="stat-row"><span>towns founded</span><span class="value" id="rec-towns">0</span></div>
               <div class="stat-row"><span>fires survived</span><span class="value" id="rec-fires">0</span></div>
               <div class="stat-row"><span>souls harvested</span><span class="value" id="rec-souls">0</span></div>
+              <div class="stat-row"><span>wars waged</span><span class="value" id="rec-wars">0</span></div>
+              <div class="stat-row"><span>fallen in battle</span><span class="value" id="rec-battle-deaths">0</span></div>
             </div>
             <h2 style="margin-top:10px">chronicle</h2>
             <div id="chronicle-list"><p class="hint">the town's story will be written here</p></div>
