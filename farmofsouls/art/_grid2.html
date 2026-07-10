@@ -1,0 +1,22 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;background:#2b2b2b">
+<canvas id="c" width="800" height="240"></canvas>
+<script>
+const S=3, PANEL_W=675, PANEL_X=Math.floor((800-675)/2), PANEL_TOP=6;
+const ctx=document.getElementById('c').getContext('2d'); ctx.imageSmoothingEnabled=false;
+const im=new Image();
+im.onload=()=>{
+  ctx.drawImage(im,0,0,225,75,PANEL_X,PANEL_TOP,675,225);
+  ctx.font='9px monospace';
+  // grid in SOURCE panel coords, every 5
+  for(let sx=0;sx<=225;sx+=5){ const x=PANEL_X+sx*S;
+    ctx.strokeStyle=sx%25===0?'rgba(255,60,60,.7)':'rgba(80,180,255,.4)';
+    ctx.beginPath();ctx.moveTo(x,PANEL_TOP);ctx.lineTo(x,PANEL_TOP+225);ctx.stroke();
+    if(sx%25===0){ctx.fillStyle='#ff5';ctx.fillText(sx,x+1,PANEL_TOP+10);} }
+  for(let sy=0;sy<=75;sy+=5){ const y=PANEL_TOP+sy*S;
+    ctx.strokeStyle=sy%25===0?'rgba(255,60,60,.7)':'rgba(80,180,255,.4)';
+    ctx.beginPath();ctx.moveTo(PANEL_X,y);ctx.lineTo(PANEL_X+675,y);ctx.stroke();
+    if(sy%5===0){ctx.fillStyle='#5f5';ctx.fillText(sy,PANEL_X-16,y+3);} }
+  document.title='ready';
+};
+im.src='art/Background_Image2.png';
+</script></body></html>
