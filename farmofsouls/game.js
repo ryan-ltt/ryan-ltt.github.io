@@ -74,7 +74,8 @@ function textW(t, size){
   ctx.font = (size*SC)+'px pixelmix, monospace';
   return ctx.measureText(t).width;
 }
-// x,y in CANVAS px (already transformed); size in logical font pt
+// x,y in CANVAS px (already transformed); size in logical font pt.
+// Anchor offsets calibrated pixel-exact against the original running in Ruffle.
 function drawText(t, x, y, size, color, align, maxW){
   if(t==null) return;
   t = ''+t;
@@ -83,16 +84,17 @@ function drawText(t, x, y, size, color, align, maxW){
   ctx.font = (size*SC)+'px pixelmix, monospace';
   ctx.fillStyle = color || '#3d3d3d';
   const asc = fontAscent(size), lh = (size+2)*SC;
+  const hOff = 2*SC - 2, vOff = size>=12 ? 6 : 8;
   let w = 0;
   for(const ln of lines) w = Math.max(w, ctx.measureText(ln).width);
   let scale = 1;
   if(maxW && w > maxW*SC) scale = maxW*SC/w;
   for(let i=0;i<lines.length;i++){
     const ln = lines[i], lw = ctx.measureText(ln).width*scale;
-    let px = x + 2*SC;
+    let px = x + hOff;
     if(align==='center') px -= lw/2;
     else if(align==='right') px -= lw;
-    const py = y + 2*SC + asc + i*lh;
+    const py = y + vOff + asc + i*lh;
     if(scale!==1){ ctx.save(); ctx.translate(px,py); ctx.scale(scale,scale);
       ctx.fillText(ln,0,0); ctx.restore(); }
     else ctx.fillText(ln, Math.round(px), Math.round(py));
@@ -976,34 +978,16 @@ function startGame(slot){
   game.mode = 'play';
 }
 
-//////////////////// audio (placeholder for itsd.mp3, which was never in the SWF) ////////////////////
-let audioCtx=null, musicGain=null;
+//////////////////// audio (Into the Second Dimension, restored from itsd.mp3) ////////////////////
+let musicEl=null;
 function initAudio(){
-  if(audioCtx) return;
-  try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; }
-  musicGain = audioCtx.createGain();
-  musicGain.gain.value = muted?0:volume/10*0.05;
-  musicGain.connect(audioCtx.destination);
-  const scale=[220,247,294,330,392,440,494,587], seq=[0,2,4,2,3,5,4,2,0,2,4,5,7,5,4,2];
-  let i=0;
-  setInterval(()=>{
-    if(!audioCtx) return;
-    const t=audioCtx.currentTime;
-    mkNote(scale[seq[i%seq.length]],t,0.22);
-    mkNote(scale[seq[i%seq.length]]/2,t,0.22);
-    i++;
-  },250);
+  if(musicEl) return;
+  musicEl = new Audio('art/itsd.mp3');
+  musicEl.loop = true;
+  musicEl.volume = muted?0:volume/10;
+  musicEl.play().catch(()=>{});
 }
-function mkNote(f,when,dur){
-  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type='square'; o.frequency.value=f;
-  g.gain.setValueAtTime(0,when);
-  g.gain.linearRampToValueAtTime(1,when+0.02);
-  g.gain.linearRampToValueAtTime(0,when+dur);
-  o.connect(g); g.connect(musicGain);
-  o.start(when); o.stop(when+dur);
-}
-function applyVolume(){ if(musicGain) musicGain.gain.value = muted?0:volume/10*0.05; }
+function applyVolume(){ if(musicEl) musicEl.volume = muted?0:volume/10; }
 function onMute(){
   if(muted){ muted=false; applyVolume(); toolTip('Playing: Into the Second Dimension'); }
   else { muted=true; applyVolume(); toolTip('Muted.'); }
@@ -1643,7 +1627,7 @@ function renderAchPane(){
     let color = '#3d3d3d';
     if(achState[i]===1||achState[i]===2) color = '#555500';
     else if(E.a[i]) color = '#005500';
-    drawText(ACH[i][0], LX(px+3), LY(py+15+row*8-2), 6, color, 'left', 180);
+    drawText(ACH[i][0], LX(px+3), LY(py+15+row*8), 6, color, 'left', 180);
   }
   ctx.fillStyle = '#232323';
   ctx.fillRect(LX(px+185), LY(py + achOffset*36/30 + 23), 1*SC, 3*SC);
