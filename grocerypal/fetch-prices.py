@@ -132,6 +132,13 @@ def extract_total_g(name):
     kg = re.search(r"(\d+(?:\.\d+)?)\s*kg\b", name, re.I)
     if kg:
         return float(kg.group(1)) * 1000
+    # Imperial weights (common on produce/meat flyers, e.g. "11 LB AVERAGE").
+    lb = re.search(r"(\d+(?:\.\d+)?)\s*(?:lb|lbs|pound)s?\b", name, re.I)
+    if lb:
+        return float(lb.group(1)) * 453.592
+    oz = re.search(r"(\d+(?:\.\d+)?)\s*oz\b", name, re.I)
+    if oz:
+        return float(oz.group(1)) * 28.3495
     g = re.search(r"(\d+(?:\.\d+)?)\s*g\b", name, re.I)
     if g:
         return float(g.group(1))

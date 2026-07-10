@@ -314,26 +314,29 @@ function renderCatalogResults(query) {
         box.appendChild(div);
     }
 
-    // 2. Deal-database items — sized concepts first (per-mL comparable), then
-    //    sizeless ("size unknown") ones. Cap to keep the dropdown manageable.
+    // 2. Deal-database items. Compute each group's best per-unit price, then sort
+    //    cheapest-per-L/kg first; sizeless ("size unknown") groups sink to the end.
     const DEAL_LIMIT = 40;
-    const sortedDeals = dealMatches.sort((a, b) => (b.hasSize ? 1 : 0) - (a.hasSize ? 1 : 0));
+    for (const g of dealMatches) {
+        const chains = Object.keys(g.deals);
+        const mlVals = chains.map(c => g.deals[c].unitPriceMl).filter(v => v != null);
+        const gVals  = chains.map(c => g.deals[c].unitPriceG).filter(v => v != null);
+        g._lowestFlat = Math.min(...chains.map(c => g.deals[c].price));
+        // Sort key: lowest $/L if any, else lowest $/kg, else Infinity (sizeless last).
+        g._sortUnit = mlVals.length ? Math.min(...mlVals) * 1000
+                    : gVals.length  ? Math.min(...gVals)  * 1000
+                    : Infinity;
+        if (mlVals.length)      g._priceStr = `${fmt$(Math.min(...mlVals) * 1000)}/L`;
+        else if (gVals.length)  g._priceStr = `${fmt$(Math.min(...gVals)  * 1000)}/kg`;
+        else                    g._priceStr = `from ${fmt$(g._lowestFlat)}`;
+    }
+    const sortedDeals = dealMatches.sort((a, b) =>
+        a._sortUnit - b._sortUnit || a._lowestFlat - b._lowestFlat);
     for (const g of sortedDeals.slice(0, DEAL_LIMIT)) {
         const chains = Object.keys(g.deals);
         const chainNames = chains.map(c => CHAIN_LABELS[c] || c).join(', ');
-        const lowestFlat = Math.min(...chains.map(c => g.deals[c].price));
-        // Best per-mL across chains (mL preferred; fall back to per-g).
-        const mlVals = chains.map(c => g.deals[c].unitPriceMl).filter(v => v != null);
-        const gVals  = chains.map(c => g.deals[c].unitPriceG).filter(v => v != null);
-        let priceStr, sizeNote = '';
-        if (mlVals.length) {
-            priceStr = `${fmt$(Math.min(...mlVals) * 1000)}/L`;       // per-L reads better than per-mL
-        } else if (gVals.length) {
-            priceStr = `${fmt$(Math.min(...gVals) * 1000)}/kg`;
-        } else {
-            priceStr = `from ${fmt$(lowestFlat)}`;
-            sizeNote = ' <span class="size-unknown">size unknown</span>';
-        }
+        const priceStr = g._priceStr;
+        const sizeNote = g.hasSize ? '' : ' <span class="size-unknown">size unknown</span>';
         const div = document.createElement('div');
         div.className = 'catalog-result-item deal-result-item' + (g.hasSize ? '' : ' size-unknown-item');
         div.innerHTML = `
@@ -671,6 +674,8 @@ function dealLookup(item, chain) {
         const matches = normName.includes(dealBase) || dealBase.includes(normName)
             || (itemNorm && dealNorm && (itemNorm.includes(dealNorm) || dealNorm.includes(itemNorm)));
         if (!matches) continue;
+        // Don't compare across product forms (whole vs chunks vs sliced, etc.).
+        if (!sameForm(item.name, deal.itemName)) continue;
 
         if (deal.unitPriceMl && (!bestUnitMl || deal.unitPriceMl < bestUnitMl.unitPriceMl)) bestUnitMl = deal;
         if (deal.unitPriceG  && (!bestUnitG  || deal.unitPriceG  < bestUnitG.unitPriceG))   bestUnitG  = deal;
@@ -696,6 +701,31 @@ function dealLookup(item, chain) {
     return flatFallback;
 }
 
+// "Form" words mark a distinct product form (a tub of chunks ≠ a whole melon).
+// They are product identity, never noise: two names must share the SAME set of
+// form words to be considered the same concept.
+const FORM_WORDS = [
+    'whole', 'half', 'halves', 'quarter', 'quarters', 'chunk', 'chunks',
+    'slice', 'sliced', 'slices', 'cut', 'cubed', 'diced', 'wedge', 'wedges',
+    'piece', 'pieces', 'portion', 'portions', 'tri pack', 'tri-pack',
+    'mini', 'minis', 'shredded', 'ground', 'fillet', 'fillets', 'boneless', 'bone-in',
+];
+function formWordSet(name) {
+    const n = ' ' + (name || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ') + ' ';
+    const set = new Set();
+    for (const w of FORM_WORDS) {
+        if (n.includes(' ' + w + ' ')) set.add(w.replace(/s$|es$/, '').replace('-', ' '));
+    }
+    return set;
+}
+// True if two names carry the same product form (so they may be compared).
+function sameForm(a, b) {
+    const fa = formWordSet(a), fb = formWordSet(b);
+    if (fa.size !== fb.size) return false;
+    for (const w of fa) if (!fb.has(w)) return false;
+    return true;
+}
+
 // Normalize a flyer/deal name to a comparison key: drop sizes, pack counts,
 // trademark junk, French boilerplate, and "selected varieties" filler so that
 // look-alike flyer lines collapse to the same key. Used to dedupe the dropdown.
@@ -703,8 +733,9 @@ function normalizeDealName(name) {
     return (name || '')
         .toLowerCase()
         .replace(/[®™®™�]/g, ' ')                    // trademark chars / mojibake
-        .replace(/\d+\s*x\s*\d+(?:\.\d+)?\s*(?:ml|l|g|kg)\b/gi, ' ') // "12x355ml" pack sizes
-        .replace(/\d+(?:\.\d+)?\s*(?:ml|l|litre|liter|g|kg)\b/gi, ' ') // "2 l", "500g"
+        .replace(/\d+\s*x\s*\d+(?:\.\d+)?\s*(?:ml|l|g|kg|lb|lbs|oz)\b/gi, ' ') // "12x355ml" pack sizes
+        .replace(/\d+(?:\.\d+)?\s*(?:ml|l|litre|liter|g|kg|lb|lbs|pound|pounds|oz)\b/gi, ' ') // "2 l", "500g", "11 lb"
+        .replace(/\baverage\b/gi, ' ')  // "11 lb AVERAGE" → drop filler after size strip
         .replace(/\bselected varieties\b/gi, ' ')
         .replace(/\bmini cans?\b/gi, ' ')
         .replace(/\bpkg\b|\bbottles?\b/gi, ' ')
@@ -726,10 +757,14 @@ function extractTotalMl(name) {
     return null;
 }
 
-// Parse "500g" or "1kg" → total grams from a product name string
+// Parse "500g", "1kg", or imperial "11 lb"/"8 oz" → total grams from a name string
 function extractTotalG(name) {
     const kg = name.match(/(\d+(?:\.\d+)?)\s*kg\b/i);
     if (kg) return parseFloat(kg[1]) * 1000;
+    const lb = name.match(/(\d+(?:\.\d+)?)\s*(?:lb|lbs|pound)s?\b/i);
+    if (lb) return parseFloat(lb[1]) * 453.592;
+    const oz = name.match(/(\d+(?:\.\d+)?)\s*oz\b/i);
+    if (oz) return parseFloat(oz[1]) * 28.3495;
     const g = name.match(/(\d+(?:\.\d+)?)\s*g\b/i);
     if (g) return parseFloat(g[1]);
     return null;
