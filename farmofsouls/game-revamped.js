@@ -1,4 +1,5 @@
-/* Farm of Souls v0.1.7 — faithful HTML/JS port of Siveran's Flash game.
+/* Farm of Souls REVAMPED — based on the faithful HTML/JS port of Siveran's Flash game (v0.1.7).
+   This copy is for bug fixes and gameplay changes; game.js stays the faithful original.
    Ported 1:1 from the decompiled AS3 (Main.as, Earth.as, Man.as, Land.as, Stash.as,
    Building.as, FoSControls.as, InfoPane.as, AchievementPane.as, ClassTree.as, ...).
    Coordinate model matches the original exactly: a 250x150 logical scene scaled x3
@@ -891,7 +892,7 @@ function controlsFrame(){
 }
 
 //////////////////// save / load (SharedObject "FoSEarth<slot>") ////////////////////
-function slotKey(slot){ return 'FoSEarth'+slot; }
+function slotKey(slot){ return 'FoSRevampedEarth'+slot; }
 function saveSO(){
   try{
     const d = { version:10,

@@ -12,12 +12,64 @@
 <body>
   <div id="game">
     <canvas id="canvas" width="800" height="500"></canvas>
+    <div id="overlay-controls">
+      <span id="mode-original" class="btn" data-mode="original">Original</span>
+      <span id="mode-revamped" class="btn" data-mode="revamped">Revamped</span>
+      <span id="size-control">
+        <span class="btn" data-scale="1">1x</span>
+        <span class="btn" data-scale="1.5">1.5x</span>
+        <span class="btn" data-scale="2">2x</span>
+        <span class="btn" data-scale="fit">Fit</span>
+      </span>
+    </div>
   </div>
 
   <div id="credits">
     Reimplementation of <b>Farm of Souls</b> v0.1.7 by Siveran (Kongregate). Music theme: "Into the Second Dimension" by AngelsDontKill11. Pixelmix font by Andrew Tyler.
   </div>
 
-  <script src="game.js"></script>
+  <script>
+    (function(){
+      const qp = new URLSearchParams(location.search).get('mode');
+      if(qp === 'original' || qp === 'revamped') localStorage.setItem('FoSMode', qp);
+      const mode = localStorage.getItem('FoSMode') === 'revamped' ? 'revamped' : 'original';
+      document.getElementById('mode-' + mode).classList.add('active');
+      if(mode === 'revamped') document.title = 'Farm of Souls: Revamped';
+      document.querySelectorAll('#overlay-controls [data-mode]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if(btn.dataset.mode === mode) return;
+          localStorage.setItem('FoSMode', btn.dataset.mode);
+          location.reload();
+        });
+      });
+      if(mode === 'revamped'){
+        const ctrl = document.getElementById('size-control');
+        const game = document.getElementById('game');
+        ctrl.style.display = 'inline-flex';
+        let scale = localStorage.getItem('FoSScale') || '1';
+        if(![...ctrl.querySelectorAll('[data-scale]')].some(b => b.dataset.scale === scale)) scale = '1';
+        function applyScale(){
+          const f = scale === 'fit'
+            ? Math.max(0.5, Math.min((window.innerWidth - 40) / 800, (window.innerHeight - 80) / 500))
+            : parseFloat(scale);
+          game.style.width = Math.round(800 * f) + 'px';
+          game.style.height = Math.round(500 * f) + 'px';
+          ctrl.querySelectorAll('[data-scale]').forEach(b => b.classList.toggle('active', b.dataset.scale === scale));
+        }
+        ctrl.querySelectorAll('[data-scale]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            scale = btn.dataset.scale;
+            localStorage.setItem('FoSScale', scale);
+            applyScale();
+          });
+        });
+        window.addEventListener('resize', () => { if(scale === 'fit') applyScale(); });
+        applyScale();
+      }
+      const s = document.createElement('script');
+      s.src = mode === 'revamped' ? 'game-revamped.js' : 'game.js';
+      document.body.appendChild(s);
+    })();
+  </script>
 </body>
 </html>
