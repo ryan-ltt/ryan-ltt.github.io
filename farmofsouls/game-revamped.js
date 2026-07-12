@@ -34,13 +34,14 @@ const CLASS_SPRITE = ['Basic','Scavenger','Farmer','Logger','Miner','Prospector'
 
 function loadAssets(done){
   const names = ['FoSControls_BackImage','FoSControls_PersonImage','Land_SpriteImage',
-    'FlyingSoul_SpriteImage','Background_Image1','Background_Image2','Background_Image3',
+    'FlyingSoul_SpriteImage','Background_Image1','Background_Image2_Revamped','Background_Image3',
     'Background_Image4','Statbar_SpriteImage','Statbar_Life','Statbar_Experience',
     'GoButton_State1','GoButton_State2','AchievementPane_SpriteImage','ClassTree_SpriteImage',
+    'BuildingPane_SpriteImage',
     'InfoPane_SpriteImage','InfoPane_RelImage','InfoPane_EnrImage','InfoPane_EduImage',
     'InfoPane_RefImage','InfoPane_HouImage','InfoPane_SupImage','Man_TransitionImage'];
   for(let t=1;t<=7;t++) names.push('Resource_'+RES_SPRITE[t]+'Image');
-  for(const cat of BUILD_CAT) for(let t=1;t<=4;t++) names.push(`Building_${cat}${t}`);
+  for(const cat of BUILD_CAT) for(let t=1;t<=5;t++) names.push(`Building_${cat}${t}`);
   for(const g of ['Male','Female']) for(const c of CLASS_SPRITE) names.push(`Man_${g}${c}`);
   let pending = names.length + 1;
   const dec = ()=>{ if(--pending<=0){ assetsReady=true; done(); } };
@@ -124,6 +125,12 @@ const CLASS_SPEC = {
 };
 
 //////////////////// building data ////////////////////
+// Types 0-31: cat*4 + tier (tiers 1-4, faithful to the original).
+// Types 32-39: revamped tier 5, one per category: 32 + cat.
+const bCat  = t => t>=32 ? t-32 : Math.floor(t/4);
+const bTier = t => t>=32 ? 4 : t%4;
+// tier unlocks: tiers 1-2 free; 3-4 gated on the original achievements; 5 on the new ones
+const tierUnlocked = (cat,tier) => tier<2 || (tier<4 ? E.a[15 + cat*2 + tier - 2] : E.a[31+cat]);
 // stash build costs, exactly the vectors passed to Stash.make() in the AS3
 const BUILD_COST = {
   0:[10,3,0,1,5,0,0],   1:[10,3,0,1,20,0,0],   2:[0,1,0,0,60,0,0],    3:[0,0,5,25,100,5,1],
@@ -133,6 +140,10 @@ const BUILD_COST = {
   16:[0,5,0,2,0,0,0],   17:[0,50,10,5,1,0,0],  18:[0,150,25,10,2,0,0],19:[0,300,50,15,3,1,1],
   20:[5,10,15,5,0,0,0], 21:[5,10,50,15,3,0,0], 22:[10,20,100,30,5,1,0],23:[10,10,300,10,5,1,1],
   24:[25,5,0,0,0,0,0],  25:[100,10,0,1,0,0,0], 26:[250,50,0,3,1,0,0], 27:[500,10,0,0,0,5,5],
+  // tier 5 (revamped)
+  32:[0,0,10,50,300,20,5], 33:[50,100,0,300,30,5,3], 34:[5,100,10,15,30,50,100],
+  35:[20,10,0,5,100,300,15], 36:[0,800,100,30,5,3,3], 37:[20,30,800,30,10,3,3],
+  38:[1200,30,0,3,0,15,15],  39:[8,8,8,8,8,8,8],
 };
 // per-type image anchor offsets from Building.as (image.x, image.y), building at land (10,45)
 const BUILD_OFF = {
@@ -144,8 +155,10 @@ const BUILD_OFF = {
   20:[-5,-10],21:[-10,-10],22:[-10,-20],23:[-10,-40],
   24:[-5,-11],25:[-5,-20], 26:[-10,-20],27:[-10,-40],
   28:[-5,-10],29:[-5,-10], 30:[-5,-20], 31:[-10,-20],
+  32:[-10,-32],33:[-10,-36],34:[-10,-45],35:[-10,-40],
+  36:[-10,-45],37:[-10,-44],38:[-10,-45],39:[-10,-24],
 };
-function buildingSprite(type){ return `Building_${BUILD_CAT[Math.floor(type/4)]}${type%4+1}`; }
+function buildingSprite(type){ return `Building_${BUILD_CAT[bCat(type)]}${bTier(type)+1}`; }
 
 //////////////////// tooltip strings ////////////////////
 const RES_TIP = [null,
@@ -188,7 +201,15 @@ const BUILD_TIP0 = [
   'Stash 1/Stash: Builds simple things.',
   'Stash 2/Crate: Builds basic buildings.',
   'Stash 3/Storage: Builds most buildings.',
-  'Stash 4/Warehouse: Builds everything.'];
+  'Stash 4/Warehouse: Builds everything below tier 5.'];
+BUILD_TIP0[32]='Recreation 5/Colosseum: People stop here to take a fleeting break. +1 xp/0.8 seconds';
+BUILD_TIP0[33]='Enrichment 5/Volcano: Massively increases resource spawn rate.';
+BUILD_TIP0[34]='Religion 5/Kongregate HQ: +8 souls per 100 levels.';
+BUILD_TIP0[35]='Refinement 5/Mint: Makes resources worth 8% more.';
+BUILD_TIP0[36]='Education 5/Wizard Tower: Causes people to class-up dramatically more often.';
+BUILD_TIP0[37]='Housing 5/Castle: Spawns 8 people a day.';
+BUILD_TIP0[38]='Supply 5/World Tree: Raises population limit by 40.';
+BUILD_TIP0[39]='Stash 5/Vault: Builds everything, even tier 5 buildings.';
 const BUILD_TIP1 = [
   '10 dirt, 3 wood, 1 clay, 5 iron.',
   '10 dirt, 3 wood, 1 clay, 20 iron.',
@@ -219,6 +240,14 @@ const BUILD_TIP1 = [
   '250 dirt, 50 wood, 3 stone, 1 iron.',
   '500 dirt, 10 wood, 5 silver, 5 gold.',
   '1 of each.','2 of each.','3 of each.','5 of each.'];
+BUILD_TIP1[32]='10 clay, 50 stone, 300 iron, 20 silver, 5 gold.';
+BUILD_TIP1[33]='50 dirt, 100 wood, 300 stone, 30 iron, 5 silver, 3 gold.';
+BUILD_TIP1[34]='5 dirt, 100 wood, 10 clay, 15 stone, 30 iron, 50 silver, 100 gold.';
+BUILD_TIP1[35]='20 dirt, 10 wood, 5 stone, 100 iron, 300 silver, 15 gold.';
+BUILD_TIP1[36]='800 wood, 100 clay, 30 stone, 5 iron, 3 silver, 3 gold.';
+BUILD_TIP1[37]='20 dirt, 30 wood, 800 clay, 30 stone, 10 iron, 3 silver, 3 gold.';
+BUILD_TIP1[38]='1200 dirt, 30 wood, 3 stone, 15 silver, 15 gold.';
+BUILD_TIP1[39]='8 of each.';
 const BUILD_TIP2 = [
   'The manifestation of the idiom "Stop to smell the roses."',
   'Never before has an empty field of grass been so enjoyable.',
@@ -249,6 +278,14 @@ const BUILD_TIP2 = [
   'There is a 100% tithe for everyone. Kongrianity is harsh.',
   "It's not a game if there aren't crates in it.",
   '',''];
+BUILD_TIP2[32]='The gladiators are all volunteers. Here, dying is considered a promotion.';
+BUILD_TIP2[33]='Finally, land with pre-installed geology.';
+BUILD_TIP2[34]='The developers and moderators physically live here.\nPrayers are answered in the comments section.';
+BUILD_TIP2[35]='It prints money, which is somehow different from whatever the Investor does.';
+BUILD_TIP2[36]="Here people learn the advanced subjects' advanced subjects, such as meta-magic.";
+BUILD_TIP2[37]='"They were rabbits all along." ~firedragongt, vindicated';
+BUILD_TIP2[38]='Its roots hold the whole farm together. No pressure.';
+BUILD_TIP2[39]='Contains 8 of everything, including crates.';
 const CLASS_TIP = [
   'Basic person. 1x anything. Lv1',
   'Scavenger. 1x anything. Lv2',
@@ -310,10 +347,19 @@ const ACH = [ // [title, tip]; id = index+1; earned flag lives in E.a[id-1]
   ['Limit Breaker','100 speed. Unlocks Life Tree.'],
   ["Rome Wasn't Built in a Day",'Build 10 buildings. Unlocks Storage.'],
   ['Metropolis','Build 50 buildings. Unlocks Warehouse.'],
+  // tier 5 unlocks (revamped); order matches categories 0-7 (a[31+cat])
+  ['Bread and Circuses','Have 200 combined stats. Unlocks Colosseum.'],
+  ['Terraforming','Gather 10,000 stone. Unlocks Volcano.'],
+  ['Badge of the Day','Harvest 100,000 souls. Unlocks Kongregate HQ.'],
+  ['Money Printer','Gather 10,000 combined silver and gold. Unlocks Mint.'],
+  ['Post-Doc','Get a person to level 30. Unlocks Wizard Tower.'],
+  ['Population Boom','10,000 people spawned from houses. Unlocks Castle.'],
+  ['Yggdrasil','Have 250 people at one time. Unlocks World Tree.'],
+  ['Hoarder','Build 200 buildings. Unlocks Vault.'],
 ];
 // render state per achievement (Achievement.renderState): 0 unearned, 1 fresh,
 // 2 seen-in-open-pane, 3 settled (green)
-let achState = new Array(31).fill(0);
+let achState = new Array(ACH.length).fill(0);
 let splashes = [];   // AchievementSplash: {x, curAlpha, alpha, text}
 
 function earnAchievement(i){ // i = 0-based
@@ -337,7 +383,7 @@ function newEarth(){
     paused:false, buildout:true, autosave:true, showTips:true,
     hasStash:false, leftBound:0, rightBound:0,
     panic:[false,false,false,false,false,false,false,false],
-    a:new Array(31).fill(false),   // achievements (Earth.a)
+    a:new Array(ACH.length).fill(false),   // achievements (Earth.a)
     c:new Array(15).fill(false),   // enabled classes (Earth.c)
     averagePop:0, recordPop:0,
     // FoSControls fields (recSouls starts 0, so the starting soul counts into totSouls)
@@ -359,9 +405,11 @@ let frameCount = 0;
 let tooltip = '';                              // toolTipText content (persists)
 // panes
 let infoOpen=false, achOpen=false, classOpen=false, classHelp=0;
+let buildOpen=false, buildPaneTip={};           // revamped: building tree pane (hotkey B)
 let achOffset = 0;
 const sbOffsets = [0,0,0,0,0]; // info pane scrollboxes: stats, options, help, credits, misc
 let muted = false, volume = 10;
+let gameSpeed = 1, sliderDrag = false;         // revamped: speed slider (replaces KONG button)
 
 function toolTip(t){ if(E && E.showTips) tooltip = t||''; }
 
@@ -411,12 +459,12 @@ function landFrame(L){
   if(L.resourceCounter>=30 && L.hasStash){
     stashTryBuild(L);
     L.resourceCounter = Math.floor(Math.random()*5);
-  } else if(L.resourceCounter>=30 && L.buildingType<=3){
+  } else if(L.resourceCounter>=30 && bCat(L.buildingType)===0){ // empty land or recreation
     if(Math.random()*(100+E.fertCap)>95 && L.resource==null) landGainResource(L, E.maxLv+2);
     else if(Math.random() > 0.95 + L.resourceType/200) landLoseResource(L);
     L.resourceCounter = Math.floor(Math.random()*5);
-  } else if(L.buildingType>=20 && L.buildingType<=23){
-    const thresh = [5400,2600,1800,1080][L.buildingType-20];
+  } else if(L.hasBuilding && bCat(L.buildingType)===5){
+    const thresh = [5400,2600,1800,1080,675][bTier(L.buildingType)];
     if(++L.spawnTimer > thresh){
       if(Math.random() < E.effHou/100) dropSoul(L.x+10);
       L.spawnTimer = Math.random()*50-25;
@@ -436,8 +484,8 @@ function landBuild(L, type){
   landLoseResource(L);
   L.hasBuilding = true;
   applyCap(type, +1);
-  if(type>=24 && type<=27) updateSouls();
-  if(type>=28 && type<=31 && !L.hasStash){
+  if(bCat(type)===6) updateSouls();
+  if(bCat(type)===7 && !L.hasStash){
     L.hasStash = true;
     L.stash = { r:[0,0,0,0,0,0,0], b:[0,0,0,0,0,0,0,1] };
   }
@@ -445,46 +493,54 @@ function landBuild(L, type){
   L.tip = 0;
 }
 function applyCap(type, sign){
-  const cat = Math.floor(type/4), tier = type%4;
-  const v = [1,2,3,5][tier]*sign;
+  const cat = bCat(type), tier = bTier(type);
+  const v = [1,2,3,5,8][tier]*sign;
   if(cat===1) E.fertCap += v;
   else if(cat===2) E.relCap += v;
   else if(cat===3) E.refCap += v;
   else if(cat===4) E.eduCap += v;
   else if(cat===5) E.housing += v;
-  else if(cat===6) E.supCap += [5,10,15,25][tier]*sign;
+  else if(cat===6) E.supCap += [5,10,15,25,40][tier]*sign;
 }
 
 //////////////////// Stash ////////////////////
+// Only a tier-5 stash (Vault, type 39) can construct tier-5 buildings; lower
+// stashes cap out at tier 4 like the original. This is what makes the Vault
+// worth having beyond flavor.
+const stashMaxTier = L => bTier(L.buildingType)===4 ? 5 : 4;
 // Stash.make: b[cat] is a tier-probe counter; only tiers >= b[cat] are attempted
 function stashMake(L, type, cost){
-  const S = L.stash, cat = Math.floor(type/4);
-  if(S.b[cat] <= type%4 &&
+  const S = L.stash, cat = bCat(type);
+  const bMax = stashMaxTier(L) - 1;          // probe counter cycles 0..bMax
+  if(S.b[cat] > bMax) S.b[cat] = 0;          // self-heal (e.g. save from before this cap)
+  if(S.b[cat] <= bTier(type) &&
      S.r[0]>=cost[0] && S.r[1]>=cost[1] && S.r[2]>=cost[2] && S.r[3]>=cost[3] &&
      S.r[4]>=cost[4] && S.r[5]>=cost[5] && S.r[6]>=cost[6]){
     if(earthBuild(type, L.index)){
       for(let t=0;t<7;t++) S.r[t] -= cost[t];
-      if(S.b[cat] < 3) S.b[cat]++;
+      if(S.b[cat] < bMax) S.b[cat]++;
       else S.b[cat] = 0;
       return true;
     }
     if(!E.buildout){
-      if(S.b[cat] !== 3) S.b[cat]++;
-      if(S.b[cat] > 3) S.b[cat] = 0;
+      if(S.b[cat] !== bMax) S.b[cat]++;
+      if(S.b[cat] > bMax) S.b[cat] = 0;
     }
   }
   return false;
 }
 // Stash.tryBuild: rotate through 7 categories starting at a random one, trying
-// tiers 1..4 (stop at first success); then the stash self-upgrade chain.
+// tiers up to the stash's own capability (stop at first success); then the
+// stash self-upgrade chain.
 function stashTryBuild(L){
   const S = L.stash;
+  const maxTier = stashMaxTier(L);
   let i = Math.floor(Math.random()*7);
   const end = i+7;
   while(++i <= end){
     const cat = i%7;
-    for(let tier=0; tier<4; tier++){
-      const type = cat*4 + tier;
+    for(let tier=0; tier<maxTier; tier++){
+      const type = tier<4 ? cat*4 + tier : 32 + cat;
       if(stashMake(L, type, BUILD_COST[type])) break;
     }
   }
@@ -498,14 +554,17 @@ function stashTryBuild(L){
   } else if(rge(5) && S.b[7]===3 && E.a[30]){
     for(let t=0;t<7;t++) S.r[t]-=5;
     S.b[7]=4; landBuild(L,31);
+  } else if(rge(8) && S.b[7]===4 && E.a[38]){
+    for(let t=0;t<7;t++) S.r[t]-=8;
+    S.b[7]=5; landBuild(L,39);
   }
 }
 
 //////////////////// Earth ////////////////////
 // Earth.build
 function earthBuild(type, nearIdx){
-  const cat = Math.floor(type/4), tier = type%4;
-  if(E.panic[cat] || !(E.a[15 + cat*2 + tier - 2] || tier<=1)) return false;
+  const cat = bCat(type), tier = bTier(type);
+  if(E.panic[cat] || !tierUnlocked(cat,tier)) return false;
   let c = 0, idx = nearIdx, step = 2;
   if(E.buildout){
     while(c<=4){
@@ -527,7 +586,7 @@ function earthBuild(type, nearIdx){
     if(idx < land.length*2/3 && idx > -land.length*2/3){
       const li = idx<0 ? -idx-1 : idx;
       c = 0;
-      if(land[li].hasBuilding && Math.floor(land[li].buildingType/4)===cat && land[li].buildingType%4 < tier){
+      if(land[li].hasBuilding && bCat(land[li].buildingType)===cat && bTier(land[li].buildingType) < tier){
         landBuild(land[li], type); c = 5;
       }
     } else c++;
@@ -535,7 +594,7 @@ function earthBuild(type, nearIdx){
     if(c===5) break;
   }
   if(c===5) return true;
-  if(tier===3) E.panic[cat] = true;
+  if(tier===4) E.panic[cat] = true;
   return false;
 }
 
@@ -555,7 +614,7 @@ function seek(M){
           landLoseResource(L);
           pickup(M, res);
         }
-      } else if(L.hasBuilding && L.buildingType<=3 && foundBuild===0){
+      } else if(L.hasBuilding && bCat(L.buildingType)===0 && foundBuild===0){
         foundBuild = L.x + 10 - M.x;
         buildIdx = idx;
       }
@@ -568,12 +627,8 @@ function seek(M){
   if(Math.abs(foundBuild) < 10){
     M.recreate = true;
     M.seekDelay = 30;
-    switch(land[buildIdx].buildingType){
-      case 0: M.rec += 1; break;
-      case 1: M.rec += 2; break;
-      case 2: M.rec += 3; break;
-      case 3: M.rec += 5;
-    }
+    // rec rate per tier; tier 5 Colosseum is 6 (deliberately shy of the 1,2,3,5,8 curve)
+    M.rec += [1,2,3,5,6][bTier(land[buildIdx].buildingType)];
   }
   return foundBuild;
 }
@@ -734,15 +789,54 @@ function pickup(M, res){
   M.seekDelay = Math.trunc(10/M.speed);
   M.exp += res.type * M.multiplier;
 }
+// Revamped class-up rework. The original aimed every class-up at one hardcoded
+// target and silently discarded the attempt when that target was disabled or
+// under-leveled. That skewed populations toward low-requirement classes
+// (Scavenger Lv2 vs Scholar Lv5), made columns dead-end when a middle tier was
+// disabled (no Logger without Farmer), and made mid/high tiers unreachable if
+// their base class was off. New rule: a person always heads for the NEAREST
+// enabled class they qualify for in a column, skipping disabled tiers; the roll
+// must beat the hardest threshold on the skipped path, so skipping is never
+// cheaper than stepping. Basics consider all 5 columns and join the one with
+// the fewest living members, which keeps enabled columns balanced. Per-tier
+// thresholds and level requirements are unchanged, so higher tiers stay rare.
+const PROMO_TH = {2:40,3:50,5:50,6:60,8:70,9:40,11:40,12:70,14:70,15:90};
+// nearest enabled+qualified class above M's position in column col (0-4),
+// with the roll threshold needed to reach it; null if none
+function nextClassUp(M, col){
+  const base = col*3+1, top = col*3+3;
+  const from = M.curClass===0 ? base-1 : M.curClass;
+  let need = M.curClass===0 ? 30 : 0;
+  for(let id=from+1; id<=top; id++){
+    if(id>base) need = Math.max(need, PROMO_TH[id]);
+    if(E.c[id-1] && M.level >= CLASS_SPEC[id].minLv) return {id, need};
+  }
+  return null;
+}
 function classUp(M){
   const roll = Math.random()*(E.education+100);
-  if(M.curClass===0 && roll>30){
-    becomeClass(M, Math.floor(Math.random()*5)*3 + 1);
+  if(M.curClass===0){
+    const cands = [];
+    for(let col=0; col<5; col++){
+      const nx = nextClassUp(M, col);
+      if(nx && roll>nx.need) cands.push({col, id:nx.id});
+    }
+    if(!cands.length) return;
+    const counts = new Array(5).fill(0);
+    for(const m of men){
+      if(m.curClass===0 || m.dying) continue;
+      counts[Math.ceil(m.curClass/3)-1]++;
+    }
+    let best = [], min = Infinity;
+    for(const c of cands){
+      if(counts[c.col] < min){ min = counts[c.col]; best = [c]; }
+      else if(counts[c.col] === min) best.push(c);
+    }
+    becomeClass(M, best[Math.floor(Math.random()*best.length)].id);
     return;
   }
-  const th = {1:[40,2],2:[50,3],4:[50,5],5:[60,6],7:[70,8],8:[40,9],
-    10:[40,11],11:[70,12],13:[70,14],14:[90,15]}[M.curClass];
-  if(th && roll>th[0]) becomeClass(M, th[1]);
+  const nx = nextClassUp(M, Math.ceil(M.curClass/3)-1);
+  if(nx && roll>nx.need) becomeClass(M, nx.id);
 }
 function becomeClass(M, id){
   const spec = CLASS_SPEC[id];
@@ -826,16 +920,27 @@ function updateAchievements(){
   else if(!E.a[28] && E.lvSpeed>=100) earnAchievement(28);
   else if(!E.a[29] && E.b>=10) earnAchievement(29);
   else if(!E.a[30] && E.b>=50) earnAchievement(30);
+  // tier 5 unlocks (revamped)
+  else if(!E.a[31] && E.lvLand+E.lvLife+E.lvSight+E.lvSpeed>=200) earnAchievement(31);
+  else if(!E.a[32] && r[3]>=10000) earnAchievement(32);
+  else if(!E.a[33] && E.totSouls>=100000) earnAchievement(33);
+  else if(!E.a[34] && r[5]+r[6]>=10000) earnAchievement(34);
+  else if(!E.a[35] && E.maxLv>=30) earnAchievement(35);
+  else if(!E.a[36] && E.spawn>=10000) earnAchievement(36);
+  else if(!E.a[37] && E.people>=250) earnAchievement(37);
+  else if(!E.a[38] && E.b>=200) earnAchievement(38);
   // Achievement.render state machine
-  for(let i=0;i<31;i++){
+  for(let i=0;i<ACH.length;i++){
     if(achOpen && achState[i]===1) achState[i]=2;
     else if(!achOpen && achState[i]===2) achState[i]=3;
   }
 }
 
 //////////////////// frame (Earth.onFrame + FoSControls.onFrame) ////////////////////
-function onFrame(){
-  controlsFrame();
+function onFrame(subframe){
+  // controls (camera/sky scroll, pod refill) run once per render tick so
+  // scrolling speed is unaffected by the game speed slider
+  if(!subframe) controlsFrame();
   if(!E.paused){
     for(const L of land) landFrame(L);
   }
@@ -929,8 +1034,8 @@ function loadSO(){
     E.resource=d.resource - 1; // quirk preserved from the original loadSO
     E.maxLv=d.maxLv;
     E.recSouls=E.souls;
-    E.a = (d.achievements||[]).map(Boolean); E.a.length=31;
-    for(let i=0;i<31;i++){ E.a[i]=!!E.a[i]; achState[i] = E.a[i]?3:0; }
+    E.a = (d.achievements||[]).map(Boolean); E.a.length=ACH.length;
+    for(let i=0;i<ACH.length;i++){ E.a[i]=!!E.a[i]; achState[i] = E.a[i]?3:0; }
     E.r = d.resourceCounts||[0,0,0,0,0,0,0];
     E.reincarn=d.reincarn;
     E.c = (d.classes||[]).map(Boolean); E.c.length=15;
@@ -965,9 +1070,9 @@ function startGame(slot){
   E = newEarth();
   land = []; men = [];
   hasSoul = false; dragSoul = null;
-  splashes = []; achState = new Array(31).fill(0);
-  infoOpen = achOpen = classOpen = false;
-  achOffset = 0; classHelp = 0;
+  splashes = []; achState = new Array(ACH.length).fill(0);
+  infoOpen = achOpen = classOpen = buildOpen = false;
+  achOffset = 0; classHelp = 0; btOffset = 0;
   for(let i=0;i<5;i++) sbOffsets[i]=0;
   tooltip = '';
   let loaded = false;
@@ -1001,6 +1106,21 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
+// Revamped: keep the canvas backing store at the real displayed resolution
+// (CSS size x devicePixelRatio) and scale the context by RS, so text and
+// sprites rasterize at device pixels instead of being resampled by CSS from
+// a fixed 800x500 buffer (which blurred everything at non-1x scales).
+let RS = 1;
+function updateCanvasRes(){
+  const dpr = window.devicePixelRatio || 1;
+  const rs = Math.max(0.25, (canvas.clientWidth || STAGE_W) * dpr / STAGE_W);
+  if(rs === RS) return;
+  RS = rs;
+  canvas.width = Math.round(STAGE_W * RS);
+  canvas.height = Math.round(STAGE_H * RS);
+  ctx.imageSmoothingEnabled = false;   // context state resets when resized
+}
+
 function di(name, lx, ly, w, h){ // draw image at logical coords/size
   const im = IMG[name];
   if(im && im.width) ctx.drawImage(im, LX(lx), LY(ly), (w||im.width)*SC, (h||im.height)*SC);
@@ -1015,14 +1135,13 @@ function controlPanes(){
     [-39,-27,64,7, ()=>upgradeClick('sight'), 'Hotkey 3: Range to spot resources, 1/4 tile per point. Ctrl to sell, shift for 10.'],
     [-39,-19,64,7, ()=>upgradeClick('land'),  "Hotkey 4: Tiles of land owned. Can't be sold."],
     [31,-19,10,7, onMute,    'Hotkey M: Click to mute. + and - keys change volume.'],
-    [42,-19,10,7, ()=>{},    "Hotkey Q: You won't really see the effect in a pixel game."],
+    [42,-19,10,7, onInfo,    'Hotkey I: More options and info.'],
     [53,-19,10,7, onPause,   'Hotkey P: Pause the game.'],
     [64,-19,19,7, ()=>window.open('http://www.kongregate.com/accounts/Siveran'), 'By Siveran on Kongregate.'],
     [31,-27,10,7, onSave,    'Hotkey Z: Save the game. Workers are not saved.'],
-    [42,-27,10,7, onInfo,    'Hotkey I: More options and info.'],
+    [42,-27,10,7, onBuildTree, 'Hotkey B: Building tree.'],
     [53,-27,10,7, onAchievement, 'Hotkey X: Achievements.'],
     [64,-27,10,7, onClasses, 'Hotkey C: Edit class tree.'],
-    [75,-27,25,7, ()=>window.open('http://www.kongregate.com/'), 'Posted to one, stolen by many!'],
     [31,-35,38,7, null, 'Total resources, regardless of type or use.'],
     [31,-43,38,7, null, 'Maximum happiness level of all who have died.'],
     [31,-51,38,7, null, 'Total number of souls earned.'],
@@ -1032,14 +1151,25 @@ function controlPanes(){
   return P;
 }
 function onPause(){ E.paused = !E.paused; }
+// speed slider: ticks at controls-local x 76..96, 5px apart (speeds 1x..5x)
+function setSpeedFromMouse(e){
+  const {lx} = mouseLogical(e);
+  const s = Math.max(1, Math.min(5, Math.round((lx-125-76)/5)+1));
+  if(s!==gameSpeed){ gameSpeed = s; toolTip('Game speed: '+s+'x'); }
+}
 function onInfo(){ infoOpen = !infoOpen; }
-function onAchievement(){ achOpen = !achOpen; if(classOpen) classOpen=false; }
+function onAchievement(){ achOpen = !achOpen; if(classOpen) classOpen=false; if(buildOpen) buildOpen=false; }
 let classGender = [];
 function onClasses(){
   classOpen = !classOpen;
   if(achOpen) achOpen=false;
+  if(buildOpen) buildOpen=false;
   // UnitClass picks a random gender each time the tree is opened
   if(classOpen) classGender = CLASS_SLOTS.map(()=>Math.random()>0.5);
+}
+function onBuildTree(){
+  buildOpen = !buildOpen;
+  if(buildOpen){ achOpen=false; classOpen=false; buildPaneTip={}; btOffset=0; }
 }
 
 // info pane hotspots in LOGICAL coords (pane is fullscreen at logical 0,0)
@@ -1077,7 +1207,8 @@ const HELP_ROWS = [
   ['Building Flavor','Clicking twice on some buildings gives you some flavor text.'],
   ['Resource Weight','Clay, wood, and dirt can be picked up by level ones. Other resources take higher levels.'],
   ['Days','Each day is approximately 3 minutes long.'],
-  ['Class Tree',"If you turn on scavenger and scholar in the class tree,\na lot more people will become scavengers than scholars becuase it's easier."],
+  ['Class Tree',"People head for the nearest enabled class they qualify for, skipping disabled tiers,\nand new recruits join whichever column has the fewest members."],
+  ['Building Tree','Hotkey B shows every building: click one for cost and flavor. Dim means none built yet, dark means locked.'],
   ['Hold Keys','Hold space for lots of people. Same principle works for all hotkeys.'],
   ['Number Cap','You can only have 2.1 billion at a time. It flips around to negative after that.'],
   ['Eff. Properties','You can ctrl+click on an eff. property to go 10% down instead of 10% up.'],
@@ -1125,6 +1256,27 @@ const CLASS_SLOTS = [
   [7,104,15],[8,104,32],[9,104,49],[10,134,15],[11,134,32],[12,134,49],
   [13,164,15],[14,164,32],[15,164,49],
 ];
+
+// building tree pane (revamped): 8 category columns x 5 tier rows at logical (28,50), 190x70,
+// with the rows scrolling vertically inside a clipped viewport (wheel or W/S)
+const BT_X = 28, BT_Y = 50, BT_H = 70, BT_COL_W = 21;
+const BT_ROW_Y = [25,33,41,50,66], BT_ROW_H = [8,8,9,15,15]; // content-local row tops/heights
+const BT_VIEW_Y = 24, BT_VIEW_H = 42;                        // viewport: labels to just above the border
+const BT_MAX_OFF = BT_ROW_Y[4]+BT_ROW_H[4]+2 - (BT_VIEW_Y+BT_VIEW_H); // scroll until tier 5 clears the border
+let btOffset = 0;                                            // scroll offset in content px
+function btScroll(d){
+  btOffset -= d*7;
+  if(btOffset<0) btOffset=0;
+  else if(btOffset>BT_MAX_OFF) btOffset=BT_MAX_OFF;
+}
+const btColX = cat => 4 + cat*23;                            // pane-local column left edge
+const btType = (cat,tier) => tier<4 ? cat*4 + tier : 32 + cat;
+function btUnlocked(cat, tier){ return tierUnlocked(cat, tier); }
+function btCounts(){
+  const n = new Array(40).fill(0);
+  for(const L of land) if(L.hasBuilding) n[L.buildingType]++;
+  return n;
+}
 
 //////////////////// hover / hit testing ////////////////////
 let hoverPane = null;        // key of hovered clickable pane (for highlight)
@@ -1175,7 +1327,7 @@ function hitTest(lx, ly){
     if(px>=0 && px<190 && py>=0 && py<70){
       for(let row=0; row<6; row++){
         const i = achOffset+row;
-        if(i>=31) break;
+        if(i>=ACH.length) break;
         const w = Math.min(184, textW(ACH[i][0],6)/SC + 2);
         if(inRect(px,py,3,15+row*8,w,8))
           return { key:'ach'+i, tip:ACH[i][1] };
@@ -1205,6 +1357,34 @@ function hitTest(lx, ly){
       return { key:'classPane' };
     }
   }
+  // building tree pane
+  if(buildOpen){
+    const px = lx-BT_X, py = ly-BT_Y;
+    if(px>=0 && px<190 && py>=0 && py<BT_H){
+      const cy = py + btOffset;   // content-local y; rows only clickable inside the viewport
+      for(let cat=0; py>=BT_VIEW_Y && py<BT_VIEW_Y+BT_VIEW_H && cat<8; cat++){
+        for(let tier=0; tier<5; tier++){
+          if(!inRect(px,cy, btColX(cat), BT_ROW_Y[tier], BT_COL_W, BT_ROW_H[tier])) continue;
+          const type = btType(cat,tier);
+          if(!btUnlocked(cat,tier)){
+            const ai = tier<4 ? 15 + cat*2 + tier - 2 : 31 + cat;
+            return { key:'bt'+type, tip:'Locked. Earn "'+ACH[ai][0]+'": '+ACH[ai][1] };
+          }
+          return { key:'bt'+type, tip:[BUILD_TIP0,BUILD_TIP1,BUILD_TIP2][buildPaneTip[type]||0][type],
+            click:()=>{
+              buildPaneTip[type] = ((buildPaneTip[type]||0)+1)%3;
+              toolTip([BUILD_TIP0,BUILD_TIP1,BUILD_TIP2][buildPaneTip[type]][type]);
+            }};
+        }
+      }
+      return { key:'buildPane' };
+    }
+  }
+  // game speed slider (replaces the KONG button)
+  if(inRect(cx,cy,75,-27,25,7))
+    return { key:'speedSlider', slider:true, click:e=>setSpeedFromMouse(e),
+      tip:'Game speed: '+gameSpeed+'x. Drag or click to set (1x-5x).',
+      hl2:[CLX(75),CLY(-27),25,7], clickable:true };
   // main control panes
   for(const P of controlPanes()){
     if(inRect(cx,cy,P[0],P[1],P[2],P[3]))
@@ -1213,7 +1393,7 @@ function hitTest(lx, ly){
   }
   // pod soul
   if(hasSoul && inRect(cx,cy,-92,-41,10,10))
-    return { key:'soul', tip:'Active soul. Drag, click, or space to spawn.', soul:true };
+    return { key:'soul', tip:'Active soul. Drag, click, or space to spawn. Shift to drop 10.', soul:true };
   // left/right scroll zones
   if(inRect(cx,cy,-100,0,10,65))
     return { key:'scrollL', scroll:-1, click:()=>{ E.camX = E.leftBound*2/3; },
@@ -1250,6 +1430,7 @@ canvas.addEventListener('mousemove', e=>{
   mouseCL.x = lx-125; mouseCL.y = ly-70;
   if(dragSoul){ dragSoul.x = mouseCL.x-5; dragSoul.y = mouseCL.y-5; }
   if(game.mode!=='play'){ game.menuMouse={lx,ly}; return; }
+  if(sliderDrag) setSpeedFromMouse(e);
   const h = hitTest(lx,ly);
   goHover = !!(h && h.key==='go');
   hoverPane = h && (h.hl||h.hl2) ? h : null;
@@ -1271,6 +1452,7 @@ let scrollZoneWasHover = false;
 canvas.addEventListener('mouseleave', ()=>{
   if(E){ E.goingLeft=E.goingRight=false; }
   scrollZoneWasHover=false; hoverPane=null; scrollHover=0; lastHoverKey=null; goHover=false;
+  sliderDrag=false;
 });
 canvas.addEventListener('mousedown', e=>{
   initAudio();
@@ -1281,23 +1463,34 @@ canvas.addEventListener('mousedown', e=>{
     dragSoul = { x:lx-125-5, y:ly-70-5 };
     hasSoul = false;
   }
+  if(h && h.slider){ sliderDrag = true; setSpeedFromMouse(e); }
 });
 canvas.addEventListener('mouseup', e=>{
   if(game.mode!=='play') return;
   const {lx,ly} = mouseLogical(e);
+  if(sliderDrag){ sliderDrag = false; return; }
   if(dragSoul){
-    onDropSoul();
+    onDropSoul(e.shiftKey || E.shift);
     return;
   }
   const h = hitTest(lx,ly);
   if(h && h.click) h.click(e);
 });
-window.addEventListener('blur', ()=>{ if(dragSoul) onDropSoul(); });
-function onDropSoul(){
+window.addEventListener('blur', ()=>{ if(dragSoul) onDropSoul(false); sliderDrag = false; });
+function onDropSoul(bulk){
   if(!dragSoul) return;
-  if(!dropSoul(dragSoul.x + 5 + E.camX)) E.souls++;
+  const x = dragSoul.x + 5 + E.camX;
+  if(!dropSoul(x)) E.souls++;
   dragSoul = null;
   E.reincarn++;
+  if(bulk){ // revamped: shift drops up to 9 more souls from the pool at the same spot
+    for(let i=0; i<9 && E.souls>0; i++){
+      if(!dropSoul(x)) break;     // population cap reached
+      E.souls--;
+      E.reincarn++;
+    }
+    updateSouls();
+  }
 }
 canvas.addEventListener('wheel', e=>{
   if(game.mode!=='play') return;
@@ -1305,6 +1498,7 @@ canvas.addEventListener('wheel', e=>{
   let scrolled = false;
   if(achOpen){ achScroll(d); scrolled = true; }
   if(infoOpen){ sbScroll(d); scrolled = true; }
+  if(buildOpen){ btScroll(d); scrolled = true; }
   if(scrolled){
     e.preventDefault();
     toolTip('Use W/Up and S/Down, not the mouse wheel.');
@@ -1313,7 +1507,7 @@ canvas.addEventListener('wheel', e=>{
 function achScroll(d){
   achOffset -= d;
   if(achOffset<0) achOffset=0;
-  else if(achOffset>=31) achOffset=30;
+  else if(achOffset>=ACH.length) achOffset=ACH.length-1;
 }
 function sbScroll(d){
   for(let b=0;b<SCROLLBOXES.length;b++){
@@ -1338,7 +1532,7 @@ window.addEventListener('keydown', e=>{
       e.preventDefault();
       if(!E.paused){
         if(hasSoul && !dragSoul){ dragSoul = { x:mouseCL.x-5, y:mouseCL.y-5 }; hasSoul = false; }
-        if(dragSoul){ dragSoul.x = mouseCL.x-5; dragSoul.y = mouseCL.y-5; onDropSoul(); }
+        if(dragSoul){ dragSoul.x = mouseCL.x-5; dragSoul.y = mouseCL.y-5; onDropSoul(e.shiftKey || E.shift); }
       }
       break;
     case '1': upgradeClick('speed'); break;
@@ -1346,21 +1540,23 @@ window.addEventListener('keydown', e=>{
     case '3': upgradeClick('sight'); break;
     case '4': upgradeClick('land'); break;
     case 'm': onMute(); break;
-    case 'q': break;                       // stage quality: no visible effect
     case 'escape': case 'p': onPause(); break;
     case 'z': onSave(); break;
     case 'i': onInfo(); break;
     case 'x': onAchievement(); break;
     case 'c': onClasses(); break;
+    case 'b': onBuildTree(); break;
     case '+': case '=': volumeUp(); break;
     case '-': volumeDown(); break;
     case 'w': case 'arrowup':
       if(achOpen) achScroll(1);
       if(infoOpen) sbScroll(1);
+      if(buildOpen) btScroll(1);
       break;
     case 's': case 'arrowdown':
       if(achOpen) achScroll(-1);
       if(infoOpen) sbScroll(-1);
+      if(buildOpen) btScroll(-1);
       break;
   }
 });
@@ -1376,37 +1572,69 @@ window.addEventListener('keyup', e=>{
 
 //////////////////// menu ////////////////////
 const MENU_ITEMS = [
-  ['New Game',80], ['Continue',90], ['Play v0.0.8 Right Here',100],
-  ['Game and Art by Siveran',110], ['Music by AngelsDontKill11',120]];
-const SLOT_ITEMS = [ ['Slot 1',80], ['Slot 2',90], ['Slot 3',100], ['Cancel',110] ];
+  ['New Game',80, ()=>{ game.load=false; menuScreen='slots'; delConfirm=0; }],
+  ['Continue',90, ()=>{ game.load=true; menuScreen='slots'; delConfirm=0; }],
+  ['Game and Art by Siveran',100, ()=>window.open('http://www.kongregate.com/accounts/Siveran')],
+  ['Music by AngelsDontKill11',110, ()=>window.open('http://www.kongregate.com/accounts/AngelsDontKill11')],
+  ['Revamped by ryan-ltt',120, ()=>window.open('https://github.com/ryan-ltt')]];
 let menuScreen = 'main';   // 'main' | 'slots'
-function menuItems(){ return menuScreen==='main' ? MENU_ITEMS : SLOT_ITEMS; }
+let delConfirm = 0;        // slot number awaiting delete confirmation (0 = none)
+function slotInfo(slot){
+  try{
+    const d = JSON.parse(localStorage.getItem(slotKey(slot)));
+    if(d && d.version===10) return d;
+  }catch(e){}
+  return null;
+}
+// items: {text, y, x? (left-aligned when set, else centered), enabled, del?, click?}
+function menuItems(){
+  if(menuScreen==='main')
+    return MENU_ITEMS.map(([t,y,fn])=>({ text:t, y, enabled:true, click:fn }));
+  const items = [];
+  for(let s=1; s<=3; s++){
+    const d = slotInfo(s), y = 70+s*10;
+    if(d){
+      // occupied: continue loads it; new game must delete it first
+      items.push({ text:d.totSouls+' tot. souls, '+d.resource+' resources', y,
+        enabled:game.load, click:()=>startGame(s) });
+      items.push({ text:delConfirm===s?'Sure?':'Del', y, x:206, del:true, enabled:true,
+        click:()=>{
+          if(delConfirm===s){ try{ localStorage.removeItem(slotKey(s)); }catch(e){} delConfirm=0; }
+          else delConfirm=s;
+        }});
+    } else {
+      items.push({ text:'Slot '+s+(game.load?': Empty':''), y,
+        enabled:!game.load, click:()=>startGame(s) });
+    }
+  }
+  items.push({ text:'Cancel', y:110, enabled:true, click:()=>{ menuScreen='main'; delConfirm=0; } });
+  return items;
+}
 function menuHitIndex(lx,ly){
   const items = menuItems();
   for(let i=0;i<items.length;i++){
-    const [t,y] = items[i];
-    const w = textW(t,6)/SC;
-    if(inRect(lx,ly, 125-w/2-2, y, w+4, 8)) return i;
+    const it = items[i];
+    if(!it.enabled) continue;
+    const w = textW(it.text,6)/SC;
+    const x0 = it.x!==undefined ? it.x : 125-w/2;
+    if(inRect(lx,ly, x0-2, it.y, w+4, 8)) return i;
   }
   return -1;
 }
 function menuClick(lx,ly){
+  const items = menuItems();
   const i = menuHitIndex(lx,ly);
-  if(i<0) return;
-  if(menuScreen==='main'){
-    if(i===0){ game.load=false; menuScreen='slots'; }
-    else if(i===1){ game.load=true; menuScreen='slots'; }
-    else if(i===3) window.open('http://www.kongregate.com/accounts/Siveran');
-    else if(i===4) window.open('http://www.kongregate.com/accounts/AngelsDontKill11');
-  } else {
-    if(i===3) menuScreen='main';
-    else startGame(i+1);
-  }
+  if(i<0){ delConfirm=0; return; }
+  const it = items[i];
+  if(!it.del) delConfirm=0;   // clicking anything else cancels a pending delete
+  if(it.click) it.click();
 }
 
 //////////////////// render ////////////////////
 let fpsText = '', fpsCounter = 0, fpsLast = 0;
 function render(){
+  updateCanvasRes();
+  ctx.setTransform(RS,0,0,RS,0,0);
   ctx.clearRect(0,0,STAGE_W,STAGE_H);
   ctx.fillStyle = '#000';
   ctx.fillRect(0,0,STAGE_W,STAGE_H);
@@ -1433,11 +1661,17 @@ function renderMenu(){
   g.addColorStop(0,'#002200'); g.addColorStop(1,'#001100');
   ctx.fillStyle = g;
   ctx.fillRect(LX(0),LY(0),250*SC,150*SC);
-  drawText('Farm of Souls\n0.1.7', LX(125), LY(30), 16, '#e5f0e5', 'center');
+  drawText('Farm of Souls', LX(125), LY(30), 16, '#e5f0e5', 'center');
+  drawText('Revamped', LX(125), LY(48), 16, '#c77dff', 'center');
   const items = menuItems();
   const hov = game.menuMouse ? menuHitIndex(game.menuMouse.lx, game.menuMouse.ly) : -1;
   for(let i=0;i<items.length;i++){
-    drawText(items[i][0], LX(125), LY(items[i][1]), 6, i===hov?'#e5f0e5':'#3d3d3d', 'center');
+    const it = items[i];
+    const color = !it.enabled ? '#232c23'
+                : it.del ? (i===hov ? '#ff6666' : (it.text==='Sure?' ? '#cc4444' : '#8a3030'))
+                : (i===hov ? '#e5f0e5' : '#3d3d3d');
+    if(it.x!==undefined) drawText(it.text, LX(it.x), LY(it.y), 6, color, 'left');
+    else drawText(it.text, LX(125), LY(it.y), 6, color, 'center');
   }
 }
 
@@ -1467,7 +1701,7 @@ function renderGame(){
   // 4. controls layer: background frame
   ctx.globalAlpha = 0.9;
   di('Background_Image1', 0, 0);
-  di('Background_Image2', 25, 0);
+  di('Background_Image2_Revamped', 25, 0);
   di('Background_Image3', 225, 75);
   di('Background_Image4', 25, 130);
   ctx.globalAlpha = 1;
@@ -1498,6 +1732,9 @@ function renderGame(){
   ctext(''+E.totSouls, 70,-53, 6, '#3d3d3d', 'left', 30);
   ctext(''+E.maxLv,    70,-45, 6, '#3d3d3d', 'left', 30);
   ctext(''+E.resource, 70,-37, 6, '#3d3d3d', 'left', 30);
+  // game speed slider knob (track is baked into Background_Image2_Revamped)
+  ctx.fillStyle = '#990000';
+  ctx.fillRect(LX(CLX(75+(gameSpeed-1)*5)), LY(CLY(-26)), 3*SC, 5*SC);
   // markers: small soul + person next to the counters
   const fs = IMG['FlyingSoul_SpriteImage'];
   if(fs && fs.width){
@@ -1528,6 +1765,7 @@ function renderGame(){
   if(infoOpen) renderInfoPane();
   if(achOpen) renderAchPane();
   if(classOpen) renderClassPane();
+  if(buildOpen) renderBuildPane();
   // 9. achievement splashes (just below tooltip text)
   for(const s of splashes){
     ctx.save();
@@ -1625,14 +1863,50 @@ function renderAchPane(){
   di('AchievementPane_SpriteImage', px, py);
   for(let row=0; row<6; row++){
     const i = achOffset+row;
-    if(i>=31) break;
+    if(i>=ACH.length) break;
     let color = '#3d3d3d';
     if(achState[i]===1||achState[i]===2) color = '#555500';
     else if(E.a[i]) color = '#005500';
     drawText(ACH[i][0], LX(px+3), LY(py+15+row*8), 6, color, 'left', 180);
   }
   ctx.fillStyle = '#232323';
-  ctx.fillRect(LX(px+185), LY(py + achOffset*36/30 + 23), 1*SC, 3*SC);
+  ctx.fillRect(LX(px+185), LY(py + achOffset*36/(ACH.length-1) + 23), 1*SC, 3*SC);
+}
+
+function renderBuildPane(){
+  const px = BT_X, py = BT_Y;
+  di('BuildingPane_SpriteImage', px, py);
+  drawText('BUILDING TREE', LX(px+4), LY(py+7), 6, '#3d3d3d', 'left');
+  const counts = btCounts();
+  for(let cat=0; cat<8; cat++)
+    drawText(BUILD_CAT[cat], LX(px+btColX(cat)+BT_COL_W/2), LY(py+17), 6, '#3d3d3d', 'center');
+  // tier rows scroll inside a clipped viewport under the labels
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(LX(px), LY(py+BT_VIEW_Y), 190*SC, BT_VIEW_H*SC);
+  ctx.clip();
+  for(let cat=0; cat<8; cat++){
+    const cx0 = px + btColX(cat);
+    for(let tier=0; tier<5; tier++){
+      const type = btType(cat,tier);
+      const im = IMG[buildingSprite(type)];
+      if(!im || !im.width) continue;
+      const w = im.width/3, h = im.height/3;   // 1/3 scale, bottom-anchored in cell
+      const x = cx0 + (BT_COL_W-w)/2;
+      const rowY = BT_ROW_Y[tier] - btOffset;
+      const y = py + rowY + BT_ROW_H[tier] - h - 1;
+      ctx.save();
+      ctx.globalAlpha = !btUnlocked(cat,tier) ? 0.15 : counts[type]>0 ? 1 : 0.5;
+      ctx.drawImage(im, LX(x), LY(y), w*SC, h*SC);
+      ctx.restore();
+      if(counts[type]>0)
+        drawText(''+counts[type], LX(cx0+BT_COL_W), LY(py+rowY+BT_ROW_H[tier]-5), 3, '#3d3d3d', 'right');
+    }
+  }
+  ctx.restore();
+  // scrollbar marker (matches the achievement pane style)
+  ctx.fillStyle = '#232323';
+  ctx.fillRect(LX(px+185), LY(py + BT_VIEW_Y + 1 + btOffset*(BT_VIEW_H-5)/BT_MAX_OFF), 1*SC, 3*SC);
 }
 
 function renderClassPane(){
@@ -1682,7 +1956,7 @@ function boot(){
     if(acc>200) acc = 200;
     while(acc>=FRAME_MS){
       frameCount++;
-      if(game.mode==='play') onFrame();
+      if(game.mode==='play') for(let s=0; s<gameSpeed; s++) onFrame(s>0);
       acc -= FRAME_MS;
     }
     render();

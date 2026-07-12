@@ -30,8 +30,11 @@
 
   <script>
     (function(){
-      const qp = new URLSearchParams(location.search).get('mode');
+      const params = new URLSearchParams(location.search);
+      const qp = params.get('mode');
       if(qp === 'original' || qp === 'revamped') localStorage.setItem('FoSMode', qp);
+      const qs = params.get('scale');
+      if(qs) localStorage.setItem('FoSScale', qs); // validated below against the buttons
       const mode = localStorage.getItem('FoSMode') === 'revamped' ? 'revamped' : 'original';
       document.getElementById('mode-' + mode).classList.add('active');
       if(mode === 'revamped') document.title = 'Farm of Souls: Revamped';
