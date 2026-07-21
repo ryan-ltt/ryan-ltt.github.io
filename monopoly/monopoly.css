@@ -1,0 +1,822 @@
+:root {
+	--page-bg: lightblue;
+	--board-bg: #eef6e9;
+	--board-border: #1a1a1a;
+	--cell-bg: #fdfdfb;
+	--cell-border: #c9c2b0;
+	--cell-text: #1c1c1c;
+	--center-bg: linear-gradient(135deg, #eef6e9, #dcecd8);
+	--center-text: #333;
+	--sidebar-card-bg: #fff;
+	--sidebar-card-border: #d8d8d8;
+	--sidebar-card-active-bg: #fffbe6;
+	--sidebar-text: #222;
+	--sidebar-text-dim: #555;
+	--panel-bg: #fff;
+	--panel-border: #000;
+	--input-bg: #fff;
+	--input-border: #999;
+	--input-text: #1c1c1c;
+	--modal-bg: #fff;
+	--modal-border: #000;
+	--modal-text: #222;
+	--log-bg: #14181a;
+	--log-text: #b9f3c2;
+	--btn-bg: #fff;
+	--btn-border: #000;
+	--btn-text: #111;
+	--btn-hover-bg: #111;
+	--btn-hover-text: #fff;
+	--btn-secondary-bg: #f2f2f2;
+	--shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.15);
+	--shadow-panel: 0 3px 10px rgba(0, 0, 0, 0.18);
+	--accent-gold: #f9a825;
+	--hint-text: #666;
+	--body-text: #222;
+	--link-color: #0066cc;
+	--link-hover: #004499;
+	--title-stroke: black;
+}
+
+:root[data-theme="dark"] {
+	--page-bg: #0e1116;
+	--board-bg: #1b2420;
+	--board-border: #0a0a0a;
+	--cell-bg: #232a2f;
+	--cell-border: #3a4149;
+	--cell-text: #e8e8e6;
+	--center-bg: linear-gradient(135deg, #1b2420, #141b18);
+	--center-text: #cfd8d4;
+	--sidebar-card-bg: #1a1f24;
+	--sidebar-card-border: #333b42;
+	--sidebar-card-active-bg: #2b2410;
+	--sidebar-text: #eaeaea;
+	--sidebar-text-dim: #9aa4ab;
+	--panel-bg: #1a1f24;
+	--panel-border: #40484f;
+	--input-bg: #12161a;
+	--input-border: #454d55;
+	--input-text: #eaeaea;
+	--modal-bg: #1a1f24;
+	--modal-border: #454d55;
+	--modal-text: #eaeaea;
+	--log-bg: #060a08;
+	--log-text: #7de892;
+	--btn-bg: #232a2f;
+	--btn-border: #545c64;
+	--btn-text: #eaeaea;
+	--btn-hover-bg: #eaeaea;
+	--btn-hover-text: #14181a;
+	--btn-secondary-bg: #12161a;
+	--shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
+	--shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.5);
+	--accent-gold: #f2b23c;
+	--hint-text: #9aa4ab;
+	--body-text: #d6d9db;
+	--link-color: #6cb8ff;
+	--link-hover: #9fd1ff;
+	--title-stroke: #e8e8e6;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--page-bg: #0e1116;
+		--board-bg: #1b2420;
+		--board-border: #0a0a0a;
+		--cell-bg: #232a2f;
+		--cell-border: #3a4149;
+		--cell-text: #e8e8e6;
+		--center-bg: linear-gradient(135deg, #1b2420, #141b18);
+		--center-text: #cfd8d4;
+		--sidebar-card-bg: #1a1f24;
+		--sidebar-card-border: #333b42;
+		--sidebar-card-active-bg: #2b2410;
+		--sidebar-text: #eaeaea;
+		--sidebar-text-dim: #9aa4ab;
+		--panel-bg: #1a1f24;
+		--panel-border: #40484f;
+		--input-bg: #12161a;
+		--input-border: #454d55;
+		--input-text: #eaeaea;
+		--modal-bg: #1a1f24;
+		--modal-border: #454d55;
+		--modal-text: #eaeaea;
+		--log-bg: #060a08;
+		--log-text: #7de892;
+		--btn-bg: #232a2f;
+		--btn-border: #545c64;
+		--btn-text: #eaeaea;
+		--btn-hover-bg: #eaeaea;
+		--btn-hover-text: #14181a;
+		--btn-secondary-bg: #12161a;
+		--shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
+		--shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.5);
+		--accent-gold: #f2b23c;
+		--hint-text: #9aa4ab;
+		--body-text: #d6d9db;
+		--link-color: #6cb8ff;
+		--link-hover: #9fd1ff;
+		--title-stroke: #e8e8e6;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--page-bg);
+	margin: 0;
+	font-family: Monaco, monospace;
+	min-height: 100vh;
+	transition: background-color 0.2s ease;
+}
+
+h1 {
+	text-align: center;
+	margin: 10px 0 4px 0;
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+	font-size: 3rem;
+	background: linear-gradient(to right, #ef5350, #f48fb1, #7e57c2, #2196f3, #26c6da, #43a047, #eeff41, #f9a825, #ff5722);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke: 2px var(--title-stroke);
+}
+
+.mono-subtitle {
+	text-align: center;
+	max-width: 700px;
+	margin: 0 auto 16px auto;
+	font-size: 13px;
+	color: var(--body-text);
+	padding: 0 12px;
+}
+
+.mono-subtitle a {
+	color: var(--link-color);
+}
+
+.mono-subtitle a:hover {
+	color: var(--link-hover);
+}
+
+.top-left-buttons {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	display: flex;
+	gap: 10px;
+	z-index: 100;
+}
+
+.top-right-buttons {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	z-index: 100;
+}
+
+.back-buttons,
+.theme-toggle-btn {
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	border: 1px solid var(--btn-border);
+	padding: 8px 12px;
+	cursor: pointer;
+	font-family: Monaco, monospace;
+	font-size: 13px;
+	box-shadow: var(--shadow-soft);
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.back-buttons:hover,
+.theme-toggle-btn:hover {
+	background: var(--btn-hover-bg);
+	color: var(--btn-hover-text);
+}
+
+.back-buttons:active,
+.theme-toggle-btn:active {
+	background-color: #32a6a8;
+	transform: translate(0px, 2px);
+}
+
+.mono-wrapper {
+	max-width: 1240px;
+	margin: 0 auto;
+	padding: 10px 10px 40px 10px;
+}
+
+.mono-layout {
+	display: flex;
+	gap: 20px;
+	align-items: flex-start;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.mono-board-wrap {
+	flex: 0 0 auto;
+	padding: 10px;
+	background: var(--panel-bg);
+	border: 1px solid var(--panel-border);
+	border-radius: 10px;
+	box-shadow: var(--shadow-panel);
+}
+
+.mono-board {
+	display: grid;
+	grid-template-columns: repeat(11, minmax(48px, 64px));
+	grid-template-rows: repeat(11, minmax(48px, 64px));
+	border: 3px solid var(--board-border);
+	border-radius: 6px;
+	background: var(--board-bg);
+	position: relative;
+	overflow: hidden;
+}
+
+.mono-cell {
+	border: 1px solid var(--cell-border);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: var(--cell-bg);
+	color: var(--cell-text);
+	font-size: 8px;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.15s ease;
+}
+
+.mono-cell-tradeable {
+	cursor: pointer;
+	box-shadow: inset 0 0 0 2px var(--accent-gold);
+	/* Stays clickable even while the "choose an action" decision modal's backdrop is up
+	   (z-index 1000) - that modal is exactly when this is meant to be used, so the cell must
+	   poke through its dimming overlay rather than being blocked by it. Same fix as
+	   .mono-view-props-btn above. */
+	position: relative;
+	z-index: 1050;
+}
+
+.mono-cell-tradeable:hover {
+	background: var(--sidebar-card-active-bg);
+}
+
+.mono-cell-color {
+	height: 11px;
+	width: 100%;
+	flex-shrink: 0;
+	box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.mono-cell-label {
+	padding: 3px 3px 1px 3px;
+	line-height: 1.15;
+	font-size: 7.5px;
+	font-weight: 600;
+	flex: 1;
+	word-break: break-word;
+	letter-spacing: 0.01em;
+}
+
+.mono-cell.mono-cell-special .mono-cell-label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: 8.5px;
+}
+
+.mono-cell-icon {
+	display: block;
+	width: 22px;
+	height: 22px;
+	margin: 3px auto 0 auto;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+.mono-cell-info {
+	display: flex;
+	gap: 2px;
+	padding: 1px 2px;
+	flex-wrap: wrap;
+}
+
+.mono-owner-chip {
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	color: #fff;
+	font-size: 9px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	border: 1px solid rgba(0, 0, 0, 0.45);
+	text-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
+	flex-shrink: 0;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mono-token-layer {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 5;
+}
+
+.mono-token {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	margin-left: -7px;
+	margin-top: -7px;
+	border-radius: 50%;
+	border: 2px solid #fff;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 2px 3px rgba(0, 0, 0, 0.5);
+	transition: left 0.12s ease-in-out, top 0.12s ease-in-out;
+	z-index: 6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mono-token {
+		transition: none;
+	}
+}
+
+.mono-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--center-bg);
+	border: 1px solid var(--cell-border);
+}
+
+.mono-center-title {
+	font-family: "Comic Sans MS", cursive;
+	font-size: 26px;
+	text-align: center;
+	color: var(--center-text);
+	transform: rotate(-8deg);
+	opacity: 0.85;
+}
+
+.mono-center-title span {
+	font-size: 13px;
+	display: block;
+	margin-top: 2px;
+}
+
+.mono-sidebar {
+	flex: 0 0 310px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.mono-dice-area {
+	background: var(--panel-bg);
+	border: 1px solid var(--panel-border);
+	border-radius: 8px;
+	padding: 14px 12px;
+	box-shadow: var(--shadow-soft);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.mono-dice-pair {
+	display: flex;
+	gap: 12px;
+	perspective: 300px;
+}
+
+.mono-die {
+	width: 48px;
+	height: 48px;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+	filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+
+.mono-die-rolling {
+	animation: mono-die-tumble 0.16s linear infinite;
+}
+
+.mono-die-land {
+	animation: mono-die-land 0.3s ease-out;
+}
+
+@keyframes mono-die-tumble {
+	0% { transform: rotate(0deg) scale(1); }
+	50% { transform: rotate(15deg) scale(1.05); }
+	100% { transform: rotate(-10deg) scale(1); }
+}
+
+@keyframes mono-die-land {
+	0% { transform: scale(1.3) rotate(8deg); }
+	60% { transform: scale(0.94) rotate(-4deg); }
+	100% { transform: scale(1) rotate(0deg); }
+}
+
+.mono-roll-btn {
+	font-size: 15px;
+	padding: 10px 18px;
+	font-weight: bold;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mono-die-rolling,
+	.mono-die-land {
+		animation: none;
+	}
+}
+
+.mono-players {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.mono-player-card {
+	background: var(--sidebar-card-bg);
+	color: var(--sidebar-text);
+	border: 2px solid var(--sidebar-card-border);
+	border-radius: 8px;
+	padding: 10px 12px;
+	font-size: 12px;
+	opacity: 1;
+	box-shadow: var(--shadow-soft);
+	transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mono-player-card.bankrupt {
+	opacity: 0.45;
+	text-decoration: line-through;
+	box-shadow: none;
+}
+
+.mono-player-card.active {
+	box-shadow: 0 0 0 2px var(--accent-gold), var(--shadow-panel);
+	background: var(--sidebar-card-active-bg);
+}
+
+.mono-player-card-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 2px;
+}
+
+.mono-player-name {
+	font-weight: bold;
+	font-size: 14.5px;
+}
+
+.mono-winprob {
+	font-size: 12px;
+	font-weight: bold;
+	color: var(--sidebar-text);
+	background: var(--input-bg);
+	border: 1px solid var(--sidebar-card-border);
+	border-radius: 10px;
+	padding: 2px 8px;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mono-winprob-loading {
+	color: var(--hint-text);
+	font-weight: normal;
+	letter-spacing: 1px;
+}
+
+.mono-group-strip {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 4px;
+}
+
+.mono-group-chip {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	background: var(--input-bg);
+	border: 1px solid var(--sidebar-card-border);
+	border-radius: 10px;
+	padding: 2px 6px 2px 3px;
+	font-size: 10px;
+	color: var(--sidebar-text-dim);
+}
+
+.mono-group-chip.complete {
+	border-color: var(--accent-gold);
+	box-shadow: 0 0 0 1px var(--accent-gold);
+	color: var(--sidebar-text);
+	font-weight: bold;
+}
+
+.mono-group-swatch {
+	width: 11px;
+	height: 11px;
+	border-radius: 3px;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.mono-group-swatch-icon {
+	border-radius: 0;
+	box-shadow: none;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+.mono-group-frac {
+	line-height: 1;
+}
+
+.mono-player-stat {
+	font-size: 12px;
+	color: var(--sidebar-text-dim);
+	margin-top: 1px;
+}
+
+.mono-view-props-btn {
+	margin-top: 6px !important;
+	font-size: 11px !important;
+	/* Stays clickable even while a decision modal's backdrop is up (z-index 1000) - checking
+	   another player's holdings is most useful exactly while deciding whether to buy/bid/trade. */
+	position: relative;
+	z-index: 1050;
+}
+
+.mono-prop-list {
+	max-height: 55vh;
+	overflow-y: auto;
+	margin: 10px 0;
+	border: 1px solid var(--sidebar-card-border);
+	border-radius: 6px;
+}
+
+.mono-prop-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	font-size: 12px;
+	border-bottom: 1px solid var(--sidebar-card-border);
+}
+
+.mono-prop-row:last-child {
+	border-bottom: none;
+}
+
+.mono-prop-swatch {
+	width: 12px;
+	height: 12px;
+	border-radius: 3px;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.mono-prop-name {
+	flex: 1;
+	min-width: 0;
+}
+
+.mono-prop-status {
+	color: var(--hint-text);
+	font-size: 11px;
+	white-space: nowrap;
+}
+
+.mono-prop-rent {
+	color: var(--sidebar-text-dim);
+	font-size: 11px;
+	white-space: nowrap;
+	min-width: 60px;
+	text-align: right;
+}
+
+.mono-controls {
+	background: var(--panel-bg);
+	color: var(--sidebar-text);
+	border: 1px solid var(--panel-border);
+	border-radius: 8px;
+	padding: 12px;
+	box-shadow: var(--shadow-soft);
+}
+
+.mono-btn {
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	border: 1px solid var(--btn-border);
+	border-radius: 4px;
+	padding: 8px 12px;
+	cursor: pointer;
+	font-family: Monaco, monospace;
+	font-size: 13px;
+	margin: 3px 3px 3px 0;
+	transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.mono-btn:hover {
+	background: var(--btn-hover-bg);
+	color: var(--btn-hover-text);
+}
+
+.mono-btn:active {
+	transform: translateY(1px);
+}
+
+.mono-btn.secondary {
+	background: var(--btn-secondary-bg);
+}
+
+.mono-btn.small {
+	font-size: 11px;
+	padding: 6px 9px;
+	display: block;
+	width: 100%;
+	text-align: left;
+	box-sizing: border-box;
+	margin: 0 0 4px 0;
+}
+
+.mono-speed-row {
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--sidebar-text);
+}
+
+.mono-speed-row select {
+	background: var(--input-bg);
+	color: var(--input-text);
+	border: 1px solid var(--input-border);
+	font-family: Monaco, monospace;
+	padding: 3px 5px;
+}
+
+.mono-log-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.mono-log-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+.mono-log-tab {
+	--tab-color: var(--btn-border);
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	border: 1px solid var(--tab-color);
+	border-radius: 4px;
+	padding: 4px 9px;
+	font-family: Monaco, monospace;
+	font-size: 11px;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mono-log-tab:hover {
+	background: var(--tab-color);
+	color: #fff;
+}
+
+.mono-log-tab.active {
+	background: var(--tab-color);
+	color: #fff;
+	font-weight: bold;
+}
+
+.mono-log {
+	background: var(--log-bg);
+	color: var(--log-text);
+	font-size: 11px;
+	padding: 10px;
+	height: 220px;
+	overflow-y: auto;
+	border: 1px solid var(--panel-border);
+	border-radius: 8px;
+	box-shadow: var(--shadow-soft);
+}
+
+.mono-log-line {
+	margin-bottom: 3px;
+	white-space: pre-wrap;
+	line-height: 1.4;
+}
+
+.mono-modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+/* The properties viewer is informational and user-triggered (not gating any decision), so it
+   must always render above the decision modal - a human peeking at holdings mid-decision should
+   never lose their pending buy/trade/jail choice underneath it. */
+#mono-props-modal-backdrop {
+	z-index: 1100;
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.mono-modal {
+	background: var(--modal-bg);
+	color: var(--modal-text);
+	border: 2px solid var(--modal-border);
+	border-radius: 10px;
+	padding: 18px 20px;
+	max-width: 460px;
+	width: 90%;
+	max-height: 85vh;
+	overflow-y: auto;
+	font-size: 13px;
+	box-shadow: var(--shadow-panel);
+}
+
+.mono-modal h3 {
+	margin-top: 0;
+}
+
+.mono-modal-actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 14px;
+	flex-wrap: wrap;
+}
+
+.mono-modal-actions.vertical {
+	flex-direction: column;
+}
+
+.mono-hint {
+	color: var(--hint-text);
+	font-size: 11px;
+}
+
+.mono-input {
+	font-family: Monaco, monospace;
+	background: var(--input-bg);
+	color: var(--input-text);
+	padding: 5px 7px;
+	border: 1px solid var(--input-border);
+	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	margin: 6px 0;
+}
+
+.mono-input.small {
+	width: 100px;
+}
+
+.mono-trade-cols {
+	display: flex;
+	gap: 16px;
+	margin-top: 10px;
+}
+
+.mono-trade-cols > div {
+	flex: 1;
+}
+
+.mono-trade-cols h4 {
+	margin: 4px 0;
+	font-size: 12px;
+}
+
+.mono-checkbox-row {
+	display: block;
+	font-size: 11px;
+	margin: 3px 0;
+}
+
+@media (max-width: 900px) {
+	.mono-board {
+		grid-template-columns: repeat(11, minmax(28px, 38px));
+		grid-template-rows: repeat(11, minmax(28px, 38px));
+	}
+	.mono-cell-label {
+		font-size: 6px;
+	}
+	.mono-sidebar {
+		flex: 1 1 100%;
+	}
+}

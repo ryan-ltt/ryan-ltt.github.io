@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>best monopoly strategy</title>
+	<link rel="stylesheet" href="strategy.css">
+</head>
+<body>
+	<div class="top-left-buttons">
+		<a href="/">
+			<button class="back-buttons">back to homepage</button>
+		</a>
+		<a href="/monopoly/">
+			<button class="back-buttons">back to game</button>
+		</a>
+	</div>
+	<div class="top-right-buttons">
+		<button class="theme-toggle-btn" id="theme-toggle">🌙 dark mode</button>
+	</div>
+
+	<article class="strategy-doc">
+		<h1>Best Monopoly Strategy<br><span class="subtitle">derived from simulation</span></h1>
+
+		<p>
+			This is the output of simulating <strong>~72,000+ 4-player games</strong> with a headless
+			rules engine (<code>monopoly/js/game.js</code>), grid-searching 17 strategy parameters via
+			coordinate ascent (<code>monopoly/sim/gridsearch.js</code>), then re-confirming the noisiest
+			parameters at n=800/value. The winning parameter set (<code>BEST_GENOME</code> in
+			<code>monopoly/js/strategy.js</code>) beat:
+		</p>
+
+		<ul class="stat-list">
+			<li>The un-tuned baseline strategy: <strong>40&ndash;41% win rate</strong> in 4-player games (vs. 25% fair share)</li>
+			<li>A hand-crafted &ldquo;monopoly rush&rdquo; bot (buys aggressively into monopolies, trades eagerly): <strong>31%</strong> (its closest rival)</li>
+			<li>&ldquo;Aggressive buyer&rdquo;, &ldquo;conservative/hoarder&rdquo;, &ldquo;jail camper&rdquo;, and &ldquo;rail collector&rdquo; archetypes: <strong>36&ndash;46%</strong></li>
+		</ul>
+
+		<p>
+			All comparisons rotate the tested strategy through all 4 seats evenly across trials, because
+			seat/turn order alone produces a large effect (~36% win rate for seat 1 vs ~20% for seat 4
+			among <em>identical</em> bots) &mdash; without controlling for that, any strategy comparison
+			is meaningless.
+		</p>
+
+		<h2>The strategy, in plain English</h2>
+
+		<ol class="strategy-points">
+			<li>
+				<strong>Buy almost everything early, but not recklessly.</strong> The winning bot buys any
+				property as long as it leaves at least ~$300 (later reduced to ~$200 threshold for
+				building) in the bank, and is more willing to buy than the naive default. Cash starvation
+				from over-buying was worse than missing a property, but under-buying was worse still
+				&mdash; the biggest single lever in the whole search was <code>tradeWillingness=0</code>
+				(never trade) crashing win rate to ~7.5%, showing that <strong>hoarding without ever
+				trading is close to a losing strategy on its own.</strong>
+			</li>
+			<li>
+				<strong>Bid aggressively in auctions, especially for monopoly-completing properties.</strong>
+				The best genome bids up to ~120% of a property's &ldquo;fair value&rdquo; (list price
+				adjusted for how contested the color group is), and applies a 2.2x bonus to fair value
+				when the property would complete one of its own monopolies. Rails are valued <em>above</em>
+				face price (1.4x) &mdash; rail sets are cheap, easy to complete, and produce steady rent
+				without needing to build. Utilities are valued <em>below</em> face price (0.9x) &mdash;
+				they're the weakest asset class in the game.
+			</li>
+			<li>
+				<strong>Prioritize completing monopolies over maximizing property count.</strong>
+				<code>monopolyPremium=1.25</code> and <code>auctionMonopolyBonus=2.2</code> both push hard
+				toward finishing color sets rather than collecting scattered singles, because rent only
+				meaningfully spikes once you own a full group (2x rent with no houses, or building starts).
+			</li>
+			<li>
+				<strong>Trade proactively &mdash; this was the single biggest factor.</strong>
+				<code>tradeWillingness=0.75</code>: the winning bot actively proposes trades (offering
+				cash + occasionally a property) to complete its own near-finished color groups, and
+				evaluates incoming offers by comparing estimated asset value (with a monopoly-completion
+				bonus) against what's being asked, only accepting when it comes out at least 1.75x ahead
+				in estimated value. <strong>Being trade-averse is the costliest mistake in the parameter
+				space</strong> &mdash; worse than any single mis-tuned buy/build threshold.
+			</li>
+			<li>
+				<strong>Build steadily but don't over-leverage into hotels.</strong>
+				<code>buildThreshold=200</code> (only build if $200+ remains after paying for the house)
+				and, notably, <code>buildUpToHotel=false</code> won: it's better to spread 3&ndash;4
+				houses across every monopoly you own than to rush any single group to a hotel and leave
+				yourself cash-poor. Three houses already captures most of the rent jump; the marginal
+				rent from a 4th house or hotel isn't worth the liquidity risk in a 4-player game where
+				opponents can still bleed you dry with a big rent bill at a bad moment.
+			</li>
+			<li>
+				<strong>Don't stay in jail voluntarily, and don't rush to pay bail either &mdash; it's
+				situational.</strong> <code>jailStayEarlyGame=false</code> beat staying deliberately: once
+				the board fills up with owned property, jail is <em>not</em> a safe haven &mdash; you
+				still miss trading/building opportunities. But <code>lateGameAlwaysPay=false</code> also
+				won over always paying immediately: if you're cash-tight, the free &ldquo;hide from
+				rent&rdquo; turns in jail are worth taking rather than paying $50 you need for building.
+				Net effect: <strong>pay bail when you can comfortably afford it and have monopolies to
+				develop; otherwise ride it out.</strong>
+			</li>
+			<li>
+				<strong>Moderate risk aversion beats both extremes.</strong> <code>riskAversion=0.7</code>
+				(fairly conservative) beat both a YOLO-spend bot and a hyper-conservative hoarder. The
+				winning balance keeps enough of a cash cushion to survive a bad rent roll but doesn't sit
+				on cash that should be converted into monopolies and houses.
+			</li>
+		</ol>
+
+		<h2>Summary heuristic a human can actually use at the table</h2>
+
+		<blockquote>
+			Buy nearly everything you land on if you can afford it. Bid hard in auctions, especially for
+			anything that completes a color group &mdash; go up to ~120% of sticker price for those.
+			Chase monopolies over scattered properties, and don't be shy about offering cash to close a
+			trade that finishes your set &mdash; trade-averse players lose. Build 3&ndash;4 houses across
+			all your monopolies before pushing any single one to a hotel. Keep a few hundred dollars in
+			reserve at all times. In jail, pay bail only when you're flush and have something productive
+			to do with the turn; otherwise sit tight for free.
+		</blockquote>
+
+		<p>
+			This exact parameter set (<code>BEST_GENOME</code>) is what powers the in-game AI opponents
+			in <a href="/monopoly/">the game itself</a> &mdash; beating them in the actual game means
+			beating the empirically best strategy found across the whole search.
+		</p>
+
+		<h2>Follow-up search: ~230,000 more games, no improvement found</h2>
+
+		<p>
+			After the initial search, I ran two more rounds (<code>gridsearch2.js</code>,
+			<code>gridsearch3.js</code>, ~230,000 additional games total) to see if a deeper search or
+			new parameters could beat <code>BEST_GENOME</code>. Four new dimensions were added: which
+			color group to develop first when multiple are buildable (cheap vs. expensive), whether to
+			hoard Get Out of Jail Free cards once holding 2+ monopolies instead of trading them away, an
+			explicit &ldquo;blocking awareness&rdquo; that overpays in auctions/trades to deny opponents a
+			monopoly-completing property, and evening out house sales across groups when forced to
+			liquidate.
+		</p>
+
+		<p>
+			<strong>Result: none of it beat <code>BEST_GENOME</code>.</strong> The first extra round
+			(<code>gridsearch2.js</code>) actually produced a genome that <em>lost</em> to
+			<code>BEST_GENOME</code> head-to-head (20&ndash;24% win rate, well below a fair 25% share)
+			&mdash; traced to a real methodology bug in plain coordinate ascent: comparing each candidate
+			only to the &ldquo;current best so far&rdquo; lets an early bad/noisy choice quietly drag down
+			the baseline the rest of that pass gets judged against, so worse changes can look like
+			improvements relative to an already-weakened baseline. <code>gridsearch3.js</code> fixed this
+			by re-validating every accepted change against the original fixed <code>BEST_GENOME</code>
+			anchor (not the drifting running best) &mdash; and even with that guard, the resulting genome
+			still landed at 20&ndash;23% vs. the anchor. Isolating all 14 parameter differences
+			individually (n=1200 each, enough statistical power to detect a ~2.5 percentage-point true
+			effect) showed every single one sitting within noise of 25% &mdash; none of them is a real
+			improvement on its own; the combined genome's loss came from many
+			statistically-neutral-or-slightly-negative changes compounding.
+		</p>
+
+		<p>
+			The practical takeaway: <code>BEST_GENOME</code> is a genuine local (and likely close to
+			global, for this parameterization) optimum for this rule engine &mdash; not just a strategy
+			nobody has tried to beat yet. All four new mechanics (build order, jail-card hoarding,
+			opponent-blocking, even house selling) are implemented in <code>strategy.js</code> and
+			available on the genome, but none measurably changes win rate at the sample sizes tested, so
+			<code>BEST_GENOME</code> keeps its round-1 values for them. If you want to push further, the
+			likely next lever isn't more grid search on this same axis set &mdash; it's a genuinely
+			different <em>mechanic</em> (e.g. reasoning about specific opponents' remaining cash/monopoly
+			progress rather than static thresholds, or multi-property trade bundling) rather than
+			re-tuning existing numeric thresholds, since this search already covered that space thoroughly
+			without finding daylight.
+		</p>
+	</article>
+
+	<script>
+		(function () {
+			const root = document.documentElement;
+			const toggleBtn = document.getElementById('theme-toggle');
+			const stored = localStorage.getItem('monopoly-theme');
+			function applyTheme(theme) {
+				if (theme === 'dark') {
+					root.setAttribute('data-theme', 'dark');
+					toggleBtn.textContent = '☀️ light mode';
+				} else {
+					root.setAttribute('data-theme', 'light');
+					toggleBtn.textContent = '🌙 dark mode';
+				}
+			}
+			const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+			toggleBtn.addEventListener('click', () => {
+				const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+				applyTheme(next);
+				localStorage.setItem('monopoly-theme', next);
+			});
+		})();
+	</script>
+</body>
+</html>

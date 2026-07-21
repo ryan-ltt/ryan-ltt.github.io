@@ -1,0 +1,221 @@
+:root {
+	--page-bg: lightblue;
+	--doc-bg: #fff;
+	--doc-text: #333;
+	--heading-text: #000;
+	--hint-text: #666;
+	--code-bg: #f5f5f5;
+	--code-text: #b3261e;
+	--quote-bg: #fffbe6;
+	--quote-border: #f9a825;
+	--link-color: #0066cc;
+	--link-hover: #004499;
+	--btn-bg: #fff;
+	--btn-border: #000;
+	--btn-text: #111;
+	--btn-hover-bg: #000;
+	--btn-hover-text: #fff;
+	--shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+	--page-bg: #0e1116;
+	--doc-bg: #1a1f24;
+	--doc-text: #d6d9db;
+	--heading-text: #f0f0f0;
+	--hint-text: #9aa4ab;
+	--code-bg: #12161a;
+	--code-text: #ff8a75;
+	--quote-bg: #2b2410;
+	--quote-border: #f2b23c;
+	--link-color: #6cb8ff;
+	--link-hover: #9fd1ff;
+	--btn-bg: #232a2f;
+	--btn-border: #545c64;
+	--btn-text: #eaeaea;
+	--btn-hover-bg: #eaeaea;
+	--btn-hover-text: #14181a;
+	--shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--page-bg: #0e1116;
+		--doc-bg: #1a1f24;
+		--doc-text: #d6d9db;
+		--heading-text: #f0f0f0;
+		--hint-text: #9aa4ab;
+		--code-bg: #12161a;
+		--code-text: #ff8a75;
+		--quote-bg: #2b2410;
+		--quote-border: #f2b23c;
+		--link-color: #6cb8ff;
+		--link-hover: #9fd1ff;
+		--btn-bg: #232a2f;
+		--btn-border: #545c64;
+		--btn-text: #eaeaea;
+		--btn-hover-bg: #eaeaea;
+		--btn-hover-text: #14181a;
+		--shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.5);
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--page-bg);
+	margin: 0;
+	padding: 40px 20px;
+	font-family: Monaco, monospace;
+	min-height: 100vh;
+	transition: background-color 0.2s ease;
+}
+
+.top-left-buttons {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	display: flex;
+	gap: 10px;
+	z-index: 100;
+}
+
+.top-right-buttons {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	z-index: 100;
+}
+
+.back-buttons,
+.theme-toggle-btn {
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	border: 1px solid var(--btn-border);
+	padding: 8px 12px;
+	cursor: pointer;
+	font-family: Monaco, monospace;
+	font-size: 13px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.back-buttons:hover,
+.theme-toggle-btn:hover {
+	background: var(--btn-hover-bg);
+	color: var(--btn-hover-text);
+}
+
+.back-buttons:active,
+.theme-toggle-btn:active {
+	background-color: #32a6a8;
+	transform: translate(0px, 2px);
+}
+
+.strategy-doc {
+	max-width: 800px;
+	margin: 40px auto 0 auto;
+	background-color: var(--doc-bg);
+	color: var(--doc-text);
+	padding: 60px;
+	box-shadow: var(--shadow-panel);
+	line-height: 1.8;
+	font-size: 16px;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1 {
+	color: var(--heading-text);
+	margin: 0 0 30px 0;
+	font-family: Monaco, monospace;
+	font-size: 30px;
+	line-height: 1.35;
+}
+
+h1 .subtitle {
+	display: block;
+	font-size: 17px;
+	font-weight: normal;
+	color: var(--hint-text);
+	margin-top: 6px;
+}
+
+h2 {
+	color: var(--heading-text);
+	margin: 40px 0 16px 0;
+	font-family: Monaco, monospace;
+	font-size: 21px;
+	border-bottom: 2px solid var(--heading-text);
+	padding-bottom: 6px;
+}
+
+p {
+	margin: 0 0 20px 0;
+	color: var(--doc-text);
+}
+
+a {
+	color: var(--link-color);
+	text-decoration: underline;
+}
+
+a:hover {
+	color: var(--link-hover);
+}
+
+code {
+	background-color: var(--code-bg);
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-family: Monaco, monospace;
+	font-size: 14px;
+	color: var(--code-text);
+}
+
+.stat-list {
+	margin: 0 0 20px 0;
+	padding-left: 22px;
+}
+
+.stat-list li {
+	margin: 8px 0;
+}
+
+.strategy-points {
+	margin: 0 0 20px 0;
+	padding-left: 24px;
+}
+
+.strategy-points li {
+	margin: 0 0 20px 0;
+}
+
+.strategy-points li:last-child {
+	margin-bottom: 0;
+}
+
+blockquote {
+	margin: 0 0 20px 0;
+	padding: 16px 20px;
+	background-color: var(--quote-bg);
+	border-left: 4px solid var(--quote-border);
+	color: var(--doc-text);
+	font-style: italic;
+}
+
+blockquote p {
+	margin: 0;
+	color: inherit;
+}
+
+@media (max-width: 700px) {
+	.strategy-doc {
+		padding: 30px 24px;
+	}
+
+	h1 {
+		font-size: 24px;
+	}
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>monopoly</title>
+	<link rel="stylesheet" href="monopoly.css">
+</head>
+<body>
+	<div class="top-left-buttons">
+		<a href="/">
+			<button class="back-buttons">back to homepage</button>
+		</a>
+		<a href="/projects/">
+			<button class="back-buttons">back to projects</button>
+		</a>
+	</div>
+	<div class="top-right-buttons">
+		<button class="theme-toggle-btn" id="theme-toggle">🌙 dark mode</button>
+	</div>
+
+	<div class="mono-wrapper">
+		<h1>monopoly</h1>
+		<p class="mono-subtitle">
+			A browser clone (original property names, not the trademarked ones) with 3 AI
+			opponents whose strategy was reverse-engineered from ~300,000 simulated games.
+			<a href="strategy.html">Read the strategy writeup</a>.
+		</p>
+		<div id="mono-app"></div>
+	</div>
+
+	<script src="js/board.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/strategy.js"></script>
+	<script src="js/human-agent.js"></script>
+	<script src="js/ui.js"></script>
+	<script>
+		const app = document.getElementById('mono-app');
+		const ui = new window.MonopolyUI.MonopolyUI(app);
+		window.__ui = ui;
+
+		(function () {
+			const root = document.documentElement;
+			const toggleBtn = document.getElementById('theme-toggle');
+			const stored = localStorage.getItem('monopoly-theme');
+			function applyTheme(theme) {
+				if (theme === 'dark') {
+					root.setAttribute('data-theme', 'dark');
+					toggleBtn.textContent = '☀️ light mode';
+				} else {
+					root.setAttribute('data-theme', 'light');
+					toggleBtn.textContent = '🌙 dark mode';
+				}
+			}
+			const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+			toggleBtn.addEventListener('click', () => {
+				const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+				applyTheme(next);
+				localStorage.setItem('monopoly-theme', next);
+				if (window.__ui && typeof window.__ui.refreshDiceTheme === 'function') {
+					window.__ui.refreshDiceTheme();
+				}
+			});
+		})();
+	</script>
+</body>
+</html>
