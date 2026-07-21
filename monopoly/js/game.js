@@ -726,7 +726,15 @@
 				this.logEvent(`${target.name} rejects trade from ${proposer.name}`);
 				return;
 			}
-			// execute
+			this.applyTradeEffects(proposer, target, trade);
+			this.logEvent(`${target.name} accepts trade from ${proposer.name}`);
+		}
+
+		/** Mutates proposer/target to reflect an already-accepted trade (properties, cash, jail
+		 * cards changing hands). Factored out of handleTradeProposal so trade-lookahead rollouts
+		 * (see strategy.js's tradeLookahead) can apply a hypothetical trade to a cloned game state
+		 * without re-running the accept/reject decision or duplicating this mutation logic. */
+		applyTradeEffects(proposer, target, trade) {
 			for (const p of trade.offerProps) { this.properties[p].owner = target.id; proposer.properties.splice(proposer.properties.indexOf(p), 1); target.properties.push(p); }
 			for (const p of trade.requestProps) { this.properties[p].owner = proposer.id; target.properties.splice(target.properties.indexOf(p), 1); proposer.properties.push(p); }
 			proposer.money -= (trade.offerMoney || 0);
@@ -735,7 +743,6 @@
 			proposer.money += (trade.requestMoney || 0);
 			if (trade.offerCards) { proposer.getOutOfJailFree -= trade.offerCards; target.getOutOfJailFree += trade.offerCards; }
 			if (trade.requestCards) { target.getOutOfJailFree -= trade.requestCards; proposer.getOutOfJailFree += trade.requestCards; }
-			this.logEvent(`${target.name} accepts trade from ${proposer.name}`);
 		}
 
 		async callAgent(player, method, ctx) {
@@ -758,6 +765,17 @@
 			}
 			this.checkGameOver();
 			return this.winner;
+		}
+
+		/** Like runToCompletion(), but stops after `n` individual player-turns (or sooner if the
+		 * game ends) instead of playing to a winner. Used for short lookahead rollouts (e.g. "what
+		 * does the board look like ~15 turns from now") where simulating a full game would be both
+		 * unnecessary and far more expensive than the decision being evaluated warrants. */
+		async runForTurns(n) {
+			for (let i = 0; i < n && !this.gameOver; i++) {
+				await this.playTurn();
+			}
+			this.checkGameOver();
 		}
 
 		/** Plain-data snapshot of all mutable game state (no agents/functions), suitable for

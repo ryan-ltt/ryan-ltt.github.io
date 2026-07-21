@@ -7,6 +7,13 @@
 	'use strict';
 
 	const Board = (typeof module !== 'undefined' && module.exports) ? require('./board.js') : root.MonopolyBoard;
+	// Lazily resolved (see rolloutNetWorthDelta) rather than required at module load time: game.js
+	// doesn't depend on strategy.js, so there's no real cycle, but resolving lazily keeps this
+	// module loadable even if something ever changes that load order, and avoids paying the cost
+	// of looking it up unless tradeLookahead is actually enabled.
+	function getEngine() {
+		return (typeof module !== 'undefined' && module.exports) ? require('./game.js') : root.MonopolyEngine;
+	}
 
 	// Default / baseline genome. Values are tuned starting points; simulation searches around these.
 	const DEFAULT_GENOME = {
@@ -55,7 +62,22 @@
 		// to face value. groupScarcityPremium models this directly, scaled by how many members of
 		// the group are already spoken for (scarcer group -> steeper asking price).
 		groupScarcityPremium: 0.0,    // 0=off; >0 = extra multiplier per already-owned group member when asked to give up a property in a group we already hold part of
-		chaseLastPieceDrive: 1.0      // multiplier on how much extra (beyond tradeMonopolyDrive) we'll offer to acquire the single missing piece of our own group before a rival can grab it
+		chaseLastPieceDrive: 1.0,     // multiplier on how much extra (beyond tradeMonopolyDrive) we'll offer to acquire the single missing piece of our own group before a rival can grab it
+
+		// --- Forward-looking trade evaluation ---
+		// evaluateTrade() above is a pure snapshot heuristic: it prices properties/cash/cards by
+		// static rules (list price, monopoly multipliers) and never asks what actually happens
+		// after the trade goes through. tradeLookahead turns on a Monte Carlo check instead: clone
+		// the live game twice (with the trade applied, and without), play both clones forward
+		// tradeLookaheadTurns player-turns using every player's own real strategy, average net
+		// worth across tradeLookaheadRollouts trials each, and accept only if the with-trade
+		// average beats the without-trade average by tradeFairnessMargin. This can catch things the
+		// static rules can't (e.g. a trade that looks fair on paper but sets up an opponent's
+		// monopoly two turns before yours completes), at the cost of being far more expensive to
+		// evaluate - each decision this drives runs 2*tradeLookaheadRollouts short simulated games.
+		tradeLookahead: false,
+		tradeLookaheadTurns: 15,      // how many player-turns to simulate forward from the current state
+		tradeLookaheadRollouts: 6     // simulated trials per side (with-trade vs without-trade); averaged to smooth over dice/card variance
 	};
 
 	function propertyValue(game, pos, genome) {
@@ -205,6 +227,7 @@
 			},
 
 			decideTradeResponse({ player, game, trade, proposer }) {
+				if (g.tradeLookahead) return evaluateTradeWithLookahead(game, player, trade, g);
 				return evaluateTrade(game, player, trade, g);
 			}
 		};
@@ -309,6 +332,61 @@
 		}
 		if (giveValue <= 0) return getValue >= 0;
 		return getValue >= giveValue * genome.tradeFairnessMargin;
+	}
+
+	/** Builds a fresh rollout MonopolyGame cloned from `game`'s current state via
+	 * snapshot/applySnapshot, with every seat using its OWN real strategy genome except that
+	 * tradeLookahead is forced off for all of them - without this, every simulated turn inside the
+	 * rollout could itself try to spawn a nested rollout, which would blow up combinatorially (a
+	 * depth-15 lookahead containing depth-15 lookahecks containing more lookaheads...). The rollout
+	 * bots are otherwise "as smart as the real ones" so the projection reflects how players would
+	 * actually keep playing, not a dumbed-down stand-in. */
+	function makeRolloutGame(game, seed) {
+		const MonopolyEngine = getEngine();
+		const agents = game.players.map(p => {
+			const baseGenome = (p.agent && p.agent.genome) ? p.agent.genome : DEFAULT_GENOME;
+			return { name: p.name, agent: makeBotAgent(Object.assign({}, baseGenome, { tradeLookahead: false })) };
+		});
+		const rollout = new MonopolyEngine.MonopolyGame(agents, { seed, maxTurns: game.maxTurns });
+		rollout.applySnapshot(game.snapshotState());
+		game.players.forEach((p, i) => { rollout.players[i].bankrupt = p.bankrupt; });
+		return rollout;
+	}
+
+	/** Forward-looking trade evaluation: simulates `rollouts` short playouts (each
+	 * `lookaheadTurns` player-turns deep) from the CURRENT game state, once with the hypothetical
+	 * trade applied and once without, using every player's real strategy so the projection reflects
+	 * actual future play rather than a static snapshot heuristic. Returns true if `player`'s average
+	 * projected net worth with the trade beats their average without it by at least
+	 * genome.tradeFairnessMargin. This can catch effects the static evaluateTrade() can't see at
+	 * all - e.g. a trade that looks even on paper but hands the proposer a monopoly that starts
+	 * collecting steep rent well before the responder's own properties pay off. */
+	async function evaluateTradeWithLookahead(game, player, trade, genome) {
+		const proposer = game.players[trade.toId];
+		const rollouts = Math.max(1, genome.tradeLookaheadRollouts);
+		const turns = Math.max(1, genome.tradeLookaheadTurns);
+		let withTradeTotal = 0, withoutTradeTotal = 0;
+		let seedBase = Math.floor(Math.random() * 2 ** 31);
+
+		for (let i = 0; i < rollouts; i++) {
+			// same seed for both branches of a given trial, so dice/card variance cancels out in the
+			// comparison and the trade itself is the only thing that differs between the two runs
+			const seed = seedBase + i;
+
+			const withTrade = makeRolloutGame(game, seed);
+			withTrade.applyTradeEffects(withTrade.players[proposer.id], withTrade.players[player.id], trade);
+			await withTrade.runForTurns(turns);
+			withTradeTotal += withTrade.netWorth(withTrade.players[player.id]);
+
+			const withoutTrade = makeRolloutGame(game, seed);
+			await withoutTrade.runForTurns(turns);
+			withoutTradeTotal += withoutTrade.netWorth(withoutTrade.players[player.id]);
+		}
+
+		const avgWith = withTradeTotal / rollouts;
+		const avgWithout = withoutTradeTotal / rollouts;
+		if (avgWithout <= 0) return avgWith >= 0;
+		return avgWith >= avgWithout * genome.tradeFairnessMargin;
 	}
 
 	// Genome discovered via coordinate-ascent grid search over ~72,000 simulated 4-player games
