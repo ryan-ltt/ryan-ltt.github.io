@@ -74,7 +74,9 @@
 				<div id="mono-props-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
 					<div id="mono-props-modal" class="mono-modal"></div>
 				</div>
-				<div id="mono-toast-stack" class="mono-toast-stack"></div>
+				<div id="mono-event-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
+					<div id="mono-event-modal" class="mono-modal mono-event-modal"></div>
+				</div>
 			`;
 			this.boardEl = this.root.querySelector('#mono-board');
 			this.playersEl = this.root.querySelector('#mono-players');
@@ -85,7 +87,10 @@
 			this.modalEl = this.root.querySelector('#mono-modal');
 			this.propsModalBackdrop = this.root.querySelector('#mono-props-modal-backdrop');
 			this.propsModalEl = this.root.querySelector('#mono-props-modal');
-			this.toastStackEl = this.root.querySelector('#mono-toast-stack');
+			this.eventModalBackdrop = this.root.querySelector('#mono-event-modal-backdrop');
+			this.eventModalEl = this.root.querySelector('#mono-event-modal');
+			this._eventQueue = []; // pending {html} notifications not yet shown
+			this._eventShowing = false; // true while a notification is on screen awaiting dismissal
 			this.diceAreaEl = this.root.querySelector('#mono-dice-area');
 			this.die1El = this.root.querySelector('#mono-die-1');
 			this.die2El = this.root.querySelector('#mono-die-2');
@@ -601,32 +606,25 @@
 			this.controlsEl.appendChild(speedRow);
 		}
 
-		// ---- AI decision popup (mirrors the human's modal, but non-blocking & auto-dismissing) ----
+		// ---- AI decision / game event notifications (unified queue, centered modal, click X to
+		// dismiss - covers both "an AI decided to do X" and "something automatic just happened,
+		// like a rent payment or card draw". Both feed the same queue so they can never overlap
+		// on screen, and the game loop pauses on each one until the player dismisses it, so nothing
+		// can be missed. ----
 
 		async _onAgentDecision(player, method, ctx, result) {
 			if (player.id === this.humanId) return; // human already sees their own choices live
-			// This popup is purely cosmetic (the engine has already applied the decision's effects
-			// by the time we get here) - a bug in describing/rendering it must never be allowed to
-			// kill the game loop. _runLoop has no try/catch around playTurn(), so an uncaught
-			// exception here would otherwise propagate all the way up and silently freeze the game
-			// with whatever was last on screen (this happened in practice: decideAction's ctx has
-			// no `pos`, so referencing it crashed on every AI build/mortgage/sellHouse/unmortgage).
+			// This popup describes a decision the engine has already applied the effects of - a bug
+			// in describing/rendering it must never be allowed to kill the game loop. _runLoop has no
+			// try/catch around playTurn(), so an uncaught exception here would otherwise propagate all
+			// the way up and silently freeze the game (this happened in practice: decideAction's ctx
+			// has no `pos`, so referencing it crashed on every AI build/mortgage/sellHouse/unmortgage).
 			try {
 				const html = this._describeAgentDecision(method, ctx, result, player);
 				if (!html) return; // no-op decision (e.g. nothing to build, declined to act) - skip the popup
-				// Reuses the same modal the human sees for their own turn, styled with the AI's color
-				// and auto-dismissing instead of waiting for a click.
-				this.modalEl.style.borderColor = PLAYER_COLORS[player.id];
-				this._showModal(html);
-				// pace the popup to the AI speed setting so "Fast" games don't grind to a crawl -
-				// scales with this.speed (the same delay used between AI turns elsewhere in the UI)
-				await this._sleep(Math.max(350, Math.min(this.speed, 1600)));
-				this._hideModal();
-				this.modalEl.style.borderColor = '';
+				await this._queueEventPopup(html, PLAYER_COLORS[player.id]);
 			} catch (err) {
 				console.error('AI decision popup failed to render (continuing game):', err);
-				this._hideModal();
-				this.modalEl.style.borderColor = '';
 			}
 		}
 
@@ -690,15 +688,16 @@
 			}
 		}
 
-		// ---- Event toasts (narrates things the engine does automatically - card draws, rent,
-		// tax, jail, bankruptcy, auction results, passing Go - that would otherwise only show up
-		// as a line in the scrolling log, which is easy to miss and doesn't explain *why* money
-		// or position just changed) ----
+		// ---- Game event notifications (narrates things the engine does automatically - card draws,
+		// rent, tax, jail, bankruptcy, auction results, passing Go - that would otherwise only show
+		// up as a line in the scrolling log, which is easy to miss and doesn't explain *why* money
+		// or position just changed). Feeds the same queue as AI decision popups (below), so the two
+		// kinds of notification never fight for the screen. ----
 
-		_onGameEvent(type, data) {
+		async _onGameEvent(type, data) {
 			const html = this._describeGameEvent(type, data);
 			if (!html) return;
-			this._pushToast(html, type);
+			await this._queueEventPopup(html, null);
 		}
 
 		_describeGameEvent(type, data) {
@@ -706,51 +705,61 @@
 			switch (type) {
 				case 'card': {
 					const deckLabel = data.deck === 'chest' ? '🎴 Fortune Chest' : '🎴 Wild Fate';
-					return `<div class="mono-toast-title">${deckLabel}</div><p><b style="color:${color(data.player)}">${data.player.name}</b> draws: ${data.card.text}</p>`;
+					return `<div class="mono-event-title">${deckLabel}</div><p><b style="color:${color(data.player)}">${data.player.name}</b> draws: ${data.card.text}</p>`;
 				}
 				case 'rent':
-					return `<div class="mono-toast-title">💰 Rent</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> to <b style="color:${color(data.owner)}">${data.owner.name}</b> for ${data.spaceName}.</p>`;
+					return `<div class="mono-event-title">💰 Rent</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> to <b style="color:${color(data.owner)}">${data.owner.name}</b> for ${data.spaceName}.</p>`;
 				case 'tax':
-					return `<div class="mono-toast-title">🧾 Tax</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> in ${data.spaceName}.</p>`;
+					return `<div class="mono-event-title">🧾 Tax</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> in ${data.spaceName}.</p>`;
 				case 'passGo':
-					return `<div class="mono-toast-title">🏁 Passed Start</div><p><b style="color:${color(data.player)}">${data.player.name}</b> collects $${data.amount}.</p>`;
+					return `<div class="mono-event-title">🏁 Passed Start</div><p><b style="color:${color(data.player)}">${data.player.name}</b> collects $${data.amount}.</p>`;
 				case 'gotojail':
-					return `<div class="mono-toast-title">🚔 Go To Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is sent to jail${data.reason === 'doubles' ? ' (3 doubles in a row)' : ''}.</p>`;
+					return `<div class="mono-event-title">🚔 Go To Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is sent to jail${data.reason === 'doubles' ? ' (3 doubles in a row)' : ''}.</p>`;
 				case 'jailOutcome':
-					if (data.outcome === 'rolledDoubles') return `<div class="mono-toast-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> rolls doubles and gets out of jail free.</p>`;
-					if (data.outcome === 'forcedBail') return `<div class="mono-toast-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> failed 3 rolls and is forced to pay bail.</p>`;
+					if (data.outcome === 'rolledDoubles') return `<div class="mono-event-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> rolls doubles and gets out of jail free.</p>`;
+					if (data.outcome === 'forcedBail') return `<div class="mono-event-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> failed 3 rolls and is forced to pay bail.</p>`;
 					return null;
 				case 'bankruptcy':
-					return `<div class="mono-toast-title">💥 Bankrupt</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is bankrupt${data.creditor ? `, assets go to <b style="color:${color(data.creditor)}">${data.creditor.name}</b>` : ' and is out of the game'}.</p>`;
+					return `<div class="mono-event-title">💥 Bankrupt</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is bankrupt${data.creditor ? `, assets go to <b style="color:${color(data.creditor)}">${data.creditor.name}</b>` : ' and is out of the game'}.</p>`;
 				case 'auctionResult':
 					return data.winner
-						? `<div class="mono-toast-title">🔨 Auction</div><p><b style="color:${color(data.winner)}">${data.winner.name}</b> wins ${data.spaceName} for <b>$${data.amount}</b>.</p>`
-						: `<div class="mono-toast-title">🔨 Auction</div><p>No bids for ${data.spaceName} — stays with the bank.</p>`;
+						? `<div class="mono-event-title">🔨 Auction</div><p><b style="color:${color(data.winner)}">${data.winner.name}</b> wins ${data.spaceName} for <b>$${data.amount}</b>.</p>`
+						: `<div class="mono-event-title">🔨 Auction</div><p>No bids for ${data.spaceName} — stays with the bank.</p>`;
 				default:
 					return null;
 			}
 		}
 
-		/** Queues a small auto-dismissing card in the corner of the screen. Multiple toasts can be
-		 * visible at once (stacked via CSS flex-column), each fading itself out independently -
-		 * unlike the decision modal, toasts never block the game loop or each other. */
-		_pushToast(html, type) {
-			if (!this.toastStackEl) return;
-			const toast = document.createElement('div');
-			toast.className = `mono-toast mono-toast-${type}`;
-			toast.innerHTML = html;
-			this.toastStackEl.appendChild(toast);
-			// cap the stack so a burst of events (e.g. "collect from everyone" cards) can't pile up forever
-			while (this.toastStackEl.children.length > 5) {
-				this.toastStackEl.removeChild(this.toastStackEl.firstChild);
-			}
-			requestAnimationFrame(() => toast.classList.add('mono-toast-in'));
+		/** Queues a centered notification popup (AI decision or automatic game event) and returns a
+		 * Promise that resolves once the player dismisses it (clicking "X" or the backdrop). Only
+		 * one notification is ever on screen at a time; if another is already showing, this one
+		 * waits in _eventQueue and the game loop is effectively paused until it's shown and
+		 * dismissed - the caller in game.js awaits this (via onAgentDecision/onEvent), so nothing
+		 * else in the turn proceeds until the player has acknowledged it. */
+		_queueEventPopup(html, borderColor) {
+			return new Promise(resolve => {
+				this._eventQueue.push({ html, borderColor, resolve });
+				this._drainEventQueue();
+			});
+		}
+
+		_drainEventQueue() {
+			if (this._eventShowing || !this._eventQueue.length) return;
+			this._eventShowing = true;
+			const { html, borderColor, resolve } = this._eventQueue.shift();
+			this.eventModalEl.style.borderColor = borderColor || '';
+			this.eventModalEl.innerHTML = `${html}<button class="mono-event-close-btn" id="mono-event-close" title="Dismiss" aria-label="Dismiss">&times;</button>`;
+			this.eventModalBackdrop.style.display = 'flex';
 			const dismiss = () => {
-				toast.classList.add('mono-toast-out');
-				setTimeout(() => toast.remove(), 250);
+				this.eventModalBackdrop.style.display = 'none';
+				this.eventModalEl.innerHTML = '';
+				this.eventModalEl.style.borderColor = '';
+				this._eventShowing = false;
+				resolve();
+				this._drainEventQueue(); // show the next queued notification, if any
 			};
-			toast.addEventListener('click', dismiss);
-			setTimeout(dismiss, 3200);
+			this.eventModalEl.querySelector('#mono-event-close').onclick = dismiss;
+			this.eventModalBackdrop.onclick = (e) => { if (e.target === this.eventModalBackdrop) dismiss(); };
 		}
 
 		// ---- Human decision handling ----

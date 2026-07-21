@@ -793,58 +793,43 @@ h1 {
 	margin-top: 10px;
 }
 
-.mono-toast-stack {
-	position: fixed;
-	top: 16px;
-	right: 16px;
-	z-index: 1200;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	max-width: 320px;
-	pointer-events: none;
+/* Centered notification popup for AI decisions and automatic game events (rent, tax, card draws,
+   jail, bankruptcy, auction results, passing Go). Shares the same backdrop/modal look as the other
+   modals, but stays on screen until the player clicks the close button - these are queued one at a
+   time (see MonopolyUI._queueEventPopup) so the game effectively pauses until each is acknowledged. */
+#mono-event-modal-backdrop {
+	z-index: 1150;
 }
 
-.mono-toast {
-	background: var(--modal-bg);
-	color: var(--modal-text);
-	border: 1px solid var(--modal-border);
-	border-left: 4px solid var(--modal-border);
-	border-radius: 8px;
-	padding: 8px 12px;
-	font-size: 12px;
-	box-shadow: var(--shadow-panel);
-	opacity: 0;
-	transform: translateX(24px);
-	transition: opacity 0.2s ease, transform 0.2s ease;
-	cursor: pointer;
-	pointer-events: auto;
+.mono-event-modal {
+	position: relative;
+	border-width: 3px;
+	padding-right: 40px;
 }
 
-.mono-toast p {
-	margin: 2px 0 0;
-}
-
-.mono-toast-in {
-	opacity: 1;
-	transform: translateX(0);
-}
-
-.mono-toast-out {
-	opacity: 0;
-	transform: translateX(24px);
-}
-
-.mono-toast-title {
+.mono-event-title {
 	font-weight: 700;
+	font-size: 15px;
+	margin-bottom: 6px;
 }
 
-.mono-toast-rent, .mono-toast-tax { border-left-color: #e63946; }
-.mono-toast-card { border-left-color: #6a4c93; }
-.mono-toast-passGo { border-left-color: #2a9d8f; }
-.mono-toast-gotojail, .mono-toast-bankruptcy { border-left-color: #333; }
-.mono-toast-jailOutcome { border-left-color: #457b9d; }
-.mono-toast-auctionResult { border-left-color: #e9c46a; }
+.mono-event-close-btn {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	background: transparent;
+	border: none;
+	color: var(--modal-text);
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 4px 6px;
+	border-radius: 6px;
+}
+
+.mono-event-close-btn:hover {
+	background: rgba(128, 128, 128, 0.2);
+}
 
 .mono-trade-cols > div {
 	flex: 1;

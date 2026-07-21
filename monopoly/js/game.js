@@ -98,9 +98,10 @@
 		/** Fires a structured, UI-facing notification for a game event that isn't already covered
 		 * by a decide* popup (onAgentDecision) - card draws, rent/tax payments, jail, bankruptcy,
 		 * auction outcomes, passing Go. Optional: no-op for headless sims / bots, since only ui.js
-		 * assigns onEvent. Never awaited - purely cosmetic, must never block or affect game state. */
-		emitEvent(type, data) {
-			if (typeof this.onEvent === 'function') this.onEvent(type, data);
+		 * assigns onEvent. Awaited so the UI can pause the game loop until the player acknowledges
+		 * the popup (e.g. clicks "X") - callers must `await` this like onMove/onAgentDecision. */
+		async emitEvent(type, data) {
+			if (typeof this.onEvent === 'function') await this.onEvent(type, data);
 		}
 
 		activePlayers() {
@@ -219,7 +220,7 @@
 					rolledDoublesCount++;
 					if (rolledDoublesCount === 3) {
 						this.logEvent(`${player.name} rolled 3 doubles - go to jail`);
-						this.emitEvent('gotojail', { player, reason: 'doubles' });
+						await this.emitEvent('gotojail', { player, reason: 'doubles' });
 						this.sendToJail(player);
 						turnActive = false;
 						break;
@@ -275,7 +276,7 @@
 				player.inJail = false;
 				player.jailTurns = 0;
 				this.logEvent(`${player.name} rolled doubles, out of jail`);
-				this.emitEvent('jailOutcome', { player, outcome: 'rolledDoubles' });
+				await this.emitEvent('jailOutcome', { player, outcome: 'rolledDoubles' });
 				await this.movePlayer(player, d1 + d2, true);
 				if (player.bankrupt || this.gameOver) return false;
 				await this.resolveSpace(player, d1 + d2);
@@ -288,7 +289,7 @@
 				player.inJail = false;
 				player.jailTurns = 0;
 				this.logEvent(`${player.name} forced to pay bail after 3 tries`);
-				this.emitEvent('jailOutcome', { player, outcome: 'forcedBail' });
+				await this.emitEvent('jailOutcome', { player, outcome: 'forcedBail' });
 				await this.movePlayer(player, d1 + d2, true);
 				if (player.bankrupt || this.gameOver) return false;
 				await this.resolveSpace(player, d1 + d2);
@@ -306,7 +307,7 @@
 			if (collectSalary && newPos < oldPos) {
 				await this.receiveMoney(player, Board.GO_SALARY);
 				this.logEvent(`${player.name} passes Start, collects $200`);
-				this.emitEvent('passGo', { player, amount: Board.GO_SALARY });
+				await this.emitEvent('passGo', { player, amount: Board.GO_SALARY });
 			}
 			player.pos = newPos;
 			// onMove may return a Promise (e.g. the UI animating the token along the board) -
@@ -442,7 +443,7 @@
 		async declareBankruptcy(player, creditor) {
 			player.bankrupt = true;
 			this.logEvent(`${player.name} is BANKRUPT`);
-			this.emitEvent('bankruptcy', { player, creditor: creditor || null });
+			await this.emitEvent('bankruptcy', { player, creditor: creditor || null });
 			if (creditor) {
 				creditor.money += player.money;
 				player.money = 0;
@@ -488,23 +489,23 @@
 				case 'go': break;
 				case 'tax':
 					this.logEvent(`${player.name} pays tax $${space.amount}`);
-					this.emitEvent('tax', { player, amount: space.amount, spaceName: space.name });
+					await this.emitEvent('tax', { player, amount: space.amount, spaceName: space.name });
 					await this.payMoney(player, space.amount, null);
 					break;
 				case 'chest': {
 					const card = this.nextChestCard();
-					this.emitEvent('card', { player, card, deck: 'chest' });
+					await this.emitEvent('card', { player, card, deck: 'chest' });
 					await this.drawCard(player, card, diceRoll);
 					break;
 				}
 				case 'fate': {
 					const card = this.nextFateCard();
-					this.emitEvent('card', { player, card, deck: 'fate' });
+					await this.emitEvent('card', { player, card, deck: 'fate' });
 					await this.drawCard(player, card, diceRoll);
 					break;
 				}
 				case 'gotojail':
-					this.emitEvent('gotojail', { player, reason: 'space' });
+					await this.emitEvent('gotojail', { player, reason: 'space' });
 					this.sendToJail(player);
 					break;
 				case 'jail':
@@ -625,7 +626,7 @@
 				if (owner.bankrupt) return;
 				const rent = this.calcRent(space.pos, diceRoll);
 				this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${space.name}`);
-				this.emitEvent('rent', { player, owner, amount: rent, spaceName: space.name, pos: space.pos });
+				await this.emitEvent('rent', { player, owner, amount: rent, spaceName: space.name, pos: space.pos });
 				await this.payMoney(player, rent, owner);
 			}
 		}
@@ -680,10 +681,10 @@
 				this.properties[pos].owner = winner.id;
 				winner.properties.push(pos);
 				this.logEvent(`${winner.name} wins auction for ${space.name} at $${highBid}`);
-				this.emitEvent('auctionResult', { winner, spaceName: space.name, amount: highBid, pos });
+				await this.emitEvent('auctionResult', { winner, spaceName: space.name, amount: highBid, pos });
 			} else {
 				this.logEvent(`Auction for ${space.name} closed with no bids`);
-				this.emitEvent('auctionResult', { winner: null, spaceName: space.name, amount: 0, pos });
+				await this.emitEvent('auctionResult', { winner: null, spaceName: space.name, amount: 0, pos });
 			}
 		}
 
