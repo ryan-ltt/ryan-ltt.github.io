@@ -23,10 +23,15 @@
 		<h1>Best Monopoly Strategy<br><span class="subtitle">derived from simulation</span></h1>
 
 		<p>
-			This is the output of simulating <strong>~72,000+ 4-player games</strong> with a headless
-			rules engine (<code>monopoly/js/game.js</code>), grid-searching 17 strategy parameters via
-			coordinate ascent (<code>monopoly/sim/gridsearch.js</code>), then re-confirming the noisiest
-			parameters at n=800/value. The winning parameter set (<code>BEST_GENOME</code> in
+			This is the output of simulating <strong>~415,000 4-player games</strong> across five rounds
+			of search with a headless rules engine (<code>monopoly/js/game.js</code>): an initial
+			~72,000-game coordinate ascent over 17 parameters (<code>monopoly/sim/gridsearch.js</code>),
+			two follow-up rounds adding 4 more parameters (~230,000 games,
+			<code>gridsearch2.js</code>/<code>gridsearch3.js</code>), a fourth round adding
+			trade-scarcity awareness after a human playtester found an exploit (~32,000 games,
+			<code>gridsearch4.js</code>), and a fifth round testing three ideas pulled from published
+			human/AI Monopoly strategy research (~58,000 games) that all tested neutral and were
+			reverted. The winning parameter set (<code>BEST_GENOME</code> in
 			<code>monopoly/js/strategy.js</code>) beat:
 		</p>
 
@@ -104,6 +109,21 @@
 				winning balance keeps enough of a cash cushion to survive a bad rent roll but doesn't sit
 				on cash that should be converted into monopolies and houses.
 			</li>
+			<li>
+				<strong>Guard partial color groups jealously, and don't sell the second piece cheaply.</strong>
+				<code>groupScarcityPremium=1.5</code>: once you already own one member of a group, giving
+				up another member of that same group is priced far above sticker &mdash; scaled by how
+				many you already hold, since a 2-of-3 holder is sitting on the single most valuable
+				property left on the board (either rival will pay almost anything for the third piece).
+				This was added specifically because a human playtester found that AI opponents would sell
+				the second piece of a group for close to face value without reasoning that the third piece
+				then becomes drastically harder for them to get. <code>chaseLastPieceDrive=1.8</code> is
+				the flip side: the bot now offers well above &ldquo;fair&rdquo; to grab the missing piece
+				of its <em>own</em> near-complete group first, rather than losing that race to a sharper
+				opponent. Tested directly against a &ldquo;trades aggressively to complete color
+				groups&rdquo; opponent (the same shape as the human exploit): its win rate against 3
+				defenders dropped from 19.4% to 11.1% once the defenders used this genome.
+			</li>
 		</ol>
 
 		<h2>Summary heuristic a human can actually use at the table</h2>
@@ -115,7 +135,9 @@
 			trade that finishes your set &mdash; trade-averse players lose. Build 3&ndash;4 houses across
 			all your monopolies before pushing any single one to a hotel. Keep a few hundred dollars in
 			reserve at all times. In jail, pay bail only when you're flush and have something productive
-			to do with the turn; otherwise sit tight for free.
+			to do with the turn; otherwise sit tight for free. And once you own even one piece of a color
+			group, don't sell it (or any other piece of that group you pick up) cheaply &mdash; the fewer
+			unclaimed pieces remain, the more each one is worth to whoever's racing you for the set.
 		</blockquote>
 
 		<p>
@@ -160,12 +182,77 @@
 			nobody has tried to beat yet. All four new mechanics (build order, jail-card hoarding,
 			opponent-blocking, even house selling) are implemented in <code>strategy.js</code> and
 			available on the genome, but none measurably changes win rate at the sample sizes tested, so
-			<code>BEST_GENOME</code> keeps its round-1 values for them. If you want to push further, the
-			likely next lever isn't more grid search on this same axis set &mdash; it's a genuinely
-			different <em>mechanic</em> (e.g. reasoning about specific opponents' remaining cash/monopoly
-			progress rather than static thresholds, or multi-property trade bundling) rather than
-			re-tuning existing numeric thresholds, since this search already covered that space thoroughly
-			without finding daylight.
+			<code>BEST_GENOME</code> kept its round-1 values for them &mdash; until round 4 found a real
+			gap in exactly this space (below).
+		</p>
+
+		<h2>Round 4: closing a human-exploitable blind spot (~32,000 games)</h2>
+
+		<p>
+			A human playtester reported a working exploit: own two of a three-property color group,
+			offer an AI opponent holding the third piece a merely-fair price, and it would often sell
+			&mdash; without reasoning that giving up its own piece killed its own shot at that group, or
+			that the human's piece was now worth far more than sticker to whoever chased it next.
+			<code>blockingAwareness</code> from the earlier rounds didn't cover this: it only reasons about
+			whether a trade completes the <em>other</em> player's set, as a flat multiplier, and tested at
+			<code>0.0</code> (off) in <code>BEST_GENOME</code> because it hadn't shown a measurable benefit
+			in isolation.
+		</p>
+
+		<p>
+			Two new parameters were added and drift-safe coordinate-ascent searched
+			(<code>gridsearch4.js</code>, ~18,400 games): <code>groupScarcityPremium</code> (demand a
+			steeply higher price to give up a property from a group you already partially own, scaled by
+			how many members you hold) and <code>chaseLastPieceDrive</code> (offer substantially more than
+			&ldquo;fair&rdquo; to acquire your own group's last piece before a rival gets there first). The
+			result, <code>groupScarcityPremium=1.5</code> / <code>chaseLastPieceDrive=1.8</code>, beat the
+			round-3 anchor at <strong>45.5&ndash;45.7% win rate</strong> (confirmed at both n=4,000 and
+			n=6,000). Tested directly against the exploit itself &mdash; a bot that trades maximally
+			aggressively to complete color groups, the same shape as the human strategy &mdash; its win
+			rate against 3 defenders dropped from <strong>19.4% to 11.1%</strong> once the defenders used
+			the new genome (n=1,000 each side). A broader archetype check (~24,600 games) confirmed the
+			gain generalized: the new genome beat every tested archetype by roughly 6&ndash;9 percentage
+			points more than the old genome did, with only a small (3.2pp) give-back specifically against
+			the group-hoarder archetype in a narrow one-hoarder-vs-one-defender framing.
+		</p>
+
+		<h2>Round 5: three more ideas from published strategy research, all neutral (~58,000 games)</h2>
+
+		<p>
+			To look for further gains, I pulled concrete heuristics from published human/AI Monopoly
+			strategy write-ups that weren't yet modeled, implemented each one, and head-to-head tested it
+			in isolation against the round-4 genome. All three came back statistically neutral (within
+			noise of a fair 25% share) and were reverted:
+		</p>
+
+		<ul class="stat-list">
+			<li>
+				<strong>&ldquo;Rush every property in a group to 3 houses before hoteling any&rdquo;</strong>
+				(common advice: rent jumps steepest at the 3rd house) &mdash; tested at 25.5% win rate
+				vs. the existing build order (n=3,000), and actually regressed the archetype aggregate
+				slightly (45.6%&rarr;45.0%, n=9,600). Likely redundant: the engine already caps building
+				more than 1 house ahead of a group's minimum (<code>canBuildOn</code> in
+				<code>game.js</code>), so development was already close to even without an explicit bias.
+			</li>
+			<li>
+				<strong>&ldquo;Mortgage properties furthest from a monopoly first, protect
+				rails/utilities&rdquo;</strong> &mdash; tested at 25.0&ndash;25.3% (n=3,000 and n=8,000).
+				Forced liquidation apparently doesn't come up often enough in these simulated games for its
+				internal ordering to matter.
+			</li>
+			<li>
+				<strong>&ldquo;Size cash reserve to the worst rent reachable in the next ~2 rolls&rdquo;</strong>
+				instead of a flat minimum &mdash; swept 5 candidate strengths, best candidate confirmed at
+				25.30% (n=3,000). No signal at any strength tested.
+			</li>
+		</ul>
+
+		<p>
+			This isn't evidence the underlying human advice is wrong at the table &mdash; only that, given
+			how this engine's other heuristics are already tuned (<code>buildCheapGroupsFirst</code>,
+			<code>riskAversion</code>, the even-build engine rule, the liquidation fallback in
+			<code>raiseCash</code>), these particular refinements don't move the needle further here.
+			<code>BEST_GENOME</code> is unchanged from round 4.
 		</p>
 	</article>
 

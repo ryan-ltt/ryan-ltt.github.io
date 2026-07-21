@@ -793,6 +793,59 @@ h1 {
 	margin-top: 10px;
 }
 
+.mono-toast-stack {
+	position: fixed;
+	top: 16px;
+	right: 16px;
+	z-index: 1200;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-width: 320px;
+	pointer-events: none;
+}
+
+.mono-toast {
+	background: var(--modal-bg);
+	color: var(--modal-text);
+	border: 1px solid var(--modal-border);
+	border-left: 4px solid var(--modal-border);
+	border-radius: 8px;
+	padding: 8px 12px;
+	font-size: 12px;
+	box-shadow: var(--shadow-panel);
+	opacity: 0;
+	transform: translateX(24px);
+	transition: opacity 0.2s ease, transform 0.2s ease;
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.mono-toast p {
+	margin: 2px 0 0;
+}
+
+.mono-toast-in {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.mono-toast-out {
+	opacity: 0;
+	transform: translateX(24px);
+}
+
+.mono-toast-title {
+	font-weight: 700;
+}
+
+.mono-toast-rent, .mono-toast-tax { border-left-color: #e63946; }
+.mono-toast-card { border-left-color: #6a4c93; }
+.mono-toast-passGo { border-left-color: #2a9d8f; }
+.mono-toast-gotojail, .mono-toast-bankruptcy { border-left-color: #333; }
+.mono-toast-jailOutcome { border-left-color: #457b9d; }
+.mono-toast-auctionResult { border-left-color: #e9c46a; }
+
 .mono-trade-cols > div {
 	flex: 1;
 }

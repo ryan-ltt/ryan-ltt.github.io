@@ -74,6 +74,7 @@
 				<div id="mono-props-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
 					<div id="mono-props-modal" class="mono-modal"></div>
 				</div>
+				<div id="mono-toast-stack" class="mono-toast-stack"></div>
 			`;
 			this.boardEl = this.root.querySelector('#mono-board');
 			this.playersEl = this.root.querySelector('#mono-players');
@@ -84,6 +85,7 @@
 			this.modalEl = this.root.querySelector('#mono-modal');
 			this.propsModalBackdrop = this.root.querySelector('#mono-props-modal-backdrop');
 			this.propsModalEl = this.root.querySelector('#mono-props-modal');
+			this.toastStackEl = this.root.querySelector('#mono-toast-stack');
 			this.diceAreaEl = this.root.querySelector('#mono-dice-area');
 			this.die1El = this.root.querySelector('#mono-die-1');
 			this.die2El = this.root.querySelector('#mono-die-2');
@@ -234,6 +236,7 @@
 			this.game.onRoll = (player, d1, d2) => this._onGameRoll(player, d1, d2);
 			this.game.onMove = (player, oldPos, newPos) => this._onGameMove(player, oldPos, newPos);
 			this.game.onAgentDecision = (player, method, ctx, result) => this._onAgentDecision(player, method, ctx, result);
+			this.game.onEvent = (type, data) => this._onGameEvent(type, data);
 
 			// one log buffer for "all events" plus one per player, so each player's actions can
 			// be reviewed in isolation; a line is routed to a player's buffer whenever their name
@@ -627,6 +630,16 @@
 			}
 		}
 
+		/** Human-readable "X, Y, $Z" summary of one side of a trade (properties + cash + jail cards).
+		 * Shared by the human's own trade-response modal and the AI-decision popups below, so an
+		 * AI-to-AI trade shows the same level of detail a human would see if they were the target. */
+		_describeTradeSide(props, money, cards) {
+			const parts = props.map(pos => this.game.getSpace(pos).name);
+			if (money) parts.push(`$${money}`);
+			if (cards) parts.push(`${cards}x Get Out of Jail Free`);
+			return parts.length ? parts.join(', ') : 'nothing';
+		}
+
 		_describeAgentDecision(method, ctx, result, player) {
 			const space = ctx.pos !== undefined ? this.game.getSpace(ctx.pos) : null;
 			switch (method) {
@@ -657,16 +670,87 @@
 					if (result.type === 'mortgage' && actionSpace) return `<h3>${player.name}</h3><p>Mortgages ${actionSpace.name}.</p>`;
 					if (result.type === 'unmortgage' && actionSpace) return `<h3>${player.name}</h3><p>Unmortgages ${actionSpace.name}.</p>`;
 					if (result.type === 'proposeTrade') {
-						const target = this.game.players[result.trade.toId];
-						return target ? `<h3>${player.name}</h3><p>Proposes a trade to ${target.name}.</p>` : null;
+						const trade = result.trade;
+						const target = this.game.players[trade.toId];
+						if (!target) return null;
+						const gives = this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards);
+						const wants = this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards);
+						return `<h3>${player.name}</h3><p>Proposes a trade to ${target.name}:</p><p><b>Offers:</b> ${gives}</p><p><b>Wants:</b> ${wants}</p>`;
 					}
 					return null;
 				}
-				case 'decideTradeResponse':
-					return `<h3>${player.name}</h3><p>${result ? 'Accepts' : 'Rejects'} the trade offer from ${ctx.proposer.name}.</p>`;
+				case 'decideTradeResponse': {
+					const { trade, proposer } = ctx;
+					const gets = this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards);
+					const gives = this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards);
+					return `<h3>${player.name}</h3><p>${result ? 'Accepts' : 'Rejects'} the trade offer from ${proposer.name}:</p><p><b>Would receive:</b> ${gets}</p><p><b>Would give up:</b> ${gives}</p>`;
+				}
 				default:
 					return null;
 			}
+		}
+
+		// ---- Event toasts (narrates things the engine does automatically - card draws, rent,
+		// tax, jail, bankruptcy, auction results, passing Go - that would otherwise only show up
+		// as a line in the scrolling log, which is easy to miss and doesn't explain *why* money
+		// or position just changed) ----
+
+		_onGameEvent(type, data) {
+			const html = this._describeGameEvent(type, data);
+			if (!html) return;
+			this._pushToast(html, type);
+		}
+
+		_describeGameEvent(type, data) {
+			const color = (p) => PLAYER_COLORS[p.id];
+			switch (type) {
+				case 'card': {
+					const deckLabel = data.deck === 'chest' ? '🎴 Fortune Chest' : '🎴 Wild Fate';
+					return `<div class="mono-toast-title">${deckLabel}</div><p><b style="color:${color(data.player)}">${data.player.name}</b> draws: ${data.card.text}</p>`;
+				}
+				case 'rent':
+					return `<div class="mono-toast-title">💰 Rent</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> to <b style="color:${color(data.owner)}">${data.owner.name}</b> for ${data.spaceName}.</p>`;
+				case 'tax':
+					return `<div class="mono-toast-title">🧾 Tax</div><p><b style="color:${color(data.player)}">${data.player.name}</b> pays <b>$${data.amount}</b> in ${data.spaceName}.</p>`;
+				case 'passGo':
+					return `<div class="mono-toast-title">🏁 Passed Start</div><p><b style="color:${color(data.player)}">${data.player.name}</b> collects $${data.amount}.</p>`;
+				case 'gotojail':
+					return `<div class="mono-toast-title">🚔 Go To Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is sent to jail${data.reason === 'doubles' ? ' (3 doubles in a row)' : ''}.</p>`;
+				case 'jailOutcome':
+					if (data.outcome === 'rolledDoubles') return `<div class="mono-toast-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> rolls doubles and gets out of jail free.</p>`;
+					if (data.outcome === 'forcedBail') return `<div class="mono-toast-title">🔓 Jail</div><p><b style="color:${color(data.player)}">${data.player.name}</b> failed 3 rolls and is forced to pay bail.</p>`;
+					return null;
+				case 'bankruptcy':
+					return `<div class="mono-toast-title">💥 Bankrupt</div><p><b style="color:${color(data.player)}">${data.player.name}</b> is bankrupt${data.creditor ? `, assets go to <b style="color:${color(data.creditor)}">${data.creditor.name}</b>` : ' and is out of the game'}.</p>`;
+				case 'auctionResult':
+					return data.winner
+						? `<div class="mono-toast-title">🔨 Auction</div><p><b style="color:${color(data.winner)}">${data.winner.name}</b> wins ${data.spaceName} for <b>$${data.amount}</b>.</p>`
+						: `<div class="mono-toast-title">🔨 Auction</div><p>No bids for ${data.spaceName} — stays with the bank.</p>`;
+				default:
+					return null;
+			}
+		}
+
+		/** Queues a small auto-dismissing card in the corner of the screen. Multiple toasts can be
+		 * visible at once (stacked via CSS flex-column), each fading itself out independently -
+		 * unlike the decision modal, toasts never block the game loop or each other. */
+		_pushToast(html, type) {
+			if (!this.toastStackEl) return;
+			const toast = document.createElement('div');
+			toast.className = `mono-toast mono-toast-${type}`;
+			toast.innerHTML = html;
+			this.toastStackEl.appendChild(toast);
+			// cap the stack so a burst of events (e.g. "collect from everyone" cards) can't pile up forever
+			while (this.toastStackEl.children.length > 5) {
+				this.toastStackEl.removeChild(this.toastStackEl.firstChild);
+			}
+			requestAnimationFrame(() => toast.classList.add('mono-toast-in'));
+			const dismiss = () => {
+				toast.classList.add('mono-toast-out');
+				setTimeout(() => toast.remove(), 250);
+			};
+			toast.addEventListener('click', dismiss);
+			setTimeout(dismiss, 3200);
 		}
 
 		// ---- Human decision handling ----
@@ -931,16 +1015,10 @@
 
 		_modalTradeResponse(ctx) {
 			const { trade, proposer } = ctx;
-			const describe = (props, money, cards) => {
-				const parts = props.map(pos => this.game.getSpace(pos).name);
-				if (money) parts.push(`$${money}`);
-				if (cards) parts.push(`${cards}x Get Out of Jail Free`);
-				return parts.length ? parts.join(', ') : 'nothing';
-			};
 			this._showModal(`
 				<h3>${proposer.name} offers a trade</h3>
-				<p><b>They give you:</b> ${describe(trade.offerProps, trade.offerMoney, trade.offerCards)}</p>
-				<p><b>They want:</b> ${describe(trade.requestProps, trade.requestMoney, trade.requestCards)}</p>
+				<p><b>They give you:</b> ${this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards)}</p>
+				<p><b>They want:</b> ${this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards)}</p>
 				<div class="mono-modal-actions">
 					<button class="mono-btn" id="mono-trade-accept">Accept</button>
 					<button class="mono-btn secondary" id="mono-trade-reject">Reject</button>

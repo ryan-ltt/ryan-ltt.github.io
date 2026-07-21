@@ -44,7 +44,18 @@
 		buildCheapGroupsFirst: true,  // when multiple monopolies are buildable, develop the cheaper color group before the pricier one
 		keepJailCardLateGame: true,   // hold onto Get Out of Jail Free cards once owning 2+ monopolies (worth more than selling) rather than trading them away
 		blockingAwareness: 0.0,       // 0=never reason about opponents; >0 = willingness to overpay in auctions/trades to deny an opponent a monopoly-completing property
-		sellHouseEvenly: true         // when forced to sell houses, take from the group with the most houses first (even depletion) rather than cheapest-to-replace
+		sellHouseEvenly: true,        // when forced to sell houses, take from the group with the most houses first (even depletion) rather than cheapest-to-replace
+
+		// --- Group scarcity (last-piece) awareness ---
+		// Standard tradeMonopolyDrive/blockingAwareness only reason about a trade completing the
+		// REQUESTER's set as a flat multiplier. They miss the compounding scarcity effect: once
+		// two of three group members are split between two different players, the third owner
+		// holds the single most valuable property on the board (either rival would pay almost
+		// anything for it) and should refuse to sell either of their own pieces for anything close
+		// to face value. groupScarcityPremium models this directly, scaled by how many members of
+		// the group are already spoken for (scarcer group -> steeper asking price).
+		groupScarcityPremium: 0.0,    // 0=off; >0 = extra multiplier per already-owned group member when asked to give up a property in a group we already hold part of
+		chaseLastPieceDrive: 1.0      // multiplier on how much extra (beyond tradeMonopolyDrive) we'll offer to acquire the single missing piece of our own group before a rival can grab it
 	};
 
 	function propertyValue(game, pos, genome) {
@@ -138,6 +149,12 @@
 					// sell from the group with the most houses first, to keep development even
 					houses = houses.slice().sort((a, b) => game.properties[b.pos].houses - game.properties[a.pos].houses);
 				}
+				// (Tried mortgagePriorityAware: sort mortgage candidates to protect group-progressed
+				// properties/rails/utilities and mortgage lone properties first, per common human
+				// strategy advice. Tested head-to-head: 25.0-25.3% win rate vs the unordered baseline
+				// at n=3000 and n=8000 - statistically neutral, a fair coin flip either way. Reverted;
+				// liquidation apparently doesn't happen often enough in these sims for ordering
+				// within it to matter much.)
 				let ordered;
 				if (g.mortgageBeforeSellHouse) ordered = mortgages.concat(houses);
 				else ordered = houses.concat(mortgages);
@@ -157,6 +174,15 @@
 					}
 				}
 				// 2) try building on any monopoly group, ordered by group cost preference
+				// (Tried implementing evenBuildBias as "rush every property in a group to 3 houses
+				// before hoteling any", per the common human-strategy advice that rent jumps most
+				// steeply at 3 houses. Tested head-to-head: lost 25.5% vs the greedy cheapest-first
+				// order (n=3000, a wash at best) and regressed slightly on the archetype aggregate
+				// (45.6% -> 45.0%, n=9600). Reverted - evenBuildBias stays declared but unused; the
+				// engine's even-building RULE [wouldBlockPath-style cap: can't build more than 1
+				// ahead of the group minimum, see canBuildOn in game.js] already forces reasonably
+				// even development regardless, which likely explains why an extra bias on top added
+				// no value here.)
 				const buildable = player.properties
 					.filter(pos => game.canBuildOn(player, pos))
 					.sort((a, b) => {
@@ -199,6 +225,15 @@
 		return v;
 	}
 
+	/** How many members of pos's color group `playerId` already owns, EXCLUDING pos itself.
+	 * Used to price "am I being asked to break up a partial set I'm holding onto?" - a player
+	 * sitting on 1-of-3 (or 2-of-3) of a group holds a scarce asset even without owning `pos`. */
+	function ownedGroupCountExcluding(game, playerId, pos, space) {
+		if (space.type !== 'property') return 0;
+		const members = game.propertiesInGroup(space.group);
+		return members.filter(p => p !== pos && game.properties[p].owner === playerId).length;
+	}
+
 	function proposeTrade(game, proposer, genome) {
 		// find a group where proposer owns all-but-one, and some other player owns the missing piece
 		for (const group of Object.keys(Board.GROUP_MEMBERS)) {
@@ -210,9 +245,13 @@
 			if (missingProp.owner === null || missingProp.owner === proposer.id) continue;
 			const owner = game.players[missingProp.owner];
 			if (owner.bankrupt) continue;
-			// offer: cash + maybe a property they don't need, sized to missing property's value
+			// offer: cash + maybe a property they don't need, sized to missing property's value.
+			// chaseLastPieceDrive scales the multiplier on top of the base 1.3x markup - a bot that
+			// understands the endgame value of the last piece of a group offers substantially more
+			// than "fair" for it rather than lowballing and losing the race to another player.
 			const missingSpace = game.getSpace(missing);
-			const offerMoney = Math.min(Math.round(missingSpace.price * 1.3), Math.max(0, proposer.money - 100));
+			const markup = 1.3 * genome.chaseLastPieceDrive;
+			const offerMoney = Math.min(Math.round(missingSpace.price * markup), Math.max(0, proposer.money - 100));
 			if (offerMoney < missingSpace.price * 0.8) continue; // can't afford a fair offer
 			return {
 				toId: owner.id,
@@ -253,6 +292,21 @@
 				}
 			}
 		}
+		// group scarcity: giving up a property from a group we ALSO hold a piece of is worse than
+		// it looks from raw price alone - it kills our own shot at that set, and the fewer members
+		// left unclaimed the more each remaining piece is worth to whoever ends up chasing it.
+		// Scales with how many of the group we already own, so a 2-of-3 holder guards their piece
+		// far more jealously than someone who owns none of the group.
+		if (genome.groupScarcityPremium > 0 && trade.requestProps && trade.requestProps.length) {
+			for (const pos of trade.requestProps) {
+				const space = game.getSpace(pos);
+				if (space.type !== 'property') continue;
+				const ownedByMe = ownedGroupCountExcluding(game, player.id, pos, space);
+				if (ownedByMe > 0) {
+					giveValue *= 1 + genome.groupScarcityPremium * ownedByMe;
+				}
+			}
+		}
 		if (giveValue <= 0) return getValue >= 0;
 		return getValue >= giveValue * genome.tradeFairnessMargin;
 	}
@@ -268,8 +322,47 @@
 	// (gridsearch2.js, gridsearch3.js) that also tried 4 new parameters (buildCheapGroupsFirst,
 	// keepJailCardLateGame, blockingAwareness, sellHouseEvenly) - no genome beat this one; every
 	// individual parameter change tested in isolation was statistically neutral (within noise of
-	// a fair 25% share at n=1200). This genome is a validated local optimum for this rule engine.
-	// See /monopoly/strategy.html for the full writeup of what this genome implies as human-readable advice.
+	// a fair 25% share at n=1200).
+	//
+	// Round 4 (gridsearch4.js): a human playtester reported exploiting a specific blind spot -
+	// bots owning 1-of-3 (or 2-of-3) of a color group would sell their piece to a human for close
+	// to face value, not accounting for the compounding scarcity effect (once 2 of 3 group members
+	// are split between two different owners, the 3rd is the single most valuable property on the
+	// board, since either rival will pay almost anything for it). Added two new parameters to model
+	// this directly: groupScarcityPremium (demand a steeper price to give up a property from a
+	// group we already partially own, scaled by how many members we hold) and chaseLastPieceDrive
+	// (offer substantially more than "fair" to acquire our own group's last piece before a rival
+	// or shrewd human beats us to it). Drift-safe coordinate ascent over ~18,400 games found
+	// groupScarcityPremium=1.5, chaseLastPieceDrive=1.8 beat the round-3 anchor at 45.5-45.7% win
+	// rate (confirmed at both n=4000 and n=6000 - not a fluke). Directly tested against the
+	// exploit: pitted 3 defenders against 1 "group hoarder" opponent (trades aggressively to
+	// complete color groups, same shape as the human strategy) - the hoarder's win rate dropped
+	// from 19.4% (round-3 anchor defenders) to 11.1% (round-4 defenders), n=1000 each side.
+	// This genome is a validated local optimum for this rule engine, including against this
+	// specific human trading strategy. See /monopoly/strategy.html for the full writeup of what
+	// this genome implies as human-readable advice.
+	//
+	// Round 5: researched published human/AI Monopoly strategy write-ups for additional ideas not
+	// yet modeled, then implemented and head-to-head tested each in isolation (code-logic diff vs
+	// current BEST_GENOME, same archetype round-robin as compare-round4-archetypes.js). All three
+	// tested NEUTRAL to slightly negative and were reverted:
+	//   - "rush every group property to 3 houses before hoteling any" (rent jumps steepest at 3
+	//     houses, per common strategy advice): 25.5% win rate vs the existing cheapest-first order
+	//     (n=3000), aggregate archetype win rate 45.6%->45.0% (n=9600, a regression). Likely
+	//     redundant with the engine's existing even-build rule (canBuildOn in game.js already caps
+	//     building more than 1 house ahead of the group minimum), so an extra bias added no value.
+	//   - "mortgage lone properties before group-progressed ones, protect rails/utilities last"
+	//     (protect properties on the path to a monopoly when raising cash): 25.0-25.3% (n=3000 and
+	//     n=8000) - statistically neutral. Liquidation apparently doesn't come up often enough in
+	//     these sims for its internal ordering to matter much.
+	//   - "size cash reserve to the worst rent reachable in the next ~2 rolls" instead of a flat
+	//     minCashReserve (common advice: hold back extra before crossing a built-up stretch):
+	//     swept 5 candidate strengths (0.3-2.0), best candidate (0.3) confirmed at 25.30% (n=3000)
+	//     - neutral, no signal at any strength tested.
+	// Net: BEST_GENOME is unchanged from round 4. This isn't evidence the underlying advice is
+	// wrong for human play - only that, given how this engine's other heuristics are already
+	// tuned (buildCheapGroupsFirst, riskAversion, the even-build engine rule, raiseCash's
+	// liquidation fallback), these particular refinements don't move the needle further here.
 	const BEST_GENOME = {
 		buyThreshold: 0.5,
 		minCashReserve: 300,
@@ -292,7 +385,9 @@
 		buildCheapGroupsFirst: true,
 		keepJailCardLateGame: true,
 		blockingAwareness: 0.0,
-		sellHouseEvenly: true
+		sellHouseEvenly: true,
+		groupScarcityPremium: 1.5,
+		chaseLastPieceDrive: 1.8
 	};
 
 	const api = { DEFAULT_GENOME, BEST_GENOME, makeBotAgent, propertyValue, countMonopolies, evaluateTrade, proposeTrade };
