@@ -618,6 +618,7 @@
 		// can be missed. ----
 
 		async _onAgentDecision(player, method, ctx, result) {
+			this._renderAll(); // the engine already applied this decision's effects (own or AI's) - reflect them now, not at end of turn
 			if (player.id === this.humanId) return; // human already sees their own choices live
 			// This popup describes a decision the engine has already applied the effects of - a bug
 			// in describing/rendering it must never be allowed to kill the game loop. _runLoop has no
@@ -701,6 +702,7 @@
 
 		async _onGameEvent(type, data) {
 			const html = this._describeGameEvent(type, data);
+			this._renderAll(); // reflect this event's already-applied effects (rent, tax, bankruptcy, etc.) immediately
 			if (!html) return;
 			await this._queueEventPopup(html, null);
 		}
