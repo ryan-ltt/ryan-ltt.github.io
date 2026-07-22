@@ -43,6 +43,15 @@
         tradeFairnessMargin: 1.15, // require this much value advantage to accept a trade
         tradeMonopolyDrive: 2.0,   // extra value assigned to trades that complete the proposer's own monopoly
 
+		// --- Trade proposal composition (see proposeTrade/composeCounterOffer) ---
+		tradeOfferMargin: 0.85,       // size proposed offers to this fraction of what the target's own
+		                               // valuation (x tradeFairnessMargin) would require - generous enough
+		                               // to plausibly land rather than a bare-minimum lowball
+		tradeEscalationRate: 0.25,    // each prior rejection from the same opponent for the same target
+		                               // property inflates the next offer by this fraction (see tradeLedger)
+		tradePropertySwapWillingness: 0.6, // chance of sweetening/substituting an offer with one of the
+		                               // proposer's own properties instead of cash-only, when a plausible swap exists
+
 		// --- Liquidation / risk ---
 		mortgageBeforeSellHouse: false, // if true, prefers mortgaging plain properties before selling houses when raising cash
 		riskAversion: 0.5,         // general dampener on aggressive spending (0=yolo, 1=very conservative)
@@ -107,6 +116,14 @@
 	 */
 	function makeBotAgent(genome) {
 		const g = Object.assign({}, DEFAULT_GENOME, genome);
+		// Per-opponent, per-property memory of past trade attempts: `${opponentId}:${pos}` ->
+		// {rejectionCount, lastOfferMoney, lastOfferValue, lastProposedTurn}. Lives only on this
+		// agent closure - it's negotiation history for THIS bot's real game, not board/player
+		// state, so it must never be threaded through game.snapshotState()/applySnapshot(). Monte
+		// Carlo rollouts (see makeRolloutGame below) already construct a fresh makeBotAgent() per
+		// clone, so rollout agents naturally get their own empty ledger and can't leak into or
+		// out of the live game's real one - don't "fix" that by passing this in from outside.
+		const tradeLedger = new Map();
 
 		return {
 			genome: g,
@@ -220,7 +237,7 @@
 				}
 				// 3) consider proposing a trade occasionally
 				if (g.tradeWillingness > 0 && Math.random() < g.tradeWillingness * 0.15) {
-					const trade = proposeTrade(game, player, g);
+					const trade = proposeTrade(game, player, g, tradeLedger);
 					if (trade) return { type: 'proposeTrade', trade };
 				}
 				return { type: 'done' };
@@ -229,6 +246,20 @@
 			decideTradeResponse({ player, game, trade, proposer }) {
 				if (g.tradeLookahead) return evaluateTradeWithLookahead(game, player, trade, g);
 				return evaluateTrade(game, player, trade, g);
+			},
+
+			/** Feedback hook: game.js's handleTradeProposal calls this on the PROPOSER's agent right
+			 * after the target accepts/rejects, so the ledger can record a rejection for next time.
+			 * Accepted trades need no bookkeeping - the property changes hands, so there's nothing
+			 * left to escalate toward. Duck-typed (game.js checks this exists before calling) so the
+			 * human agent, which has no such method, is unaffected. */
+			onTradeResult(trade, accepted) {
+				if (accepted) return;
+				for (const pos of (trade.requestProps || [])) {
+					const key = `${trade.toId}:${pos}`;
+					const prev = tradeLedger.get(key) || { rejectionCount: 0, lastOfferMoney: 0, lastOfferValue: 0, lastProposedTurn: -1 };
+					tradeLedger.set(key, Object.assign({}, prev, { rejectionCount: prev.rejectionCount + 1 }));
+				}
 			}
 		};
 	}
@@ -257,32 +288,140 @@
 		return members.filter(p => p !== pos && game.properties[p].owner === playerId).length;
 	}
 
-	function proposeTrade(game, proposer, genome) {
-		// find a group where proposer owns all-but-one, and some other player owns the missing piece
-		for (const group of Object.keys(Board.GROUP_MEMBERS)) {
-			const members = Board.GROUP_MEMBERS[group];
-			const ownedByMe = members.filter(p => game.properties[p].owner === proposer.id);
-			if (ownedByMe.length !== members.length - 1) continue;
-			const missing = members.find(p => game.properties[p].owner !== proposer.id);
-			const missingProp = game.properties[missing];
-			if (missingProp.owner === null || missingProp.owner === proposer.id) continue;
-			const owner = game.players[missingProp.owner];
+	/** True if `pos` is the single missing piece of a color group `playerId` otherwise fully
+	 * owns - i.e. estimateAssetValue's tradeMonopolyDrive bonus is active for this asset. Used to
+	 * (a) apply chaseLastPieceDrive on top when composing an offer for such a piece, and (b)
+	 * keep findSwapCandidate from offering away the proposer's own near-complete piece as a
+	 * sweetener for an unrelated trade. */
+	function isNearCompletePiece(game, playerId, pos, space) {
+		if (space.type !== 'property') return false;
+		const members = game.propertiesInGroup(space.group);
+		const ownedByPlayer = members.filter(p => game.properties[p].owner === playerId).length;
+		return ownedByPlayer === members.length - 1;
+	}
+
+	/** Scans every property/rail/utility NOT owned by proposer (and owned by some other live,
+	 * non-bankrupt player), scores each by (value to proposer) - (fair market cost), and returns
+	 * candidates sorted best-gap-first. Reuses estimateAssetValue/propertyValue rather than a
+	 * parallel pricing scheme, so a group's near-complete piece naturally scores highest via
+	 * estimateAssetValue's existing tradeMonopolyDrive bonus - no separate "check my own
+	 * monopolies first" pass is needed, that case just falls out of the unified scoring. Rails
+	 * and utilities participate for the same reason: propertyValue/estimateAssetValue already
+	 * branch on space.type for their multipliers. */
+	function scoreTradeTargets(game, proposer, genome) {
+		const candidates = [];
+		for (const posStr of Object.keys(game.properties)) {
+			const pos = Number(posStr);
+			const prop = game.properties[pos];
+			if (prop.owner === null || prop.owner === proposer.id) continue;
+			const owner = game.players[prop.owner];
 			if (owner.bankrupt) continue;
-			// offer: cash + maybe a property they don't need, sized to missing property's value.
-			// chaseLastPieceDrive scales the multiplier on top of the base 1.3x markup - a bot that
-			// understands the endgame value of the last piece of a group offers substantially more
-			// than "fair" for it rather than lowballing and losing the race to another player.
-			const missingSpace = game.getSpace(missing);
-			const markup = 1.3 * genome.chaseLastPieceDrive;
-			const offerMoney = Math.min(Math.round(missingSpace.price * markup), Math.max(0, proposer.money - 100));
-			if (offerMoney < missingSpace.price * 0.8) continue; // can't afford a fair offer
+			const valueToMe = estimateAssetValue(game, proposer.id, pos, genome);
+			const costToAcquire = propertyValue(game, pos, genome);
+			const gap = valueToMe - costToAcquire;
+			if (gap <= 0) continue;
+			candidates.push({ pos, owner, space: game.getSpace(pos), valueToMe, gap });
+		}
+		candidates.sort((a, b) => b.gap - a.gap);
+		return candidates;
+	}
+
+	/** Looks for one of proposer's own properties that `target` would plausibly want, to
+	 * sweeten/substitute for cash in a counter-offer. Values each candidate AS IF target already
+	 * owned it (the same trick evaluateTrade uses for offerProps), so a rail/utility target lacks
+	 * or a piece that would complete target's own set score highest. Skips developed properties
+	 * (don't give away built equity) and skips the proposer's own near-complete group pieces
+	 * (never trade away your own monopoly chase to sweeten an unrelated deal). */
+	function findSwapCandidate(game, proposer, target, excludePos, genome) {
+		let best = null;
+		for (const pos of proposer.properties) {
+			if (pos === excludePos) continue;
+			const space = game.getSpace(pos);
+			if (game.properties[pos].houses > 0) continue;
+			if (isNearCompletePiece(game, proposer.id, pos, space)) continue;
+			const valueToTarget = estimateAssetValue(game, target.id, pos, genome);
+			if (!best || valueToTarget > best.valueToTarget) {
+				best = { pos, space, valueToTarget };
+			}
+		}
+		return best;
+	}
+
+	/** Builds the offerMoney/offerProps/offerCards side of a trade requesting `targetPos` from
+	 * `target`, sized to be generous enough to plausibly clear target's own evaluateTrade
+	 * threshold (tradeOfferMargin fraction of target's own valuation x tradeFairnessMargin),
+	 * escalated past any previously-rejected offer for this exact opponent+property
+	 * (tradeEscalationRate), but never past what the property is actually worth to the proposer
+	 * (ceiling - prevents runaway offers across a long game, since the ledger never decays).
+	 * Returns null if no affordable/valid offer can be composed. */
+	function composeCounterOffer(game, proposer, target, targetPos, genome, ledgerEntry) {
+		const ownValueToProposer = estimateAssetValue(game, proposer.id, targetPos, genome);
+		const requiredValue = estimateAssetValue(game, target.id, targetPos, genome) * genome.tradeFairnessMargin;
+		let targetOfferValue = requiredValue * genome.tradeOfferMargin;
+		// chaseLastPieceDrive: extra push on top when this is the proposer's own near-complete
+		// group piece - the same endgame urgency the old proposeTrade modeled, now layered onto
+		// the unified offer-sizing instead of being the only case handled.
+		const targetSpace = game.getSpace(targetPos);
+		if (isNearCompletePiece(game, proposer.id, targetPos, targetSpace)) {
+			targetOfferValue *= genome.chaseLastPieceDrive;
+		}
+		if (ledgerEntry && ledgerEntry.rejectionCount > 0) {
+			targetOfferValue = Math.max(targetOfferValue, ledgerEntry.lastOfferValue * (1 + ledgerEntry.rejectionCount * genome.tradeEscalationRate));
+		}
+		// never offer more than the property is worth to the proposer, no matter how escalated
+		targetOfferValue = Math.min(targetOfferValue, ownValueToProposer);
+		if (ledgerEntry && targetOfferValue <= ledgerEntry.lastOfferValue) return null; // can't beat the last (rejected) offer within the ceiling - not worth repeating
+
+		let remaining = targetOfferValue;
+		let offerProps = [];
+		if (Math.random() < genome.tradePropertySwapWillingness) {
+			const swap = findSwapCandidate(game, proposer, target, targetPos, genome);
+			if (swap) {
+				offerProps = [swap.pos];
+				remaining -= swap.valueToTarget;
+			}
+		}
+
+		let offerCards = 0;
+		const keepingCards = genome.keepJailCardLateGame && countMonopolies(game, proposer.id) >= 2;
+		if (remaining > 60 && proposer.getOutOfJailFree > 0 && !keepingCards) {
+			offerCards = 1;
+			remaining -= 60; // matches evaluateTrade's flat per-card valuation
+		}
+
+		const offerMoney = Math.max(0, Math.round(remaining));
+		const affordableCap = Math.max(0, proposer.money - genome.minCashReserve);
+		if (offerMoney > affordableCap) return null;
+		if (offerCards > proposer.getOutOfJailFree) return null;
+
+		const totalOfferValue = offerMoney + offerCards * 60 + offerProps.reduce((sum, p) => sum + estimateAssetValue(game, target.id, p, genome), 0);
+		return { offerMoney, offerProps, offerCards, totalOfferValue };
+	}
+
+	function proposeTrade(game, proposer, genome, ledger) {
+		const led = ledger || new Map();
+		const candidates = scoreTradeTargets(game, proposer, genome);
+		for (const candidate of candidates) {
+			const { pos, owner } = candidate;
+			const key = `${owner.id}:${pos}`;
+			const ledgerEntry = led.get(key);
+			const composed = composeCounterOffer(game, proposer, owner, pos, genome, ledgerEntry);
+			if (!composed) continue;
+
+			led.set(key, Object.assign({}, ledgerEntry, {
+				rejectionCount: ledgerEntry ? ledgerEntry.rejectionCount : 0,
+				lastOfferMoney: composed.offerMoney,
+				lastOfferValue: composed.totalOfferValue,
+				lastProposedTurn: game.turnCount
+			}));
+
 			return {
 				toId: owner.id,
-				offerProps: [],
-				offerMoney,
-				requestProps: [missing],
+				offerProps: composed.offerProps,
+				offerMoney: composed.offerMoney,
+				requestProps: [pos],
 				requestMoney: 0,
-				offerCards: 0,
+				offerCards: composed.offerCards,
 				requestCards: 0
 			};
 		}
@@ -293,6 +432,13 @@
 		let giveValue = (trade.requestMoney || 0);
 		let getValue = (trade.offerMoney || 0);
 		for (const pos of trade.requestProps) giveValue += estimateAssetValue(game, player.id, pos, genome);
+		// offerProps are valued as if owned by trade.toId - the RESPONDER (this function's
+		// `player`) receiving them, i.e. trade.toId is player.id here, since handleTradeProposal
+		// always calls decideTradeResponse on the trade's target. Correct on purpose: getValue is
+		// "how much is what I'd receive worth to me", so pricing offerProps from the receiver's
+		// own group-ownership/monopoly-bonus perspective is exactly right, not a proposer/
+		// responder mixup. This path was rarely exercised before (bots only offered cash), so
+		// it's worth flagging now that proposeTrade routinely fills in offerProps.
 		for (const pos of trade.offerProps) getValue += estimateAssetValue(game, trade.toId != null ? trade.toId : player.id, pos, genome);
 		giveValue += (trade.requestCards || 0) * 60;
 		getValue += (trade.offerCards || 0) * 60;
@@ -441,6 +587,15 @@
 	// wrong for human play - only that, given how this engine's other heuristics are already
 	// tuned (buildCheapGroupsFirst, riskAversion, the even-build engine rule, raiseCash's
 	// liquidation fallback), these particular refinements don't move the needle further here.
+	//
+	// Trade rework: proposeTrade rewritten to evaluate ALL opponent-owned properties/rails/
+	// utilities by value-gap (not just the proposer's own near-complete monopoly), compose
+	// offers that can include a property swap alongside/instead of cash, and consult a
+	// per-opponent per-property tradeLedger (kept on the agent closure, see makeBotAgent) so a
+	// second attempt at a previously-rejected target offers strictly more than the first.
+	// Introduced tradeOfferMargin/tradeEscalationRate/tradePropertySwapWillingness as
+	// manually-tuned starting points - NOT yet grid-searched, unlike every other parameter in
+	// this genome. A future search round should sweep these three.
 	const BEST_GENOME = {
 		buyThreshold: 0.5,
 		minCashReserve: 300,
@@ -458,6 +613,9 @@
 		tradeWillingness: 0.75,
 		tradeFairnessMargin: 1.75,
 		tradeMonopolyDrive: 2,
+		tradeOfferMargin: 0.85,
+		tradeEscalationRate: 0.25,
+		tradePropertySwapWillingness: 0.6,
 		mortgageBeforeSellHouse: false,
 		riskAversion: 0.7,
 		buildCheapGroupsFirst: true,
@@ -468,7 +626,7 @@
 		chaseLastPieceDrive: 1.8
 	};
 
-	const api = { DEFAULT_GENOME, BEST_GENOME, makeBotAgent, propertyValue, countMonopolies, evaluateTrade, proposeTrade };
+	const api = { DEFAULT_GENOME, BEST_GENOME, makeBotAgent, propertyValue, estimateAssetValue, countMonopolies, evaluateTrade, proposeTrade };
 
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = api;

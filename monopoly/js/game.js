@@ -735,6 +735,12 @@
 			if (proposer.money < (trade.offerMoney || 0)) return;
 			if (target.money < (trade.requestMoney || 0)) return;
 			const accept = await this.callAgent(target, 'decideTradeResponse', { player: target, game: this, trade, proposer });
+			// lets a bot proposer's agent record a rejection (so it offers more next time) - duck-typed
+			// since the human agent has no such method, and this never fires for lookahead rollouts
+			// (those apply hypothetical trades directly via applyTradeEffects, bypassing this method).
+			if (proposer.agent && typeof proposer.agent.onTradeResult === 'function') {
+				proposer.agent.onTradeResult(trade, !!accept);
+			}
 			if (!accept) {
 				this.logEvent(`${target.name} rejects trade from ${proposer.name}`);
 				return;

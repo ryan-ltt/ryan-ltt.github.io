@@ -203,26 +203,87 @@ h1 {
 }
 
 .mono-wrapper {
-	max-width: 1240px;
+	max-width: 1400px;
 	margin: 0 auto;
 	padding: 10px 10px 40px 10px;
 }
 
-.mono-layout {
+/* Tabletop layout: the 3 AI docks are thin strips fused directly onto the board's own frame,
+   overlapping a fixed small amount ONTO the board edge (not a percentage of the dock's own size -
+   that blew up once the dock grew content, pushing it off past the page's own title/viewport).
+   Each dock is capped to a fixed max width/height so it can never grow past the board's own side
+   length. The human dock stays in normal flow directly below. */
+.mono-table {
 	display: flex;
-	gap: 20px;
-	align-items: flex-start;
-	justify-content: center;
-	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	/* Generous top clearance - the top dock grows upward as a player accumulates properties (see
+	   .mono-dock-top's bottom:100% anchor below), so this needs enough room for a label + cash row
+	   + a couple of wrapped lines of property cards without colliding with the page title/subtitle
+	   above it. .mono-prop-row's own max-height (below) caps how tall it can still get. */
+	margin: 130px auto 0 auto;
 }
 
 .mono-board-wrap {
+	position: relative;
 	flex: 0 0 auto;
 	padding: 10px;
 	background: var(--panel-bg);
 	border: 1px solid var(--panel-border);
 	border-radius: 10px;
 	box-shadow: var(--shadow-panel);
+}
+
+.mono-dock {
+	display: flex;
+	justify-content: center;
+}
+
+/* Top/left/right docks are positioned against the board frame with a fixed pixel offset (not a
+   transform percentage) so their own size never affects how far they sit from the board - they
+   hug the edge exactly the same amount regardless of how many properties/denominations a player
+   has. */
+.mono-dock-top,
+.mono-dock-left,
+.mono-dock-right {
+	position: absolute;
+	z-index: 20;
+}
+
+/* The dock BOX itself sits entirely outside the board (zero overlap) - only the cash-pile element
+   inside it gets pulled back in with its own negative margin (see .mono-dock-*.mono-cash-piles
+   below) so just that sliver reaches under the board panel. Pulling the whole dock box in (an
+   earlier attempt) dragged the name label along with it, hiding the label behind the board's
+   higher z-index background - this keeps the label fully outside no matter what. */
+.mono-dock-top {
+	bottom: 100%;
+	margin-bottom: 16px;
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: min(90vw, 560px);
+}
+
+.mono-dock-left {
+	right: 100%;
+	margin-right: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	max-height: min(80vh, 560px);
+}
+
+.mono-dock-right {
+	left: 100%;
+	margin-left: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+	max-height: min(80vh, 560px);
+}
+
+.mono-dock-bottom {
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
 }
 
 .mono-board {
@@ -234,6 +295,11 @@ h1 {
 	background: var(--board-bg);
 	position: relative;
 	overflow: hidden;
+	/* Higher than .mono-dock-top/-left/-right (z-index 20) so the board panel's own box visually
+	   covers the top of each side's cash piles where they overlap (see .mono-cash-piles / the
+	   .mono-dock-* negative-margin tuck-under rules) - the "tucked under the board" look from
+	   point 1. */
+	z-index: 25;
 }
 
 .mono-cell {
@@ -318,6 +384,15 @@ h1 {
 	text-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
 	flex-shrink: 0;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	transition: background-color 0.15s ease;
+}
+
+/* Shown instead of a property's real owner color while the trade builder modal has a
+   not-yet-sent offer that would move this property (see MonopolyUI._tradePreview /
+   _previewOwner) - dashed ring makes clear this is a preview, not a completed trade. */
+.mono-owner-chip-preview {
+	outline: 2px dashed var(--accent-gold);
+	outline-offset: 1px;
 }
 
 .mono-token-layer {
@@ -352,6 +427,9 @@ h1 {
 	justify-content: center;
 	background: var(--center-bg);
 	border: 1px solid var(--cell-border);
+	/* Positioning context for .mono-dice-area, which now lives here (on the board itself) rather
+	   than pinned inside the human's own dock - see .mono-dice-area-* below. */
+	position: relative;
 }
 
 .mono-center-title {
@@ -369,23 +447,60 @@ h1 {
 	margin-top: 2px;
 }
 
-.mono-sidebar {
-	flex: 0 0 310px;
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-}
-
+/* Sits on the board itself (centered on the middle logo area, see .mono-center's position:relative)
+   and slides toward whichever seat's turn it currently is, so it reads as "the dice are in front of
+   the active player" rather than always parked at the human's own seat - see
+   MonopolyUI._positionDiceForCurrentPlayer, which swaps the mono-dice-area-* modifier class below
+   each time the current player changes. Rotated to face that seat, same convention as the player
+   docks' cash/property rows (DOCK_ROTATE). */
 .mono-dice-area {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	background: var(--panel-bg);
 	border: 1px solid var(--panel-border);
 	border-radius: 8px;
 	padding: 14px 12px;
-	box-shadow: var(--shadow-soft);
+	box-shadow: var(--shadow-panel);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
+	transition: top 0.25s ease, left 0.25s ease, transform 0.25s ease;
+	z-index: 4;
+}
+
+.mono-dice-area-bottom {
+	top: auto;
+	left: 50%;
+	bottom: 12%;
+	transform: translate(-50%, 0);
+}
+
+.mono-dice-area-top {
+	top: 12%;
+	left: 50%;
+	transform: translate(-50%, 0) rotate(180deg);
+}
+
+.mono-dice-area-left {
+	top: 50%;
+	left: 12%;
+	transform: translate(0, -50%) rotate(90deg);
+}
+
+.mono-dice-area-right {
+	top: 50%;
+	left: auto;
+	right: 12%;
+	transform: translate(0, -50%) rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mono-dice-area {
+		transition: none;
+	}
 }
 
 .mono-dice-pair {
@@ -435,173 +550,524 @@ h1 {
 	}
 }
 
-.mono-players {
+/* The bank: a static visual anchor in the board's center (alongside the dice/title, see
+   .mono-center) for flying bill/property animations to fly to/from - not a running cash total,
+   since this ruleset's bank has unlimited money (game.js never checks a bank balance). Sits below
+   the dice area in normal flex flow within .mono-center. */
+/* Tucked in a corner rather than dead-center - the dice area (.mono-dice-area-*) can slide to
+   any of center/top/left/right/bottom depending on whose turn it is, so a corner is the one spot
+   never occupied by the dice regardless of current player. */
+.mono-bank {
+	position: absolute;
+	top: 6%;
+	right: 6%;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
-}
-
-.mono-player-card {
-	background: var(--sidebar-card-bg);
-	color: var(--sidebar-text);
-	border: 2px solid var(--sidebar-card-border);
-	border-radius: 8px;
-	padding: 10px 12px;
-	font-size: 12px;
-	opacity: 1;
-	box-shadow: var(--shadow-soft);
-	transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.mono-player-card.bankrupt {
-	opacity: 0.45;
-	text-decoration: line-through;
-	box-shadow: none;
-}
-
-.mono-player-card.active {
-	box-shadow: 0 0 0 2px var(--accent-gold), var(--shadow-panel);
-	background: var(--sidebar-card-active-bg);
-}
-
-.mono-player-card-header {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 8px;
-	margin-bottom: 2px;
-}
-
-.mono-player-name {
-	font-weight: bold;
-	font-size: 14.5px;
-}
-
-.mono-winprob {
-	font-size: 12px;
-	font-weight: bold;
-	color: var(--sidebar-text);
-	background: var(--input-bg);
-	border: 1px solid var(--sidebar-card-border);
-	border-radius: 10px;
-	padding: 2px 8px;
-	white-space: nowrap;
-	flex-shrink: 0;
-	transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.mono-winprob-loading {
-	color: var(--hint-text);
-	font-weight: normal;
-	letter-spacing: 1px;
-}
-
-.mono-group-strip {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px;
-	margin-bottom: 4px;
-}
-
-.mono-group-chip {
-	display: flex;
 	align-items: center;
-	gap: 3px;
-	background: var(--input-bg);
-	border: 1px solid var(--sidebar-card-border);
-	border-radius: 10px;
-	padding: 2px 6px 2px 3px;
-	font-size: 10px;
-	color: var(--sidebar-text-dim);
+	gap: 4px;
+	z-index: 3;
 }
 
-.mono-group-chip.complete {
-	border-color: var(--accent-gold);
-	box-shadow: 0 0 0 1px var(--accent-gold);
-	color: var(--sidebar-text);
-	font-weight: bold;
-}
-
-.mono-group-swatch {
-	width: 11px;
-	height: 11px;
-	border-radius: 3px;
-	flex-shrink: 0;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
-}
-
-.mono-group-swatch-icon {
-	border-radius: 0;
-	box-shadow: none;
-	image-rendering: pixelated;
-	image-rendering: crisp-edges;
-}
-
-.mono-group-frac {
-	line-height: 1;
-}
-
-.mono-player-stat {
+.mono-bank-label {
 	font-size: 12px;
-	color: var(--sidebar-text-dim);
-	margin-top: 1px;
+	font-weight: bold;
+	color: var(--center-text);
+	background: var(--panel-bg);
+	border: 1px solid var(--panel-border);
+	border-radius: 6px;
+	padding: 2px 8px;
+	box-shadow: var(--shadow-soft);
+	white-space: nowrap;
 }
 
-.mono-view-props-btn {
-	margin-top: 6px !important;
-	font-size: 11px !important;
-	/* Stays clickable even while a decision modal's backdrop is up (z-index 1000) - checking
-	   another player's holdings is most useful exactly while deciding whether to buy/bid/trade. */
+/* Small fanned stack of face-down generic cards standing in for "the unowned property deck" -
+   doesn't track the exact unowned count, just a fixed visual stack (see MonopolyUI._flyProperty
+   for the real per-property flying card, which reuses .mono-mini-prop's own look). */
+.mono-bank-deck {
+	display: flex;
+}
+
+/* .mono-mini-prop.mono-deck-card (two-class selector) so this width/height reliably beats
+   .mono-mini-prop's own 34px width, regardless of source order between the two rules. */
+.mono-mini-prop.mono-deck-card {
+	width: 20px;
+	height: 28px;
+	background: repeating-linear-gradient(135deg, #8a8f96, #8a8f96 3px, #797d84 3px, #797d84 6px);
+	border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.mono-bank-deck .mono-deck-card + .mono-deck-card {
+	margin-left: -12px;
+}
+
+/* Full-viewport overlay for flying bill/property animations (see MonopolyUI._flyBills/
+   _flyProperty) - fixed with inset:0 so getBoundingClientRect()'s viewport coordinates can be used
+   directly as left/top without any offset math. pointer-events:none so it never blocks clicks on
+   the docks/board beneath it. Above the board/docks/tokens but below the decision/event modals
+   (1000-1150) - a flying bill briefly crossing in front of a modal reads fine, but must never
+   block the modal's own controls. */
+.mono-fx-layer {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 900;
+}
+
+/* Flying bill/property elements: absolutely positioned at their start point, then moved to their
+   destination on the next frame so the browser animates the transform via a plain CSS transition
+   (transitionDuration is set per-flight in JS so multi-bill flurries can share this one rule while
+   each bill's own duration/stagger still comes from _flyBills). Centered on their own {left,top}
+   point (matching _elCenter's center-point contract) via negative margins, same convention as
+   .mono-token. */
+.mono-fly-bill {
+	position: fixed;
+	margin-left: -19px;
+	margin-top: -11px;
+	transition-property: left, top, opacity;
+	transition-timing-function: ease-in-out;
+	will-change: left, top, opacity;
+}
+
+/* .mono-mini-prop.mono-fly-prop (two-class selector, higher specificity than plain .mono-mini-prop
+   alone) so `position: fixed` here reliably beats .mono-mini-prop's own `position: relative`
+   regardless of which rule happens to come later in this file. */
+.mono-mini-prop.mono-fly-prop {
+	position: fixed;
+	width: 34px;
+	margin-left: -17px;
+	margin-top: -14px;
+	transition-property: left, top, opacity;
+	transition-timing-function: ease-in-out;
+	will-change: left, top, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mono-fly-bill,
+	.mono-fly-prop {
+		transition-duration: 1ms !important;
+	}
+}
+
+/* Gutted dock: no boxed card at all anymore - a bare, unboxed strip (name label + cash piles +
+   property clusters) hugging the board's edge. Top/bottom docks stack their contents in a row
+   (name above, cash+properties below, laid out horizontally); left/right docks run as a narrow
+   vertical column instead, since they hug a vertical board edge. */
+.mono-player-dock {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	padding: 2px;
+	cursor: pointer;
+	/* Forces the dock to size itself to its widest child (the cash-pile row, now much wider than
+	   the name label) rather than shrinking to the label's own width - without this, the outer
+	   flex layout was sizing the dock box off the label alone, leaving the wider cash row centered
+	   within a too-narrow box and visually offset from the label above it. */
+	width: max-content;
+}
+
+.mono-dock-left .mono-player-dock,
+.mono-dock-right .mono-player-dock {
+	max-width: 130px;
+}
+
+/* Explicit flex `order` (independent of DOM order) so the cash-pile row is always the child
+   nearest the board on every edge, and the name label is always furthest from it - regardless of
+   which edge the dock sits on. This is what the cash tuck-under negative margins rely on to only
+   ever pull the cash element itself under the board, never the label. Applies to whichever element
+   is the DIRECT child of .mono-player-dock - for left/right docks that's .mono-prop-row-viewport /
+   .mono-cash-piles-viewport (the rotation-clipping wrappers), not the inner rows themselves. */
+.mono-player-label { order: 0; }
+.mono-prop-row,
+.mono-prop-row-viewport { order: 1; }
+.mono-cash-piles,
+.mono-cash-piles-viewport { order: 2; }
+
+.mono-dock-tradeable {
+	/* Same reasoning as .mono-cell-tradeable: this is only clickable while the "choose an action"
+	   decision modal's backdrop (z-index 1000) is up, so it must poke through the dimming overlay. */
 	position: relative;
 	z-index: 1050;
+}
+
+.mono-dock-tradeable:hover .mono-player-label {
+	background: var(--sidebar-card-active-bg);
+	box-shadow: 0 0 0 2px var(--accent-gold);
+}
+
+.mono-player-dock.bankrupt {
+	opacity: 0.4;
+	text-decoration: line-through;
+}
+
+.mono-player-label {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: bold;
+	font-size: 13px;
+	padding: 2px 8px;
+	border-radius: 10px;
+	background: var(--panel-bg);
+	box-shadow: var(--shadow-soft);
+	transition: background-color 0.15s ease, box-shadow 0.15s ease;
+	white-space: nowrap;
+}
+
+.mono-player-dock.active .mono-player-label {
+	box-shadow: 0 0 0 2px var(--accent-gold);
+}
+
+/* Marks a player's dock as affected by the trade currently being built in the modal (see
+   MonopolyUI._tradePreview) - not yet-real state, so a dashed ring distinguishes it from .active. */
+.mono-player-dock-preview .mono-player-label {
+	outline: 2px dashed var(--accent-gold);
+	outline-offset: 2px;
+}
+
+.mono-turn-dot {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--accent-gold);
+	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+	flex-shrink: 0;
+}
+
+.mono-jail-indicator {
+	font-size: 11px;
+}
+
+/* Cash piles (point 1): one clean, un-fanned, un-rotated stack per denomination, laid out in a
+   row like real bank stacks at a seat - sized to read as a prominent centerpiece (each row targets
+   roughly half the board's own side length, see .mono-cash-piles width/.mono-bill sizing below),
+   not a small icon strip. Pulled toward the board with ITS OWN negative margin (not the whole dock
+   box - see .mono-dock-top/-left/-right) so only this element reaches under the board panel's
+   edge; the name label above/beside it is unaffected and stays fully visible. */
+.mono-cash-piles {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 10px;
+	width: min(50vw, 360px);
+}
+
+/* Top dock's cash row isn't wrapped in a rotation viewport (180deg doesn't swap width/height), so
+   the tuck-under margin applies directly to .mono-cash-piles there. Left/right ARE wrapped (see
+   .mono-cash-piles-viewport above), so the margin has to live on the wrapper instead - it's the
+   actual direct child of .mono-player-dock in that case, closest to the board. */
+.mono-dock-top .mono-cash-piles { margin-bottom: -22px; }
+
+/* On left/right docks, rotating the whole .mono-cash-piles row 90deg visually turns its row layout
+   into a column as a side effect of the transform - bills stack above the $ total, tight and
+   narrow, same as the label above them. Top's 180deg rotation does NOT swap row/column, so without
+   this it stayed a wide horizontal strip (bills beside the $ total) that reads as a completely
+   different shape from the other 3 docks. Stacking it into an explicit column here matches that
+   same tight, narrow, vertically-grouped look regardless of rotation angle. */
+.mono-dock-top .mono-cash-piles {
+	flex-direction: column;
+	align-items: center;
+	width: auto;
+	gap: 4px;
+}
+.mono-dock-left .mono-cash-piles-viewport { margin-right: -22px; }
+.mono-dock-right .mono-cash-piles-viewport { margin-left: -22px; }
+
+.mono-cash-pile-row {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 6px;
+}
+
+/* Each pile is a fixed-structure column: the bill stack, then the count badge row below it. Using
+   align-items:flex-end at the ROW level (above) would align whole piles by their outer box, which
+   includes the badge row - a pile with a badge (taller box) and one without (shorter box) would
+   then have their actual BILLS (the part that should visually line up as sitting on the same
+   "table") at different heights. Instead, .mono-bill-stack is pushed to the bottom of its own pile
+   via margin-top:auto, so bill bottoms always align across piles regardless of whether that
+   particular pile happens to show a badge. */
+.mono-bill-pile {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.mono-bill-stack {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	margin-top: auto;
+}
+
+.mono-bill {
+	width: 38px;
+	height: 23px;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+	border-radius: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 11px;
+	font-weight: bold;
+	color: rgba(0, 0, 0, 0.65);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+.mono-bill-stack .mono-bill + .mono-bill {
+	margin-top: -15px;
+}
+
+/* Always present (a "xN" badge or an &nbsp; placeholder - see MonopolyUI._cashStackHtml) so every
+   pile reserves the same badge-row height whether or not it actually has a count to show, keeping
+   the bill stacks above it aligned regardless. */
+.mono-bill-count {
+	margin-top: 2px;
+	font-size: 10px;
+	font-weight: bold;
+	color: var(--sidebar-text);
+	text-align: center;
+}
+
+/* Colors follow the classic Monopoly bank note palette, so the denomination reads at a glance
+   even before you see the printed number. */
+.mono-bill-500 { background: repeating-linear-gradient(135deg, #f2d675, #f2d675 3px, #e8c85f 3px, #e8c85f 6px); }
+.mono-bill-100 { background: repeating-linear-gradient(135deg, #f0ead8, #f0ead8 3px, #e2d9bf 3px, #e2d9bf 6px); }
+.mono-bill-50 { background: repeating-linear-gradient(135deg, #7fc4e8, #7fc4e8 3px, #6bb3da 3px, #6bb3da 6px); }
+.mono-bill-20 { background: repeating-linear-gradient(135deg, #f2a25c, #f2a25c 3px, #e88f42 3px, #e88f42 6px); }
+.mono-bill-10 { background: repeating-linear-gradient(135deg, #f2e07a, #f2e07a 3px, #e6d160 3px, #e6d160 6px); }
+.mono-bill-5 { background: repeating-linear-gradient(135deg, #f0a8c4, #f0a8c4 3px, #e691b3 3px, #e691b3 6px); }
+.mono-bill-1 { background: repeating-linear-gradient(135deg, #f5f5f2, #f5f5f2 3px, #e6e6e0 3px, #e6e6e0 6px); }
+
+:root[data-theme="dark"] .mono-bill {
+	color: rgba(0, 0, 0, 0.7);
+	border-color: rgba(0, 0, 0, 0.75);
+}
+
+.mono-cash-amount {
+	font-weight: bold;
+	font-size: 17px;
+	color: var(--sidebar-text);
+	white-space: nowrap;
+	flex-shrink: 0;
+	align-self: center;
+}
+
+/* Seat-facing rotation for cash piles (mirrors .mono-prop-row-rotate-* below) - top/left/right
+   docks rotate the whole cash row to face that seat, same convention as the property row. A 90deg
+   turn swaps visual width/height without changing the space reserved in normal layout, so rotated
+   piles are wrapped in a fixed-size .mono-cash-piles-viewport (overflow:hidden, sized for the
+   POST-rotation footprint) exactly like .mono-prop-row-viewport does for property cards. */
+.mono-rotate-180 {
+	transform: rotate(180deg);
+}
+
+.mono-cash-piles-viewport {
+	width: 130px;
+	/* Must be an explicit height, not max-height - the browser sizes a flex container from its
+	   child's normal (PRE-transform) layout box, which for a 90deg-rotated child is much shorter
+	   than the rotated content actually needs, so a max-height cap alone never gets reached. */
+	height: min(50vw, 360px);
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mono-rotate-left,
+.mono-rotate-right {
+	width: min(50vw, 360px);
+	/* The viewport wrapper's own box is intentionally much narrower (the POST-rotation footprint) -
+	   without flex-shrink:0 here, being a flex item of that narrower container would shrink this
+	   element down to fit BEFORE the rotation transform is applied (transforms are purely visual,
+	   computed after layout), squashing the pre-rotation content down to a sliver. */
+	flex-shrink: 0;
+}
+
+.mono-rotate-left {
+	transform: rotate(90deg);
+}
+
+.mono-rotate-right {
+	transform: rotate(-90deg);
+}
+
+/* The $ total counter-rotates against its parent pile's rotation so it stays upright/legible from
+   any seat, even though the bills around it are rotated to face that seat. */
+.mono-rotate-180 .mono-cash-amount {
+	transform: rotate(180deg);
+}
+
+.mono-rotate-left .mono-cash-amount {
+	transform: rotate(-90deg);
+}
+
+.mono-rotate-right .mono-cash-amount {
+	transform: rotate(90deg);
+}
+
+/* Grouped, non-fanned property row (point 2): properties cluster by color group/rail/utility, each
+   cluster a plain side-by-side row of small title-deed cards - no overlap, no fan transform. This
+   is the only view on the dock now; clicking the dock (see MonopolyUI._renderPlayers) opens
+   _modalPlayerProperties for full rent/mortgage detail. */
+.mono-prop-row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 7px;
+	max-width: min(90vw, 480px);
+	max-height: 120px;
+	overflow-y: auto;
+}
+
+.mono-prop-cluster {
+	display: flex;
+	gap: 2px;
+	padding: 2px;
+	border-radius: 4px;
+	background: var(--board-bg);
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.mono-mini-prop {
+	width: 34px;
+	border: 1px solid var(--sidebar-card-border);
+	border-radius: 3px;
+	overflow: hidden;
+	background: var(--sidebar-card-bg);
+	position: relative;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.mono-mini-prop.mortgaged {
+	opacity: 0.5;
+}
+
+.mono-mini-prop-bar {
+	height: 6px;
+}
+
+.mono-mini-prop-name {
+	font-size: 6px;
+	line-height: 1.15;
+	padding: 2px 2px;
+	min-height: 22px;
+	color: var(--sidebar-text);
+	word-break: break-word;
+	text-align: center;
+}
+
+.mono-mini-prop-mark {
+	position: absolute;
+	top: 7px;
+	right: 2px;
+	font-size: 7px;
+	font-weight: bold;
+	color: var(--accent-gold);
+	text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Seat-facing rotation (point 3): rotate the grouped property row so its text faces that seat
+   rather than the board's own upright orientation. Top seat is directly across the board from the
+   human, so a straight 180deg flip faces them correctly - a 180deg turn doesn't swap width/height,
+   so the row's own layout box is unaffected and it just renders in place, upside down.
+   Left/right seats each get a quarter turn in opposite directions (the standard tabletop convention
+   for cards dealt to a side seat). A 90deg turn DOES swap visual width/height without changing the
+   space the element reserves in normal layout (CSS transforms never affect layout), so left/right
+   rotated rows are wrapped in .mono-prop-row-viewport - a fixed-size clipping box sized for the
+   POST-rotation footprint (narrow width, taller height) with overflow:hidden, so the rotated row
+   can never spill upward into the name label above it or sideways off the page. */
+.mono-prop-row-rotate-180 {
+	transform: rotate(180deg);
+}
+
+.mono-prop-row-viewport {
+	width: 90px;
+	/* Must be an explicit height, not max-height - see .mono-cash-piles-viewport's comment on the
+	   same issue: a flex container sizes from its child's pre-transform layout box, so a max-height
+	   cap alone is never actually reached once the child is rotated 90deg. */
+	height: 160px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mono-prop-row-rotate-left,
+.mono-prop-row-rotate-right {
+	width: 160px;
+	flex-wrap: wrap;
+	align-content: center;
+	/* See .mono-rotate-left/-right's flex-shrink comment - same fix, otherwise being a flex item of
+	   the narrower viewport wrapper shrinks this BEFORE the rotation transform is applied. */
+	flex-shrink: 0;
+}
+
+.mono-prop-row-rotate-left {
+	transform: rotate(90deg);
+}
+
+.mono-prop-row-rotate-right {
+	transform: rotate(-90deg);
 }
 
 .mono-prop-list {
 	max-height: 55vh;
 	overflow-y: auto;
 	margin: 10px 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 8px;
+}
+
+/* Title-deed-style card: a color-bar header (matching the property's board group color) over a
+   small body, standing in for a physical Monopoly deed card. */
+.mono-prop-card {
 	border: 1px solid var(--sidebar-card-border);
 	border-radius: 6px;
+	overflow: hidden;
+	background: var(--sidebar-card-bg);
+	box-shadow: var(--shadow-soft);
 }
 
-.mono-prop-row {
+.mono-prop-card.mortgaged {
+	opacity: 0.55;
+}
+
+.mono-prop-card-bar {
+	height: 16px;
+}
+
+.mono-prop-card-body {
+	padding: 6px 8px;
+	font-size: 11px;
+}
+
+.mono-prop-card-name {
+	font-weight: bold;
+	color: var(--sidebar-text);
+	margin-bottom: 3px;
+	line-height: 1.2;
+}
+
+.mono-prop-card-row {
 	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 6px 10px;
-	font-size: 12px;
-	border-bottom: 1px solid var(--sidebar-card-border);
-}
-
-.mono-prop-row:last-child {
-	border-bottom: none;
-}
-
-.mono-prop-swatch {
-	width: 12px;
-	height: 12px;
-	border-radius: 3px;
-	flex-shrink: 0;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
-}
-
-.mono-prop-name {
-	flex: 1;
-	min-width: 0;
+	justify-content: space-between;
+	gap: 6px;
 }
 
 .mono-prop-status {
 	color: var(--hint-text);
-	font-size: 11px;
+	font-size: 10px;
 	white-space: nowrap;
 }
 
 .mono-prop-rent {
 	color: var(--sidebar-text-dim);
-	font-size: 11px;
+	font-size: 10px;
 	white-space: nowrap;
-	min-width: 60px;
-	text-align: right;
 }
 
 .mono-controls {
@@ -665,10 +1131,77 @@ h1 {
 	padding: 3px 5px;
 }
 
+/* The event log is secondary now that screen space goes to the 4 docks - tucked into a corner,
+   collapsed behind a toggle button by default (see MonopolyUI._toggleLogPanel), fully functional
+   once opened. */
+.mono-log-toggle {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	z-index: 90;
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	border: 1px solid var(--btn-border);
+	border-radius: 6px;
+	padding: 7px 11px;
+	cursor: pointer;
+	font-family: Monaco, monospace;
+	font-size: 12px;
+	box-shadow: var(--shadow-soft);
+}
+
+.mono-log-toggle:hover,
+.mono-log-toggle.active {
+	background: var(--btn-hover-bg);
+	color: var(--btn-hover-text);
+}
+
 .mono-log-panel {
+	position: fixed;
+	bottom: 54px;
+	right: 10px;
+	width: 320px;
+	max-width: calc(100vw - 20px);
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
+	background: var(--panel-bg);
+	border: 1px solid var(--panel-border);
+	border-radius: 8px;
+	padding: 10px;
+	box-shadow: var(--shadow-panel);
+	z-index: 90;
+	transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.mono-log-panel.collapsed {
+	display: none;
+}
+
+.mono-log-panel-head {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.mono-log-panel-head .mono-log-tabs {
+	flex: 1;
+}
+
+.mono-log-close {
+	background: transparent;
+	border: none;
+	color: var(--sidebar-text);
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 2px 6px;
+	border-radius: 4px;
+	flex-shrink: 0;
+}
+
+.mono-log-close:hover {
+	background: rgba(128, 128, 128, 0.2);
 }
 
 .mono-log-tabs {
@@ -706,7 +1239,7 @@ h1 {
 	color: var(--log-text);
 	font-size: 11px;
 	padding: 10px;
-	height: 220px;
+	height: 200px;
 	overflow-y: auto;
 	border: 1px solid var(--panel-border);
 	border-radius: 8px;
@@ -737,6 +1270,19 @@ h1 {
 	background: rgba(0, 0, 0, 0.45);
 }
 
+/* Decision modals (buy/jail/action/trade/auction/trade-response) anchor just above the human's
+   dock at the bottom of the board, so a choice reads as "made at your seat" rather than a
+   disconnected popup - but only when there's realistically room for a modal above the dock
+   without clipping. Below ~760px tall or ~760px wide that math gets unreliable (the dock, board,
+   and modal all fight for the same space), so fall back to the simple centered overlay there
+   rather than measuring exact geometry in JS. */
+@media (min-height: 760px) and (min-width: 760px) {
+	#mono-modal-backdrop {
+		align-items: flex-end;
+		padding-bottom: 4vh;
+	}
+}
+
 .mono-modal {
 	background: var(--modal-bg);
 	color: var(--modal-text);
@@ -749,6 +1295,15 @@ h1 {
 	overflow-y: auto;
 	font-size: 13px;
 	box-shadow: var(--shadow-panel);
+}
+
+/* #mono-modal specifically (not props/event modals) also needs its own clamp in anchored mode -
+   flex-end alignment above means it can grow upward off-screen instead of centering, so cap it
+   a bit tighter than the general 85vh. */
+@media (min-height: 760px) and (min-width: 760px) {
+	#mono-modal {
+		max-height: 70vh;
+	}
 }
 
 .mono-modal h3 {
@@ -846,6 +1401,17 @@ h1 {
 	margin: 3px 0;
 }
 
+.mono-ask-price {
+	margin: 2px 0 6px 18px;
+	padding: 2px 8px;
+	font-size: 10px;
+}
+
+.mono-ask-result {
+	display: block;
+	margin: 0 0 6px 18px;
+}
+
 @media (max-width: 900px) {
 	.mono-board {
 		grid-template-columns: repeat(11, minmax(28px, 38px));
@@ -854,7 +1420,86 @@ h1 {
 	.mono-cell-label {
 		font-size: 6px;
 	}
-	.mono-sidebar {
-		flex: 1 1 100%;
+	.mono-dock-left .mono-player-dock,
+	.mono-dock-right .mono-player-dock {
+		max-width: 100px;
+	}
+	.mono-mini-prop {
+		width: 26px;
+	}
+	.mono-mini-prop-name {
+		font-size: 5px;
+		min-height: 18px;
+	}
+	.mono-bill {
+		width: 18px;
+		height: 11px;
+	}
+	.mono-bill-stack .mono-bill + .mono-bill {
+		margin-top: -7px;
+	}
+	.mono-log-panel {
+		width: calc(100vw - 20px);
+	}
+}
+
+/* Narrow enough that the board-fused side docks would overlap the board's own cells - drop the
+   absolute positioning and let all 4 docks fall into normal document flow instead (top opponent,
+   board, left/right opponents, human dock, in reading order) so nothing overlaps or clips. Property
+   rows also drop their seat-facing rotation here: stacked in normal flow, upright reading order is
+   more useful than seat-facing rotation once there's no board edge left to face. */
+@media (max-width: 560px) {
+	.mono-table {
+		margin-top: 10px;
+	}
+	.mono-dock-top,
+	.mono-dock-left,
+	.mono-dock-right {
+		position: static;
+		transform: none;
+		max-width: none;
+		max-height: none;
+		margin: 6px auto;
+	}
+	.mono-dock-left .mono-player-dock,
+	.mono-dock-right .mono-player-dock {
+		max-width: none;
+	}
+	/* No board edge to tuck cash under in this stacked layout - drop the negative margins that
+	   pulled the cash-pile row toward the (now absent) fused board edge, or consecutive stacked
+	   docks would overlap each other's labels. */
+	.mono-dock-top .mono-cash-piles,
+	.mono-dock-left .mono-cash-piles,
+	.mono-dock-right .mono-cash-piles {
+		margin: 0;
+	}
+	.mono-prop-row-rotate-180,
+	.mono-prop-row-rotate-left,
+	.mono-prop-row-rotate-right {
+		transform: none;
+		max-width: none;
+		width: auto;
+	}
+	.mono-prop-row-viewport {
+		width: auto;
+		height: auto;
+	}
+	/* Same reset for cash pile rotation - no board edge to face in this stacked layout, so cash
+	   goes back to a plain horizontal row like the human's own dock, and the $ total's
+	   counter-rotation is no longer needed once its parent isn't rotated either. */
+	.mono-rotate-180,
+	.mono-rotate-left,
+	.mono-rotate-right {
+		transform: none;
+		width: auto;
+	}
+	.mono-rotate-180 .mono-cash-amount,
+	.mono-rotate-left .mono-cash-amount,
+	.mono-rotate-right .mono-cash-amount {
+		transform: none;
+	}
+	.mono-cash-piles-viewport {
+		width: auto;
+		height: auto;
 	}
 }
