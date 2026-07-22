@@ -301,7 +301,11 @@
 			return false;
 		}
 
-		async movePlayer(player, spaces, collectSalary) {
+		/** @param direction 'forward' (default) or 'backward' - purely a hint passed through to
+		 * onMove so the UI can animate the token the right way round (e.g. "Go Back 3 Spaces"
+		 * walking backward 3 tiles instead of forward the long way around the board). Never
+		 * affects game state - collectSalary/newPos math is unchanged either way. */
+		async movePlayer(player, spaces, collectSalary, direction) {
 			const oldPos = player.pos;
 			const newPos = (player.pos + spaces) % Board.BOARD_SIZE;
 			if (collectSalary && newPos < oldPos) {
@@ -312,7 +316,7 @@
 			player.pos = newPos;
 			// onMove may return a Promise (e.g. the UI animating the token along the board) -
 			// awaiting it lets the animation finish before the engine resolves the landed-on space.
-			if (typeof this.onMove === 'function') await this.onMove(player, oldPos, newPos);
+			if (typeof this.onMove === 'function') await this.onMove(player, oldPos, newPos, direction || 'forward');
 		}
 
 		async receiveMoney(player, amount) {
@@ -556,7 +560,7 @@
 					this.sendToJail(player);
 					break;
 				case 'goBack':
-					await this.movePlayer(player, Board.BOARD_SIZE - card.amount, false);
+					await this.movePlayer(player, Board.BOARD_SIZE - card.amount, false, 'backward');
 					await this.resolveSpace(player, diceRoll);
 					await this.postLandingActions(player);
 					break;
@@ -577,14 +581,18 @@
 					const rails = Board.RAIL_POSITIONS;
 					let target = rails.find(p => p > player.pos);
 					if (target === undefined) { target = rails[0]; await this.receiveMoney(player, Board.GO_SALARY); }
+					const targetSpace = this.getSpace(target);
 					player.pos = target;
 					const prop = this.properties[target];
 					if (prop.owner === null) {
 						await this.offerPurchaseOrAuction(player, target);
-					} else if (prop.owner !== player.id) {
-						const mult = card.action === 'advanceToNearestRail' ? 2 : 1;
+					} else if (prop.owner !== player.id && !prop.mortgaged) {
 						const owner = this.players[prop.owner];
+						if (owner.bankrupt) break;
+						const mult = card.action === 'advanceToNearestRail' ? 2 : 1;
 						const rent = this.calcRent(target, diceRoll) * mult;
+						this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${targetSpace.name}${mult > 1 ? ' (double rent)' : ''}`);
+						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
 						await this.payMoney(player, rent, owner);
 					}
 					break;
@@ -593,13 +601,17 @@
 					const utils = Board.UTILITY_POSITIONS;
 					let target = utils.find(p => p > player.pos);
 					if (target === undefined) { target = utils[0]; await this.receiveMoney(player, Board.GO_SALARY); }
+					const targetSpace = this.getSpace(target);
 					player.pos = target;
 					const prop = this.properties[target];
 					if (prop.owner === null) {
 						await this.offerPurchaseOrAuction(player, target);
-					} else if (prop.owner !== player.id) {
+					} else if (prop.owner !== player.id && !prop.mortgaged) {
 						const owner = this.players[prop.owner];
+						if (owner.bankrupt) break;
 						const rent = 10 * diceRoll;
+						this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${targetSpace.name} (10x dice)`);
+						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
 						await this.payMoney(player, rent, owner);
 					}
 					break;

@@ -202,14 +202,19 @@
 
 		/** Animates a token walking step-by-step from oldPos to newPos around the board
 		 * (handling wraparound past Start), pausing briefly on each intermediate space.
+		 * @param direction 'forward' (default) or 'backward' - e.g. the "Go Back 3 Spaces" card
+		 * moves backward 3 tiles; without this hint the animation would otherwise always step
+		 * forward, which for a 3-space retreat means walking almost all the way around the board
+		 * and visually crossing Go for no reason.
 		 * Returns a Promise that resolves once the token visually arrives at newPos. */
-		async _animateTokenMove(playerId, oldPos, newPos) {
+		async _animateTokenMove(playerId, oldPos, newPos, direction) {
 			const token = this.tokenEls[playerId];
 			if (!token) return;
+			const stepDelta = direction === 'backward' ? -1 : 1;
 			const steps = [];
 			let p = oldPos;
 			while (p !== newPos) {
-				p = (p + 1) % Board.BOARD_SIZE;
+				p = (p + stepDelta + Board.BOARD_SIZE) % Board.BOARD_SIZE;
 				steps.push(p);
 			}
 			if (!steps.length) return;
@@ -239,7 +244,7 @@
 			this._origLog = this.game.logEvent.bind(this.game);
 			this.game.logEvent = (msg) => { this._origLog(msg); this._appendLog(msg); };
 			this.game.onRoll = (player, d1, d2) => this._onGameRoll(player, d1, d2);
-			this.game.onMove = (player, oldPos, newPos) => this._onGameMove(player, oldPos, newPos);
+			this.game.onMove = (player, oldPos, newPos, direction) => this._onGameMove(player, oldPos, newPos, direction);
 			this.game.onAgentDecision = (player, method, ctx, result) => this._onAgentDecision(player, method, ctx, result);
 			this.game.onEvent = (type, data) => this._onGameEvent(type, data);
 
@@ -274,8 +279,8 @@
 			this._updateWinProbabilities();
 		}
 
-		async _onGameMove(player, oldPos, newPos) {
-			await this._animateTokenMove(player.id, oldPos, newPos);
+		async _onGameMove(player, oldPos, newPos, direction) {
+			await this._animateTokenMove(player.id, oldPos, newPos, direction);
 		}
 
 		_onGameRoll(player, d1, d2) {
