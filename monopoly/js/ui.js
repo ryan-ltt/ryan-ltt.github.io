@@ -7,7 +7,7 @@
 
 	const Board = window.MonopolyBoard;
 	const { MonopolyGame } = window.MonopolyEngine;
-	const { makeBotAgent, BEST_GENOME, estimateAssetValue, propertyValue } = window.MonopolyStrategy;
+	const { makeBotAgent, BEST_GENOME, estimateAssetValue, propertyValue, evaluateTrade } = window.MonopolyStrategy;
 	const { HumanAgent } = window.MonopolyHumanAgent;
 
 	const PLAYER_COLORS = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a'];
@@ -74,11 +74,6 @@
 
 		_build() {
 			this.root.innerHTML = `
-				<div class="mono-hud" id="mono-hud">
-					<div class="mono-hud-status" id="mono-hud-status"></div>
-					<div class="mono-winbar" id="mono-winbar" title="Live win probability (Monte-Carlo estimate)"></div>
-					<div class="mono-hud-players" id="mono-hud-players"></div>
-				</div>
 				<div class="mono-table">
 					<div class="mono-board-wrap">
 						<div id="mono-board" class="mono-board"></div>
@@ -94,7 +89,7 @@
 				<div class="mono-toggle-row">
 					<button class="mono-log-toggle" id="mono-about-toggle" title="About this game">ℹ️ Read more</button>
 					<button class="mono-log-toggle" id="mono-log-toggle" title="Show event log">📜 Log</button>
-					<button class="mono-log-toggle" id="mono-debug-toggle" title="Show animation debug log">🐞 Debug</button>
+					<button class="mono-log-toggle mono-log-toggle-icon" id="mono-debug-toggle" title="Show animation debug log" aria-label="Animation debug log">🐞</button>
 				</div>
 				<div class="mono-log-panel collapsed" id="mono-about-panel">
 					<div class="mono-log-panel-head">
@@ -125,6 +120,9 @@
 					<div id="mono-props-modal" class="mono-modal"></div>
 				</div>
 				<div id="mono-fx-layer" class="mono-fx-layer"></div>
+				<div id="mono-auction-backdrop" class="mono-modal-backdrop" style="display:none;">
+					<div id="mono-auction-room" class="mono-auction-room"></div>
+				</div>
 				<div id="mono-deed-tip" class="mono-deed-tip" style="display:none;"></div>
 				<div id="mono-tour" class="mono-tour" style="display:none;">
 					<div class="mono-tour-spotlight" id="mono-tour-spotlight"></div>
@@ -148,10 +146,6 @@
 				bottom: this.root.querySelector('#mono-human-dock-card')
 			};
 			this.controlsEl = this.root.querySelector('#mono-controls');
-			this.hudEl = this.root.querySelector('#mono-hud');
-			this.hudStatusEl = this.root.querySelector('#mono-hud-status');
-			this.winbarEl = this.root.querySelector('#mono-winbar');
-			this.hudPlayersEl = this.root.querySelector('#mono-hud-players');
 			this.logPanelEl = this.root.querySelector('#mono-log-panel');
 			this.logToggleEl = this.root.querySelector('#mono-log-toggle');
 			this.logTabsEl = this.root.querySelector('#mono-log-tabs');
@@ -168,6 +162,8 @@
 			this.propsModalEl = this.root.querySelector('#mono-props-modal');
 			this.fxLayerEl = this.root.querySelector('#mono-fx-layer');
 			this.deedTipEl = this.root.querySelector('#mono-deed-tip');
+			this.auctionBackdrop = this.root.querySelector('#mono-auction-backdrop');
+			this.auctionRoomEl = this.root.querySelector('#mono-auction-room');
 			this.tourEl = this.root.querySelector('#mono-tour');
 			this._eventQueue = []; // pending {html} notifications not yet shown
 			this._eventShowing = false; // true while a notification is on screen awaiting its auto-dismiss timer
@@ -193,7 +189,6 @@
 			this.bankEl = this.root.querySelector('#mono-bank');
 			this.eventNoticeEl = this.root.querySelector('#mono-event-notice');
 			this._renderControls();
-			this._renderHud(); // hides itself (mono-hud-empty) until a game exists
 		}
 
 		_toggleLogPanel(open) {
@@ -427,6 +422,8 @@
 			this.game.onMove = (player, oldPos, newPos, direction) => this._onGameMove(player, oldPos, newPos, direction);
 			this.game.onAgentDecision = (player, method, ctx, result) => this._onAgentDecision(player, method, ctx, result);
 			this.game.onEvent = (type, data) => this._onGameEvent(type, data);
+			this.game.onAuctionStart = (data) => this._onAuctionStart(data);
+			this.game.onAuctionBid = (data) => this._onAuctionBid(data);
 
 			// one log buffer for "all events" plus one per player, so each player's actions can
 			// be reviewed in isolation; a line is routed to a player's buffer whenever their name
@@ -520,7 +517,6 @@
 				this.winProbs = {};
 				this.game.players.forEach(p => { this.winProbs[p.id] = (this.game.winner && p.id === this.game.winner.id) ? 1 : 0; });
 				this._renderPlayers();
-				this._renderHud();
 			}
 		}
 
@@ -535,7 +531,6 @@
 				const only = active[0];
 				this.winProbs = only ? { [only.id]: 1 } : {};
 				this._renderPlayers();
-				this._renderHud();
 				return;
 			}
 			const runId = ++this.winProbRunId;
@@ -567,7 +562,6 @@
 			playerMeta.forEach(p => { probs[p.id] = wins[p.id] / WIN_PROB_ROLLOUTS; });
 			this.winProbs = probs;
 			this._renderPlayers();
-			this._renderHud();
 		}
 
 		_sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -635,7 +629,6 @@
 			this._renderBoardState();
 			this._renderPlayers();
 			this._renderControls();
-			this._renderHud();
 			this._positionDiceForCurrentPlayer();
 		}
 
@@ -867,59 +860,6 @@
 			return total;
 		}
 
-		/** Renders the top HUD: a turn-status line, the live win-probability stacked bar, and a compact
-		 * per-player scoreboard (token, name, cash, net worth). Cheap enough to call from _renderAll and
-		 * again whenever winProbs updates. Reads live game state + this.winProbs (may be null before the
-		 * first Monte-Carlo estimate lands, in which case the bar shows a neutral "estimating" state). */
-		_renderHud() {
-			if (!this.game) { this.hudEl.classList.add('mono-hud-empty'); this.hudStatusEl.textContent = ''; this.winbarEl.innerHTML = ''; this.hudPlayersEl.innerHTML = ''; return; }
-			this.hudEl.classList.remove('mono-hud-empty');
-
-			// --- status line ---
-			if (this.game.gameOver) {
-				this.hudStatusEl.innerHTML = this.game.winner
-					? `<span class="mono-hud-trophy">🏆</span> <b style="color:${PLAYER_COLORS[this.game.winner.id]}">${this.game.winner.name}</b> wins!`
-					: 'Game over — draw.';
-			} else {
-				const cur = this.game.players[this.game.currentPlayerIdx];
-				if (cur.id === this.humanId) {
-					this.hudStatusEl.innerHTML = `<span class="mono-hud-turn-dot" style="background:${PLAYER_COLORS[cur.id]}"></span> <b>Your turn</b>`;
-				} else {
-					this.hudStatusEl.innerHTML = `<span class="mono-hud-turn-dot" style="background:${PLAYER_COLORS[cur.id]}"></span> <b style="color:${PLAYER_COLORS[cur.id]}">${cur.name}</b> is playing…`;
-				}
-			}
-
-			// --- win-probability stacked bar ---
-			const active = this.game.players.filter(p => !p.bankrupt);
-			if (this.winProbs && active.length) {
-				this.winbarEl.classList.remove('mono-winbar-pending');
-				this.winbarEl.innerHTML = this.game.players.map(p => {
-					const pct = this.winProbs[p.id] != null ? this.winProbs[p.id] : 0;
-					if (pct <= 0) return '';
-					return `<div class="mono-winbar-seg" style="flex-grow:${pct};background:${PLAYER_COLORS[p.id]}" title="${p.name}: ${Math.round(pct * 100)}% win chance"><span>${Math.round(pct * 100)}%</span></div>`;
-				}).join('');
-			} else {
-				this.winbarEl.classList.add('mono-winbar-pending');
-				this.winbarEl.innerHTML = '<span class="mono-winbar-label">estimating win odds…</span>';
-			}
-
-			// --- per-player scoreboard ---
-			this.hudPlayersEl.innerHTML = this.game.players.map(p => {
-				const cls = 'mono-hud-player'
-					+ (p.bankrupt ? ' bankrupt' : '')
-					+ (this.game.currentPlayerIdx === p.id && !this.game.gameOver ? ' active' : '')
-					+ (p.id === this.humanId ? ' you' : '');
-				const worth = this._netWorth(p.id);
-				return `
-					<div class="${cls}">
-						<span class="mono-hud-token">${PLAYER_TOKENS[p.id] || '●'}</span>
-						<span class="mono-hud-name" style="color:${PLAYER_COLORS[p.id]}">${p.name}${p.inJail ? ' 🔒' : ''}</span>
-						<span class="mono-hud-cash">$${p.money}</span>
-						<span class="mono-hud-worth" title="Net worth (cash + property + houses)">≈$${worth}</span>
-					</div>
-				`;
-			}).join('');
-		}
 
 		// ---- First-run coach-mark tour (dismissible, remembered in localStorage). Points at the few
 		// non-obvious things a new player needs: the win bar, click-to-trade, the dice, and the AI
@@ -935,8 +875,7 @@
 
 		_startTour() {
 			this._tourSteps = [
-				{ sel: '#mono-hud-players', text: '<b>This is the scoreboard.</b> You\'re the underlined player. Track everyone\'s cash and net worth here.' },
-				{ sel: '#mono-winbar', text: '<b>Your live win odds.</b> Re-estimated from thousands of simulated games each round — watch it swing as the game turns.' },
+				{ sel: '#mono-human-dock-card', text: '<b>This is you.</b> Each player\'s label — around all four edges of the board — shows their <b>live win odds</b> (re-estimated from thousands of simulated games each round) and net worth, right above their cash.' },
 				{ sel: '#mono-board', text: '<b>Hover any property</b> to see its full rent ladder and owner. <b>Click a rival\'s property</b> (on your turn) to propose a trade for it.' },
 				{ sel: '#mono-dice-area', text: '<b>Roll here on your turn.</b> Buying, building, and trading all happen through prompts as you play.' },
 				{ sel: '#mono-controls', text: '<b>Set the AI speed</b> here if the opponents move too fast or slow. That\'s it — good luck!' }
@@ -1496,12 +1435,21 @@
 				+ (this.game.currentPlayerIdx === p.id && !this.game.gameOver ? ' active' : '')
 				+ (previewed ? ' mono-player-dock-preview' : '')
 				+ (isHuman ? '' : (this._canProposeTradeNow() && !p.bankrupt ? ' mono-dock-tradeable' : ''));
+			// Win% + net worth used to live in the top HUD scoreboard; they're folded into each dock
+			// label now (see _renderPlayers / _updateWinProbabilities, which re-render docks when a
+			// fresh estimate lands). Win% shows a dash until the first Monte-Carlo estimate completes.
+			const worth = this._netWorth(p.id);
+			const winPct = (this.winProbs && this.winProbs[p.id] != null) ? Math.round(this.winProbs[p.id] * 100) + '%' : '—';
 			return `
 				<div class="${classes}" data-player-id="${p.id}" title="${!isHuman && this._canProposeTradeNow() && !p.bankrupt ? `Click to propose a trade with ${p.name}` : ''}">
 					<div class="mono-player-label">
-						<span style="color:${PLAYER_COLORS[p.id]}">${p.name}${p.bankrupt ? ' (out)' : ''}</span>
+						<span class="mono-player-name" style="color:${PLAYER_COLORS[p.id]}">${p.name}${p.bankrupt ? ' (out)' : ''}</span>
 						${this.game.currentPlayerIdx === p.id && !this.game.gameOver ? '<span class="mono-turn-dot" title="Current turn"></span>' : ''}
 						${p.inJail ? '<span class="mono-jail-indicator" title="In Jail">🔒</span>' : ''}
+					</div>
+					<div class="mono-player-stats">
+						<span class="mono-player-win" style="color:${PLAYER_COLORS[p.id]}" title="Live win probability (Monte-Carlo estimate)">${p.bankrupt ? '—' : winPct}</span>
+						<span class="mono-player-worth" title="Net worth (cash + property + houses)">≈$${worth}</span>
 					</div>
 					${this._cashStackHtml(this._previewCash(p.id), slot)}
 					${this._propertyRowHtml(p.id, slot)}
@@ -1739,6 +1687,15 @@
 		// kinds of notification never fight for the screen. ----
 
 		async _onGameEvent(type, data) {
+			// Auction result: the live auction room is showing this deal, so present the outcome INSIDE
+			// the room (winner banner) and close it, rather than firing the generic center-notice. The
+			// money/property diff (winner pays the bank, gets the deed) still animates via the normal
+			// checkpoint at the end of the turn / next notice.
+			if (type === 'auctionResult' && this._auction) {
+				this._renderAll();
+				await this._showAuctionResult(data);
+				return;
+			}
 			const html = this._describeGameEvent(type, data);
 			this._dlog('onGameEvent:', type, 'player=', data.player ? data.player.id : undefined, 'amount=', data.amount, 'money(all)=', Object.fromEntries(this.game.players.map(p => [p.id, p.money])));
 			// Unambiguous player-to-player cases the callback data already tells us directly, so
@@ -1982,27 +1939,147 @@
 			this.modalEl.querySelector('#mono-buy-no').onclick = () => { this._hideModal(); this.humanAgent.resolve('buyProperty', false); };
 		}
 
-		_modalAuctionBid(ctx) {
-			const space = this.game.getSpace(ctx.pos);
-			const minBid = ctx.highBid + 5;
-			const highBidderName = ctx.highBidder !== null ? this.game.players[ctx.highBidder].name : null;
-			this._showModal(`
-				<h3>🔨 Auction</h3>
-				<div class="mono-deed-card">${this._deedTipHtml(ctx.pos)}</div>
-				<p>Current high bid: <b>$${ctx.highBid}</b>${highBidderName ? ` <span class="mono-hint">(${highBidderName})</span>` : ' <span class="mono-hint">(no bids yet)</span>'}</p>
-				<label class="mono-hint" for="mono-bid-input">Your bid (min $${minBid}, cash $${ctx.player.money}):</label>
-				<input type="number" id="mono-bid-input" min="${minBid}" max="${ctx.player.money}" value="${minBid}" class="mono-input" />
-				<div class="mono-modal-actions">
-					<button class="mono-btn" id="mono-bid-go">Bid</button>
-					<button class="mono-btn secondary" id="mono-bid-out">Withdraw</button>
-				</div>
-			`);
-			this.modalEl.querySelector('#mono-bid-go').onclick = () => {
-				const val = Number(this.modalEl.querySelector('#mono-bid-input').value);
-				this._hideModal();
-				this.humanAgent.resolve('auctionBid', val);
+		// ---- Live auction room ----
+		// Driven by three engine hooks: onAuctionStart (open the room), onAuctionBid (a bid/pass just
+		// happened - update the board + history, pace AI raises), and the human's own decideAuctionBid
+		// (enable the human's bid controls in the already-open room and wait). auctionResult (via
+		// _onGameEvent) then shows the winner and closes it. this._auction holds live room state.
+
+		_onAuctionStart(data) {
+			this._auction = {
+				pos: data.pos,
+				spaceName: data.spaceName,
+				highBid: 0,
+				highBidder: null,
+				history: [],           // [{playerId, outcome:'raise'|'pass', bid}]
+				out: new Set()         // ids that have withdrawn
 			};
-			this.modalEl.querySelector('#mono-bid-out').onclick = () => { this._hideModal(); this.humanAgent.resolve('auctionBid', 0); };
+			this.auctionBackdrop.style.display = 'flex';
+			this._renderAuctionRoom(null);
+		}
+
+		async _onAuctionBid(data) {
+			if (!this._auction) return;
+			this._auction.highBid = data.highBid;
+			this._auction.highBidder = data.highBidder;
+			if (data.outcome === 'pass') this._auction.out.add(data.playerId);
+			this._auction.history.push({ playerId: data.playerId, outcome: data.outcome, bid: data.bid });
+			this._renderAuctionRoom(data.playerId);
+			// pace AI raises so the room reads as a live back-and-forth rather than instant; the human's
+			// own bids were already resolved interactively so they don't need an extra pause here
+			if (data.playerId !== this.humanId) await this._sleep(Math.max(250, this.speed * 0.6));
+		}
+
+		/** @param activeId the player whose bid/pass just landed (for a brief highlight), or null. */
+		_renderAuctionRoom(activeId) {
+			if (!this._auction) return;
+			const a = this._auction;
+			const minBid = a.highBid + 5;
+			const seats = this.game.players.map(p => {
+				const isOut = a.out.has(p.id) || p.bankrupt;
+				const isHigh = a.highBidder === p.id;
+				const cls = 'mono-auc-seat' + (isOut ? ' out' : '') + (isHigh ? ' high' : '') + (activeId === p.id ? ' pinged' : '') + (p.id === this.humanId ? ' you' : '');
+				const status = p.bankrupt ? 'bankrupt' : (isOut ? 'withdrew' : (isHigh ? `$${a.highBid}` : 'in'));
+				return `<div class="${cls}">
+					<span class="mono-auc-token">${PLAYER_TOKENS[p.id] || '●'}</span>
+					<span class="mono-auc-name" style="color:${PLAYER_COLORS[p.id]}">${p.name}</span>
+					<span class="mono-auc-status">${status}</span>
+					<span class="mono-auc-cash">$${p.money}</span>
+				</div>`;
+			}).join('');
+			const historyHtml = a.history.slice(-6).map(h => {
+				const name = this.game.players[h.playerId].name;
+				return h.outcome === 'raise'
+					? `<div class="mono-auc-hist-line"><b style="color:${PLAYER_COLORS[h.playerId]}">${name}</b> bids $${h.bid}</div>`
+					: `<div class="mono-auc-hist-line mono-hint">${name} withdraws</div>`;
+			}).join('') || '<div class="mono-hint">No bids yet.</div>';
+			const highName = a.highBidder !== null ? this.game.players[a.highBidder].name : null;
+
+			// human's controls (only interactive while it's the human's turn to bid - see _modalAuctionBid
+			// which flips this._auction.humanTurn on and wires the buttons; otherwise they're disabled)
+			const human = this.game.players[this.humanId];
+			const canBid = !!a.humanTurn && !a.out.has(this.humanId) && !human.bankrupt;
+			const quick = [10, 50, 100];
+			const quickBtns = quick.map(inc => {
+				const amt = minBid - 5 + inc; // relative to current high bid
+				const afford = amt <= human.money;
+				return `<button class="mono-btn mono-auc-quick" data-bid="${amt}" ${canBid && afford ? '' : 'disabled'}>+$${inc}</button>`;
+			}).join('');
+
+			this.auctionRoomEl.innerHTML = `
+				<h3>🔨 Auction</h3>
+				<div class="mono-deed-card">${this._deedTipHtml(a.pos)}</div>
+				<div class="mono-auc-high">High bid: <b>$${a.highBid}</b> ${highName ? `<span style="color:${PLAYER_COLORS[a.highBidder]}">(${highName})</span>` : '<span class="mono-hint">— no bids</span>'}</div>
+				<div class="mono-auc-seats">${seats}</div>
+				<div class="mono-auc-history">${historyHtml}</div>
+				<div class="mono-auc-controls">
+					<div class="mono-auc-quickrow">${quickBtns}</div>
+					<div class="mono-auc-customrow">
+						<input type="number" id="mono-auc-input" min="${minBid}" max="${human.money}" value="${Math.min(minBid, human.money)}" class="mono-input" ${canBid ? '' : 'disabled'}>
+						<button class="mono-btn" id="mono-auc-bid" ${canBid ? '' : 'disabled'}>Bid</button>
+						<button class="mono-btn secondary" id="mono-auc-pass" ${canBid ? '' : 'disabled'}>Withdraw</button>
+					</div>
+					<div class="mono-auc-prompt">${canBid ? `Your turn — min bid $${minBid}` : (a.humanTurn ? '' : 'Waiting for other bidders…')}</div>
+				</div>
+			`;
+
+			if (canBid) {
+				const submit = (val) => {
+					a.humanTurn = false;
+					this.humanAgent.resolve('auctionBid', val);
+				};
+				this.auctionRoomEl.querySelectorAll('.mono-auc-quick').forEach(btn => {
+					btn.onclick = () => submit(Number(btn.dataset.bid));
+				});
+				this.auctionRoomEl.querySelector('#mono-auc-bid').onclick = () => {
+					submit(Number(this.auctionRoomEl.querySelector('#mono-auc-input').value) || 0);
+				};
+				this.auctionRoomEl.querySelector('#mono-auc-pass').onclick = () => submit(0);
+			}
+		}
+
+		_modalAuctionBid(ctx) {
+			// The engine is asking the human for a bid. The room is already open (onAuctionStart fired
+			// first); just flip on the human's controls and re-render - the promise resolves when they
+			// click a bid/withdraw button (wired in _renderAuctionRoom).
+			if (!this._auction) { this._onAuctionStart({ pos: ctx.pos, spaceName: this.game.getSpace(ctx.pos).name, bidders: [] }); }
+			this._auction.highBid = ctx.highBid;
+			this._auction.highBidder = ctx.highBidder;
+			this._auction.humanTurn = true;
+			this._renderAuctionRoom(null);
+		}
+
+		/** Shows the auction outcome inside the room (winner banner or "no sale"), waits briefly so the
+		 * player can register it, then closes the room. Clickable to dismiss early. Awaited by the
+		 * engine (via onEvent) so the turn doesn't continue until the room clears. */
+		_showAuctionResult(data) {
+			return new Promise(resolve => {
+				const banner = data.winner
+					? `<div class="mono-auc-result win">🔨 <b style="color:${PLAYER_COLORS[data.winner.id]}">${data.winner.name}</b> wins ${data.spaceName} for <b>$${data.amount}</b>!</div>`
+					: `<div class="mono-auc-result">No bids — ${data.spaceName} stays with the bank.</div>`;
+				const bannerEl = document.createElement('div');
+				bannerEl.innerHTML = banner;
+				this.auctionRoomEl.insertBefore(bannerEl.firstChild, this.auctionRoomEl.firstChild);
+				// disable any lingering controls
+				this.auctionRoomEl.querySelectorAll('button, input').forEach(el => { el.disabled = true; });
+				let done = false;
+				const finish = () => {
+					if (done) return;
+					done = true;
+					clearTimeout(timer);
+					this._closeAuctionRoom();
+					resolve();
+				};
+				const timer = setTimeout(finish, Math.max(1200, this.speed * 2));
+				this.auctionBackdrop.onclick = (e) => { if (e.target === this.auctionBackdrop || this.auctionRoomEl.contains(e.target)) finish(); };
+			});
+		}
+
+		_closeAuctionRoom() {
+			this.auctionBackdrop.style.display = 'none';
+			this.auctionBackdrop.onclick = null;
+			this.auctionRoomEl.innerHTML = '';
+			this._auction = null;
 		}
 
 		_modalJail(ctx) {
@@ -2278,10 +2355,41 @@
 			renderBuilder();
 		}
 
+		// ---- Trade response with counteroffers ----
+		// The trade object is always proposer-framed: offer* = what the PROPOSER gives (the human
+		// responder receives); request* = what the PROPOSER wants (the human responder gives up). The
+		// counter builder below lets the human edit BOTH sides and send it back; the AI proposer then
+		// evaluates the counter (via strategy.js's evaluateTrade, the same math its own decideTradeResponse
+		// uses) and either accepts it, or re-counters with a small adjustment toward what it would accept,
+		// up to a fixed number of rounds. An accepted counter is applied by mutating ctx.trade in place
+		// (so the engine's applyTradeEffects uses the agreed terms) then resolving true.
+
 		_modalTradeResponse(ctx) {
-			const { trade, proposer } = ctx;
+			this._negotiationRound = 0;
+			this._showTradeOffer(ctx, ctx.trade, 'initial');
+		}
+
+		/** Human-readable value (to `pid`) of one proposer-framed trade, used for the negotiation
+		 * fairness readouts. Prices properties from pid's own perspective + cash + cards. */
+		_tradeSideValue(pid, props, money, cards, genome) {
+			let v = (money || 0) + (cards || 0) * 60;
+			for (const pos of props) v += estimateAssetValue(this.game, pid, pos, genome || BEST_GENOME);
+			return Math.round(v);
+		}
+
+		/** Shows the current offer on the table to the human, with Accept / Counter / Reject.
+		 * @param source 'initial' (AI's first offer) or 'aiCounter' (AI's re-counter after the human's
+		 * counter was declined) - only affects the header wording. */
+		_showTradeOffer(ctx, trade, source) {
+			const proposer = ctx.proposer;
+			const roundNote = this._negotiationRound > 0
+				? `<p class="mono-hint">Negotiation round ${this._negotiationRound} of ${MonopolyUI.MAX_COUNTER_ROUNDS}</p>` : '';
+			const header = source === 'aiCounter'
+				? `🤝 ${proposer.name} counters with:`
+				: `🤝 ${proposer.name} offers a trade`;
 			this._showModal(`
-				<h3>🤝 ${proposer.name} offers a trade</h3>
+				<h3>${header}</h3>
+				${roundNote}
 				<div class="mono-trade-response">
 					<div class="mono-trade-side get">
 						<div class="mono-trade-side-head">You receive</div>
@@ -2294,12 +2402,264 @@
 				</div>
 				<div class="mono-modal-actions">
 					<button class="mono-btn" id="mono-trade-accept">Accept</button>
+					<button class="mono-btn secondary" id="mono-trade-counter">Counter…</button>
 					<button class="mono-btn secondary" id="mono-trade-reject">Reject</button>
 				</div>
 			`);
-			this.modalEl.querySelector('#mono-trade-accept').onclick = () => { this._hideModal(); this.humanAgent.resolve('tradeResponse', true); };
+			this.modalEl.querySelector('#mono-trade-accept').onclick = () => {
+				// accept the CURRENT terms on the table (may be the AI's re-counter, not ctx.trade's
+				// original) - write them back into ctx.trade so the engine applies exactly these.
+				this._commitTradeTerms(ctx.trade, trade);
+				this._hideModal();
+				this.humanAgent.resolve('tradeResponse', true);
+			};
 			this.modalEl.querySelector('#mono-trade-reject').onclick = () => { this._hideModal(); this.humanAgent.resolve('tradeResponse', false); };
+			this.modalEl.querySelector('#mono-trade-counter').onclick = () => this._modalCounterBuilder(ctx, trade);
 		}
+
+		/** Copies proposer-framed terms from `src` into `dest` (both proposer-framed), so an accepted
+		 * counter/re-counter applies the agreed-on terms rather than the original offer. */
+		_commitTradeTerms(dest, src) {
+			dest.offerProps = src.offerProps.slice();
+			dest.requestProps = src.requestProps.slice();
+			dest.offerMoney = src.offerMoney || 0;
+			dest.requestMoney = src.requestMoney || 0;
+			dest.offerCards = src.offerCards || 0;
+			dest.requestCards = src.requestCards || 0;
+		}
+
+		/** Counter builder: the human edits both sides of the deal (still proposer-framed under the
+		 * hood, but labeled from the human's own perspective). On send, the AI proposer evaluates the
+		 * counter; accepts it (deal done on the counter terms), or - if rounds remain - re-counters with
+		 * a nudge toward its own acceptance threshold. */
+		_modalCounterBuilder(ctx, baseTrade) {
+			const proposer = ctx.proposer;   // the AI
+			const me = ctx.player;            // the human responder
+			// working copy, proposer-framed. "You receive" = proposer's offer* side (proposer gives);
+			// "You give up" = proposer's request* side (proposer wants).
+			const state = {
+				offerProps: (baseTrade.offerProps || []).slice(),     // proposer gives -> I receive
+				requestProps: (baseTrade.requestProps || []).slice(), // proposer wants -> I give
+				offerMoney: baseTrade.offerMoney || 0,
+				requestMoney: baseTrade.requestMoney || 0,
+				offerCards: baseTrade.offerCards || 0,
+				requestCards: baseTrade.requestCards || 0
+			};
+			const readState = () => {
+				state.offerProps = [...this.modalEl.querySelectorAll('[data-cgroup="receive"]:checked')].map(el => Number(el.value));
+				state.requestProps = [...this.modalEl.querySelectorAll('[data-cgroup="give"]:checked')].map(el => Number(el.value));
+				state.offerMoney = Number(this.modalEl.querySelector('#mono-counter-receive-money').value) || 0;
+				state.requestMoney = Number(this.modalEl.querySelector('#mono-counter-give-money').value) || 0;
+				state.offerCards = this.modalEl.querySelector('#mono-counter-receive-card').checked ? 1 : 0;
+				state.requestCards = this.modalEl.querySelector('#mono-counter-give-card').checked ? 1 : 0;
+			};
+			const propRow = (props, cgroup, checkedList) => props.map(pos => {
+				const space = this.game.getSpace(pos);
+				return `<label class="mono-checkbox-row"><input type="checkbox" data-cgroup="${cgroup}" value="${pos}" ${checkedList.includes(pos) ? 'checked' : ''}> ${space.name}</label>`;
+			}).join('') || '<p class="mono-hint">none</p>';
+			const render = () => {
+				this._showModal(`
+					<h3>Counter ${proposer.name}'s offer</h3>
+					<p class="mono-hint">Adjust the deal and send it back. They'll accept, decline, or counter.</p>
+					<div class="mono-trade-cols">
+						<div>
+							<h4>You receive</h4>
+							${propRow(proposer.properties, 'receive', state.offerProps)}
+							<label>Cash: <input type="number" id="mono-counter-receive-money" value="${state.offerMoney}" min="0" max="${proposer.money}" class="mono-input small"></label>
+							<label class="mono-checkbox-row"><input type="checkbox" id="mono-counter-receive-card" ${state.offerCards ? 'checked' : ''} ${proposer.getOutOfJailFree > 0 ? '' : 'disabled'}> Get Out of Jail Free card</label>
+						</div>
+						<div>
+							<h4>You give up</h4>
+							${propRow(me.properties, 'give', state.requestProps)}
+							<label>Cash: <input type="number" id="mono-counter-give-money" value="${state.requestMoney}" min="0" max="${me.money}" class="mono-input small"></label>
+							<label class="mono-checkbox-row"><input type="checkbox" id="mono-counter-give-card" ${state.requestCards ? 'checked' : ''} ${me.getOutOfJailFree > 0 ? '' : 'disabled'}> Get Out of Jail Free card</label>
+						</div>
+					</div>
+					<div class="mono-trade-fairness" id="mono-counter-fairness"></div>
+					<div class="mono-modal-actions">
+						<button class="mono-btn" id="mono-counter-send">Send counter</button>
+						<button class="mono-btn secondary" id="mono-counter-back">Back</button>
+					</div>
+				`);
+				const updateFairness = () => {
+					readState();
+					this._updateCounterFairness(ctx, state);
+				};
+				this.modalEl.querySelectorAll('[data-cgroup]').forEach(cb => cb.onchange = updateFairness);
+				this.modalEl.querySelector('#mono-counter-receive-money').oninput = updateFairness;
+				this.modalEl.querySelector('#mono-counter-give-money').oninput = updateFairness;
+				this.modalEl.querySelector('#mono-counter-receive-card').onchange = updateFairness;
+				this.modalEl.querySelector('#mono-counter-give-card').onchange = updateFairness;
+				updateFairness();
+				this.modalEl.querySelector('#mono-counter-back').onclick = () => this._showTradeOffer(ctx, baseTrade, this._negotiationRound > 0 ? 'aiCounter' : 'initial');
+				this.modalEl.querySelector('#mono-counter-send').onclick = () => {
+					readState();
+					this._submitCounter(ctx, {
+						toId: me.id,
+						offerProps: state.offerProps, requestProps: state.requestProps,
+						offerMoney: state.offerMoney, requestMoney: state.requestMoney,
+						offerCards: state.offerCards, requestCards: state.requestCards
+					});
+				};
+			};
+			render();
+		}
+
+		/** Live "will they accept your counter?" readout, from the AI proposer's own evaluateTrade. */
+		_updateCounterFairness(ctx, state) {
+			const el = this.modalEl.querySelector('#mono-counter-fairness');
+			if (!el) return;
+			const proposer = ctx.proposer;
+			if (!proposer.agent || !proposer.agent.genome) { el.className = 'mono-trade-fairness'; el.innerHTML = ''; return; }
+			const counter = this._proposerFramedFromState(ctx, state);
+			const accepts = this._aiWouldAccept(proposer, counter);
+			el.className = 'mono-trade-fairness ' + (accepts ? 'good' : 'bad');
+			el.innerHTML = `<div class="mono-fairness-label">${accepts ? '👍 They\'d likely accept this' : '👎 They\'d likely decline this'}</div>`;
+		}
+
+		/** Builds a proposer-framed trade object from the human's counter-builder state (which is
+		 * already proposer-framed - offer* = proposer gives, request* = proposer wants). */
+		_proposerFramedFromState(ctx, state) {
+			return {
+				toId: ctx.player.id,
+				offerProps: state.offerProps.slice(), requestProps: state.requestProps.slice(),
+				offerMoney: state.offerMoney, requestMoney: state.requestMoney,
+				offerCards: state.offerCards, requestCards: state.requestCards
+			};
+		}
+
+		/** Does the AI proposer accept `counter` (proposer-framed)? evaluateTrade always scores from the
+		 * TARGET's perspective, so to ask "would the proposer accept", we flip the trade to the
+		 * proposer-as-responder framing and evaluate it as them. */
+		_aiWouldAccept(proposer, counter) {
+			// flip: what the proposer would "receive" is the counter's request* side (what they asked
+			// for), what they'd "give" is the counter's offer* side.
+			const flipped = {
+				toId: proposer.id,
+				offerProps: counter.requestProps.slice(), offerMoney: counter.requestMoney, offerCards: counter.requestCards,
+				requestProps: counter.offerProps.slice(), requestMoney: counter.offerMoney, requestCards: counter.offerCards
+			};
+			try {
+				return !!evaluateTrade(this.game, proposer, flipped, proposer.agent.genome);
+			} catch (e) {
+				return false;
+			}
+		}
+
+		/** Handles the human's submitted counter: validate affordability, then let the AI proposer
+		 * respond. If they accept, apply the counter terms and resolve true. Otherwise, if rounds
+		 * remain, the AI re-counters with a nudge toward its threshold; else the negotiation ends and
+		 * the human is asked one more time to accept the AI's last word or walk away. */
+		_submitCounter(ctx, counter) {
+			const proposer = ctx.proposer;
+			const me = ctx.player;
+			// basic validation - can't offer money/props you don't have
+			if (counter.requestMoney > me.money) counter.requestMoney = me.money;
+			if (counter.offerMoney > proposer.money) counter.offerMoney = proposer.money;
+			this._negotiationRound++;
+			if (this._aiWouldAccept(proposer, counter)) {
+				this._commitTradeTerms(ctx.trade, counter);
+				this._hideModal();
+				this._queueEventPopup(`<h3>${proposer.name}</h3><p>Accepts your counteroffer.</p>`, PLAYER_COLORS[proposer.id]);
+				this.humanAgent.resolve('tradeResponse', true);
+				return;
+			}
+			// AI declines. If we've hit the round cap, present the human's own counter back as a final
+			// take-it-or-leave-it (they can still Accept their own terms won't apply - so just reject).
+			if (this._negotiationRound >= MonopolyUI.MAX_COUNTER_ROUNDS) {
+				this._hideModal();
+				this._queueEventPopup(`<h3>${proposer.name}</h3><p>Rejects your counteroffer — negotiation over.</p>`, PLAYER_COLORS[proposer.id]).then(() => {
+					this.humanAgent.resolve('tradeResponse', false);
+				});
+				return;
+			}
+			// AI re-counters: nudge toward what it would accept (a cash midpoint), then show it.
+			const reCounter = this._aiReCounter(ctx, counter);
+			if (!reCounter) {
+				this._hideModal();
+				this._queueEventPopup(`<h3>${proposer.name}</h3><p>Can't find a deal — negotiation over.</p>`, PLAYER_COLORS[proposer.id]).then(() => {
+					this.humanAgent.resolve('tradeResponse', false);
+				});
+				return;
+			}
+			this._showTradeOffer(ctx, reCounter, 'aiCounter');
+		}
+
+		/** Produces the AI proposer's re-counter to the human's declined counter: keeps the same
+		 * PROPERTIES/CARDS on each side (those are what the two sides actually want) and only adjusts a
+		 * single NET cash figure to a fair middle ground between the human's offer and the AI's own
+		 * break-even price.
+		 *
+		 * The cash is always expressed net - it lives on exactly one side, so you never see the
+		 * nonsensical "give up a property AND pay cash, to receive less cash" that a naive
+		 * inflate-one-side search produces. Concretely:
+		 *   - value everything non-cash from the AI's perspective (what it gives vs gets),
+		 *   - the AI's break-even net cash is how much cash must flow to the AI to make getValue meet
+		 *     giveValue * fairnessMargin,
+		 *   - the human's counter already implies some net cash; the re-counter meets in the MIDDLE of
+		 *     those two, so it's a genuine compromise, not a shakedown,
+		 *   - clamp to what the human can actually pay.
+		 * Returns a proposer-framed trade, or null if even a fair midpoint can't be represented (e.g.
+		 * the human can't afford the AI's minimum). */
+		_aiReCounter(ctx, humanCounter) {
+			const proposer = ctx.proposer;
+			const me = ctx.player;
+			const genome = proposer.agent && proposer.agent.genome;
+			if (!genome) return null;
+			const margin = genome.tradeFairnessMargin || 1;
+
+			// Value the NON-CASH items from the AI (proposer) perspective. In proposer framing:
+			//   offerProps/offerCards  = what the AI GIVES  (proposer gives)
+			//   requestProps/requestCards = what the AI GETS (proposer wants)
+			const CARD = 60;
+			const aiGivesNonCash = humanCounter.offerProps.reduce((s, pos) => s + estimateAssetValue(this.game, proposer.id, pos, genome), 0) + (humanCounter.offerCards || 0) * CARD;
+			const aiGetsNonCash = humanCounter.requestProps.reduce((s, pos) => s + estimateAssetValue(this.game, proposer.id, pos, genome), 0) + (humanCounter.requestCards || 0) * CARD;
+
+			// "net cash to the AI" convention: positive means cash flows human->AI (AI's requestMoney),
+			// negative means AI->human (AI's offerMoney). The AI accepts when:
+			//   aiGetsNonCash + netToAI >= (aiGivesNonCash - min(netToAI,0)... ) - simpler: accepts when
+			//   getValue >= giveValue*margin, where getValue = aiGetsNonCash + max(netToAI,0) + (cash it
+			//   receives) and giveValue = aiGivesNonCash + max(-netToAI,0). We solve for the break-even
+			//   single net figure directly instead of per-side.
+			// Break-even (margin applied to the AI's give side): the AI needs
+			//   aiGetsNonCash + netToAI >= aiGivesNonCash * margin   =>   netToAI >= aiGivesNonCash*margin - aiGetsNonCash
+			const aiBreakEvenNet = Math.ceil(aiGivesNonCash * margin - aiGetsNonCash);
+
+			// the human's own counter, as a single net-to-AI figure
+			const humanNet = (humanCounter.requestMoney || 0) - (humanCounter.offerMoney || 0);
+
+			// If the AI's break-even is at or below the human's offer, the AI should just accept - but
+			// we only get here after a rejection, so treat that as "meet slightly above the human" to
+			// avoid a degenerate no-op. Otherwise meet in the middle of humanNet and break-even.
+			let targetNet = Math.round((humanNet + Math.max(aiBreakEvenNet, humanNet)) / 2);
+			// never demand more net cash from the human than they can pay (their cash on hand, minus
+			// any the AI is also handing over doesn't apply here since net is one-directional)
+			if (targetNet > me.money) targetNet = me.money;
+
+			// Re-express the single net figure back onto exactly one side.
+			const reCounter = Object.assign({}, humanCounter);
+			if (targetNet >= 0) { reCounter.requestMoney = targetNet; reCounter.offerMoney = 0; }
+			else { reCounter.requestMoney = 0; reCounter.offerMoney = Math.min(-targetNet, proposer.money); }
+
+			// Sanity: only return it if it's actually different from the human's offer AND the AI would
+			// in fact accept it (the valuation heuristic and evaluateTrade agree closely, but clamp/
+			// rounding could leave it just short - if so, nudge once toward the AI by $1 increments up
+			// to a small cap, else give up).
+			const differs = reCounter.requestMoney !== (humanCounter.requestMoney || 0) || reCounter.offerMoney !== (humanCounter.offerMoney || 0);
+			if (!differs) return null;
+			if (this._aiWouldAccept(proposer, reCounter)) return reCounter;
+			// small corrective nudge (raise net-to-AI a little) in case rounding left it under threshold
+			for (let bump = 5; bump <= 60; bump += 5) {
+				let net = targetNet + bump;
+				if (net > me.money) break;
+				const t = Object.assign({}, humanCounter);
+				if (net >= 0) { t.requestMoney = net; t.offerMoney = 0; } else { t.requestMoney = 0; t.offerMoney = Math.min(-net, proposer.money); }
+				if (this._aiWouldAccept(proposer, t)) return t;
+			}
+			return null;
+		}
+
+		static get MAX_COUNTER_ROUNDS() { return 3; }
 	}
 
 	window.MonopolyUI = { MonopolyUI };

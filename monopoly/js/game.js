@@ -327,6 +327,16 @@
 			if (typeof this.onMove === 'function') await this.onMove(player, oldPos, newPos, direction || 'forward');
 		}
 
+		/** Fires onMove for a position change that has ALREADY been applied to player.pos (e.g. the
+		 * "advance to X" cards, which set player.pos directly and then resolve rent/purchase at the
+		 * destination). Lets the UI walk the token there the same way a dice move animates, instead of
+		 * the token snapping via ui.js's stale-position safety net. Game state is untouched - this is
+		 * purely a UI hook, and no-op for headless sims/bots (only ui.js assigns onMove). */
+		async emitMove(player, oldPos, direction) {
+			if (oldPos === player.pos) return;
+			if (typeof this.onMove === 'function') await this.onMove(player, oldPos, player.pos, direction || 'forward');
+		}
+
 		async receiveMoney(player, amount) {
 			player.money += amount;
 		}
@@ -608,13 +618,18 @@
 					await this.resolveSpace(player, diceRoll);
 					await this.postLandingActions(player);
 					break;
-				case 'advanceToGo':
+				case 'advanceToGo': {
+					const goOldPos = player.pos;
 					player.pos = 0;
+					await this.emitMove(player, goOldPos);
 					await this.receiveMoney(player, Board.GO_SALARY);
 					break;
+				}
 				case 'advanceTo': {
+					const advOldPos = player.pos;
 					const passed = card.pos < player.pos;
 					player.pos = card.pos;
+					await this.emitMove(player, advOldPos);
 					if (passed) await this.receiveMoney(player, Board.GO_SALARY);
 					await this.resolveSpace(player, diceRoll);
 					await this.postLandingActions(player);
@@ -622,11 +637,13 @@
 				}
 				case 'advanceToNearestRail':
 				case 'advanceToNearestRail2': {
+					const railOldPos = player.pos;
 					const rails = Board.RAIL_POSITIONS;
 					let target = rails.find(p => p > player.pos);
 					if (target === undefined) { target = rails[0]; await this.receiveMoney(player, Board.GO_SALARY); }
 					const targetSpace = this.getSpace(target);
 					player.pos = target;
+					await this.emitMove(player, railOldPos);
 					const prop = this.properties[target];
 					if (prop.owner === null) {
 						await this.offerPurchaseOrAuction(player, target);
@@ -642,11 +659,13 @@
 					break;
 				}
 				case 'advanceToNearestUtility': {
+					const utilOldPos = player.pos;
 					const utils = Board.UTILITY_POSITIONS;
 					let target = utils.find(p => p > player.pos);
 					if (target === undefined) { target = utils[0]; await this.receiveMoney(player, Board.GO_SALARY); }
 					const targetSpace = this.getSpace(target);
 					player.pos = target;
+					await this.emitMove(player, utilOldPos);
 					const prop = this.properties[target];
 					if (prop.owner === null) {
 						await this.offerPurchaseOrAuction(player, target);
@@ -719,19 +738,29 @@
 			let idx = 0;
 			let roundsWithNoRaise = 0;
 			const active = new Set(bidders);
+			// Non-blocking UI hooks (like onRoll/onMove) so ui.js can render a live auction room -
+			// no-op for headless sims/bots since only ui.js assigns them. onAuctionBid is awaited so
+			// the UI can pace/animate each AI raise before the next bidder is asked.
+			if (typeof this.onAuctionStart === 'function') this.onAuctionStart({ pos, spaceName: space.name, bidders: bidders.slice() });
 			while (active.size > 1 && roundsWithNoRaise < active.size) {
 				const pid = bidders[idx % bidders.length];
 				idx++;
 				if (!active.has(pid)) continue;
 				const player = this.players[pid];
 				const bid = await this.callAgent(player, 'decideAuctionBid', { player, game: this, pos, highBid, highBidder });
+				let outcome;
 				if (bid && bid > highBid && bid <= player.money) {
 					highBid = bid;
 					highBidder = pid;
 					roundsWithNoRaise = 0;
+					outcome = 'raise';
 				} else {
 					active.delete(pid);
 					roundsWithNoRaise++;
+					outcome = 'pass';
+				}
+				if (typeof this.onAuctionBid === 'function') {
+					await this.onAuctionBid({ playerId: pid, bid: outcome === 'raise' ? bid : 0, outcome, highBid, highBidder, stillIn: Array.from(active), pos });
 				}
 				if (active.size <= 1) break;
 			}

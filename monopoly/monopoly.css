@@ -183,9 +183,7 @@ body {
 .mono-cell-price,
 .mono-prop-rent,
 .mono-bill,
-.mono-bill-count,
-.mono-hud-cash,
-.mono-hud-worth {
+.mono-bill-count {
 	font-variant-numeric: tabular-nums;
 }
 
@@ -255,152 +253,6 @@ h1 {
 	max-width: 1400px;
 	margin: 0 auto;
 	padding: 10px 10px 40px 10px;
-}
-
-/* Top HUD: a fixed slim panel pinned top-center (between the back buttons and theme toggle) so it
-   never collides with the board-edge docks (the top dock grows upward into the space just above the
-   board). Carries the three scannable things a player wants at a glance: whose turn it is, the live
-   win-probability bar, and a compact cash/net-worth scoreboard. */
-.mono-hud {
-	position: fixed;
-	top: 8px;
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 95;
-	width: min(520px, calc(100vw - 320px));
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	background: var(--panel-bg);
-	border: 1px solid var(--panel-border);
-	border-radius: var(--radius-lg);
-	box-shadow: var(--shadow-panel);
-	padding: 8px 12px;
-	color: var(--sidebar-text);
-}
-
-.mono-hud-empty { display: none; }
-
-.mono-hud-status {
-	font-size: 13px;
-	text-align: center;
-	line-height: 1.2;
-}
-
-.mono-hud-turn-dot {
-	display: inline-block;
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
-	vertical-align: middle;
-	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
-	animation: mono-turn-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes mono-turn-pulse {
-	0%, 100% { opacity: 1; }
-	50% { opacity: 0.35; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.mono-hud-turn-dot { animation: none; }
-}
-
-.mono-hud-trophy { font-size: 15px; }
-
-/* Live win-probability stacked bar - the game's signature feature (strategy from 400k+ sims) made
-   visible. Each segment's flex-grow is that player's win %, colored by seat. */
-.mono-winbar {
-	display: flex;
-	height: 20px;
-	border-radius: 999px;
-	overflow: hidden;
-	background: var(--input-bg);
-	border: 1px solid var(--panel-border);
-}
-
-.mono-winbar-seg {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 0;
-	color: #fff;
-	font-size: 10px;
-	font-weight: 700;
-	font-variant-numeric: tabular-nums;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
-	transition: flex-grow 0.5s ease;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-.mono-winbar-seg span { padding: 0 2px; }
-
-.mono-winbar-pending {
-	align-items: center;
-	justify-content: center;
-	color: var(--hint-text);
-}
-
-.mono-winbar-label {
-	font-size: 10px;
-	font-style: italic;
-}
-
-.mono-hud-players {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 3px 12px;
-}
-
-.mono-hud-player {
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	font-size: 11px;
-	padding: 2px 4px;
-	border-radius: 5px;
-	white-space: nowrap;
-}
-
-.mono-hud-player.active {
-	background: var(--sidebar-card-active-bg);
-	box-shadow: inset 0 0 0 1px var(--accent-gold);
-}
-
-.mono-hud-player.you .mono-hud-name { text-decoration: underline; }
-
-.mono-hud-player.bankrupt {
-	opacity: 0.4;
-	text-decoration: line-through;
-}
-
-.mono-hud-token { font-size: 13px; }
-
-.mono-hud-name {
-	font-weight: 700;
-	flex: 1;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.mono-hud-cash { font-weight: 700; }
-
-.mono-hud-worth {
-	color: var(--sidebar-text-dim);
-	font-size: 10px;
-}
-
-/* On narrow screens the fixed HUD would crowd the top buttons - drop it into normal flow above the
-   board instead (the board-edge docks also un-fix at 560px, so nothing collides there). */
-@media (max-width: 720px) {
-	.mono-hud {
-		position: static;
-		transform: none;
-		width: auto;
-		max-width: 520px;
-		margin: 56px auto 0 auto;
-	}
 }
 
 /* Tabletop layout: the 3 AI docks are thin strips fused directly onto the board's own frame,
@@ -1127,10 +979,11 @@ h1 {
    is the DIRECT child of .mono-player-dock - for left/right docks that's .mono-prop-row-viewport /
    .mono-cash-piles-viewport (the rotation-clipping wrappers), not the inner rows themselves. */
 .mono-player-label { order: 0; }
+.mono-player-stats { order: 1; }
 .mono-prop-row,
-.mono-prop-row-viewport { order: 1; }
+.mono-prop-row-viewport { order: 2; }
 .mono-cash-piles,
-.mono-cash-piles-viewport { order: 2; }
+.mono-cash-piles-viewport { order: 3; }
 
 .mono-dock-tradeable {
 	/* Same reasoning as .mono-cell-tradeable: this is only clickable while the "choose an action"
@@ -1165,6 +1018,28 @@ h1 {
 
 .mono-player-dock.active .mono-player-label {
 	box-shadow: 0 0 0 2px var(--accent-gold);
+}
+
+/* Win% + net worth folded into the dock (replaces the old top-center HUD scoreboard). Sits right
+   under the name label on every edge (see the flex `order` block above). Win% is colored to match
+   the player's seat; net worth is muted so cash-on-hand (the cash piles below) stays the headline. */
+.mono-player-stats {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	font-size: 12px;
+	line-height: 1.1;
+	white-space: nowrap;
+}
+
+.mono-player-win {
+	font-weight: bold;
+	font-variant-numeric: tabular-nums;
+}
+
+.mono-player-worth {
+	color: var(--sidebar-text-dim);
+	font-variant-numeric: tabular-nums;
 }
 
 /* Marks a player's dock as affected by the trade currently being built in the modal (see
@@ -1655,6 +1530,18 @@ h1 {
 	color: var(--btn-hover-text);
 }
 
+/* Compact icon-only variant for the low-key debug toggle - a small square bug button that sits
+   quietly next to the Log button rather than carrying a "🐞 Debug" text label. */
+.mono-log-toggle-icon {
+	padding: 7px 8px;
+	opacity: 0.6;
+}
+
+.mono-log-toggle-icon:hover,
+.mono-log-toggle-icon.active {
+	opacity: 1;
+}
+
 .mono-log-panel {
 	position: fixed;
 	bottom: 54px;
@@ -2040,6 +1927,138 @@ h1 {
 	letter-spacing: 0.05em;
 	color: var(--sidebar-text-dim);
 	margin-bottom: 4px;
+}
+
+/* ---- Live auction room (see MonopolyUI._renderAuctionRoom) ---- */
+.mono-auction-room {
+	background: var(--modal-bg);
+	color: var(--modal-text);
+	border: var(--border-thick) solid var(--modal-border);
+	border-radius: var(--radius-lg);
+	padding: 18px 20px;
+	max-width: 460px;
+	width: 92%;
+	max-height: 88vh;
+	overflow-y: auto;
+	font-size: 13px;
+	box-shadow: var(--shadow-panel);
+	animation: mono-modal-in 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.mono-auction-room h3 { margin-top: 0; }
+
+.mono-auc-high {
+	text-align: center;
+	font-size: 15px;
+	margin: 10px 0;
+	font-variant-numeric: tabular-nums;
+}
+
+/* per-player seats around the auction - shows who's still in, who holds the high bid, and cash */
+.mono-auc-seats {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 6px;
+	margin: 10px 0;
+}
+
+.mono-auc-seat {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 8px;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--panel-border);
+	background: var(--sidebar-card-bg);
+	font-size: 12px;
+	transition: box-shadow 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.mono-auc-seat.high {
+	background: var(--sidebar-card-active-bg);
+	box-shadow: inset 0 0 0 2px var(--accent-gold);
+}
+
+.mono-auc-seat.out {
+	opacity: 0.4;
+}
+
+.mono-auc-seat.you .mono-auc-name { text-decoration: underline; }
+
+/* brief flash when a bidder's bid/pass just landed */
+.mono-auc-seat.pinged {
+	animation: mono-auc-ping 0.5s ease-out;
+}
+
+@keyframes mono-auc-ping {
+	0% { transform: scale(1.06); box-shadow: 0 0 12px 2px rgba(224, 165, 0, 0.7); }
+	100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mono-auc-seat.pinged { animation: none; }
+	.mono-auction-room { animation: none; }
+}
+
+.mono-auc-token { font-size: 14px; }
+.mono-auc-name { font-weight: 700; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mono-auc-status { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mono-auc-cash { font-size: 10px; color: var(--sidebar-text-dim); font-variant-numeric: tabular-nums; }
+
+.mono-auc-history {
+	background: var(--input-bg);
+	border: 1px solid var(--panel-border);
+	border-radius: var(--radius-sm);
+	padding: 6px 8px;
+	margin: 10px 0;
+	max-height: 90px;
+	overflow-y: auto;
+	font-size: 11px;
+}
+
+.mono-auc-hist-line { padding: 1px 0; font-variant-numeric: tabular-nums; }
+
+.mono-auc-controls { margin-top: 12px; }
+
+.mono-auc-quickrow {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.mono-auc-quick { flex: 1; margin: 0; }
+
+.mono-auc-customrow {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+}
+
+.mono-auc-customrow .mono-input { margin: 0; flex: 1; }
+.mono-auc-customrow .mono-btn { margin: 0; }
+
+.mono-auc-prompt {
+	text-align: center;
+	font-size: 11px;
+	color: var(--hint-text);
+	margin-top: 8px;
+	min-height: 14px;
+}
+
+.mono-auc-result {
+	text-align: center;
+	font-size: 14px;
+	font-weight: 700;
+	padding: 10px;
+	margin-bottom: 12px;
+	border-radius: var(--radius-sm);
+	background: var(--sidebar-card-active-bg);
+	font-variant-numeric: tabular-nums;
+}
+
+.mono-auc-result.win {
+	background: #2f9e44;
+	color: #fff;
 }
 
 .mono-trade-cols h4 {
