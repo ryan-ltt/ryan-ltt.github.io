@@ -254,12 +254,14 @@
 
 		async handleJailTurn(player) {
 			// returns true if player should proceed to move this turn, false if turn ends
-			const decision = await this.callAgent(player, 'decideJail', { player, game: this });
+			const jailCtx = { player, game: this };
+			const decision = await this.callAgent(player, 'decideJail', jailCtx);
 			if (decision === 'card' && player.getOutOfJailFree > 0) {
 				player.getOutOfJailFree--;
 				player.inJail = false;
 				player.jailTurns = 0;
 				this.logEvent(`${player.name} uses Get Out of Jail Free card`);
+				await this.notifyDecision(player, 'decideJail', jailCtx, decision);
 				return true;
 			}
 			if (decision === 'pay' && player.money >= Board.JAIL_FINE) {
@@ -267,8 +269,14 @@
 				player.inJail = false;
 				player.jailTurns = 0;
 				this.logEvent(`${player.name} pays $${Board.JAIL_FINE} bail`);
+				// decideJail is in DEFERRED_NOTIFY_METHODS (see callAgent) so this fires AFTER the
+				// bail payment above, not before - same reasoning as decideBuyProperty.
+				await this.notifyDecision(player, 'decideJail', jailCtx, decision);
 				return true;
 			}
+			// 'stay' (or 'pay' without enough cash) - no popup either way (see _describeAgentDecision),
+			// but still notify so the UI's _renderAll() runs and nothing relies on stale state.
+			await this.notifyDecision(player, 'decideJail', jailCtx, decision);
 			// attempt roll
 			const [d1, d2] = await this.rollDiceForPlayer(player);
 			player.jailTurns++;
@@ -350,12 +358,17 @@
 				guard++;
 				const sellable = this.getSellableAssets(player);
 				if (!sellable.length) break;
-				const action = await this.callAgent(player, 'decideLiquidation', { player, game: this, amountNeeded, sellable });
+				const liqCtx = { player, game: this, amountNeeded, sellable };
+				const action = await this.callAgent(player, 'decideLiquidation', liqCtx);
 				if (!action) break;
+				// decideLiquidation is in DEFERRED_NOTIFY_METHODS (see callAgent) so this fires AFTER
+				// the mortgage/sale below is applied, not before - same reasoning as decideBuyProperty.
 				if (action.type === 'mortgage') {
 					this.mortgageProperty(player, action.pos);
+					await this.notifyDecision(player, 'decideLiquidation', liqCtx, action);
 				} else if (action.type === 'sellHouse') {
 					this.sellHouse(player, action.pos);
+					await this.notifyDecision(player, 'decideLiquidation', liqCtx, action);
 				} else {
 					break;
 				}
@@ -437,6 +450,15 @@
 			if (prop.owner !== player.id) return false;
 			if (!this.ownsFullGroup(player.id, space.group)) return false;
 			if (prop.mortgaged) return false;
+			if (prop.houses >= 5) return false;
+			// bank's physical piece supply - the 5th "house" on a property is actually a hotel, drawn
+			// from the separate hotel pool; buildHouse() enforces this same split. Without this check,
+			// a bot whose strategy doesn't track remaining supply (money is its own responsibility -
+			// see strategy.js's buildThreshold) can get stuck repeatedly deciding to build on a property
+			// that's guaranteed to fail once the bank is out of houses, firing an empty "Builds a
+			// house" notification each time with nothing actually happening.
+			if (prop.houses === 4) { if (this.hotelSupply <= 0) return false; }
+			else if (this.houseSupply <= 0) return false;
 			// even building rule: can't build more than 1 ahead of lowest in group
 			const members = this.propertiesInGroup(space.group);
 			const minHouses = Math.min(...members.map(p => this.properties[p].houses));
@@ -493,19 +515,17 @@
 				case 'go': break;
 				case 'tax':
 					this.logEvent(`${player.name} pays tax $${space.amount}`);
-					await this.emitEvent('tax', { player, amount: space.amount, spaceName: space.name });
 					await this.payMoney(player, space.amount, null);
+					await this.emitEvent('tax', { player, amount: space.amount, spaceName: space.name });
 					break;
 				case 'chest': {
 					const card = this.nextChestCard();
-					await this.emitEvent('card', { player, card, deck: 'chest' });
-					await this.drawCard(player, card, diceRoll);
+					await this.drawCardAndNotify(player, card, diceRoll, 'chest');
 					break;
 				}
 				case 'fate': {
 					const card = this.nextFateCard();
-					await this.emitEvent('card', { player, card, deck: 'fate' });
-					await this.drawCard(player, card, diceRoll);
+					await this.drawCardAndNotify(player, card, diceRoll, 'fate');
 					break;
 				}
 				case 'gotojail':
@@ -528,6 +548,30 @@
 			player.inJail = true;
 			player.jailTurns = 0;
 			this.logEvent(`${player.name} sent to jail`);
+		}
+
+		// Card actions that move the player and cascade into their own further notifications (rent,
+		// a purchase decision, another card draw via postLandingActions's building/mortgage menu) -
+		// for these, the outer 'card' notice announcing the draw must fire BEFORE drawCard() runs, so
+		// it appears first in the narrative ahead of whatever it triggers (e.g. "drew: Advance to
+		// Boardwalk" before "pays $50 rent for Boardwalk"). Every other card action is fully resolved
+		// money/state-wise by the time drawCard() returns with nothing further to announce, so for
+		// those the notice fires AFTER instead - see drawCardAndNotify - matching the same
+		// apply-before-notify fix already used for tax/decideBuyProperty/decideJail/decideLiquidation/
+		// decideAction: notifying before the effect is applied leaves the UI's diff-based flying-bill
+		// animation with nothing to see at that checkpoint.
+		static CASCADING_CARD_ACTIONS = new Set([
+			'goBack', 'advanceTo', 'advanceToNearestRail', 'advanceToNearestRail2', 'advanceToNearestUtility'
+		]);
+
+		async drawCardAndNotify(player, card, diceRoll, deck) {
+			if (MonopolyGame.CASCADING_CARD_ACTIONS.has(card.action)) {
+				await this.emitEvent('card', { player, card, deck });
+				await this.drawCard(player, card, diceRoll);
+			} else {
+				await this.drawCard(player, card, diceRoll);
+				await this.emitEvent('card', { player, card, deck });
+			}
 		}
 
 		async drawCard(player, card, diceRoll) {
@@ -645,14 +689,18 @@
 
 		async offerPurchaseOrAuction(player, pos) {
 			const space = this.getSpace(pos);
+			const ctx = { player, game: this, pos };
 			const wantsToBuy = player.money >= space.price
-				? await this.callAgent(player, 'decideBuyProperty', { player, game: this, pos })
+				? await this.callAgent(player, 'decideBuyProperty', ctx)
 				: false;
 			if (wantsToBuy) {
 				player.money -= space.price;
 				this.properties[pos].owner = player.id;
 				player.properties.push(pos);
 				this.logEvent(`${player.name} buys ${space.name} for $${space.price}`);
+				// decideBuyProperty is in DEFERRED_NOTIFY_METHODS (see callAgent) specifically so this
+				// can fire manually AFTER the purchase is applied above, not before.
+				await this.notifyDecision(player, 'decideBuyProperty', ctx, true);
 			} else {
 				await this.runAuction(pos);
 			}
@@ -705,19 +753,31 @@
 			let guard = 0;
 			while (guard < 30) {
 				guard++;
-				const action = await this.callAgent(player, 'decideAction', { player, game: this });
+				const actionCtx = { player, game: this };
+				const action = await this.callAgent(player, 'decideAction', actionCtx);
 				if (!action || action.type === 'done') break;
+				// decideAction is in DEFERRED_NOTIFY_METHODS (see callAgent) so each branch below
+				// notifies manually AFTER its mutation is applied, not before - same reasoning as
+				// decideBuyProperty. proposeTrade is the one exception: its own popup just describes
+				// the offer being made (no money/property state to wait for), and the trade's actual
+				// effects get their own separate notification once decideTradeResponse resolves
+				// (handleTradeProposal -> callAgent, not deferred) - so it can notify immediately.
 				if (action.type === 'build') {
 					if (!this.canBuildOn(player, action.pos)) continue;
 					this.buildHouse(player, action.pos);
+					await this.notifyDecision(player, 'decideAction', actionCtx, action);
 				} else if (action.type === 'sellHouse') {
 					if (this.properties[action.pos].owner !== player.id) continue;
 					this.sellHouse(player, action.pos);
+					await this.notifyDecision(player, 'decideAction', actionCtx, action);
 				} else if (action.type === 'mortgage') {
 					this.mortgageProperty(player, action.pos);
+					await this.notifyDecision(player, 'decideAction', actionCtx, action);
 				} else if (action.type === 'unmortgage') {
 					this.unmortgageProperty(player, action.pos);
+					await this.notifyDecision(player, 'decideAction', actionCtx, action);
 				} else if (action.type === 'proposeTrade') {
+					await this.notifyDecision(player, 'decideAction', actionCtx, action);
 					await this.handleTradeProposal(player, action.trade);
 				} else {
 					break;
@@ -734,7 +794,8 @@
 			for (const p of trade.requestProps) if (this.properties[p].owner !== target.id) return;
 			if (proposer.money < (trade.offerMoney || 0)) return;
 			if (target.money < (trade.requestMoney || 0)) return;
-			const accept = await this.callAgent(target, 'decideTradeResponse', { player: target, game: this, trade, proposer });
+			const tradeCtx = { player: target, game: this, trade, proposer };
+			const accept = await this.callAgent(target, 'decideTradeResponse', tradeCtx);
 			// lets a bot proposer's agent record a rejection (so it offers more next time) - duck-typed
 			// since the human agent has no such method, and this never fires for lookahead rollouts
 			// (those apply hypothetical trades directly via applyTradeEffects, bypassing this method).
@@ -743,10 +804,18 @@
 			}
 			if (!accept) {
 				this.logEvent(`${target.name} rejects trade from ${proposer.name}`);
+				// no mutation on rejection, so nothing for the deferred notify to wait for - fine to
+				// notify right here.
+				await this.notifyDecision(target, 'decideTradeResponse', tradeCtx, accept);
 				return;
 			}
 			this.applyTradeEffects(proposer, target, trade);
 			this.logEvent(`${target.name} accepts trade from ${proposer.name}`);
+			// decideTradeResponse is in DEFERRED_NOTIFY_METHODS (see callAgent) so this fires AFTER
+			// applyTradeEffects above, not before - same reasoning as decideBuyProperty. Money-bearing
+			// trades used to notify before the transfer happened, leaving the UI's diff-based
+			// flying-bill checkpoint with nothing to animate.
+			await this.notifyDecision(target, 'decideTradeResponse', tradeCtx, accept);
 		}
 
 		/** Mutates proposer/target to reflect an already-accepted trade (properties, cash, jail
@@ -764,16 +833,35 @@
 			if (trade.requestCards) { target.getOutOfJailFree -= trade.requestCards; proposer.getOutOfJailFree += trade.requestCards; }
 		}
 
+		// decide* methods whose effect is NOT applied until after callAgent returns - the caller has
+		// to decide first, then apply the mutation itself (build a house, pay bail, buy a property,
+		// etc.), so notifying at decide-time here would fire the "X does Y" popup (and the UI's
+		// diff-based flying-bill/property checkpoint it triggers on dismiss) before that mutation
+		// actually happened, leaving the checkpoint with nothing to animate. These callers must call
+		// notifyDecision() manually, right after applying the effect, instead of relying on
+		// callAgent's automatic notify below. decideRoll is excluded too, but for an unrelated reason
+		// (it carries no meaningful decision - bots always proceed immediately).
+		static DEFERRED_NOTIFY_METHODS = new Set([
+			'decideRoll', 'decideBuyProperty', 'decideJail', 'decideLiquidation', 'decideAction', 'decideTradeResponse'
+		]);
+
 		async callAgent(player, method, ctx) {
 			if (!player.agent || typeof player.agent[method] !== 'function') return null;
 			const result = player.agent[method](ctx);
 			const resolved = (result && typeof result.then === 'function') ? await result : result;
-			// lets the UI show a transient "what did the AI just decide" popup; decideRoll is
-			// excluded since it carries no meaningful decision (bots always proceed immediately).
-			if (method !== 'decideRoll' && typeof this.onAgentDecision === 'function') {
-				await this.onAgentDecision(player, method, ctx, resolved);
+			if (!MonopolyGame.DEFERRED_NOTIFY_METHODS.has(method)) {
+				await this.notifyDecision(player, method, ctx, resolved);
 			}
 			return resolved;
+		}
+
+		/** Fires onAgentDecision, if the UI has assigned one - factored out of callAgent so methods
+		 * in DEFERRED_NOTIFY_METHODS (see above) can call this manually once their effect has
+		 * actually been applied, rather than at decide-time. */
+		async notifyDecision(player, method, ctx, result) {
+			if (typeof this.onAgentDecision === 'function') {
+				await this.onAgentDecision(player, method, ctx, result);
+			}
 		}
 
 		async runToCompletion() {

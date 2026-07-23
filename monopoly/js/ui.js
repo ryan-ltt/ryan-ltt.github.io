@@ -11,9 +11,15 @@
 	const { HumanAgent } = window.MonopolyHumanAgent;
 
 	const PLAYER_COLORS = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a'];
+	// Distinct game-piece per seat (still color-ringed via PLAYER_COLORS) so tokens are easy to tell
+	// apart at a glance rather than four near-identical colored dots.
+	const PLAYER_TOKENS = ['🎩', '🚗', '🐕', '🚢'];
+	// Kept in sync with the --group-* tokens in monopoly.css (tuned for consistent saturation +
+	// AA contrast on the tile face). These drive board color bars, owner chips, mini deed cards,
+	// and flying-property cards, so they must match the CSS the tiles use.
 	const GROUP_COLORS = {
-		brown: '#8d5524', lightblue: '#a2d2ff', pink: '#ffafcc', orange: '#ff9f1c',
-		red: '#e63946', yellow: '#ffd60a', green: '#2a9d8f', darkblue: '#1d3557'
+		brown: '#955436', lightblue: '#7cc4e8', pink: '#d955a3', orange: '#e8811f',
+		red: '#d92d3a', yellow: '#f2c018', green: '#1f9d63', darkblue: '#2555c7'
 	};
 	const TYPE_ICONS = {
 		go: 'art/icon-go.png', jail: 'art/icon-jail.png', freeparking: 'art/icon-parking.png',
@@ -60,11 +66,19 @@
 			// _tradePreviewCash and _modalTradeBuilder's live-updating listeners. Never mutates real
 			// game state; null whenever no trade builder is open.
 			this._tradePreview = null;
+			// pos -> playerId|null (bank), overriding _previewOwner's displayed owner while a
+			// _flyProperty animation for that pos is mid-flight - see _previewOwner's comment.
+			this._pendingPropertyDisplay = new Map();
 			this._build();
 		}
 
 		_build() {
 			this.root.innerHTML = `
+				<div class="mono-hud" id="mono-hud">
+					<div class="mono-hud-status" id="mono-hud-status"></div>
+					<div class="mono-winbar" id="mono-winbar" title="Live win probability (Monte-Carlo estimate)"></div>
+					<div class="mono-hud-players" id="mono-hud-players"></div>
+				</div>
 				<div class="mono-table">
 					<div class="mono-board-wrap">
 						<div id="mono-board" class="mono-board"></div>
@@ -77,7 +91,17 @@
 						<div class="mono-controls" id="mono-controls"></div>
 					</div>
 				</div>
-				<button class="mono-log-toggle" id="mono-log-toggle" title="Show event log">📜 Log</button>
+				<div class="mono-toggle-row">
+					<button class="mono-log-toggle" id="mono-about-toggle" title="About this game">ℹ️ Read more</button>
+					<button class="mono-log-toggle" id="mono-log-toggle" title="Show event log">📜 Log</button>
+					<button class="mono-log-toggle" id="mono-debug-toggle" title="Show animation debug log">🐞 Debug</button>
+				</div>
+				<div class="mono-log-panel collapsed" id="mono-about-panel">
+					<div class="mono-log-panel-head">
+						<div class="mono-about-body" id="mono-about-body"></div>
+						<button class="mono-log-close" id="mono-about-close" title="Hide" aria-label="Hide">&times;</button>
+					</div>
+				</div>
 				<div class="mono-log-panel collapsed" id="mono-log-panel">
 					<div class="mono-log-panel-head">
 						<div class="mono-log-tabs" id="mono-log-tabs"></div>
@@ -85,16 +109,36 @@
 					</div>
 					<div class="mono-log" id="mono-log"></div>
 				</div>
+				<div class="mono-log-panel collapsed" id="mono-debug-panel">
+					<div class="mono-log-panel-head">
+						<span style="font-size:11px;font-weight:bold;flex:1;">Animation debug log</span>
+						<button class="mono-log-close" id="mono-debug-clear" title="Clear" aria-label="Clear" style="font-size:11px;width:auto;padding:2px 8px;">Clear</button>
+						<button class="mono-log-close" id="mono-debug-copy" title="Copy to clipboard" aria-label="Copy" style="font-size:11px;width:auto;padding:2px 8px;">Copy</button>
+						<button class="mono-log-close" id="mono-debug-close" title="Hide" aria-label="Hide">&times;</button>
+					</div>
+					<textarea class="mono-debug-text" id="mono-debug-text" readonly wrap="off"></textarea>
+				</div>
 				<div id="mono-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
 					<div id="mono-modal" class="mono-modal"></div>
 				</div>
 				<div id="mono-props-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
 					<div id="mono-props-modal" class="mono-modal"></div>
 				</div>
-				<div id="mono-event-modal-backdrop" class="mono-modal-backdrop" style="display:none;">
-					<div id="mono-event-modal" class="mono-modal mono-event-modal"></div>
-				</div>
 				<div id="mono-fx-layer" class="mono-fx-layer"></div>
+				<div id="mono-deed-tip" class="mono-deed-tip" style="display:none;"></div>
+				<div id="mono-tour" class="mono-tour" style="display:none;">
+					<div class="mono-tour-spotlight" id="mono-tour-spotlight"></div>
+					<div class="mono-tour-card" id="mono-tour-card">
+						<div class="mono-tour-text" id="mono-tour-text"></div>
+						<div class="mono-tour-foot">
+							<span class="mono-tour-progress" id="mono-tour-progress"></span>
+							<span class="mono-tour-btns">
+								<button class="mono-btn secondary" id="mono-tour-skip">Skip</button>
+								<button class="mono-btn" id="mono-tour-next">Next</button>
+							</span>
+						</div>
+					</div>
+				</div>
 			`;
 			this.boardEl = this.root.querySelector('#mono-board');
 			this.dockEls = {
@@ -104,22 +148,41 @@
 				bottom: this.root.querySelector('#mono-human-dock-card')
 			};
 			this.controlsEl = this.root.querySelector('#mono-controls');
+			this.hudEl = this.root.querySelector('#mono-hud');
+			this.hudStatusEl = this.root.querySelector('#mono-hud-status');
+			this.winbarEl = this.root.querySelector('#mono-winbar');
+			this.hudPlayersEl = this.root.querySelector('#mono-hud-players');
 			this.logPanelEl = this.root.querySelector('#mono-log-panel');
 			this.logToggleEl = this.root.querySelector('#mono-log-toggle');
 			this.logTabsEl = this.root.querySelector('#mono-log-tabs');
 			this.logEl = this.root.querySelector('#mono-log');
+			this.aboutPanelEl = this.root.querySelector('#mono-about-panel');
+			this.aboutToggleEl = this.root.querySelector('#mono-about-toggle');
+			this.debugPanelEl = this.root.querySelector('#mono-debug-panel');
+			this.debugToggleEl = this.root.querySelector('#mono-debug-toggle');
+			this.debugTextEl = this.root.querySelector('#mono-debug-text');
+			this._debugLog = []; // ring buffer of log lines - see _dlog
 			this.modalBackdrop = this.root.querySelector('#mono-modal-backdrop');
 			this.modalEl = this.root.querySelector('#mono-modal');
 			this.propsModalBackdrop = this.root.querySelector('#mono-props-modal-backdrop');
 			this.propsModalEl = this.root.querySelector('#mono-props-modal');
-			this.eventModalBackdrop = this.root.querySelector('#mono-event-modal-backdrop');
-			this.eventModalEl = this.root.querySelector('#mono-event-modal');
 			this.fxLayerEl = this.root.querySelector('#mono-fx-layer');
+			this.deedTipEl = this.root.querySelector('#mono-deed-tip');
+			this.tourEl = this.root.querySelector('#mono-tour');
 			this._eventQueue = []; // pending {html} notifications not yet shown
-			this._eventShowing = false; // true while a notification is on screen awaiting dismissal
+			this._eventShowing = false; // true while a notification is on screen awaiting its auto-dismiss timer
+			this._eventDismissTimer = null; // setTimeout handle for the currently-showing notice's auto-dismiss
 			this.activeLogTab = 'all'; // 'all' or a player id
-			this.logToggleEl.onclick = () => this._toggleLogPanel(true);
+			this.logToggleEl.onclick = () => { this._toggleAboutPanel(false); this._toggleLogPanel(true); };
 			this.root.querySelector('#mono-log-close').onclick = () => this._toggleLogPanel(false);
+			const aboutTemplate = document.getElementById('mono-about-text');
+			if (aboutTemplate) this.root.querySelector('#mono-about-body').appendChild(aboutTemplate.content.cloneNode(true));
+			this.aboutToggleEl.onclick = () => { this._toggleLogPanel(false); this._toggleAboutPanel(true); };
+			this.root.querySelector('#mono-about-close').onclick = () => this._toggleAboutPanel(false);
+			this.debugToggleEl.onclick = () => { this._toggleLogPanel(false); this._toggleAboutPanel(false); this._toggleDebugPanel(true); };
+			this.root.querySelector('#mono-debug-close').onclick = () => this._toggleDebugPanel(false);
+			this.root.querySelector('#mono-debug-clear').onclick = () => { this._debugLog = []; this._renderDebugLog(); };
+			this.root.querySelector('#mono-debug-copy').onclick = () => this._copyDebugLog();
 			this._renderBoardSkeleton();
 			// dice area is built as part of the board skeleton (it lives in .mono-center, overlaid on
 			// the board itself), so these queries must happen after _renderBoardSkeleton(), not before
@@ -128,12 +191,58 @@
 			this.die2El = this.root.querySelector('#mono-die-2');
 			this.rollBtnEl = this.root.querySelector('#mono-roll-btn');
 			this.bankEl = this.root.querySelector('#mono-bank');
+			this.eventNoticeEl = this.root.querySelector('#mono-event-notice');
 			this._renderControls();
+			this._renderHud(); // hides itself (mono-hud-empty) until a game exists
 		}
 
 		_toggleLogPanel(open) {
 			this.logPanelEl.classList.toggle('collapsed', !open);
 			this.logToggleEl.classList.toggle('active', open);
+		}
+
+		_toggleAboutPanel(open) {
+			this.aboutPanelEl.classList.toggle('collapsed', !open);
+			this.aboutToggleEl.classList.toggle('active', open);
+		}
+
+		_toggleDebugPanel(open) {
+			this.debugPanelEl.classList.toggle('collapsed', !open);
+			this.debugToggleEl.classList.toggle('active', open);
+			if (open) this._renderDebugLog();
+		}
+
+		/** Appends one timestamped line to the animation debug ring buffer (capped at 500 lines, oldest
+		 * dropped first) - temporary instrumentation for diagnosing why a flying-bill/property
+		 * animation didn't show up for a given transaction. Cheap no-op when the panel is closed
+		 * (only re-renders the textarea while it's open); safe to call from hot paths like
+		 * _diffAndAnimate/_flyBills without needing to gate every call site on a debug flag. */
+		_dlog(...parts) {
+			const t = (performance.now() / 1000).toFixed(3);
+			this._debugLog.push(`[${t}] ${parts.map(p => typeof p === 'object' ? JSON.stringify(p) : String(p)).join(' ')}`);
+			if (this._debugLog.length > 500) this._debugLog.shift();
+			if (!this.debugPanelEl.classList.contains('collapsed')) this._renderDebugLog();
+		}
+
+		_renderDebugLog() {
+			this.debugTextEl.value = this._debugLog.join('\n');
+			this.debugTextEl.scrollTop = this.debugTextEl.scrollHeight;
+		}
+
+		async _copyDebugLog() {
+			const text = this._debugLog.join('\n');
+			try {
+				await navigator.clipboard.writeText(text);
+				const btn = this.root.querySelector('#mono-debug-copy');
+				const orig = btn.textContent;
+				btn.textContent = 'Copied!';
+				setTimeout(() => { btn.textContent = orig; }, 1200);
+			} catch (err) {
+				// clipboard API can be blocked (permissions, insecure context) - fall back to a
+				// select-all on the textarea so the user can still Ctrl+C manually
+				this.debugTextEl.focus();
+				this.debugTextEl.select();
+			}
 		}
 
 		_diceSrc(face) {
@@ -162,6 +271,11 @@
 				cell.style.gridRow = (row + 1);
 				cell.style.gridColumn = (col + 1);
 				cell.dataset.pos = space.pos;
+				// The four corners (Start/Jail/Free Parking/Go-To-Jail) get a distinct larger treatment
+				// so they anchor the board's corners visually (see .mono-cell-corner).
+				if (space.pos === 0 || space.pos === 10 || space.pos === 20 || space.pos === 30) {
+					cell.classList.add('mono-cell-corner');
+				}
 				if (space.group && GROUP_COLORS[space.group]) {
 					const bar = document.createElement('div');
 					bar.className = 'mono-cell-color';
@@ -186,6 +300,11 @@
 				cell.appendChild(info);
 
 				cell.addEventListener('click', () => this._onCellClick(space.pos));
+				// Hover title-deed tooltip: any purchasable space (property/rail/utility) shows its full
+				// rent ladder, costs, and current owner on hover, so the rules are discoverable without
+				// landing on it or opening a modal. Non-purchasable spaces (Go, tax, cards...) have none.
+				cell.addEventListener('mouseenter', () => this._showDeedTip(space.pos, cell));
+				cell.addEventListener('mouseleave', () => this._hideDeedTip());
 
 				this.boardEl.appendChild(cell);
 				this.cellEls[space.pos] = { cell, info };
@@ -195,7 +314,8 @@
 			center.style.gridRow = '2 / 11';
 			center.style.gridColumn = '2 / 11';
 			center.innerHTML = `
-				<div class="mono-center-title">MONOPOLY<br><span>(clone)</span></div>
+				<div class="mono-center-title" id="mono-center-title">MONOPOLY<br><span>(clone)</span></div>
+				<div class="mono-event-notice" id="mono-event-notice" style="display:none;"></div>
 				<div class="mono-dice-area" id="mono-dice-area" style="display:none;">
 					<div class="mono-dice-pair" id="mono-dice-pair">
 						<img class="mono-die" id="mono-die-1" src="art/dice-1.png" alt="">
@@ -323,7 +443,9 @@
 			this.game.players.forEach(p => {
 				const token = document.createElement('div');
 				token.className = 'mono-token';
-				token.style.background = PLAYER_COLORS[p.id];
+				token.style.borderColor = PLAYER_COLORS[p.id];
+				token.style.setProperty('--token-color', PLAYER_COLORS[p.id]);
+				token.textContent = PLAYER_TOKENS[p.id] || '●';
 				token.title = p.name;
 				this.tokenLayerEl.appendChild(token);
 				this.tokenEls[p.id] = token;
@@ -337,10 +459,24 @@
 
 			this._runLoop();
 			this._updateWinProbabilities();
+			this._maybeStartTour();
 		}
 
 		async _onGameMove(player, oldPos, newPos, direction) {
 			await this._animateTokenMove(player.id, oldPos, newPos, direction);
+			this._pulseLandedCell(newPos);
+		}
+
+		/** Briefly glows the tile a token just landed on so the eye follows the action. Re-triggering
+		 * the CSS animation requires removing the class and forcing a reflow before re-adding it, so
+		 * two landings on the same tile still each flash. */
+		_pulseLandedCell(pos) {
+			const entry = this.cellEls[pos];
+			if (!entry) return;
+			const { cell } = entry;
+			cell.classList.remove('mono-cell-landed');
+			void cell.offsetWidth;
+			cell.classList.add('mono-cell-landed');
 		}
 
 		_onGameRoll(player, d1, d2) {
@@ -363,6 +499,10 @@
 				const wasHumanTurn = this.game.currentPlayerIdx === this.humanId;
 				await this.game.playTurn();
 				this._renderAll();
+				// Fallback checkpoint: catches any leftover diff from a turn that produced no notice/
+				// modal at all (e.g. a silent no-op decision, or the last mutation before the turn
+				// just ended) - see _renderAll's comment for why this isn't folded into every render.
+				this._diffAndAnimate('endOfTurn');
 				if (this.game.gameOver) break;
 				// small delay so AI turns are watchable, skip delay right before human's turn
 				const next = this.game.players[this.game.currentPlayerIdx];
@@ -380,6 +520,7 @@
 				this.winProbs = {};
 				this.game.players.forEach(p => { this.winProbs[p.id] = (this.game.winner && p.id === this.game.winner.id) ? 1 : 0; });
 				this._renderPlayers();
+				this._renderHud();
 			}
 		}
 
@@ -394,6 +535,7 @@
 				const only = active[0];
 				this.winProbs = only ? { [only.id]: 1 } : {};
 				this._renderPlayers();
+				this._renderHud();
 				return;
 			}
 			const runId = ++this.winProbRunId;
@@ -425,6 +567,7 @@
 			playerMeta.forEach(p => { probs[p.id] = wins[p.id] / WIN_PROB_ROLLOUTS; });
 			this.winProbs = probs;
 			this._renderPlayers();
+			this._renderHud();
 		}
 
 		_sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -477,11 +620,22 @@
 			buffer.forEach(msg => this._appendLogLine(msg));
 		}
 
+		/** Updates every visual (board, docks, controls, dice) from live game state immediately -
+		 * deliberately does NOT fire the flying-bill/property animation (see _diffAndAnimate), which
+		 * is instead triggered separately at natural "screen is clear" checkpoints: when the AI
+		 * board notice fades (_drainEventQueue's dismiss) or a human decision modal closes
+		 * (_hideModal), plus a fallback after every full turn in _runLoop. Calling _renderAll()
+		 * itself mid-turn (e.g. once per postLandingActions loop iteration) is common and must stay
+		 * cheap/side-effect-free for the animation layer - triggering a flight from an arbitrary,
+		 * possibly mid-popup moment is what used to make bills fly while still hidden behind a
+		 * notice, or skip over transactions the diff was still waiting to pair up (see git history:
+		 * this used to call _diffAndAnimate() on every render, which raced with the popup/notice
+		 * queue in exactly this way). */
 		_renderAll() {
-			this._diffAndAnimate(); // fires flying-bill/property animations for whatever changed since the last pass
 			this._renderBoardState();
 			this._renderPlayers();
 			this._renderControls();
+			this._renderHud();
 			this._positionDiceForCurrentPlayer();
 		}
 
@@ -500,15 +654,30 @@
 			this.diceAreaEl.className = 'mono-dice-area mono-dice-area-' + slot;
 		}
 
-		/** Effective owner of `pos` accounting for this._tradePreview (the in-progress, not-yet-sent
-		 * offer in the trade builder), without touching real game state. Falls back to the real
-		 * owner whenever no preview is active or pos isn't part of it. */
+		/** Effective owner of `pos` to DISPLAY (docks/board), accounting for two independent
+		 * overrides on top of the real game-state owner:
+		 *  1. this._tradePreview - the in-progress, not-yet-sent offer in the trade builder.
+		 *  2. this._pendingPropertyDisplay - a property currently mid-flight in _flyProperty's
+		 *     animation (see _diffAndAnimate). Without this, _renderPlayers() would show the
+		 *     property in its new owner's dock the instant the decision resolves, several ms BEFORE
+		 *     the flying deed-card animation even starts - so by the time the card visually arrives,
+		 *     the destination already displayed it, making the flight look like a no-op. Holding the
+		 *     display at the OLD owner until the flight actually lands (cleared in _flyProperty's
+		 *     removal timeout) gives the animation a real before/after to bridge, the same way a cash
+		 *     pile's dollar total stays visibly different until its bill flight completes.
+		 * Trade preview takes priority since it's an explicit, real-time user action (dragging
+		 * properties into an offer) - it should never be masked by a leftover flight override from
+		 * some earlier, unrelated transaction. */
 		_previewOwner(pos) {
 			const real = this.game.properties[pos].owner;
 			const pv = this._tradePreview;
-			if (!pv) return real;
-			if (pv.offerProps.includes(pos)) return pv.toId;
-			if (pv.requestProps.includes(pos)) return pv.fromId;
+			if (pv) {
+				if (pv.offerProps.includes(pos)) return pv.toId;
+				if (pv.requestProps.includes(pos)) return pv.fromId;
+			}
+			if (this._pendingPropertyDisplay && this._pendingPropertyDisplay.has(pos)) {
+				return this._pendingPropertyDisplay.get(pos);
+			}
 			return real;
 		}
 
@@ -546,6 +715,69 @@
 			this._modalTradeBuilder(pendingCtx, this.game.activePlayers().filter(p => p.id !== this.humanId), { targetId: owner.id, requestPos: pos });
 		}
 
+		/** Builds the inner HTML for the hover title-deed tooltip of a purchasable space (property/
+		 * rail/utility). Returns null for non-purchasable spaces (Go, jail, tax, cards, parking), which
+		 * get no tooltip. Reads live game state for the current owner/houses/mortgage status. */
+		_deedTipHtml(pos) {
+			const space = this.game ? this.game.getSpace(pos) : Board.SPACES.find(s => s.pos === pos);
+			if (!space || (space.type !== 'property' && space.type !== 'rail' && space.type !== 'utility')) return null;
+			const prop = this.game ? this.game.properties[pos] : null;
+			const barColor = (space.group && GROUP_COLORS[space.group]) || (space.type === 'rail' ? '#555' : (space.type === 'utility' ? '#888' : '#999'));
+			let ownerLine = '<span class="mono-hint">Unowned — bank</span>';
+			if (prop && prop.owner !== null) {
+				const owner = this.game.players[prop.owner];
+				const status = prop.mortgaged ? ' (mortgaged)' : (prop.houses >= 5 ? ' · Hotel' : (prop.houses > 0 ? ` · ${prop.houses} house${prop.houses > 1 ? 's' : ''}` : ''));
+				ownerLine = `Owned by <b style="color:${PLAYER_COLORS[owner.id]}">${owner.name}</b>${status}`;
+			}
+			let rentRows = '';
+			if (space.type === 'property') {
+				const labels = ['Base rent', '1 house', '2 houses', '3 houses', '4 houses', 'Hotel'];
+				const liveTier = prop && !prop.mortgaged ? (prop.houses >= 5 ? 5 : prop.houses) : -1;
+				rentRows = space.rent.map((r, i) =>
+					`<div class="mono-deed-rent-row${i === liveTier ? ' current' : ''}"><span>${labels[i]}</span><span>$${r}</span></div>`
+				).join('');
+				rentRows += `<div class="mono-deed-rent-row sub"><span>House cost</span><span>$${space.houseCost} each</span></div>`;
+			} else if (space.type === 'rail') {
+				const labels = ['1 owned', '2 owned', '3 owned', '4 owned'];
+				rentRows = space.rent.map((r, i) => `<div class="mono-deed-rent-row"><span>${labels[i]}</span><span>$${r}</span></div>`).join('');
+			} else {
+				rentRows = `<div class="mono-deed-rent-row"><span>1 owned</span><span>4× dice</span></div>`
+					+ `<div class="mono-deed-rent-row"><span>2 owned</span><span>10× dice</span></div>`;
+			}
+			return `
+				<div class="mono-deed-bar" style="background:${barColor}"></div>
+				<div class="mono-deed-body">
+					<div class="mono-deed-name">${space.name}</div>
+					<div class="mono-deed-meta">Price $${space.price} · Mortgage $${Math.floor(space.price / 2)}</div>
+					<div class="mono-deed-owner">${ownerLine}</div>
+					<div class="mono-deed-rents">${rentRows}</div>
+				</div>
+			`;
+		}
+
+		_showDeedTip(pos, cell) {
+			const html = this._deedTipHtml(pos);
+			if (!html) { this._hideDeedTip(); return; }
+			this.deedTipEl.innerHTML = html;
+			this.deedTipEl.style.display = 'block';
+			// position near the cell but clamped to the viewport so edge/corner tiles don't push it
+			// off-screen (measured after it's visible so offsetWidth/Height are real)
+			const r = cell.getBoundingClientRect();
+			const tw = this.deedTipEl.offsetWidth, th = this.deedTipEl.offsetHeight;
+			let left = r.right + 8;
+			if (left + tw > window.innerWidth - 6) left = r.left - tw - 8;   // flip to the left side
+			if (left < 6) left = Math.min(Math.max(6, r.left), window.innerWidth - tw - 6);
+			let top = r.top;
+			if (top + th > window.innerHeight - 6) top = window.innerHeight - th - 6;
+			if (top < 6) top = 6;
+			this.deedTipEl.style.left = left + 'px';
+			this.deedTipEl.style.top = top + 'px';
+		}
+
+		_hideDeedTip() {
+			if (this.deedTipEl) this.deedTipEl.style.display = 'none';
+		}
+
 		_renderBoardState() {
 			const tradeable = this._canProposeTradeNow();
 			for (const space of Board.SPACES) {
@@ -553,17 +785,34 @@
 				info.innerHTML = '';
 				if (this.game) {
 					const prop = this.game.properties[space.pos];
-					if (prop && prop.owner !== null) {
-						// chip reflects the PREVIEW owner (what the in-progress trade would result in),
-						// but clickability/title stay keyed off the real owner - the trade builder must
-						// always be opened against actual game state, not a hypothetical mid-edit
-						const previewOwnerId = this._previewOwner(space.pos);
+					// chip reflects the PREVIEW owner (what an in-progress trade would result in, or -
+					// see _previewOwner - a property mid-flight in _flyProperty still displaying its OLD
+					// owner until the animation lands), but clickability/title stay keyed off the real
+					// owner - the trade builder must always be opened against actual game state, not a
+					// hypothetical mid-edit. previewOwnerId can be null even when prop.owner isn't (a
+					// fresh bank purchase still displaying as unowned until its flight lands), so the
+					// chip itself is gated on the PREVIEW owner, not the real one.
+					const previewOwnerId = prop ? this._previewOwner(space.pos) : null;
+					if (prop && prop.owner !== null && previewOwnerId !== null) {
 						const owner = this.game.players[previewOwnerId];
 						const chip = document.createElement('div');
 						chip.className = 'mono-owner-chip' + (previewOwnerId !== prop.owner ? ' mono-owner-chip-preview' : '');
 						chip.style.background = PLAYER_COLORS[owner.id];
-						chip.textContent = prop.mortgaged ? 'M' : (prop.houses >= 5 ? 'H' : (prop.houses > 0 ? String(prop.houses) : ''));
+						// chip carries only the mortgage flag now; houses/hotel show as visual pips
+						// alongside it (clearer at a glance than a bare digit)
+						chip.textContent = prop.mortgaged ? 'M' : '';
 						info.appendChild(chip);
+						if (!prop.mortgaged && prop.houses > 0) {
+							const pips = document.createElement('div');
+							pips.className = 'mono-cell-pips';
+							if (prop.houses >= 5) {
+								pips.innerHTML = '<div class="mono-pip-hotel" title="Hotel"></div>';
+							} else {
+								pips.innerHTML = Array.from({ length: prop.houses }, () => '<div class="mono-pip-house"></div>').join('');
+								pips.title = `${prop.houses} house${prop.houses > 1 ? 's' : ''}`;
+							}
+							info.appendChild(pips);
+						}
 						const realOwner = this.game.players[prop.owner];
 						const canTradeThis = tradeable && realOwner.id !== this.humanId && !realOwner.bankrupt;
 						cell.classList.toggle('mono-cell-tradeable', canTradeThis);
@@ -571,6 +820,15 @@
 					} else {
 						cell.classList.remove('mono-cell-tradeable');
 						cell.title = '';
+						// Not owned (or its purchase flight hasn't landed yet - see previewOwnerId above)
+						// - show the bank's asking price right on the tile instead of an owner chip, so
+						// the cost to buy is visible without having to land on it or open a modal.
+						if (prop) {
+							const priceTag = document.createElement('div');
+							priceTag.className = 'mono-cell-price';
+							priceTag.textContent = `$${space.price}`;
+							info.appendChild(priceTag);
+						}
 					}
 				}
 			}
@@ -587,6 +845,159 @@
 						token.dataset.renderedPos = String(p.pos);
 					}
 				});
+			}
+		}
+
+		/** Transparent, engine-independent net-worth estimate for the HUD: cash + full price of each
+		 * owned property (half-price when mortgaged) + resale value of houses/hotels (houses sell back
+		 * at half the house cost, per standard rules). Deliberately simpler than strategy.js's
+		 * genome-weighted estimateAssetValue - this is a display figure a human can reason about ("what
+		 * could I liquidate to"), not a strategic valuation, so it needs no genome and stays stable. */
+		_netWorth(playerId) {
+			const p = this.game.players[playerId];
+			let total = p.money;
+			for (const pos of p.properties) {
+				const space = this.game.getSpace(pos);
+				const prop = this.game.properties[pos];
+				total += prop.mortgaged ? Math.floor(space.price / 2) : space.price;
+				if (prop.houses > 0 && space.houseCost) {
+					total += prop.houses * Math.floor(space.houseCost / 2);
+				}
+			}
+			return total;
+		}
+
+		/** Renders the top HUD: a turn-status line, the live win-probability stacked bar, and a compact
+		 * per-player scoreboard (token, name, cash, net worth). Cheap enough to call from _renderAll and
+		 * again whenever winProbs updates. Reads live game state + this.winProbs (may be null before the
+		 * first Monte-Carlo estimate lands, in which case the bar shows a neutral "estimating" state). */
+		_renderHud() {
+			if (!this.game) { this.hudEl.classList.add('mono-hud-empty'); this.hudStatusEl.textContent = ''; this.winbarEl.innerHTML = ''; this.hudPlayersEl.innerHTML = ''; return; }
+			this.hudEl.classList.remove('mono-hud-empty');
+
+			// --- status line ---
+			if (this.game.gameOver) {
+				this.hudStatusEl.innerHTML = this.game.winner
+					? `<span class="mono-hud-trophy">🏆</span> <b style="color:${PLAYER_COLORS[this.game.winner.id]}">${this.game.winner.name}</b> wins!`
+					: 'Game over — draw.';
+			} else {
+				const cur = this.game.players[this.game.currentPlayerIdx];
+				if (cur.id === this.humanId) {
+					this.hudStatusEl.innerHTML = `<span class="mono-hud-turn-dot" style="background:${PLAYER_COLORS[cur.id]}"></span> <b>Your turn</b>`;
+				} else {
+					this.hudStatusEl.innerHTML = `<span class="mono-hud-turn-dot" style="background:${PLAYER_COLORS[cur.id]}"></span> <b style="color:${PLAYER_COLORS[cur.id]}">${cur.name}</b> is playing…`;
+				}
+			}
+
+			// --- win-probability stacked bar ---
+			const active = this.game.players.filter(p => !p.bankrupt);
+			if (this.winProbs && active.length) {
+				this.winbarEl.classList.remove('mono-winbar-pending');
+				this.winbarEl.innerHTML = this.game.players.map(p => {
+					const pct = this.winProbs[p.id] != null ? this.winProbs[p.id] : 0;
+					if (pct <= 0) return '';
+					return `<div class="mono-winbar-seg" style="flex-grow:${pct};background:${PLAYER_COLORS[p.id]}" title="${p.name}: ${Math.round(pct * 100)}% win chance"><span>${Math.round(pct * 100)}%</span></div>`;
+				}).join('');
+			} else {
+				this.winbarEl.classList.add('mono-winbar-pending');
+				this.winbarEl.innerHTML = '<span class="mono-winbar-label">estimating win odds…</span>';
+			}
+
+			// --- per-player scoreboard ---
+			this.hudPlayersEl.innerHTML = this.game.players.map(p => {
+				const cls = 'mono-hud-player'
+					+ (p.bankrupt ? ' bankrupt' : '')
+					+ (this.game.currentPlayerIdx === p.id && !this.game.gameOver ? ' active' : '')
+					+ (p.id === this.humanId ? ' you' : '');
+				const worth = this._netWorth(p.id);
+				return `
+					<div class="${cls}">
+						<span class="mono-hud-token">${PLAYER_TOKENS[p.id] || '●'}</span>
+						<span class="mono-hud-name" style="color:${PLAYER_COLORS[p.id]}">${p.name}${p.inJail ? ' 🔒' : ''}</span>
+						<span class="mono-hud-cash">$${p.money}</span>
+						<span class="mono-hud-worth" title="Net worth (cash + property + houses)">≈$${worth}</span>
+					</div>
+				`;
+			}).join('');
+		}
+
+		// ---- First-run coach-mark tour (dismissible, remembered in localStorage). Points at the few
+		// non-obvious things a new player needs: the win bar, click-to-trade, the dice, and the AI
+		// speed control. Each step spotlights a target element and anchors a text card near it. ----
+
+		_maybeStartTour() {
+			let seen = false;
+			try { seen = localStorage.getItem('monopoly-tour-done') === '1'; } catch (e) { /* storage blocked - just show it */ }
+			if (seen) return;
+			// let the board/HUD lay out first so target rects are real
+			requestAnimationFrame(() => requestAnimationFrame(() => this._startTour()));
+		}
+
+		_startTour() {
+			this._tourSteps = [
+				{ sel: '#mono-hud-players', text: '<b>This is the scoreboard.</b> You\'re the underlined player. Track everyone\'s cash and net worth here.' },
+				{ sel: '#mono-winbar', text: '<b>Your live win odds.</b> Re-estimated from thousands of simulated games each round — watch it swing as the game turns.' },
+				{ sel: '#mono-board', text: '<b>Hover any property</b> to see its full rent ladder and owner. <b>Click a rival\'s property</b> (on your turn) to propose a trade for it.' },
+				{ sel: '#mono-dice-area', text: '<b>Roll here on your turn.</b> Buying, building, and trading all happen through prompts as you play.' },
+				{ sel: '#mono-controls', text: '<b>Set the AI speed</b> here if the opponents move too fast or slow. That\'s it — good luck!' }
+			];
+			this._tourIdx = 0;
+			this.tourEl.style.display = 'block';
+			this.root.querySelector('#mono-tour-next').onclick = () => this._tourAdvance(1);
+			this.root.querySelector('#mono-tour-skip').onclick = () => this._endTour();
+			this._showTourStep();
+			// reposition on resize/scroll while the tour is open
+			this._tourReposition = () => this._showTourStep();
+			window.addEventListener('resize', this._tourReposition);
+			window.addEventListener('scroll', this._tourReposition, true);
+		}
+
+		_tourAdvance(dir) {
+			this._tourIdx += dir;
+			if (this._tourIdx >= this._tourSteps.length) { this._endTour(); return; }
+			this._showTourStep();
+		}
+
+		_showTourStep() {
+			const step = this._tourSteps[this._tourIdx];
+			const target = this.root.querySelector(step.sel);
+			const spot = this.root.querySelector('#mono-tour-spotlight');
+			const card = this.root.querySelector('#mono-tour-card');
+			this.root.querySelector('#mono-tour-text').innerHTML = step.text;
+			this.root.querySelector('#mono-tour-progress').textContent = `${this._tourIdx + 1} / ${this._tourSteps.length}`;
+			this.root.querySelector('#mono-tour-next').textContent = this._tourIdx === this._tourSteps.length - 1 ? 'Done' : 'Next';
+			const r = target ? target.getBoundingClientRect() : null;
+			if (!r || (!r.width && !r.height)) {
+				// target not visible (e.g. dice hidden before first roll) - center the card, no spotlight
+				spot.style.display = 'none';
+				card.style.left = '50%'; card.style.top = '50%'; card.style.transform = 'translate(-50%, -50%)';
+				return;
+			}
+			const pad = 6;
+			spot.style.display = 'block';
+			spot.style.left = (r.left - pad) + 'px';
+			spot.style.top = (r.top - pad) + 'px';
+			spot.style.width = (r.width + pad * 2) + 'px';
+			spot.style.height = (r.height + pad * 2) + 'px';
+			// place the card below the target if there's room, else above; clamp horizontally
+			card.style.transform = 'none';
+			const cardW = 280;
+			let left = r.left + r.width / 2 - cardW / 2;
+			left = Math.max(10, Math.min(left, window.innerWidth - cardW - 10));
+			card.style.left = left + 'px';
+			card.style.width = cardW + 'px';
+			const below = r.bottom + 12;
+			if (below + 130 < window.innerHeight) card.style.top = below + 'px';
+			else card.style.top = Math.max(10, r.top - 142) + 'px';
+		}
+
+		_endTour() {
+			this.tourEl.style.display = 'none';
+			try { localStorage.setItem('monopoly-tour-done', '1'); } catch (e) { /* ignore */ }
+			if (this._tourReposition) {
+				window.removeEventListener('resize', this._tourReposition);
+				window.removeEventListener('scroll', this._tourReposition, true);
+				this._tourReposition = null;
 			}
 		}
 
@@ -712,12 +1123,16 @@
 		 * awaited by callers (transactions can be frequent; the game loop must not slow down for a
 		 * cosmetic flourish). No-ops quietly if either endpoint is missing or amount is 0 - a
 		 * rendering hiccup here must never affect the actual game state. */
-		_flyBills(amount, from, to) {
-			if (!amount || !from || !to || !this.fxLayerEl) return;
+		_flyBills(amount, from, to, label) {
+			if (!amount || !from || !to || !this.fxLayerEl) {
+				this._dlog('    _flyBills ABORT', label || '', 'amount=', amount, 'from=', from, 'to=', to, 'fxLayerEl=', !!this.fxLayerEl);
+				return;
+			}
 			const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 			const bills = this._billList(amount);
-			const stagger = reduceMotion ? 0 : 40;
-			const duration = reduceMotion ? 1 : 420;
+			const stagger = reduceMotion ? 0 : 80;
+			const duration = reduceMotion ? 1 : 850;
+			this._dlog('    _flyBills', label || '', 'amount=', amount, 'bills=', bills, 'from=', from, 'to=', to, 'totalStaggerSpan=', (bills.length - 1) * stagger + 'ms', 'reduceMotion=', reduceMotion);
 			bills.forEach((value, i) => {
 				setTimeout(() => {
 					const el = document.createElement('div');
@@ -726,24 +1141,50 @@
 					el.style.left = from.x + 'px';
 					el.style.top = from.y + 'px';
 					this.fxLayerEl.appendChild(el);
+					this._dlog('      bill#' + i, label || '', '$' + value, 'appended, connected=', el.isConnected, 'rect=', el.getBoundingClientRect ? JSON.stringify(el.getBoundingClientRect()) : 'n/a', 'computedDisplay=', getComputedStyle(el).display, 'computedVisibility=', getComputedStyle(el).visibility, 'computedZIndex=', getComputedStyle(el).zIndex, 'computedBg=', getComputedStyle(el).backgroundImage.slice(0, 40));
 					requestAnimationFrame(() => {
 						el.style.transitionDuration = duration + 'ms';
 						el.style.left = to.x + 'px';
 						el.style.top = to.y + 'px';
 						el.style.opacity = '0';
+						this._dlog('      bill#' + i, label || '', '$' + value, 'rAF fired: left=', el.style.left, 'top=', el.style.top);
 					});
-					setTimeout(() => el.remove(), duration + 60);
+					setTimeout(() => {
+						this._dlog('      bill#' + i, label || '', '$' + value, 'removed after', duration + 60, 'ms, wasConnected=', el.isConnected);
+						el.remove();
+					}, duration + 60);
 				}, i * stagger);
 			});
 		}
 
 		/** Fire-and-forget flying deed-card animation for a single property ownership change, from
 		 * `from` to `to` (viewport {x,y} points) - mirrors _flyBills but for one card, used for
-		 * bank<->player and player<->player property transfers (see _diffAndAnimate). */
-		_flyProperty(pos, from, to) {
-			if (!from || !to || !this.fxLayerEl || !this.game) return;
+		 * bank<->player and player<->player property transfers (see _diffAndAnimate).
+		 * @param expectedDisplayOwner the value the caller just wrote into
+		 * this._pendingPropertyDisplay.set(pos, ...) for this specific flight - must be cleared once
+		 * the flight is done (lands, or aborts early for a missing anchor/game) so the dock display
+		 * can catch up to the real owner (see _previewOwner's comment). Checked-and-cleared rather
+		 * than blindly deleted, in case a second flight for the same pos started (and overwrote the
+		 * map entry) before this one's timer fired - that would otherwise let this call's landing
+		 * incorrectly release the OTHER flight's still-pending override. */
+		_flyProperty(pos, from, to, expectedDisplayOwner) {
+			const releasePendingDisplay = () => {
+				if (this._pendingPropertyDisplay.get(pos) === expectedDisplayOwner) {
+					this._pendingPropertyDisplay.delete(pos);
+					// both surfaces read _previewOwner (see its comment) and must stay in sync -
+					// _renderPlayers for the dock's property list, _renderBoardState for the board
+					// tile's owner chip.
+					this._renderPlayers();
+					this._renderBoardState();
+				}
+			};
+			if (!from || !to || !this.fxLayerEl || !this.game) {
+				this._dlog('    _flyProperty ABORT pos=', pos, 'from=', from, 'to=', to, 'fxLayerEl=', !!this.fxLayerEl, 'game=', !!this.game);
+				releasePendingDisplay();
+				return;
+			}
 			const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			const duration = reduceMotion ? 1 : 450;
+			const duration = reduceMotion ? 1 : 900;
 			const space = this.game.getSpace(pos);
 			const barColor = (space.group && GROUP_COLORS[space.group]) || '#999';
 			const el = document.createElement('div');
@@ -752,41 +1193,96 @@
 			el.style.left = from.x + 'px';
 			el.style.top = from.y + 'px';
 			this.fxLayerEl.appendChild(el);
+			this._dlog('    _flyProperty', space.name, 'from=', from, 'to=', to, 'sameSpot=', (from.x === to.x && from.y === to.y), 'duration=', duration, 'connected=', el.isConnected, 'rect=', el.getBoundingClientRect ? JSON.stringify(el.getBoundingClientRect()) : 'n/a');
 			requestAnimationFrame(() => {
 				el.style.transitionDuration = duration + 'ms';
 				el.style.left = to.x + 'px';
 				el.style.top = to.y + 'px';
 				el.style.opacity = '0';
+				this._dlog('    _flyProperty', space.name, 'rAF fired: computedOpacity=', getComputedStyle(el).opacity, 'computedLeft=', el.style.left, 'computedTop=', el.style.top);
 			});
-			setTimeout(() => el.remove(), duration + 60);
+			setTimeout(() => {
+				this._dlog('    _flyProperty', space.name, 'landed after', duration + 60, 'ms, wasConnected=', el.isConnected, '- releasing pending-display override');
+				el.remove();
+				releasePendingDisplay();
+			}, duration + 60);
 		}
 
 		/** Diffs this._prevMoney/_prevProperties (snapshotted after the previous render pass) against
 		 * live game state and fires flying-bill/flying-property animations for whatever changed -
 		 * the generic mechanism that covers rent, tax, salary, buying, mortgaging, building,
 		 * card effects, auctions, and trades without bespoke per-event-type wiring (see class-level
-		 * comment in newGame() for why). this._txHint, when set by the caller just before _renderAll()
-		 * (see _onGameEvent/_onAgentDecision), disambiguates player-to-player vs bank-involved for the
+		 * comment in newGame() for why). Only called at a handful of deliberate "screen is clear"
+		 * checkpoints - a board notice finishing its dismiss (_drainEventQueue), a human decision
+		 * modal closing (_hideModal), and a fallback after every full turn in _runLoop - never as
+		 * part of _renderAll's own immediate visual refresh, so it always sees the FULL diff
+		 * accumulated since the last checkpoint in one shot, regardless of how many intermediate
+		 * decide-then-mutate steps happened in between (a liquidation loop mortgaging several
+		 * properties to cover rent, for instance). this._txHint, when set by the caller just before
+		 * the event/decision that will need a checkpoint to actually show its effect (see
+		 * _onGameEvent/_onAgentDecision), disambiguates player-to-player vs bank-involved for the
 		 * cases where the callback itself already knows unambiguously (rent's owner, a resolved
 		 * trade's two sides, bankruptcy's creditor) - pure diffing alone can't always tell "A lost $X,
 		 * B gained $X" apart from "A lost $X to the bank" + "B separately gained $X from the bank in
 		 * the same pass" (rare, but e.g. simultaneous rent+card in one pass could coincide). Falls
-		 * back to pure diffing whenever no hint matches. A hint is kept alive for up to 2 diff passes
-		 * before expiring unused: bankruptcy's emitEvent('bankruptcy', ...) fires (and triggers this
-		 * method, via _onGameEvent's _renderAll()) BEFORE declareBankruptcy actually moves the
-		 * creditor's money/properties in game.js - so the money/property diff this hint is meant for
-		 * doesn't show up until the FOLLOWING _renderAll() call, one pass later than where the hint
-		 * was set. Rent and trade hints match on the same pass they're set and so consume immediately
-		 * either way. */
-		_diffAndAnimate() {
-			if (!this.game || !this._prevMoney) return;
-			const hint = this._txHint;
-			if (hint) {
-				hint._age = (hint._age || 0) + 1;
-				this._txHint = hint._age < 2 ? hint : null; // expire after this pass either way
+		 * back to pure diffing whenever no hint matches or a checkpoint's diff doesn't have the right
+		 * shape to be it (exactly one gainer, one loser, matching amounts) - a stale hint just sits
+		 * unused until either consumed or overwritten by the next one, no arbitrary expiry needed now
+		 * that checkpoints are sparse and deliberate rather than firing on every micro-mutation. */
+		/** Sets the current player-to-player transaction hint. Before replacing an existing hint, it
+		 * flushes any money diff accumulated so far against the OLD hint (via _diffAndAnimate) - so a
+		 * still-unsettled hint (common for rent, which game.js emits before actually moving the money)
+		 * is always resolved against its own transaction before a newer event can overwrite it. Without
+		 * this, back-to-back money events in one turn would leave the earlier hint stale, and its cash
+		 * would fall back to bank legs instead of flying player-to-player. */
+		_setTxHint(hint) {
+			if (this._txHint && this._prevMoney) {
+				// give the old hint a chance to claim whatever's moved since it was set
+				this._diffAndAnimate('preHintFlush');
 			}
+			this._txHint = hint;
+			this._dlog('  set txHint:', hint);
+		}
+
+		/** If `hint` names a from/to pair, tries to pull a matching player-to-player leg out of the
+		 * accumulated gained/lost lists: the named payer must have lost at least `amt` and the named
+		 * payee gained at least `amt`, where `amt` is the hint's own amount if known, else the smaller
+		 * of the two sides. Mutates gained/lost in place (subtracting the matched amount, dropping
+		 * zeroed entries) and returns the matched {fromId, toId, amount} or null. Robust to OTHER
+		 * simultaneous bank transactions in the same diff (e.g. rent paid after a liquidation that
+		 * mortgaged properties) - only the matched pair flies player-to-player; the remainder still
+		 * routes through the bank below. */
+		_matchHintPair(hint, gained, lost) {
+			if (!hint || (hint.type !== 'rent' && hint.type !== 'trade' && hint.type !== 'bankruptcyCreditor')) return null;
+			// a trade can net either direction depending on the offer, so accept both orderings;
+			// rent/bankruptcy always flow payer(from)->payee(to)
+			const orderings = hint.type === 'trade'
+				? [[hint.fromId, hint.toId], [hint.toId, hint.fromId]]
+				: [[hint.fromId, hint.toId]];
+			for (const [payerId, payeeId] of orderings) {
+				const loser = lost.find(l => l.id === payerId);
+				const gainer = gained.find(g => g.id === payeeId);
+				if (!loser || !gainer) continue;
+				// prefer the hint's declared amount when it's actually present on both sides; otherwise
+				// take whatever overlaps (the smaller of the two deltas)
+				let amt = Math.min(loser.delta, gainer.delta);
+				if (hint.amount && hint.amount <= loser.delta && hint.amount <= gainer.delta) amt = hint.amount;
+				if (amt <= 0) continue;
+				loser.delta -= amt;
+				gainer.delta -= amt;
+				if (loser.delta === 0) lost.splice(lost.indexOf(loser), 1);
+				if (gainer.delta === 0) gained.splice(gained.indexOf(gainer), 1);
+				return { fromId: payerId, toId: payeeId, amount: amt };
+			}
+			return null;
+		}
+
+		_diffAndAnimate(source) {
+			if (!this.game || !this._prevMoney) { this._dlog('diffAndAnimate SKIP', source || '?', 'no game/prevMoney yet'); return; }
+			const hint = this._txHint;
 			const active = this.game.players;
 			const bank = this._bankAnchor();
+			this._dlog('diffAndAnimate START', source || '?', 'hint=', hint, 'bankAnchor=', bank ? 'ok' : 'NULL');
 
 			// ---- money diffs ----
 			const gained = []; // {id, delta}
@@ -796,45 +1292,70 @@
 				if (delta > 0) gained.push({ id: p.id, delta });
 				else if (delta < 0) lost.push({ id: p.id, delta: -delta });
 			});
+			this._dlog('  money diff: prevMoney=', this._prevMoney, 'liveMoney=', Object.fromEntries(active.map(p => [p.id, p.money])), 'gained=', gained, 'lost=', lost);
 			if (gained.length || lost.length) {
-				// Player-to-player hint: exactly one loser and one gainer, matching amounts, and the
-				// hint names those same two players (rent always flows payer->owner; a trade can net
-				// either direction depending on the offer, so both orderings are accepted) - fly
-				// directly between their docks, bypassing bank.
-				const hintPair = hint && (hint.type === 'rent' || hint.type === 'trade' || hint.type === 'bankruptcyCreditor')
-					&& gained.length === 1 && lost.length === 1
-					&& gained[0].delta === lost[0].delta
-					&& ((hint.fromId === lost[0].id && hint.toId === gained[0].id)
-						|| (hint.type === 'trade' && hint.fromId === gained[0].id && hint.toId === lost[0].id));
-				if (hintPair) {
-					this._txHint = null; // consumed - don't let it linger into a later unrelated pass
-					const fromAnchor = this._dockAnchor(lost[0].id);
-					const toAnchor = this._dockAnchor(gained[0].id);
-					this._flyBills(gained[0].delta, fromAnchor, toAnchor);
-				} else {
-					// Bank-involved (default): each gain flies from the bank to that player, each loss
-					// flies from that player to the bank - independent flurries, not paired up, since
-					// e.g. "collect $10 from every player" is 3 separate player->bank legs into one
-					// implicit collector (handled via the trade/rent hint above when there IS a single
-					// named recipient) - true "one pays bank, unrelated player also paid this pass"
-					// coincidences render as two independent bank legs, which is still visually correct.
-					gained.forEach(g => this._flyBills(g.delta, bank, this._dockAnchor(g.id)));
-					lost.forEach(l => this._flyBills(l.delta, this._dockAnchor(l.id), bank));
+				// First, pull out a hinted player-to-player leg (rent/trade/bankruptcy) if the diff
+				// contains one - this flies directly dock-to-dock and is removed from the lists so it
+				// isn't double-counted. Only consume (null) the hint once its pair actually appears in
+				// the diff; a hint set before its money has moved (rent - see _onGameEvent) simply
+				// survives to the next checkpoint where the money is finally present.
+				const matched = this._matchHintPair(hint, gained, lost);
+				if (matched) {
+					this._txHint = null; // consumed - its transaction has now been animated
+					const fromAnchor = this._dockAnchor(matched.fromId);
+					const toAnchor = this._dockAnchor(matched.toId);
+					this._dlog('  -> HINT-PAIR flight: player', matched.fromId, '-> player', matched.toId, 'amount=', matched.amount, 'fromAnchor=', fromAnchor ? 'ok' : 'NULL', 'toAnchor=', toAnchor ? 'ok' : 'NULL');
+					this._flyBills(matched.amount, fromAnchor, toAnchor, `p${matched.fromId}->p${matched.toId}`);
 				}
+				// Whatever remains after the hinted pair is bank-involved: each gain flies from the bank
+				// to that player, each loss flies from that player to the bank - independent flurries,
+				// not paired up, since e.g. "collect $10 from every player" is 3 separate player->bank
+				// legs into one implicit collector (the hinted single-recipient case is handled above).
+				gained.forEach(g => {
+					const toAnchor = this._dockAnchor(g.id);
+					this._dlog('  -> BANK->player flight: bank -> player', g.id, 'amount=', g.delta, 'bankAnchor=', bank ? 'ok' : 'NULL', 'toAnchor=', toAnchor ? 'ok' : 'NULL');
+					this._flyBills(g.delta, bank, toAnchor, `bank->p${g.id}`);
+				});
+				lost.forEach(l => {
+					const fromAnchor = this._dockAnchor(l.id);
+					this._dlog('  -> player->BANK flight: player', l.id, '-> bank amount=', l.delta, 'fromAnchor=', fromAnchor ? 'ok' : 'NULL', 'bankAnchor=', bank ? 'ok' : 'NULL');
+					this._flyBills(l.delta, fromAnchor, bank, `p${l.id}->bank`);
+				});
+			} else {
+				this._dlog('  -> no money diff this pass');
 			}
 
 			// ---- property owner diffs ----
+			let propChanges = 0;
 			Object.keys(this.game.properties).forEach(posStr => {
 				const pos = Number(posStr);
 				const prop = this.game.properties[pos];
 				const prevOwner = this._prevProperties[pos];
 				if (prevOwner === prop.owner) return;
+				propChanges++;
 				const toAnchor = prop.owner !== null ? this._dockAnchor(prop.owner) : bank;
 				const fromAnchor = (prevOwner !== null && prevOwner !== undefined) ? this._dockAnchor(prevOwner) : bank;
-				this._flyProperty(pos, fromAnchor, toAnchor);
+				this._dlog('  -> property flight: pos', pos, this.game.getSpace(pos).name, 'owner', prevOwner, '->', prop.owner, 'fromAnchor=', fromAnchor ? 'ok' : 'NULL', 'toAnchor=', toAnchor ? 'ok' : 'NULL');
+				// Hold the dock display at the OLD owner until this flight lands - see
+				// _previewOwner's comment for why (otherwise the destination dock already shows the
+				// property before the card even starts flying, and the flight looks like a no-op).
+				const displayOwner = prevOwner === undefined ? null : prevOwner;
+				this._pendingPropertyDisplay.set(pos, displayOwner);
+				this._flyProperty(pos, fromAnchor, toAnchor, displayOwner);
 			});
+			if (propChanges) {
+				// The docks/board were already rendered with the NEW owner (by whatever _renderAll()
+				// call happened right after the decision resolved, before this checkpoint) - re-render
+				// now so the pending-display overrides just set above actually take effect, rolling the
+				// display back to the old owner for the duration of each flight.
+				this._renderPlayers();
+				this._renderBoardState();
+			} else {
+				this._dlog('  -> no property diff this pass');
+			}
 
 			this._snapshotState();
+			this._dlog('diffAndAnimate END', source || '?');
 		}
 
 		/** Captures current money/property-owner state for the next _diffAndAnimate() call to diff
@@ -1046,7 +1567,7 @@
 							<div class="mono-prop-card-name">${space.name}</div>
 							<div class="mono-prop-card-row">
 								<span class="mono-prop-status">${status}</span>
-								<span class="mono-prop-rent">$${rent} rent</span>
+								<span class="mono-prop-rent">$${rent} rent &middot; $${space.price} price</span>
 							</div>
 						</div>
 					</div>
@@ -1107,15 +1628,16 @@
 		// can be missed. ----
 
 		async _onAgentDecision(player, method, ctx, result) {
+			this._dlog('onAgentDecision:', method, 'player=', player.id, 'result=', result, 'money(all)=', Object.fromEntries(this.game.players.map(p => [p.id, p.money])));
 			// A resolved (accepted) trade is a direct player-to-player transfer of money/properties -
 			// applyTradeEffects has already run by the time this callback fires (see game.js's
 			// callAgent/handleTradeProposal), so tell _diffAndAnimate to fly bills/cards directly
 			// between these two docks rather than routing through the bank. Both directions are
 			// tagged (proposer<->target) since a trade can net either way depending on the offer.
 			if (method === 'decideTradeResponse' && result) {
-				this._txHint = { type: 'trade', fromId: ctx.proposer.id, toId: player.id };
+				this._setTxHint({ type: 'trade', fromId: ctx.proposer.id, toId: player.id });
 			}
-			this._renderAll(); // the engine already applied this decision's effects (own or AI's) - reflect them now, not at end of turn
+			this._renderAll(); // reflect this decision's already-applied effects (own or AI's) in dock numbers/board immediately - NOT the flying-bill animation itself, which waits for a checkpoint (see _renderAll's comment)
 			// Detect an AI rejecting the HUMAN's own trade proposal (player here is the AI target,
 			// so this doesn't hit the early-return below) - stash it so the next 'action' decision
 			// reopens the trade builder prefilled with the rejected offer instead of the bare
@@ -1218,13 +1740,20 @@
 
 		async _onGameEvent(type, data) {
 			const html = this._describeGameEvent(type, data);
+			this._dlog('onGameEvent:', type, 'player=', data.player ? data.player.id : undefined, 'amount=', data.amount, 'money(all)=', Object.fromEntries(this.game.players.map(p => [p.id, p.money])));
 			// Unambiguous player-to-player cases the callback data already tells us directly, so
 			// _diffAndAnimate doesn't have to guess from the money diff alone - see that method's
 			// comment on why pure diffing can occasionally be ambiguous. Both rent and a
 			// creditor-bankruptcy are payer->payee with an explicit named counterpart.
-			if (type === 'rent') this._txHint = { type: 'rent', fromId: data.player.id, toId: data.owner.id };
-			else if (type === 'bankruptcy' && data.creditor) this._txHint = { type: 'bankruptcyCreditor', fromId: data.player.id, toId: data.creditor.id };
-			this._renderAll(); // reflect this event's already-applied effects (rent, tax, bankruptcy, etc.) immediately
+			// A rent event is emitted by game.js BEFORE the money actually moves (emitEvent then
+			// payMoney - see game.js resolveSpace/card handlers), and payMoney can itself trigger
+			// liquidation notices in between, so the payer->owner cash diff often isn't flushed until a
+			// LATER checkpoint with other transactions mixed in. So the hint carries fromId/toId (and
+			// the expected amount) and _diffAndAnimate pairs that specific pair out of the accumulated
+			// diff rather than requiring the whole diff to be one clean pair - see _matchHintPair.
+			if (type === 'rent') { this._setTxHint({ type: 'rent', fromId: data.player.id, toId: data.owner.id, amount: data.amount }); }
+			else if (type === 'bankruptcy' && data.creditor) { this._setTxHint({ type: 'bankruptcyCreditor', fromId: data.player.id, toId: data.creditor.id }); }
+			this._renderAll(); // reflect this event's already-applied effects (rent, tax, bankruptcy, etc.) in dock numbers/board immediately - flying-bill animation itself waits for a checkpoint (see _renderAll's comment)
 			if (!html) return;
 			await this._queueEventPopup(html, null);
 		}
@@ -1259,12 +1788,15 @@
 			}
 		}
 
-		/** Queues a centered notification popup (AI decision or automatic game event) and returns a
-		 * Promise that resolves once the player dismisses it (clicking "X" or the backdrop). Only
-		 * one notification is ever on screen at a time; if another is already showing, this one
-		 * waits in _eventQueue and the game loop is effectively paused until it's shown and
-		 * dismissed - the caller in game.js awaits this (via onAgentDecision/onEvent), so nothing
-		 * else in the turn proceeds until the player has acknowledged it. */
+		/** Queues a notification (AI decision or automatic game event), shown in a spot on the board
+		 * itself (.mono-event-notice, overlaid on the center logo - see _renderBoardSkeleton) rather
+		 * than a blocking centered popup, and returns a Promise that resolves once it's cleared. Only
+		 * one notification is ever on screen at a time; if another is already showing, this one waits
+		 * in _eventQueue. Each notice auto-dismisses after a short delay (scaled by the same "AI
+		 * speed" setting that paces bot turns, so slowing that down also gives more time to read
+		 * notices) rather than requiring a click - clicking it just skips the wait early. The caller
+		 * in game.js awaits this (via onAgentDecision/onEvent), so nothing else in the turn proceeds
+		 * until the notice has cleared. */
 		_queueEventPopup(html, borderColor) {
 			return new Promise(resolve => {
 				this._eventQueue.push({ html, borderColor, resolve });
@@ -1276,19 +1808,38 @@
 			if (this._eventShowing || !this._eventQueue.length) return;
 			this._eventShowing = true;
 			const { html, borderColor, resolve } = this._eventQueue.shift();
-			this.eventModalEl.style.borderColor = borderColor || '';
-			this.eventModalEl.innerHTML = `${html}<button class="mono-event-close-btn" id="mono-event-close" title="Dismiss" aria-label="Dismiss">&times;</button>`;
-			this.eventModalBackdrop.style.display = 'flex';
+			const noticeText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+			this._dlog('notice SHOW:', noticeText);
+			this.eventNoticeEl.style.borderColor = borderColor || '';
+			this.eventNoticeEl.innerHTML = html;
+			this.eventNoticeEl.style.display = 'block';
+			this._centerTitleEl().style.display = 'none';
 			const dismiss = () => {
-				this.eventModalBackdrop.style.display = 'none';
-				this.eventModalEl.innerHTML = '';
-				this.eventModalEl.style.borderColor = '';
+				this._dlog('notice DISMISS:', noticeText);
+				if (this._eventDismissTimer) { clearTimeout(this._eventDismissTimer); this._eventDismissTimer = null; }
+				this.eventNoticeEl.style.display = 'none';
+				this.eventNoticeEl.innerHTML = '';
+				this.eventNoticeEl.style.borderColor = '';
+				this.eventNoticeEl.onclick = null;
+				this._centerTitleEl().style.display = '';
 				this._eventShowing = false;
+				// The board is clear again right here - the one moment guaranteed not to be mid-popup
+				// or mid-liquidation-loop, so this is where the flying-bill/property animation for
+				// whatever changed while this notice was up (and anything that happened right before
+				// it, still unanimated) actually fires. See _renderAll's comment for why this can't
+				// just live there instead.
+				this._diffAndAnimate('noticeDismiss:' + noticeText.slice(0, 40));
 				resolve();
 				this._drainEventQueue(); // show the next queued notification, if any
 			};
-			this.eventModalEl.querySelector('#mono-event-close').onclick = dismiss;
-			this.eventModalBackdrop.onclick = (e) => { if (e.target === this.eventModalBackdrop) dismiss(); };
+			this.eventNoticeEl.onclick = dismiss; // click to skip the wait
+			// same 150/650/1400ms tiers as the bot-action pacing (this.speed), floored so even "Fast"
+			// leaves a notice on screen long enough to register rather than flickering
+			this._eventDismissTimer = setTimeout(dismiss, Math.max(500, this.speed * 2));
+		}
+
+		_centerTitleEl() {
+			return this.root.querySelector('#mono-center-title');
 		}
 
 		// ---- Human decision handling ----
@@ -1372,33 +1923,74 @@
 			this.modalBackdrop.style.display = 'flex';
 		}
 
-		_hideModal() {
+		/** @param deferCheckpoint - true for the one case (buying a property) where closing the modal
+		 * happens BEFORE resolve() unblocks game.js to actually apply the mutation (see
+		 * _modalBuyProperty), so animating here would still see pre-purchase state. In that case the
+		 * caller queues _diffAndAnimate() as a macrotask instead (setTimeout 0), which runs after the
+		 * resolve() continuation's mutation has had a chance to complete synchronously. */
+		_hideModal(deferCheckpoint) {
 			this.modalBackdrop.style.display = 'none';
 			this.modalEl.innerHTML = '';
+			// Mirrors _drainEventQueue's dismiss() for the human's own decisions (buy/jail/action/
+			// trade/auction) - the modal closing is this path's "board is clear again" checkpoint, so
+			// the flying-bill/property animation for whatever the human's choice just changed fires
+			// here rather than inside _renderAll (see its comment for why).
+			if (deferCheckpoint) setTimeout(() => this._diffAndAnimate('hideModal(deferred)'), 0);
+			else this._diffAndAnimate('hideModal');
+		}
+
+		/** How many of a purchasable space's "set" the player would own after acquiring `pos`, and the
+		 * set size - drives the buy modal's "completes a set / N of M" callout. Works for color groups,
+		 * rails, and utilities. Returns null for non-set spaces. */
+		_setProgressAfterBuy(playerId, pos) {
+			const space = this.game.getSpace(pos);
+			let members;
+			let label;
+			if (space.type === 'property') { members = Board.GROUP_MEMBERS[space.group]; label = `${space.group} set`; }
+			else if (space.type === 'rail') { members = Board.RAIL_POSITIONS; label = 'stations'; }
+			else if (space.type === 'utility') { members = Board.UTILITY_POSITIONS; label = 'utilities'; }
+			else return null;
+			const ownedNow = members.filter(m => this.game.properties[m].owner === playerId).length;
+			return { owned: ownedNow + 1, total: members.length, label };
 		}
 
 		_modalBuyProperty(ctx) {
 			const space = this.game.getSpace(ctx.pos);
+			const afford = ctx.player.money >= space.price;
+			const prog = this._setProgressAfterBuy(ctx.player.id, ctx.pos);
+			let setCallout = '';
+			if (prog) {
+				const completes = prog.owned === prog.total;
+				setCallout = `<div class="mono-buy-callout${completes ? ' complete' : ''}">${completes ? '🎉 Completes your ' + prog.label + '!' : `You'd own ${prog.owned} of ${prog.total} ${prog.label}`}</div>`;
+			}
 			this._showModal(`
-				<h3>${space.name}</h3>
-				<p>Price: $${space.price} &nbsp; Your cash: $${ctx.player.money}</p>
-				<p class="mono-hint">Rent: ${space.rent ? space.rent.join(' / ') : 'varies'}</p>
+				<h3>Buy this property?</h3>
+				<div class="mono-deed-card">${this._deedTipHtml(ctx.pos)}</div>
+				${setCallout}
+				<p class="mono-buy-cash">Your cash: <b>$${ctx.player.money}</b> → <b>$${ctx.player.money - space.price}</b> after buying</p>
 				<div class="mono-modal-actions">
-					<button class="mono-btn" id="mono-buy-yes">Buy for $${space.price}</button>
+					<button class="mono-btn" id="mono-buy-yes" ${afford ? '' : 'disabled title="Not enough cash"'}>Buy for $${space.price}</button>
 					<button class="mono-btn secondary" id="mono-buy-no">Pass (go to auction)</button>
 				</div>
 			`);
-			this.modalEl.querySelector('#mono-buy-yes').onclick = () => { this._hideModal(); this.humanAgent.resolve('buyProperty', true); };
+			// Buying is resolved by the human clicking here, but the actual money/property mutation
+			// only happens back in game.js's offerPurchaseOrAuction AFTER resolve() unblocks it - so
+			// unlike every other human decision modal, _hideModal() here would checkpoint too early
+			// (same gap decideBuyProperty has for AI, see callAgent's comment). Defer the checkpoint
+			// one tick via resolve()'s continuation instead of firing it inside _hideModal.
+			this.modalEl.querySelector('#mono-buy-yes').onclick = () => { this._hideModal(true); this.humanAgent.resolve('buyProperty', true); };
 			this.modalEl.querySelector('#mono-buy-no').onclick = () => { this._hideModal(); this.humanAgent.resolve('buyProperty', false); };
 		}
 
 		_modalAuctionBid(ctx) {
 			const space = this.game.getSpace(ctx.pos);
 			const minBid = ctx.highBid + 5;
+			const highBidderName = ctx.highBidder !== null ? this.game.players[ctx.highBidder].name : null;
 			this._showModal(`
-				<h3>Auction: ${space.name}</h3>
-				<p>Current high bid: $${ctx.highBid} ${ctx.highBidder !== null ? '(' + this.game.players[ctx.highBidder].name + ')' : ''}</p>
-				<p>Your cash: $${ctx.player.money}</p>
+				<h3>🔨 Auction</h3>
+				<div class="mono-deed-card">${this._deedTipHtml(ctx.pos)}</div>
+				<p>Current high bid: <b>$${ctx.highBid}</b>${highBidderName ? ` <span class="mono-hint">(${highBidderName})</span>` : ' <span class="mono-hint">(no bids yet)</span>'}</p>
+				<label class="mono-hint" for="mono-bid-input">Your bid (min $${minBid}, cash $${ctx.player.money}):</label>
 				<input type="number" id="mono-bid-input" min="${minBid}" max="${ctx.player.money}" value="${minBid}" class="mono-input" />
 				<div class="mono-modal-actions">
 					<button class="mono-btn" id="mono-bid-go">Bid</button>
@@ -1416,13 +2008,14 @@
 		_modalJail(ctx) {
 			const canCard = ctx.player.getOutOfJailFree > 0;
 			const canPay = ctx.player.money >= Board.JAIL_FINE;
+			const attemptsLeft = 3 - ctx.player.jailTurns;
 			this._showModal(`
-				<h3>You're in Jail</h3>
-				<p>Attempt ${ctx.player.jailTurns + 1} of 3</p>
-				<div class="mono-modal-actions">
-					${canCard ? '<button class="mono-btn" id="mono-jail-card">Use Get Out of Jail Free</button>' : ''}
-					${canPay ? `<button class="mono-btn" id="mono-jail-pay">Pay $${Board.JAIL_FINE} Bail</button>` : ''}
-					<button class="mono-btn secondary" id="mono-jail-stay">Try to Roll Doubles</button>
+				<h3>🔒 You're in Jail</h3>
+				<p>Roll attempt <b>${ctx.player.jailTurns + 1} of 3</b> — ${attemptsLeft} left. Roll doubles to get out free, or buy your way out now.</p>
+				<div class="mono-modal-actions vertical">
+					${canCard ? '<button class="mono-btn" id="mono-jail-card">🎟️ Use Get Out of Jail Free card</button>' : ''}
+					${canPay ? `<button class="mono-btn" id="mono-jail-pay">💵 Pay $${Board.JAIL_FINE} bail</button>` : ''}
+					<button class="mono-btn secondary" id="mono-jail-stay">🎲 Try to roll doubles</button>
 				</div>
 			`);
 			if (canCard) this.modalEl.querySelector('#mono-jail-card').onclick = () => { this._hideModal(); this.humanAgent.resolve('jail', 'card'); };
@@ -1437,10 +2030,10 @@
 				return `<button class="mono-btn small" data-idx="${i}">${label} (+$${s.value})</button>`;
 			}).join('');
 			this._showModal(`
-				<h3>Need $${ctx.amountNeeded} — raise cash</h3>
-				<p>Your cash: $${ctx.player.money}</p>
+				<h3>⚠️ Raise cash</h3>
+				<p>You need <b>$${ctx.amountNeeded}</b> but only have <b>$${ctx.player.money}</b>. Sell houses or mortgage properties to cover it, or risk bankruptcy.</p>
 				<div class="mono-modal-actions vertical">${rows}
-					<button class="mono-btn secondary" id="mono-liq-stop">Stop (risk bankruptcy)</button>
+					<button class="mono-btn danger" id="mono-liq-stop">Stop (risk bankruptcy)</button>
 				</div>
 			`);
 			ctx.sellable.forEach((s, i) => {
@@ -1458,28 +2051,46 @@
 			const unmortgageable = player.properties.filter(pos => this.game.properties[pos].mortgaged);
 			const otherPlayers = this.game.activePlayers().filter(p => p.id !== player.id);
 
-			let html = `<h3>Your turn — choose an action</h3><div class="mono-modal-actions vertical">`;
-			buildable.forEach(pos => {
+			// Grouped into labeled sections (Build / Manage / Trade) instead of one flat list, so a
+			// player with many properties can scan by category; each build button disables-with-reason
+			// (rather than vanishing) when its house cost isn't currently affordable, keeping the option
+			// discoverable. A section is omitted entirely only when it has no candidate spaces at all.
+			const section = (title, inner) => inner ? `<div class="mono-action-section"><div class="mono-action-heading">${title}</div>${inner}</div>` : '';
+
+			const buildBtns = buildable.map(pos => {
 				const space = this.game.getSpace(pos);
-				html += `<button class="mono-btn small" data-action="build" data-pos="${pos}">Build on ${space.name} ($${space.houseCost})</button>`;
-			});
-			sellableHouses.forEach(pos => {
-				const space = this.game.getSpace(pos);
-				html += `<button class="mono-btn small" data-action="sellHouse" data-pos="${pos}">Sell house on ${space.name}</button>`;
-			});
-			mortgageable.forEach(pos => {
-				const space = this.game.getSpace(pos);
-				html += `<button class="mono-btn small" data-action="mortgage" data-pos="${pos}">Mortgage ${space.name} (+$${Math.floor(space.price / 2)})</button>`;
-			});
-			unmortgageable.forEach(pos => {
-				const space = this.game.getSpace(pos);
-				const cost = Math.ceil(space.price / 2 * 1.1);
-				html += `<button class="mono-btn small" data-action="unmortgage" data-pos="${pos}">Unmortgage ${space.name} (-$${cost})</button>`;
-			});
-			if (otherPlayers.length) {
-				html += `<button class="mono-btn small" id="mono-act-trade">Propose a Trade...</button>`;
+				const afford = player.money >= space.houseCost;
+				const isHotel = this.game.properties[pos].houses === 4;
+				return `<button class="mono-btn small" data-action="build" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + space.houseCost + '"'}>🏠 ${isHotel ? 'Build hotel' : 'Build house'} on ${space.name} <span class="mono-action-cost">$${space.houseCost}</span></button>`;
+			}).join('');
+
+			const manageBtns = [
+				...sellableHouses.map(pos => {
+					const space = this.game.getSpace(pos);
+					return `<button class="mono-btn small" data-action="sellHouse" data-pos="${pos}">🔻 Sell house on ${space.name}</button>`;
+				}),
+				...mortgageable.map(pos => {
+					const space = this.game.getSpace(pos);
+					return `<button class="mono-btn small" data-action="mortgage" data-pos="${pos}">🏦 Mortgage ${space.name} <span class="mono-action-cost">+$${Math.floor(space.price / 2)}</span></button>`;
+				}),
+				...unmortgageable.map(pos => {
+					const space = this.game.getSpace(pos);
+					const cost = Math.ceil(space.price / 2 * 1.1);
+					const afford = player.money >= cost;
+					return `<button class="mono-btn small" data-action="unmortgage" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + cost + '"'}>🔓 Unmortgage ${space.name} <span class="mono-action-cost">-$${cost}</span></button>`;
+				})
+			].join('');
+
+			const tradeBtns = otherPlayers.length ? `<button class="mono-btn small" id="mono-act-trade">🤝 Propose a trade…</button>` : '';
+
+			let html = `<h3>Your turn — choose an action</h3>`;
+			html += section('Build', buildBtns);
+			html += section('Manage properties', manageBtns);
+			html += section('Trade', tradeBtns);
+			if (!buildBtns && !manageBtns && !tradeBtns) {
+				html += `<p class="mono-hint">No property actions available right now.</p>`;
 			}
-			html += `<button class="mono-btn" data-action="done">End Turn</button></div>`;
+			html += `<div class="mono-modal-actions"><button class="mono-btn" data-action="done">End Turn ▶</button></div>`;
 			this._showModal(html);
 
 			this.modalEl.querySelectorAll('[data-action]').forEach(btn => {
@@ -1504,6 +2115,37 @@
 		 *     offer that was just turned down, with a banner, so adjusting it doesn't mean
 		 *     rebuilding from scratch every round of back-and-forth.
 		 */
+		/** Live "will they accept?" meter for the trade builder, from the AI target's own valuation
+		 * (the same estimateAssetValue + tradeFairnessMargin math evaluateTrade uses), so the readout
+		 * reflects what would actually clear their acceptance threshold. Values what the target would
+		 * RECEIVE vs GIVE UP, both priced from the target's perspective; a non-negative net (after their
+		 * fairness margin) reads as likely-accept. No-ops for a human target (no genome to estimate). */
+		_updateTradeFairness(targetId, state) {
+			const el = this.modalEl.querySelector('#mono-trade-fairness');
+			if (!el) return;
+			const target = this.game.players[targetId];
+			const empty = !state.offerProps.length && !state.requestProps.length && !state.offerMoney && !state.requestMoney && !state.offerCards && !state.requestCards;
+			if (empty) { el.className = 'mono-trade-fairness'; el.innerHTML = '<span class="mono-hint">Build an offer to see if they\'ll accept.</span>'; return; }
+			if (!target.agent || !target.agent.genome) { el.className = 'mono-trade-fairness'; el.innerHTML = ''; return; }
+			const genome = target.agent.genome;
+			const CARD_VAL = 60; // same flat jail-card value strategy.js uses in trade evaluation
+			// value what the TARGET would receive (my offer) and give up (my request), from their view
+			const theyGet = state.offerProps.reduce((s, pos) => s + estimateAssetValue(this.game, targetId, pos, genome), 0)
+				+ (state.offerMoney || 0) + (state.offerCards || 0) * CARD_VAL;
+			const theyGive = state.requestProps.reduce((s, pos) => s + estimateAssetValue(this.game, targetId, pos, genome), 0)
+				+ (state.requestMoney || 0) + (state.requestCards || 0) * CARD_VAL;
+			// they accept when what they get covers what they give up, padded by their fairness margin
+			const required = theyGive * (genome.tradeFairnessMargin || 1);
+			const surplus = theyGet - required;
+			let cls, label;
+			if (surplus >= 0) { cls = 'good'; label = '👍 Likely to accept'; }
+			else if (surplus >= -required * 0.2) { cls = 'close'; label = '🤔 Borderline — sweeten it a little'; }
+			else { cls = 'bad'; label = '👎 Unlikely to accept'; }
+			el.className = 'mono-trade-fairness ' + cls;
+			el.innerHTML = `<div class="mono-fairness-label">${label}</div>`
+				+ `<div class="mono-fairness-detail">They receive ≈$${Math.round(theyGet)} · give up ≈$${Math.round(theyGive)}</div>`;
+		}
+
 		_modalTradeBuilder(ctx, otherPlayers, prefill) {
 			const player = ctx.player;
 			let targetId = (prefill && prefill.targetId !== undefined) ? prefill.targetId : otherPlayers[0].id;
@@ -1540,6 +2182,7 @@
 				};
 				this._renderBoardState();
 				this._renderPlayers();
+				this._updateTradeFairness(targetId, state);
 			};
 			const renderBuilder = () => {
 				const target = this.game.players[targetId];
@@ -1575,6 +2218,7 @@
 							<label class="mono-checkbox-row"><input type="checkbox" id="mono-trade-request-card" ${state.requestCards ? 'checked' : ''} ${target.getOutOfJailFree > 0 ? '' : 'disabled'}> Get Out of Jail Free card</label>
 						</div>
 					</div>
+					<div class="mono-trade-fairness" id="mono-trade-fairness"></div>
 					<div class="mono-modal-actions">
 						<button class="mono-btn" id="mono-trade-send">Send Offer</button>
 						<button class="mono-btn secondary" id="mono-trade-cancel">Cancel</button>
@@ -1637,9 +2281,17 @@
 		_modalTradeResponse(ctx) {
 			const { trade, proposer } = ctx;
 			this._showModal(`
-				<h3>${proposer.name} offers a trade</h3>
-				<p><b>They give you:</b> ${this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards)}</p>
-				<p><b>They want:</b> ${this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards)}</p>
+				<h3>🤝 ${proposer.name} offers a trade</h3>
+				<div class="mono-trade-response">
+					<div class="mono-trade-side get">
+						<div class="mono-trade-side-head">You receive</div>
+						<div>${this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards)}</div>
+					</div>
+					<div class="mono-trade-side give">
+						<div class="mono-trade-side-head">You give up</div>
+						<div>${this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards)}</div>
+					</div>
+				</div>
 				<div class="mono-modal-actions">
 					<button class="mono-btn" id="mono-trade-accept">Accept</button>
 					<button class="mono-btn secondary" id="mono-trade-reject">Reject</button>
