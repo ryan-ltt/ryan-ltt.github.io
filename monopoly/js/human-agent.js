@@ -11,6 +11,9 @@
 			// a decision is needed; the UI is responsible for calling the matching resolve method.
 			this.onNeedDecision = onNeedDecision;
 			this._pending = null; // { resolve, kind, ctx }
+			// lets the engine special-case human players (e.g. the pre-roll action phase in
+			// playTurn, which is offered to humans only so bot behavior stays as grid-searched)
+			this.isHuman = true;
 		}
 
 		_wait(kind, ctx) {

@@ -104,6 +104,19 @@
 			if (typeof this.onEvent === 'function') await this.onEvent(type, data);
 		}
 
+		/** Announces a player-to-player cash transfer at the moment it's about to be applied, so the
+		 * UI can tag the pair BEFORE the money actually moves. Rent/bankruptcy notices are emitted
+		 * only after payMoney() has already transferred (deliberately - see resolvePropertySpace), so
+		 * a hint set from those events arrives too late whenever an intervening checkpoint (a
+		 * liquidation popup's dismiss, say) has already diffed the transfer and routed it through the
+		 * bank as two separate legs. Firing here instead means the pair is always known first.
+		 * Synchronous and optional: no-op for headless sims, since only ui.js assigns onTransfer. */
+		notifyTransfer(from, to, amount) {
+			if (typeof this.onTransfer === 'function' && from && to && amount > 0) {
+				this.onTransfer(from, to, amount);
+			}
+		}
+
 		activePlayers() {
 			return this.players.filter(p => !p.bankrupt);
 		}
@@ -120,7 +133,10 @@
 		async rollDiceForPlayer(player) {
 			await this.callAgent(player, 'decideRoll', { player, game: this });
 			const roll = this.rollDice();
-			if (typeof this.onRoll === 'function') this.onRoll(player, roll[0], roll[1]);
+			// onRoll may return a Promise (the UI's dice-throw animation) - awaiting it makes the token
+			// move wait until the dice have finished being thrown and settled, for every player. No-op
+			// for headless sims/bots (only ui.js assigns onRoll); game state / RNG are untouched.
+			if (typeof this.onRoll === 'function') await this.onRoll(player, roll[0], roll[1]);
 			return roll;
 		}
 
@@ -205,6 +221,19 @@
 			let rolledDoublesCount = 0;
 			let turnActive = true;
 
+			// Pre-roll action phase: lets a player build/mortgage/trade BEFORE rolling. Gated to
+			// human players only - bots' strategy was grid-searched against a post-roll-only turn, so
+			// giving them a second action window would change their (frozen) behavior. For humans it's
+			// the whole point of the UI's whole-turn trading: the action bar and click-to-trade are
+			// live from the moment the turn starts, not just after the roll. actionCtx carries
+			// phase:'preRoll' so the UI shows a Roll button (not End Turn) and knows 'done' means
+			// "proceed to roll", not "end turn". Skipped for jailed players (their turn opens with the
+			// jail decision instead).
+			if (player.agent && player.agent.isHuman && !player.inJail) {
+				await this.postLandingActions(player, 'preRoll');
+				if (player.bankrupt || this.gameOver) { this.checkGameOver(); this.advanceTurn(); return; }
+			}
+
 			while (turnActive && !player.bankrupt && !this.gameOver) {
 				if (player.inJail) {
 					const handled = await this.handleJailTurn(player);
@@ -220,8 +249,9 @@
 					rolledDoublesCount++;
 					if (rolledDoublesCount === 3) {
 						this.logEvent(`${player.name} rolled 3 doubles - go to jail`);
-						await this.emitEvent('gotojail', { player, reason: 'doubles' });
+						// jail first, then notice (so the token is at Jail when the notice dismisses)
 						this.sendToJail(player);
+						await this.emitEvent('gotojail', { player, reason: 'doubles' });
 						turnActive = false;
 						break;
 					}
@@ -233,8 +263,10 @@
 				await this.resolveSpace(player, d1 + d2);
 				if (player.bankrupt || this.gameOver) break;
 
-				// post-landing actions: buy/build/trade offered every stop
-				await this.postLandingActions(player);
+				// post-landing actions: buy/build/trade offered every stop. On a (non-third) double the
+				// player rolls again after this, so signal rollsAgain so the UI labels its button
+				// "Roll Again" rather than "End Turn".
+				await this.postLandingActions(player, undefined, isDouble);
 				if (player.bankrupt || this.gameOver) break;
 
 				if (!isDouble) turnActive = false;
@@ -344,6 +376,8 @@
 		/** Attempts to deduct money; if insufficient, triggers liquidation/bankruptcy flow. creditor is a Player or null (bank). */
 		async payMoney(player, amount, creditor) {
 			if (player.money >= amount) {
+				// tag the pair before the cash moves, so the UI never diffs this as two bank legs
+				this.notifyTransfer(player, creditor, amount);
 				player.money -= amount;
 				if (creditor) creditor.money += amount;
 				else this.freeParkingPot += amount; // house rule OFF by default via config below; harmless if unused
@@ -352,6 +386,7 @@
 			// need to raise cash
 			await this.raiseCash(player, amount);
 			if (player.money >= amount) {
+				this.notifyTransfer(player, creditor, amount);
 				player.money -= amount;
 				if (creditor) creditor.money += amount;
 				return true;
@@ -481,6 +516,7 @@
 			this.logEvent(`${player.name} is BANKRUPT`);
 			await this.emitEvent('bankruptcy', { player, creditor: creditor || null });
 			if (creditor) {
+				this.notifyTransfer(player, creditor, player.money);
 				creditor.money += player.money;
 				player.money = 0;
 				for (const pos of player.properties.slice()) {
@@ -539,8 +575,11 @@
 					break;
 				}
 				case 'gotojail':
-					await this.emitEvent('gotojail', { player, reason: 'space' });
+					// send to jail BEFORE the notice so the token is already at Jail when the notice
+					// dismisses (its _renderAll snaps the token there) - otherwise the move to Jail is
+					// deferred to the next render (e.g. when the action bar appears), reading as laggy.
 					this.sendToJail(player);
+					await this.emitEvent('gotojail', { player, reason: 'space' });
 					break;
 				case 'jail':
 				case 'freeparking':
@@ -570,8 +609,14 @@
 		// apply-before-notify fix already used for tax/decideBuyProperty/decideJail/decideLiquidation/
 		// decideAction: notifying before the effect is applied leaves the UI's diff-based flying-bill
 		// animation with nothing to see at that checkpoint.
+		// Cards that WALK the player are cascading: the draw notice/animation fires BEFORE drawCard()
+		// so the card is revealed first and the token then walks to its destination (otherwise the token
+		// moves before the player is shown why, reading as a jarring "blast" across the board). The
+		// go-to-jail card is deliberately NOT here: it is a teleport (no walk), so it stays non-cascading
+		// - drawCard() jails the player first, then the card flip render snaps the token there right away
+		// rather than deferring the jail move to a later render. UI ordering only, never game state / RNG.
 		static CASCADING_CARD_ACTIONS = new Set([
-			'goBack', 'advanceTo', 'advanceToNearestRail', 'advanceToNearestRail2', 'advanceToNearestUtility'
+			'goBack', 'advanceTo', 'advanceToGo', 'advanceToNearestRail', 'advanceToNearestRail2', 'advanceToNearestUtility'
 		]);
 
 		async drawCardAndNotify(player, card, diceRoll, deck) {
@@ -653,8 +698,9 @@
 						const mult = card.action === 'advanceToNearestRail' ? 2 : 1;
 						const rent = this.calcRent(target, diceRoll) * mult;
 						this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${targetSpace.name}${mult > 1 ? ' (double rent)' : ''}`);
-						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
+						// pay before the notice so the bills fly at its dismiss (see resolvePropertySpace)
 						await this.payMoney(player, rent, owner);
+						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
 					}
 					break;
 				}
@@ -674,8 +720,9 @@
 						if (owner.bankrupt) break;
 						const rent = 10 * diceRoll;
 						this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${targetSpace.name} (10x dice)`);
-						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
+						// pay before the notice so the bills fly at its dismiss (see resolvePropertySpace)
 						await this.payMoney(player, rent, owner);
+						await this.emitEvent('rent', { player, owner, amount: rent, spaceName: targetSpace.name, pos: target });
 					}
 					break;
 				}
@@ -701,8 +748,13 @@
 				if (owner.bankrupt) return;
 				const rent = this.calcRent(space.pos, diceRoll);
 				this.logEvent(`${player.name} owes $${rent} rent to ${owner.name} for ${space.name}`);
-				await this.emitEvent('rent', { player, owner, amount: rent, spaceName: space.name, pos: space.pos });
+				// Pay BEFORE emitting the notice (like tax, above) so that by the time the rent notice's
+				// dismiss fires the UI's flying-bill checkpoint, the money has actually moved and the
+				// bills fly right then - rather than the transfer being deferred to the next checkpoint
+				// (which, for a human, could be the End Turn button). If the player can't afford it,
+				// payMoney's liquidation runs first, then this notice shows the completed payment.
 				await this.payMoney(player, rent, owner);
+				await this.emitEvent('rent', { player, owner, amount: rent, spaceName: space.name, pos: space.pos });
 			}
 		}
 
@@ -777,12 +829,17 @@
 			}
 		}
 
-		async postLandingActions(player) {
-			// Building, mortgage/unmortgage, and trade offers happen here (agent-driven, may loop)
+		async postLandingActions(player, phase, rollsAgain) {
+			// Building, mortgage/unmortgage, and trade offers happen here (agent-driven, may loop).
+			// phase is 'preRoll' when called at the top of the turn (human-only, see playTurn) so the
+			// UI can present a Roll button instead of End Turn; undefined for the normal post-landing
+			// call. rollsAgain is true when this landing was a doubles roll that will be followed by
+			// another roll - the UI uses it to label its primary button "Roll Again" instead of "End
+			// Turn" so a human isn't misled into thinking their turn is over. Bots ignore both.
 			let guard = 0;
 			while (guard < 30) {
 				guard++;
-				const actionCtx = { player, game: this };
+				const actionCtx = { player, game: this, phase, rollsAgain };
 				const action = await this.callAgent(player, 'decideAction', actionCtx);
 				if (!action || action.type === 'done') break;
 				// decideAction is in DEFERRED_NOTIFY_METHODS (see callAgent) so each branch below

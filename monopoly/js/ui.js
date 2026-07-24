@@ -32,10 +32,10 @@
 	// tabletop convention for cards/money dealt to a side seat. Bottom (human) stays upright. `dir`
 	// (0/180/90/-90) drives which generic rotate-* class gets applied, shared by both element kinds.
 	const DOCK_ROTATE = {
-		top: { dir: 180, propClass: 'mono-prop-row-rotate-180', cashClass: 'mono-rotate-180' },
-		left: { dir: 90, propClass: 'mono-prop-row-rotate-left', cashClass: 'mono-rotate-left' },
-		right: { dir: -90, propClass: 'mono-prop-row-rotate-right', cashClass: 'mono-rotate-right' },
-		bottom: { dir: 0, propClass: '', cashClass: '' }
+		top: { dir: 180, assetsClass: 'mono-dock-assets-180' },
+		left: { dir: 90, assetsClass: 'mono-dock-assets-left' },
+		right: { dir: -90, assetsClass: 'mono-dock-assets-right' },
+		bottom: { dir: 0, assetsClass: '' }
 	};
 
 	// Maps board position (0-39) to a {row, col} on an 11x11 grid (standard Monopoly layout,
@@ -61,15 +61,19 @@
 			this.winProbs = null; // {playerId: 0..1} from the most recently completed estimate, or null before the first one lands
 			this.winProbRunId = 0; // bumped whenever a new estimate starts, so stale/in-flight batches can detect they're outdated and stop early
 			// {fromId, toId, offerProps, requestProps, offerMoney, requestMoney, offerCards,
-			// requestCards} while the trade builder is open, so the board/player panels can preview
+			// requestCards} while the trade tray is open, so the board/player panels can preview
 			// what the in-progress (not-yet-sent) offer would do - see _tradePreviewOwner/
-			// _tradePreviewCash and _modalTradeBuilder's live-updating listeners. Never mutates real
-			// game state; null whenever no trade builder is open.
+			// _tradePreviewCash and _updateTradePreview. Never mutates real game state; null whenever
+			// no trade tray is open.
 			this._tradePreview = null;
 			// pos -> playerId|null (bank), overriding _previewOwner's displayed owner while a
 			// _flyProperty animation for that pos is mid-flight - see _previewOwner's comment.
 			this._pendingPropertyDisplay = new Map();
+			// playerIds whose token is currently mid-walk (see _animateTokenMove) - the board-state
+			// stale-position safety net skips these so it can't snap a walking token mid-stride.
+			this._walkingTokens = new Set();
 			this._build();
+			this._preloadDiceArt();
 		}
 
 		_build() {
@@ -83,9 +87,11 @@
 					</div>
 					<div class="mono-dock mono-dock-bottom" id="mono-dock-bottom">
 						<div id="mono-human-dock-card"></div>
+						<div class="mono-action-bar" id="mono-action-bar"></div>
 						<div class="mono-controls" id="mono-controls"></div>
 					</div>
 				</div>
+				<div id="mono-trade-tray" class="mono-trade-tray" style="display:none;"></div>
 				<div class="mono-toggle-row">
 					<button class="mono-log-toggle" id="mono-about-toggle" title="About this game">ℹ️ Read more</button>
 					<button class="mono-log-toggle" id="mono-log-toggle" title="Show event log">📜 Log</button>
@@ -146,6 +152,8 @@
 				bottom: this.root.querySelector('#mono-human-dock-card')
 			};
 			this.controlsEl = this.root.querySelector('#mono-controls');
+			this.actionBarEl = this.root.querySelector('#mono-action-bar');
+			this.tradeTrayEl = this.root.querySelector('#mono-trade-tray');
 			this.logPanelEl = this.root.querySelector('#mono-log-panel');
 			this.logToggleEl = this.root.querySelector('#mono-log-toggle');
 			this.logTabsEl = this.root.querySelector('#mono-log-tabs');
@@ -187,6 +195,10 @@
 			this.die2El = this.root.querySelector('#mono-die-2');
 			this.rollBtnEl = this.root.querySelector('#mono-roll-btn');
 			this.bankEl = this.root.querySelector('#mono-bank');
+			this.bankCashEl = this.root.querySelector('#mono-bank-cash');
+			this.bankPropsEl = this.root.querySelector('#mono-bank-props');
+			this.deckFateEl = this.root.querySelector('#mono-deck-fate');
+			this.deckChestEl = this.root.querySelector('#mono-deck-chest');
 			this.eventNoticeEl = this.root.querySelector('#mono-event-notice');
 			this._renderControls();
 		}
@@ -243,6 +255,21 @@
 		_diceSrc(face) {
 			const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 			return `art/dice-${isDark ? 'dark-' : ''}${face}.png`;
+		}
+
+		/** Preload all 12 dice face images (light + dark) so the throw animation never has to decode an
+		 * image on first use - an un-decoded <img> can render a frame late, which was one cause of the
+		 * throw occasionally appearing to "not play". Runs once at startup, fire-and-forget. */
+		_preloadDiceArt() {
+			if (this._dicePreloaded) return;
+			this._dicePreloaded = [];
+			for (let f = 1; f <= 6; f++) {
+				for (const dark of ['', 'dark-']) {
+					const img = new Image();
+					img.src = `art/dice-${dark}${f}.png`;
+					this._dicePreloaded.push(img); // keep a ref so the browser keeps them cached
+				}
+			}
 		}
 
 		/** Re-points any currently-displayed dice faces at the correct theme variant.
@@ -320,11 +347,31 @@
 				</div>
 				<div class="mono-bank" id="mono-bank" title="The Bank">
 					<div class="mono-bank-label">🏦 Bank</div>
-					<div class="mono-bank-deck" id="mono-bank-deck">
-						<div class="mono-mini-prop mono-deck-card"></div>
-						<div class="mono-mini-prop mono-deck-card"></div>
-						<div class="mono-mini-prop mono-deck-card"></div>
+					<div class="mono-bank-piles">
+						<div class="mono-bank-pile mono-bank-cash" id="mono-bank-cash" title="Bank cash">
+							<div class="mono-bank-bill"></div>
+							<div class="mono-bank-bill"></div>
+							<div class="mono-bank-bill"></div>
+							<div class="mono-bank-pile-cap">$</div>
+						</div>
+						<div class="mono-bank-pile mono-bank-props" id="mono-bank-props" title="Unowned properties">
+							<div class="mono-mini-prop mono-deck-card"></div>
+							<div class="mono-mini-prop mono-deck-card"></div>
+							<div class="mono-mini-prop mono-deck-card"></div>
+						</div>
 					</div>
+				</div>
+				<div class="mono-card-deck mono-deck-fate" id="mono-deck-fate" title="Wild Fate">
+					<div class="mono-card-back"><span>?</span></div>
+					<div class="mono-card-back"><span>?</span></div>
+					<div class="mono-card-back mono-card-back-top"><span>?</span></div>
+					<div class="mono-card-deck-label">Wild Fate</div>
+				</div>
+				<div class="mono-card-deck mono-deck-chest" id="mono-deck-chest" title="Fortune Chest">
+					<div class="mono-card-back chest"><span>🎁</span></div>
+					<div class="mono-card-back chest"><span>🎁</span></div>
+					<div class="mono-card-back chest mono-card-back-top"><span>🎁</span></div>
+					<div class="mono-card-deck-label">Fortune Chest</div>
 				</div>
 			`;
 			this.boardEl.appendChild(center);
@@ -387,13 +434,24 @@
 			}
 			if (!steps.length) return;
 			const perStep = steps.length > 12 ? 45 : (steps.length > 6 ? 75 : 130);
-			for (const stepPos of steps) {
-				const { left, top } = this._cellCenter(stepPos);
-				const { dx, dy } = this._tokenOffset(playerId);
-				token.style.left = (left + dx) + 'px';
-				token.style.top = (top + dy) + 'px';
-				token.dataset.renderedPos = String(stepPos);
-				await this._sleep(perStep);
+			// Mark this token as mid-walk so the _renderBoardState stale-position safety net (which
+			// exists only to snap TELEPORTS - jail, non-walking cards) doesn't override the walk. Any
+			// render that fires while the walk is in flight (e.g. an event popup mid-move) would
+			// otherwise see renderedPos out of step with the already-updated player.pos and instantly
+			// snap the token to the destination and back - the visible "jump back a few tiles then
+			// forward" bug. The walk itself is the source of truth while it runs.
+			this._walkingTokens.add(playerId);
+			try {
+				for (const stepPos of steps) {
+					const { left, top } = this._cellCenter(stepPos);
+					const { dx, dy } = this._tokenOffset(playerId);
+					token.style.left = (left + dx) + 'px';
+					token.style.top = (top + dy) + 'px';
+					token.dataset.renderedPos = String(stepPos);
+					await this._sleep(perStep);
+				}
+			} finally {
+				this._walkingTokens.delete(playerId);
 			}
 		}
 
@@ -409,6 +467,12 @@
 			this.humanId = 0;
 			this._lastTradeAttempt = null;
 			this._pendingTradeRejection = null;
+			this._humanPhase = null;
+			this._actionCtx = null;
+			this._autoRoll = false;
+			if (this.tradeTrayEl) { this.tradeTrayEl.style.display = 'none'; this.tradeTrayEl.innerHTML = ''; }
+			this._tradeSession = null;
+			this._tradePreview = null;
 			this.game = new MonopolyGame(agents, { maxTurns: 600 });
 			// baseline for the diff-based flying-money/property detector (see _diffAndAnimate) - set
 			// BEFORE the first _renderAll() below, so starting cash/no-ownership isn't misread as a
@@ -422,6 +486,7 @@
 			this.game.onMove = (player, oldPos, newPos, direction) => this._onGameMove(player, oldPos, newPos, direction);
 			this.game.onAgentDecision = (player, method, ctx, result) => this._onAgentDecision(player, method, ctx, result);
 			this.game.onEvent = (type, data) => this._onGameEvent(type, data);
+			this.game.onTransfer = (from, to, amount) => this._onTransfer(from, to, amount);
 			this.game.onAuctionStart = (data) => this._onAuctionStart(data);
 			this.game.onAuctionBid = (data) => this._onAuctionBid(data);
 
@@ -476,18 +541,14 @@
 			cell.classList.add('mono-cell-landed');
 		}
 
+		/** onRoll hook (awaited by the engine). Plays the physical dice-throw for whoever is rolling -
+		 * human or AI - and only resolves once the dice have settled, so the token move waits for it. */
 		_onGameRoll(player, d1, d2) {
 			this._positionDiceForCurrentPlayer();
-			this.diceAreaEl.style.display = 'flex';
+			// hide the static roll panel/button; the thrown dice are their own FX elements
 			this.rollBtnEl.style.display = 'none';
-			if (player.id === this.humanId) {
-				// human's own roll: snap the animated dice to the true result
-				this._showFinalRoll(d1, d2);
-			} else {
-				// AI roll: just show their result directly (no animation needed, keeps games watchable at speed)
-				this.die1El.src = this._diceSrc(d1);
-				this.die2El.src = this._diceSrc(d2);
-			}
+			this.diceAreaEl.style.display = 'none';
+			return this._animateDiceThrow(player, d1, d2);
 		}
 
 		async _runLoop() {
@@ -629,6 +690,7 @@
 			this._renderBoardState();
 			this._renderPlayers();
 			this._renderControls();
+			this._renderActionBar();
 			this._positionDiceForCurrentPlayer();
 		}
 
@@ -686,6 +748,18 @@
 			return real;
 		}
 
+		/** Effective Get Out of Jail Free card count for player `id`, accounting for this._tradePreview
+		 * (a jail card being offered/requested in the open trade builder), so the dock CARDS box
+		 * updates live as the offer is edited - same non-mutating preview as _previewCash. */
+		_previewJailCards(id) {
+			const real = this.game.players[id].getOutOfJailFree;
+			const pv = this._tradePreview;
+			if (!pv) return real;
+			if (id === pv.fromId) return real - (pv.offerCards || 0) + (pv.requestCards || 0);
+			if (id === pv.toId) return real + (pv.offerCards || 0) - (pv.requestCards || 0);
+			return real;
+		}
+
 		/** True right now if clicking a property owned by someone else should offer to start a
 		 * trade for it: it must be the human's turn, and the engine must currently be waiting on
 		 * the human's decideAction (the only decision point a trade proposal can be resolved from -
@@ -701,11 +775,15 @@
 		_onCellClick(pos) {
 			if (!this._canProposeTradeNow()) return;
 			const prop = this.game.properties[pos];
-			if (!prop || prop.owner === null || prop.owner === this.humanId) return;
+			if (!prop || prop.owner === null) return;
+			// Tray already open: clicking any property adds/removes it on the appropriate side.
+			if (this._tradeTrayOpen()) { this._tradeAddProp(pos); return; }
+			// Tray closed: only a rival's property opens a new trade (clicking your own with no tray
+			// open has nothing to target yet).
+			if (prop.owner === this.humanId) return;
 			const owner = this.game.players[prop.owner];
 			if (owner.bankrupt) return;
-			const pendingCtx = this.humanAgent._pending.ctx;
-			this._modalTradeBuilder(pendingCtx, this.game.activePlayers().filter(p => p.id !== this.humanId), { targetId: owner.id, requestPos: pos });
+			this._openTradeTray(this.humanAgent._pending.ctx, { targetId: owner.id, requestPos: pos });
 		}
 
 		/** Builds the inner HTML for the hover title-deed tooltip of a purchasable space (property/
@@ -807,11 +885,21 @@
 							info.appendChild(pips);
 						}
 						const realOwner = this.game.players[prop.owner];
-						const canTradeThis = tradeable && realOwner.id !== this.humanId && !realOwner.bankrupt;
+						// A rival's tile is always click-to-trade during your turn. Your OWN tiles become
+						// clickable only while the trade tray is open (to add them to "You give"), so the
+						// tray must be open for the click to have a side to land on. Whichever side a
+						// currently-selected tile is on gets an "in this offer" highlight.
+						const trayOpen = this._tradeTrayOpen();
+						const isMine = realOwner.id === this.humanId;
+						const canTradeThis = tradeable && !realOwner.bankrupt && (isMine ? trayOpen : true);
 						cell.classList.toggle('mono-cell-tradeable', canTradeThis);
-						cell.title = canTradeThis ? `Click to propose a trade for ${space.name}` : '';
+						const inOffer = trayOpen && this._tradeSession &&
+							(this._tradeSession.state.offerProps.includes(space.pos) || this._tradeSession.state.requestProps.includes(space.pos));
+						cell.classList.toggle('mono-cell-in-trade', !!inOffer);
+						cell.title = canTradeThis ? (trayOpen ? `Click to ${inOffer ? 'remove from' : 'add to'} the trade` : `Click to propose a trade for ${space.name}`) : '';
 					} else {
 						cell.classList.remove('mono-cell-tradeable');
+						cell.classList.remove('mono-cell-in-trade');
 						cell.title = '';
 						// Not owned (or its purchase flight hasn't landed yet - see previewOwnerId above)
 						// - show the bank's asking price right on the tile instead of an owner chip, so
@@ -833,6 +921,10 @@
 					// safety net: some engine effects (sent to jail, "advance to X" cards) move a
 					// player without going through movePlayer/onMove, so no walking animation fires
 					// for those - snap the token straight there if it's showing a stale position.
+					// BUT never override a token that is currently mid-walk (see _animateTokenMove):
+					// its renderedPos is legitimately "behind" the final player.pos step by step, and
+					// snapping it here mid-walk is exactly the "jump back and forth" bug.
+					if (this._walkingTokens.has(p.id)) return;
 					if (Number(token.dataset.renderedPos) !== p.pos) {
 						this._placeTokenInstant(p.id, p.pos);
 						token.dataset.renderedPos = String(p.pos);
@@ -876,8 +968,8 @@
 		_startTour() {
 			this._tourSteps = [
 				{ sel: '#mono-human-dock-card', text: '<b>This is you.</b> Each player\'s label — around all four edges of the board — shows their <b>live win odds</b> (re-estimated from thousands of simulated games each round) and net worth, right above their cash.' },
-				{ sel: '#mono-board', text: '<b>Hover any property</b> to see its full rent ladder and owner. <b>Click a rival\'s property</b> (on your turn) to propose a trade for it.' },
-				{ sel: '#mono-dice-area', text: '<b>Roll here on your turn.</b> Buying, building, and trading all happen through prompts as you play.' },
+				{ sel: '#mono-board', text: '<b>Hover any property</b> to see its full rent ladder and owner. <b>Click a rival\'s property or their name</b> (any time during your turn) to start a trade for it — then click more tiles to add them to the deal.' },
+				{ sel: '#mono-action-bar', text: '<b>Your action bar.</b> It always shows whose turn it is. On your turn you can <b>Build</b>, <b>Manage</b>, or <b>Trade</b> — then <b>Roll</b>, and later <b>End Turn</b> — all from here, before and after your roll.' },
 				{ sel: '#mono-controls', text: '<b>Set the AI speed</b> here if the opponents move too fast or slow. That\'s it — good luck!' }
 			];
 			this._tourIdx = 0;
@@ -1052,8 +1144,12 @@
 			return null;
 		}
 
-		_bankAnchor() {
-			return this._elCenter(this.bankEl);
+		/** Bank anchor for flying animations. The bank is now split into a cash pile and a property
+		 * pile, so bills fly to/from the cash pile and deeds to/from the property pile; falls back to
+		 * the whole bank element if a specific pile isn't laid out yet. */
+		_bankAnchor(kind) {
+			const el = kind === 'props' ? this.bankPropsEl : (kind === 'cash' ? this.bankCashEl : this.bankEl);
+			return this._elCenter(el) || this._elCenter(this.bankEl);
 		}
 
 		/** Fires-and-forgets a flurry of individual flying `.mono-bill` divs from `from` to `to`
@@ -1147,6 +1243,93 @@
 			}, duration + 60);
 		}
 
+		/** Physical card-draw animation: a card slides out of its deck to the board center, flips
+		 * face-up to reveal the drawn card's text, holds so it can be read, then flips back and returns
+		 * to the deck. Returns a Promise the caller (the engine, via onEvent) awaits, so the turn pauses
+		 * on the card just like it paused on the old text notice. Clickable to skip the read pause.
+		 * @param deck 'fate' | 'chest'  @param text the card's text  @param player who drew it. */
+		_animateCardDraw(deck, text, player) {
+			return new Promise(resolve => {
+				const deckEl = deck === 'chest' ? this.deckChestEl : this.deckFateEl;
+				const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				const from = this._elCenter(deckEl);
+				const center = this._elCenter(this.boardEl);
+				// no fx layer / not laid out yet: fall back to a plain notice so the draw is never silent
+				if (!this.fxLayerEl || !from || !center) {
+					const label = deck === 'chest' ? '🎴 Fortune Chest' : '🎴 Wild Fate';
+					const who = player ? `<b style="color:${PLAYER_COLORS[player.id]}">${player.name}</b> draws: ` : '';
+					this._queueEventPopup(`<div class="mono-event-title">${label}</div><p>${who}${text}</p>`, null).then(resolve);
+					return;
+				}
+				const deckName = deck === 'chest' ? 'Fortune Chest' : 'Wild Fate';
+				const backGlyph = deck === 'chest' ? '🎁' : '?';
+				const card = document.createElement('div');
+				card.className = 'mono-card-draw';
+				card.innerHTML = `
+					<div class="mono-card-draw-inner">
+						<div class="mono-card-face back${deck === 'chest' ? ' chest' : ''}">${backGlyph}</div>
+						<div class="mono-card-face front">
+							<div class="mono-card-front-head">${deckName}${player ? ' — ' + player.name : ''}</div>
+							<div class="mono-card-front-text">${text}</div>
+						</div>
+					</div>`;
+				// start small, at the deck
+				const startW = 30, cardW = 150, cardH = 200;
+				card.style.width = cardW + 'px';
+				card.style.height = cardH + 'px';
+				card.style.left = (from.x - cardW / 2) + 'px';
+				card.style.top = (from.y - cardH / 2) + 'px';
+				card.style.transformOrigin = 'center center';
+				card.style.transform = `scale(${startW / cardW})`;
+				card.style.opacity = '0';
+				this.fxLayerEl.appendChild(card);
+
+				let done = false;
+				const finish = () => {
+					if (done) return;
+					done = true;
+					card.remove();
+					resolve();
+				};
+				if (reduceMotion) {
+					// no motion: just show it flipped in place briefly, then resolve
+					card.style.opacity = '1';
+					card.style.transform = 'none';
+					card.classList.add('flipped');
+					card.onclick = finish;
+					const t = setTimeout(finish, Math.max(700, this.speed * 2));
+					card._t = t;
+					return;
+				}
+				// 1) fly to center + scale up
+				requestAnimationFrame(() => {
+					card.style.opacity = '1';
+					card.style.left = (center.x - cardW / 2) + 'px';
+					card.style.top = (center.y - cardH / 2) + 'px';
+					card.style.transform = 'scale(1)';
+				});
+				// 2) flip face-up
+				const flipT = setTimeout(() => card.classList.add('flipped'), 520);
+				// 3) hold to read, then fly back
+				const holdMs = Math.max(1100, this.speed * 2.2);
+				let backT, flyingBack = false;
+				const flyBack = () => {
+					if (flyingBack) return; // guard against click + timer both firing it
+					flyingBack = true;
+					clearTimeout(flipT); clearTimeout(backT);
+					card.classList.remove('flipped');
+					card.style.left = (from.x - cardW / 2) + 'px';
+					card.style.top = (from.y - cardH / 2) + 'px';
+					card.style.transform = `scale(${startW / cardW})`;
+					card.style.opacity = '0';
+					setTimeout(finish, 520);
+				};
+				backT = setTimeout(flyBack, 520 + holdMs);
+				// click anywhere on the card to skip straight to flying it back
+				card.onclick = flyBack;
+			});
+		}
+
 		/** Diffs this._prevMoney/_prevProperties (snapshotted after the previous render pass) against
 		 * live game state and fires flying-bill/flying-property animations for whatever changed -
 		 * the generic mechanism that covers rent, tax, salary, buying, mortgaging, building,
@@ -1181,6 +1364,34 @@
 			}
 			this._txHint = hint;
 			this._dlog('  set txHint:', hint);
+		}
+
+		/** game.js's onTransfer: a player-to-player cash payment is about to be applied (rent, a
+		 * bankruptcy handover - anything routed through payMoney with a creditor). This fires BEFORE
+		 * the money moves, which is the whole point: the corresponding rent/bankruptcy notice is only
+		 * emitted afterwards, so a hint set from that event can arrive after some intervening
+		 * checkpoint has already diffed the transfer and split it into player->bank + bank->player
+		 * legs (the bank appearing as a middleman for what is really a direct payment). Tagging the
+		 * pair up front means whichever checkpoint first sees this diff already knows to fly the
+		 * bills straight dock-to-dock. The later rent/bankruptcy hint is then redundant but harmless
+		 * - by that point this one has usually been consumed, and if not it just names the same pair. */
+		_onTransfer(from, to, amount) {
+			if (!from || !to || from.id === to.id || !(amount > 0)) return;
+			this._setTxHint({ type: 'rent', fromId: from.id, toId: to.id, amount });
+		}
+
+		/** _setTxHint, but a no-op when an unconsumed hint already names the same payer->payee pair.
+		 * Used by the rent/bankruptcy notices, which fire after _onTransfer has already tagged the
+		 * same payment: replacing the hint there would trigger _setTxHint's preHintFlush and animate
+		 * the pending transfer at that arbitrary mid-turn moment instead of at the next real
+		 * checkpoint. Direction-sensitive, so a genuine reverse payment still replaces the hint. */
+		_setTxHintIfNew(hint) {
+			const cur = this._txHint;
+			if (cur && cur.fromId === hint.fromId && cur.toId === hint.toId) {
+				this._dlog('  txHint already tagged for this pair, keeping:', cur);
+				return;
+			}
+			this._setTxHint(hint);
 		}
 
 		/** If `hint` names a from/to pair, tries to pull a matching player-to-player leg out of the
@@ -1220,7 +1431,8 @@
 			if (!this.game || !this._prevMoney) { this._dlog('diffAndAnimate SKIP', source || '?', 'no game/prevMoney yet'); return; }
 			const hint = this._txHint;
 			const active = this.game.players;
-			const bank = this._bankAnchor();
+			const bank = this._bankAnchor('cash');       // bills fly to/from the cash pile
+			const bankProps = this._bankAnchor('props');  // deeds fly to/from the property pile
 			this._dlog('diffAndAnimate START', source || '?', 'hint=', hint, 'bankAnchor=', bank ? 'ok' : 'NULL');
 
 			// ---- money diffs ----
@@ -1272,8 +1484,8 @@
 				const prevOwner = this._prevProperties[pos];
 				if (prevOwner === prop.owner) return;
 				propChanges++;
-				const toAnchor = prop.owner !== null ? this._dockAnchor(prop.owner) : bank;
-				const fromAnchor = (prevOwner !== null && prevOwner !== undefined) ? this._dockAnchor(prevOwner) : bank;
+				const toAnchor = prop.owner !== null ? this._dockAnchor(prop.owner) : bankProps;
+				const fromAnchor = (prevOwner !== null && prevOwner !== undefined) ? this._dockAnchor(prevOwner) : bankProps;
 				this._dlog('  -> property flight: pos', pos, this.game.getSpace(pos).name, 'owner', prevOwner, '->', prop.owner, 'fromAnchor=', fromAnchor ? 'ok' : 'NULL', 'toAnchor=', toAnchor ? 'ok' : 'NULL');
 				// Hold the dock display at the OLD owner until this flight lands - see
 				// _previewOwner's comment for why (otherwise the destination dock already shows the
@@ -1318,11 +1530,10 @@
 		 * board panel's edge - the printed $ total is always the real, exact figure, and now so is
 		 * every individual pile (this used to show a fixed one-of-each-denomination set that didn't
 		 * actually sum to the displayed total).
-		 * `slot` drives seat-facing rotation (see DOCK_ROTATE) same as _propertyRowHtml: top/left/right
-		 * rotate to face that seat, bottom (human) stays upright. Rotated piles are wrapped in a
-		 * fixed-size viewport (like the property row) since a transform doesn't change the element's
-		 * reserved layout box. */
-		_cashStackHtml(amount, slot) {
+		 * Always rendered upright; seat-facing rotation now happens on the whole .mono-dock-assets
+		 * container as a unit (see _renderPlayerCardHtml), so every player's CASH box is identical and
+		 * just reoriented toward their seat. */
+		_cashStackHtml(amount) {
 			const MAX_STACKED = 3; // bill divs drawn per pile, regardless of true count
 			const denoms = this._denominateCash(amount);
 			const piles = denoms.map(({ value, count }) => {
@@ -1336,82 +1547,86 @@
 				const badge = count > 1 ? `&times;${count}` : '&nbsp;';
 				return `<div class="mono-bill-pile"><div class="mono-bill-stack">${billDivs}</div><div class="mono-bill-count">${badge}</div></div>`;
 			}).join('');
-			const rotate = DOCK_ROTATE[slot] || DOCK_ROTATE.bottom;
-			const cashClass = rotate.cashClass;
-			// the dollar total counter-rotates against the pile's own rotation (see
-			// .mono-cash-amount's per-rotation override) so it's always upright/legible, even though
-			// the bills themselves are fine rotated (their printed denomination isn't meant to be
-			// read from any particular angle, unlike the $ total which is the actual source of truth)
-			const piles_ = `<div class="mono-cash-piles${cashClass ? ' ' + cashClass : ''}"><div class="mono-cash-pile-row">${piles}</div><span class="mono-cash-amount">$${amount}</span></div>`;
-			// only left/right (90deg turns) need the fixed-size clipping viewport - a 180deg turn
-			// (top) doesn't swap width/height, so wrapping it would just needlessly constrain it
-			const needsViewport = rotate.dir === 90 || rotate.dir === -90;
-			return needsViewport ? `<div class="mono-cash-piles-viewport">${piles_}</div>` : piles_;
+			return `<div class="mono-cash-piles"><div class="mono-cash-pile-row">${piles}</div><span class="mono-cash-amount">$${amount}</span></div>`;
 		}
 
-		/** Groups a player's properties by color group / rail / utility (reusing _ownershipSummary's
-		 * grouping logic but needing the actual member positions, not just counts), for the grouped
-		 * side-by-side property row rendered directly on each dock. Returns
-		 * [{key, color, icon, positions: [pos,...]}] in board order, omitting groups with no owned
-		 * members. */
-		_groupedOwnedProperties(playerId) {
-			const groups = [];
-			for (const groupKey of Object.keys(Board.GROUP_MEMBERS)) {
-				const members = Board.GROUP_MEMBERS[groupKey];
-				const owned = members.filter(pos => this._previewOwner(pos) === playerId);
-				if (owned.length) groups.push({ key: groupKey, color: GROUP_COLORS[groupKey], icon: null, positions: owned });
+		/** The 10 property "groups" that each get a slot in the dock's 2x5 PROPERTIES grid: the 8 color
+		 * groups (board order) + rails + utilities. Fixed order so a group always lands in the same
+		 * grid cell regardless of which/how many a player owns. */
+		_propGroupSlots() {
+			if (!this._propGroupSlotsCache) {
+				this._propGroupSlotsCache = [
+					...Object.keys(Board.GROUP_MEMBERS).map(key => ({ key, kind: 'color', members: Board.GROUP_MEMBERS[key], color: GROUP_COLORS[key], icon: null })),
+					{ key: 'rail', kind: 'rail', members: Board.RAIL_POSITIONS, color: '#555', icon: TYPE_ICONS.rail },
+					{ key: 'utility', kind: 'utility', members: Board.UTILITY_POSITIONS, color: '#888', icon: TYPE_ICONS.utility }
+				];
 			}
-			const railOwned = Board.RAIL_POSITIONS.filter(pos => this._previewOwner(pos) === playerId);
-			if (railOwned.length) groups.push({ key: 'rail', color: null, icon: TYPE_ICONS.rail, positions: railOwned });
-			const utilOwned = Board.UTILITY_POSITIONS.filter(pos => this._previewOwner(pos) === playerId);
-			if (utilOwned.length) groups.push({ key: 'utility', color: null, icon: TYPE_ICONS.utility, positions: utilOwned });
-			return groups;
+			return this._propGroupSlotsCache;
 		}
 
-		/** One small title-deed-style card (color bar + name, no fan/overlap) for a single owned
-		 * property - the compact sibling of _modalPlayerProperties' larger detail cards, sized to fit
-		 * several per row directly on a dock. */
-		_miniPropCardHtml(pos) {
-			const space = this.game.getSpace(pos);
+		/** Groups a player's owned properties by the fixed 10-slot group order, omitting groups with no
+		 * owned members. Returns [{key, kind, color, icon, positions:[pos,...], full:bool}]. */
+		_groupedOwnedProperties(playerId) {
+			const out = [];
+			for (const slot of this._propGroupSlots()) {
+				const owned = slot.members.filter(pos => this._previewOwner(pos) === playerId);
+				if (!owned.length) continue;
+				out.push({ key: slot.key, kind: slot.kind, color: slot.color, icon: slot.icon, positions: owned, full: owned.length === slot.members.length });
+			}
+			return out;
+		}
+
+		/** House/hotel/mortgage marker for a property, or '' if none. */
+		_propMark(pos) {
 			const prop = this.game.properties[pos];
-			const barColor = (space.group && GROUP_COLORS[space.group]) || '#999';
-			let mark = '';
-			if (prop.mortgaged) mark = 'M';
-			else if (prop.houses >= 5) mark = 'H';
-			else if (prop.houses > 0) mark = String(prop.houses);
-			return `
-				<div class="mono-mini-prop${prop.mortgaged ? ' mortgaged' : ''}" title="${space.name}">
-					<div class="mono-mini-prop-bar" style="background:${barColor}"></div>
-					<div class="mono-mini-prop-name">${space.name}</div>
-					${mark ? `<div class="mono-mini-prop-mark">${mark}</div>` : ''}
-				</div>
-			`;
+			if (prop.mortgaged) return 'M';
+			if (prop.houses >= 5) return 'H';
+			if (prop.houses > 0) return String(prop.houses);
+			return '';
 		}
 
-		/** Grouped, non-fanned, side-by-side property card row for a player's dock - clusters cards by
-		 * color group/rail/utility (small gap between clusters), replacing the old "click to open a
-		 * modal" as the primary at-a-glance view. `slot` applies the seat-facing rotation for
-		 * top/left/right docks (see DOCK_ROTATE / .mono-prop-row-rotate-* CSS); bottom (human) gets
-		 * none. The rotated row is wrapped in a fixed-size "viewport" div with overflow:hidden - a
-		 * transform doesn't change the element's reserved layout box, so without this wrapper a
-		 * rotated row's true (wide) footprint would still reserve/spill into that width, pushing into
-		 * the name label above it. The wrapper's own box is sized for the POST-rotation footprint
-		 * instead. */
-		_propertyRowHtml(playerId, slot) {
+		/** One group cell in the PROPERTIES grid. A group with a SINGLE property shows as a normal mini
+		 * card (color bar + name), so a lone holding is still identifiable. A group with 2+ properties
+		 * stacks them vertically so only the top card's color is fully visible (the rest peek out
+		 * behind), with a count badge - the compact "you own several of this group" look. A completed
+		 * set gets a gold ring. */
+		_propGroupCellHtml(g) {
+			const n = g.positions.length;
+			if (n === 1) {
+				const pos = g.positions[0];
+				const space = this.game.getSpace(pos);
+				const prop = this.game.properties[pos];
+				const mark = this._propMark(pos);
+				const iconBg = g.icon ? `background-image:url(${g.icon});background-size:12px 12px;background-repeat:no-repeat;background-position:center;` : '';
+				return `<div class="mono-pg-cell single${g.full ? ' full' : ''}" data-group="${g.key}" title="${space.name}">
+						<div class="mono-mini-prop${prop.mortgaged ? ' mortgaged' : ''}">
+							<div class="mono-mini-prop-bar" style="background:${g.color};${iconBg}"></div>
+							<div class="mono-mini-prop-name">${space.name}</div>
+							${mark ? `<div class="mono-mini-prop-mark">${mark}</div>` : ''}
+						</div>
+					</div>`;
+			}
+			// build the stack top-card-first (card 0 is frontmost/fully visible - see .mono-pg-card CSS)
+			const cards = g.positions.map((pos, i) => {
+				const space = this.game.getSpace(pos);
+				const prop = this.game.properties[pos];
+				const mark = this._propMark(pos);
+				const iconBg = g.icon ? `background-image:url(${g.icon});` : '';
+				return `<div class="mono-pg-card${prop.mortgaged ? ' mortgaged' : ''}" style="--pg-color:${g.color};--pg-i:${i};${iconBg}" title="${space.name}${mark ? ' (' + (prop.mortgaged ? 'mortgaged' : (prop.houses >= 5 ? 'hotel' : prop.houses + ' house' + (prop.houses > 1 ? 's' : ''))) + ')' : ''}">${mark ? `<span class="mono-pg-mark">${mark}</span>` : ''}</div>`;
+			}).join('');
+			return `<div class="mono-pg-cell${g.full ? ' full' : ''}" data-group="${g.key}" title="${g.key} — ${n} owned${g.full ? ' (full set)' : ''}">
+					<div class="mono-pg-stack" style="--pg-n:${n}">${cards}</div>
+					<span class="mono-pg-count">${n}</span>
+				</div>`;
+		}
+
+		/** The PROPERTIES grid for a dock: up to 10 group cells in a 2-row x 5-col layout (empty when
+		 * the player owns nothing). Rotation is handled by the parent .mono-dock-assets container as a
+		 * whole (see _renderPlayerCardHtml), so this is always built upright. */
+		_propertyRowHtml(playerId) {
 			const groups = this._groupedOwnedProperties(playerId);
 			if (!groups.length) return '';
-			const clusters = groups.map(g => `
-				<div class="mono-prop-cluster">
-					${g.positions.map(pos => this._miniPropCardHtml(pos)).join('')}
-				</div>
-			`).join('');
-			const rotate = DOCK_ROTATE[slot] || DOCK_ROTATE.bottom;
-			const rotateClass = rotate.propClass;
-			const row = `<div class="mono-prop-row${rotateClass ? ' ' + rotateClass : ''}">${clusters}</div>`;
-			// only left/right (90deg turns) need the fixed-size clipping viewport - a 180deg turn
-			// (top) doesn't swap width/height, so wrapping it would just needlessly constrain it
-			const needsViewport = rotate.dir === 90 || rotate.dir === -90;
-			return needsViewport ? `<div class="mono-prop-row-viewport">${row}</div>` : row;
+			return `<div class="mono-prop-grid">${groups.map(g => this._propGroupCellHtml(g)).join('')}</div>`;
 		}
 
 		/** Assigns each active dock slot (top/left/right = the 3 AI opponents, bottom = the human) a
@@ -1440,6 +1655,33 @@
 			// fresh estimate lands). Win% shows a dash until the first Monte-Carlo estimate completes.
 			const worth = this._netWorth(p.id);
 			const winPct = (this.winProbs && this.winProbs[p.id] != null) ? Math.round(this.winProbs[p.id] * 100) + '%' : '—';
+			// EVERY dock gets the same upright CASH / PROPERTIES boxes; the whole .mono-dock-assets
+			// container is then rotated as a unit to face that seat (top 180deg, left/right 90deg,
+			// bottom upright - see DOCK_ROTATE.assetsClass and .mono-dock-assets-* CSS). Rotating the
+			// container as a whole (rather than the inner rows individually) means all four players'
+			// asset boxes are identical and just reoriented, so each takes the same footprint. A 90deg
+			// turn swaps width/height without changing the reserved layout box, so left/right are
+			// wrapped in a fixed-size viewport sized for the post-rotation footprint.
+			const cashHtml = this._cashStackHtml(this._previewCash(p.id));
+			const propsHtml = this._propertyRowHtml(p.id);
+			// CARDS box: only shown when the player actually holds Get Out of Jail Free card(s), so it
+			// doesn't add width to every dock in the common case of holding none.
+			const jailCards = this._previewJailCards ? this._previewJailCards(p.id) : p.getOutOfJailFree;
+			const cardsHtml = jailCards > 0
+				? `<div class="mono-asset-box mono-asset-cards"><div class="mono-asset-head">Cards</div>`
+					+ `<div class="mono-jailcard-row">`
+					+ Array.from({ length: Math.min(jailCards, 2) }, () => `<div class="mono-jailcard" title="Get Out of Jail Free">🎟️</div>`).join('')
+					+ (jailCards > 2 ? `<span class="mono-jailcard-count">×${jailCards}</span>` : '')
+					+ `</div></div>`
+				: '';
+			const rotate = DOCK_ROTATE[slot] || DOCK_ROTATE.bottom;
+			const inner = `<div class="mono-dock-assets${rotate.assetsClass ? ' ' + rotate.assetsClass : ''}">
+					<div class="mono-asset-box mono-asset-cash"><div class="mono-asset-head">Cash</div>${cashHtml}</div>
+					${propsHtml ? `<div class="mono-asset-box mono-asset-props"><div class="mono-asset-head">Properties</div>${propsHtml}</div>` : ''}
+					${cardsHtml}
+				</div>`;
+			const needsViewport = rotate.dir === 90 || rotate.dir === -90;
+			const assets = needsViewport ? `<div class="mono-dock-assets-viewport">${inner}</div>` : inner;
 			return `
 				<div class="${classes}" data-player-id="${p.id}" title="${!isHuman && this._canProposeTradeNow() && !p.bankrupt ? `Click to propose a trade with ${p.name}` : ''}">
 					<div class="mono-player-label">
@@ -1451,8 +1693,7 @@
 						<span class="mono-player-win" style="color:${PLAYER_COLORS[p.id]}" title="Live win probability (Monte-Carlo estimate)">${p.bankrupt ? '—' : winPct}</span>
 						<span class="mono-player-worth" title="Net worth (cash + property + houses)">≈$${worth}</span>
 					</div>
-					${this._cashStackHtml(this._previewCash(p.id), slot)}
-					${this._propertyRowHtml(p.id, slot)}
+					${assets}
 				</div>
 			`;
 		}
@@ -1491,8 +1732,13 @@
 			if (!this._canProposeTradeNow()) return;
 			const target = this.game.players[playerId];
 			if (!target || target.bankrupt) return;
-			const pendingCtx = this.humanAgent._pending.ctx;
-			this._modalTradeBuilder(pendingCtx, this.game.activePlayers().filter(p => p.id !== this.humanId), { targetId: target.id });
+			if (this._tradeTrayOpen()) {
+				// retarget the open tray at this opponent instead of opening a second one
+				const s = this._tradeSession;
+				if (s.targetId !== playerId) { s.targetId = playerId; s.state.requestProps = []; s.state.requestMoney = 0; s.state.requestCards = 0; this._renderTradeTray(); }
+				return;
+			}
+			this._openTradeTray(this.humanAgent._pending.ctx, { targetId: target.id });
 		}
 
 		_modalPlayerProperties(playerId) {
@@ -1537,26 +1783,27 @@
 		}
 
 		_renderControls() {
+			// The AI-speed control lives up in the fixed top-right corner (next to the theme toggle),
+			// out of the normal flow, so it doesn't add to the vertical height that has to fit on screen
+			// without scrolling. The in-flow #mono-controls now only carries the Start/Play-Again CTA.
+			this._renderSpeedControl();
 			this.controlsEl.innerHTML = '';
-			if (!this.game) {
+			if (!this.game || this.game.gameOver) {
 				const btn = document.createElement('button');
 				btn.className = 'mono-btn';
-				btn.textContent = 'Start New Game';
+				btn.textContent = this.game && this.game.gameOver ? 'Play Again' : 'Start New Game';
 				btn.onclick = () => this.newGame(3);
 				this.controlsEl.appendChild(btn);
-				return;
 			}
-			if (this.game.gameOver) {
-				const btn = document.createElement('button');
-				btn.className = 'mono-btn';
-				btn.textContent = 'Play Again';
-				btn.onclick = () => this.newGame(3);
-				this.controlsEl.appendChild(btn);
-				return;
-			}
-			const speedRow = document.createElement('div');
-			speedRow.className = 'mono-speed-row';
-			speedRow.innerHTML = `<label>AI speed: </label>`;
+		}
+
+		/** Renders the AI-speed dropdown into the fixed top-right control area (see index.html's
+		 * #mono-speed-control). Only shown while a game is actively in progress. */
+		_renderSpeedControl() {
+			const host = document.getElementById('mono-speed-control');
+			if (!host) return;
+			if (!this.game || this.game.gameOver) { host.innerHTML = ''; return; }
+			host.innerHTML = `<label>AI speed:</label>`;
 			const select = document.createElement('select');
 			[['Fast', 150], ['Normal', 650], ['Slow', 1400]].forEach(([label, val]) => {
 				const opt = document.createElement('option');
@@ -1565,8 +1812,7 @@
 				select.appendChild(opt);
 			});
 			select.onchange = () => { this.speed = Number(select.value); };
-			speedRow.appendChild(select);
-			this.controlsEl.appendChild(speedRow);
+			host.appendChild(select);
 		}
 
 		// ---- AI decision / game event notifications (unified queue, centered modal, click X to
@@ -1696,20 +1942,38 @@
 				await this._showAuctionResult(data);
 				return;
 			}
+			// Card draw: instead of the plain center-notice, play the physical card-draw animation (a
+			// card flies out of its deck, flips face-up to read, then flies back). The engine awaits
+			// this (emitEvent -> onEvent), so the turn pauses on the card exactly like it did on the
+			// notice. Any money/property effect the card triggers still animates at the next checkpoint.
+			if (type === 'card') {
+				this._renderAll();
+				await this._animateCardDraw(data.deck, data.card.text, data.player);
+				// The card's own effect (e.g. "collect $200") was already applied before this event
+				// fired (drawCard runs before emitEvent for non-cascading cards - see game.js
+				// drawCardAndNotify), so the card animation finishing is this path's "screen is clear"
+				// checkpoint where those flying bills fire - mirroring _drainEventQueue's dismiss.
+				this._diffAndAnimate('cardDraw');
+				return;
+			}
 			const html = this._describeGameEvent(type, data);
 			this._dlog('onGameEvent:', type, 'player=', data.player ? data.player.id : undefined, 'amount=', data.amount, 'money(all)=', Object.fromEntries(this.game.players.map(p => [p.id, p.money])));
 			// Unambiguous player-to-player cases the callback data already tells us directly, so
 			// _diffAndAnimate doesn't have to guess from the money diff alone - see that method's
 			// comment on why pure diffing can occasionally be ambiguous. Both rent and a
 			// creditor-bankruptcy are payer->payee with an explicit named counterpart.
-			// A rent event is emitted by game.js BEFORE the money actually moves (emitEvent then
-			// payMoney - see game.js resolveSpace/card handlers), and payMoney can itself trigger
-			// liquidation notices in between, so the payer->owner cash diff often isn't flushed until a
-			// LATER checkpoint with other transactions mixed in. So the hint carries fromId/toId (and
-			// the expected amount) and _diffAndAnimate pairs that specific pair out of the accumulated
-			// diff rather than requiring the whole diff to be one clean pair - see _matchHintPair.
-			if (type === 'rent') { this._setTxHint({ type: 'rent', fromId: data.player.id, toId: data.owner.id, amount: data.amount }); }
-			else if (type === 'bankruptcy' && data.creditor) { this._setTxHint({ type: 'bankruptcyCreditor', fromId: data.player.id, toId: data.creditor.id }); }
+			// Rent money now moves BEFORE its notice fires (game.js pays, then emits - so the transfer
+			// is already applied by the time this notice's dismiss runs the flying-bill checkpoint, and
+			// the bills fly right then rather than being deferred). The hint still carries fromId/toId/
+			// amount so _diffAndAnimate can pair that specific payer->owner leg out of a diff that may
+			// also include other transactions (e.g. liquidation the rent forced) - see _matchHintPair.
+			// These re-tag a pair that game.js's onTransfer (see _onTransfer) has normally already
+			// tagged before the money moved - that earlier hint is the one that matters, since it's
+			// set early enough to beat any intervening checkpoint. Skip if it's still pending and
+			// names the same pair, so we don't force a _setTxHint flush of the very diff it's waiting
+			// to claim. Kept as a fallback for any payment path that doesn't route through payMoney.
+			if (type === 'rent') { this._setTxHintIfNew({ type: 'rent', fromId: data.player.id, toId: data.owner.id, amount: data.amount }); }
+			else if (type === 'bankruptcy' && data.creditor) { this._setTxHintIfNew({ type: 'bankruptcyCreditor', fromId: data.player.id, toId: data.creditor.id }); }
 			this._renderAll(); // reflect this event's already-applied effects (rent, tax, bankruptcy, etc.) in dock numbers/board immediately - flying-bill animation itself waits for a checkpoint (see _renderAll's comment)
 			if (!html) return;
 			await this._queueEventPopup(html, null);
@@ -1810,17 +2074,24 @@
 				case 'jail': return this._modalJail(ctx);
 				case 'liquidation': return this._modalLiquidation(ctx);
 				case 'action': {
+					// phase 'preRoll' (top of turn, before rolling) vs post-roll: the action bar shows a
+					// Roll button in preRoll and End Turn otherwise (see _renderActionBar). Trading,
+					// building and managing are available in both. rollsAgain (a non-third doubles roll)
+					// means another roll follows, so the button reads "Roll Again", not "End Turn".
+					this._humanPhase = ctx.phase === 'preRoll' ? 'preRoll' : 'action';
+					this._rollsAgain = !!ctx.rollsAgain;
+					this._actionCtx = ctx;
 					// if the last thing that happened was an AI rejecting the trade THIS decideAction
-					// call is following up on, reopen the trade builder prefilled with that rejected
-					// offer (see _onAgentDecision) instead of the bare action menu, so counteroffers
-					// don't mean starting over from scratch each round
+					// call is following up on, reopen the trade tray prefilled with that rejected offer
+					// (see _onAgentDecision) instead of just the action bar, so counteroffers don't mean
+					// starting over from scratch each round
 					if (this._pendingTradeRejection) {
 						const rejected = this._pendingTradeRejection;
 						this._pendingTradeRejection = null;
-						const otherPlayers = this.game.activePlayers().filter(p => p.id !== player.id);
-						return this._modalTradeBuilder(ctx, otherPlayers, Object.assign({ rejected: true }, rejected));
+						this._renderActionBar();
+						return this._openTradeTray(ctx, Object.assign({ rejected: true }, rejected));
 					}
-					return this._modalAction(ctx);
+					return this._renderActionBar();
 				}
 				case 'tradeResponse': return this._modalTradeResponse(ctx);
 			}
@@ -1830,49 +2101,192 @@
 
 		_showRollButton(ctx) {
 			this._positionDiceForCurrentPlayer();
+			// The static dice panel now only carries the human's Roll button; the actual dice are
+			// thrown as separate FX elements in _animateDiceThrow (fired from onRoll for every player).
+			// Hide the two static die images so they don't sit alongside the thrown ones.
 			this.diceAreaEl.style.display = 'flex';
+			this.die1El.style.display = 'none';
+			this.die2El.style.display = 'none';
+			// _autoRoll: the player already pressed "Roll Dice" in the pre-roll action bar, so don't make
+			// them click again - resolve straight away and let onRoll throw the dice.
+			if (this._autoRoll) {
+				this._autoRoll = false;
+				this.rollBtnEl.style.display = 'none';
+				this.humanAgent.resolve('roll', true);
+				return;
+			}
 			this.rollBtnEl.style.display = 'inline-block';
 			this.rollBtnEl.disabled = false;
 			this.rollBtnEl.textContent = '🎲 Roll Dice';
-			this.rollBtnEl.onclick = () => this._animateRoll();
+			this.rollBtnEl.onclick = () => {
+				this.rollBtnEl.disabled = true;
+				this.rollBtnEl.style.display = 'none';
+				// Resolve decideRoll; the engine then computes the real (seeded) roll and fires onRoll,
+				// which runs the throw animation with the true face values.
+				this.humanAgent.resolve('roll', true);
+			};
 		}
 
-		async _animateRoll() {
-			this.rollBtnEl.disabled = true;
-			this.rollBtnEl.textContent = 'Rolling...';
-			this.die1El.classList.add('mono-die-rolling');
-			this.die2El.classList.add('mono-die-rolling');
+		/** Physical dice-throw: two dice are flung from the active player's edge, tumble/skid across the
+		 * open board center along a randomized path with spin, settle at a slightly-random spot near
+		 * center showing the true faces, then a "Move N" badge appears. Returns a Promise the engine
+		 * awaits (via onRoll) so the token doesn't move until the throw finishes - for every player,
+		 * human and AI alike. @param d1,d2 the true (seeded) face values. */
+		_animateDiceThrow(player, d1, d2) {
+			return new Promise(resolve => {
+				const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				const boardCenter = this._elCenter(this.boardEl);
+				if (!this.fxLayerEl || !boardCenter) { resolve(); return; }
 
-			// cycle through random faces for a short flurry before settling, so it reads as a
-			// real roll rather than an instant number appearing
-			const cycles = 8;
-			for (let i = 0; i < cycles; i++) {
-				this.die1El.src = this._diceSrc(1 + Math.floor(Math.random() * 6));
-				this.die2El.src = this._diceSrc(1 + Math.floor(Math.random() * 6));
-				await this._sleep(60 + i * 8); // ease out - slows down near the end
+				// clear any previous throw still on screen
+				this._clearThrownDice();
+				const layer = document.createElement('div');
+				layer.className = 'mono-thrown-dice';
+				this.fxLayerEl.appendChild(layer);
+				this._thrownDiceEl = layer;
+
+				// board half-size, to scope the toss + landing spread to the open center
+				const boardRect = this.boardEl.getBoundingClientRect();
+				const half = Math.min(boardRect.width, boardRect.height) / 2;
+				const settleSpread = half * 0.28;   // how far from dead-center the dice may settle
+				// throw origin: from the active player's edge (dice come "off" their seat toward center)
+				const slot = this._currentSeatSlot();
+				const edge = half * 0.82;
+				const originByCorner = {
+					bottom: { x: 0, y: edge }, top: { x: 0, y: -edge },
+					left: { x: -edge, y: 0 }, right: { x: edge, y: 0 }
+				};
+				const origin = originByCorner[slot] || { x: 0, y: edge };
+
+				// The dice come to rest as a neat, centered PAIR in the middle of the board (side by side,
+				// a small gap between them) rather than scattered at random spots - and during the
+				// tumble they travel toward loosely-random scatter positions, then converge together to
+				// this centered pair on the confirm step (see the settle sequence below). 46px die →
+				// centers ~30px each side of center = a ~14px gap.
+				const PAIR_HALF = 30;
+				const scatter = () => ({ x: (Math.random() - 0.5) * settleSpread * 1.4, y: (Math.random() - 0.5) * settleSpread * 1.4 });
+				const settle = [{ x: -PAIR_HALF, y: 0 }, { x: PAIR_HALF, y: 0 }];  // final centered pair
+				const scatterPos = [scatter(), scatter()];                          // mid-flight scatter
+
+				const faces = [d1, d2];
+				const dice = faces.map((face, i) => {
+					const el = document.createElement('img');
+					el.className = 'mono-die mono-thrown-die';
+					el.src = this._diceSrc(1 + Math.floor(Math.random() * 6)); // start on a random face
+					el.style.left = (boardCenter.x + origin.x) + 'px';
+					el.style.top = (boardCenter.y + origin.y) + 'px';
+					el.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(0.7)';
+					layer.appendChild(el);
+					return {
+						el, face,
+						// mid-flight scatter target (where the toss travels first)
+						fx: boardCenter.x + scatterPos[i].x, fy: boardCenter.y + scatterPos[i].y,
+						// final resting spot: the centered pair
+						sx: boardCenter.x + settle[i].x, sy: boardCenter.y + settle[i].y,
+						spin: (200 + Math.random() * 520) * (Math.random() < 0.5 ? 1 : -1)
+					};
+				});
+
+				const finishBadge = () => {
+					// show the move-count badge by the settled dice, then resolve
+					const badge = document.createElement('div');
+					badge.className = 'mono-dice-badge';
+					const isDouble = d1 === d2;
+					badge.innerHTML = `${isDouble ? '<span class="mono-dice-badge-dbl">Doubles!</span> ' : ''}Move ${d1 + d2}`;
+					badge.style.left = boardCenter.x + 'px';
+					// just below the centered dice pair (die half-height + gap)
+					badge.style.top = (boardCenter.y + 46) + 'px';
+					layer.appendChild(badge);
+					requestAnimationFrame(() => badge.classList.add('show'));
+					const hold = reduceMotion ? 350 : Math.max(650, this.speed * 1.1);
+					setTimeout(() => { this._clearThrownDice(); resolve(); }, hold);
+				};
+
+				if (reduceMotion) {
+					dice.forEach(d => {
+						d.el.src = this._diceSrc(d.face);
+						d.el.style.left = d.sx + 'px'; d.el.style.top = d.sy + 'px';
+						d.el.style.transform = 'translate(-50%, -50%) scale(1)';
+					});
+					finishBadge();
+					return;
+				}
+
+				// tumble: cycle faces while the dice are in flight, but with the TRUE result baked into the
+				// tail of the roll so the dice settle ON their real faces instead of snapping to them
+				// afterward (which looked like a teleport). Faces cycle randomly for most of the roll,
+				// then in the final stretch each die "locks" onto its true face, and the interval eases
+				// out (slows down) as it lands - so the last visible frame IS the actual result.
+				const tumbleMs = 520;
+				const lockMs = 170; // before the dice come to rest, each die shows its true face
+				const startT = performance.now();
+				let tumbling = true;
+				const tumble = () => {
+					if (!tumbling) return;
+					const elapsed = performance.now() - startT;
+					const locked = elapsed >= tumbleMs - lockMs;
+					dice.forEach(d => {
+						d.el.src = this._diceSrc(locked ? d.face : (1 + Math.floor(Math.random() * 6)));
+					});
+					if (locked) return; // stop cycling once the true faces are showing; they stay put to rest
+					// ease-out: slow the face changes as the roll winds down
+					const t = Math.min(1, elapsed / (tumbleMs - lockMs));
+					const next = 45 + t * t * 90; // ~45ms early, up to ~135ms near the lock
+					setTimeout(tumble, next);
+				};
+				tumble();
+
+				// Force a synchronous reflow so the browser COMMITS the dice's start position before we
+				// set the target below. Without this, appending the element and setting its start +
+				// target position can be batched into one layout pass, so the CSS transition never
+				// fires and the dice jump straight to the settle spot with no visible throw - the
+				// intermittent "animation not played" bug. offsetWidth read forces layout now.
+				// eslint-disable-next-line no-unused-expressions
+				this.fxLayerEl.offsetWidth;
+
+				// Fling toward the mid-flight SCATTER spots with spin (CSS transition handles travel).
+				// A double rAF (two frames) on top of the reflow above ensures the transition always
+				// fires even if the first frame is dropped under load.
+				requestAnimationFrame(() => requestAnimationFrame(() => {
+					dice.forEach(d => {
+						d.el.style.transitionDuration = tumbleMs + 'ms';
+						d.el.style.left = d.fx + 'px';
+						d.el.style.top = d.fy + 'px';
+						d.el.style.transform = `translate(-50%, -50%) rotate(${d.spin}deg) scale(1)`;
+					});
+				}));
+
+				// Settle: once the toss lands, the dice CONVERGE together to a neat centered pair (a
+				// smooth glide to the middle) and their spin eases to rest - already showing the true
+				// faces (locked during the tumble). No landing "bounce"/shake, which read as janky.
+				const convergeMs = reduceMotion ? 0 : 300;
+				setTimeout(() => {
+					tumbling = false;
+					dice.forEach(d => {
+						d.el.src = this._diceSrc(d.face); // belt-and-suspenders: ensure true face shows
+						d.el.style.transitionDuration = convergeMs + 'ms';
+						d.el.style.left = d.sx + 'px';
+						d.el.style.top = d.sy + 'px';
+						d.el.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
+					});
+				}, tumbleMs);
+				// count badge, a beat after the dice have come together
+				const badgePause = reduceMotion ? 0 : 160;
+				setTimeout(finishBadge, tumbleMs + convergeMs + badgePause);
+			});
+		}
+
+		/** The active player's seat slot ('bottom'|'top'|'left'|'right'), for aiming the dice throw. */
+		_currentSeatSlot() {
+			const assignments = this._dockAssignments();
+			for (const key of Object.keys(assignments)) {
+				if (assignments[key] && assignments[key].id === this.game.currentPlayerIdx) return key;
 			}
-
-			this.die1El.classList.remove('mono-die-rolling');
-			this.die2El.classList.remove('mono-die-rolling');
-			this.rollBtnEl.style.display = 'none';
-
-			// resolving lets the engine's real (seeded) rollDice() run; we don't know the actual
-			// result yet, so leave the dice on the last random frame until the log/board update
-			// shows the true roll, then snap the dice to match it.
-			this.humanAgent.resolve('roll', true);
+			return 'bottom';
 		}
 
-		/** Called after the engine's real roll happens, once we know the true face values,
-		 * so the displayed dice always end up showing the actual result (never a random one). */
-		_showFinalRoll(d1, d2) {
-			this.die1El.src = this._diceSrc(d1);
-			this.die2El.src = this._diceSrc(d2);
-			this.die1El.classList.add('mono-die-land');
-			this.die2El.classList.add('mono-die-land');
-			setTimeout(() => {
-				this.die1El.classList.remove('mono-die-land');
-				this.die2El.classList.remove('mono-die-land');
-			}, 300);
+		_clearThrownDice() {
+			if (this._thrownDiceEl) { this._thrownDiceEl.remove(); this._thrownDiceEl = null; }
 		}
 
 		_showModal(html) {
@@ -2120,66 +2534,157 @@
 			this.modalEl.querySelector('#mono-liq-stop').onclick = () => { this._hideModal(); this.humanAgent.resolve('liquidation', null); };
 		}
 
-		_modalAction(ctx) {
-			const player = ctx.player;
-			const buildable = player.properties.filter(pos => this.game.canBuildOn(player, pos));
-			const sellableHouses = player.properties.filter(pos => this.game.properties[pos].houses > 0);
-			const mortgageable = player.properties.filter(pos => !this.game.properties[pos].mortgaged && this.game.properties[pos].houses === 0);
-			const unmortgageable = player.properties.filter(pos => this.game.properties[pos].mortgaged);
-			const otherPlayers = this.game.activePlayers().filter(p => p.id !== player.id);
+		// ---- Persistent action bar ----
+		// Replaces the old "choose an action" modal. Lives in the bottom dock, always visible, and
+		// reflects the current turn state (whose turn it is; and when it's the human's action phase,
+		// what they can do). Because it's non-modal, the board and docks stay fully clickable - so
+		// click-to-trade works throughout the human's turn, not just while a modal is up. Two action
+		// phases feed it: 'preRoll' (top of turn, before rolling - primary button rolls the dice) and
+		// 'action' (post-landing - primary button ends the turn). See _onHumanDecisionNeeded.
 
-			// Grouped into labeled sections (Build / Manage / Trade) instead of one flat list, so a
-			// player with many properties can scan by category; each build button disables-with-reason
-			// (rather than vanishing) when its house cost isn't currently affordable, keeping the option
-			// discoverable. A section is omitted entirely only when it has no candidate spaces at all.
-			const section = (title, inner) => inner ? `<div class="mono-action-section"><div class="mono-action-heading">${title}</div>${inner}</div>` : '';
+		/** Resolve the pending decideAction with `action` and tear down the bar's interactive state.
+		 * Any open Build/Manage popover is closed and the trade preview cleared first. */
+		_resolveAction(action) {
+			this._closeActionPopover();
+			this._humanPhase = null;
+			this._rollsAgain = false;
+			this._renderActionBar(); // flip to the "waiting" state immediately for responsiveness
+			this.humanAgent.resolve('action', action);
+		}
 
-			const buildBtns = buildable.map(pos => {
-				const space = this.game.getSpace(pos);
-				const afford = player.money >= space.houseCost;
-				const isHotel = this.game.properties[pos].houses === 4;
-				return `<button class="mono-btn small" data-action="build" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + space.houseCost + '"'}>🏠 ${isHotel ? 'Build hotel' : 'Build house'} on ${space.name} <span class="mono-action-cost">$${space.houseCost}</span></button>`;
-			}).join('');
-
-			const manageBtns = [
-				...sellableHouses.map(pos => {
-					const space = this.game.getSpace(pos);
-					return `<button class="mono-btn small" data-action="sellHouse" data-pos="${pos}">🔻 Sell house on ${space.name}</button>`;
-				}),
-				...mortgageable.map(pos => {
-					const space = this.game.getSpace(pos);
-					return `<button class="mono-btn small" data-action="mortgage" data-pos="${pos}">🏦 Mortgage ${space.name} <span class="mono-action-cost">+$${Math.floor(space.price / 2)}</span></button>`;
-				}),
-				...unmortgageable.map(pos => {
-					const space = this.game.getSpace(pos);
-					const cost = Math.ceil(space.price / 2 * 1.1);
-					const afford = player.money >= cost;
-					return `<button class="mono-btn small" data-action="unmortgage" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + cost + '"'}>🔓 Unmortgage ${space.name} <span class="mono-action-cost">-$${cost}</span></button>`;
-				})
-			].join('');
-
-			const tradeBtns = otherPlayers.length ? `<button class="mono-btn small" id="mono-act-trade">🤝 Propose a trade…</button>` : '';
-
-			let html = `<h3>Your turn — choose an action</h3>`;
-			html += section('Build', buildBtns);
-			html += section('Manage properties', manageBtns);
-			html += section('Trade', tradeBtns);
-			if (!buildBtns && !manageBtns && !tradeBtns) {
-				html += `<p class="mono-hint">No property actions available right now.</p>`;
+		_closeActionPopover() {
+			if (this.actionBarEl) {
+				const pop = this.actionBarEl.querySelector('.mono-action-popover');
+				if (pop) pop.remove();
 			}
-			html += `<div class="mono-modal-actions"><button class="mono-btn" data-action="done">End Turn ▶</button></div>`;
-			this._showModal(html);
+		}
 
-			this.modalEl.querySelectorAll('[data-action]').forEach(btn => {
+		/** Renders the action bar for the current game/turn state. Called on every render (via
+		 * _renderAll) so the "whose turn" status stays live during AI turns, and directly by
+		 * _onHumanDecisionNeeded when the human's action phase opens. */
+		_renderActionBar() {
+			if (!this.actionBarEl) return;
+			// Don't blow away an open Build/Manage popover mid-interaction (a stray _renderAll during
+			// the human's own action phase would otherwise close it under them).
+			if (this.actionBarEl.querySelector('.mono-action-popover')) return;
+			if (!this.game || this.game.gameOver) { this.actionBarEl.innerHTML = ''; this.actionBarEl.className = 'mono-action-bar'; return; }
+
+			const human = this.game.players[this.humanId];
+			const isHumanTurn = this.game.currentPlayerIdx === this.humanId;
+			const myActionPhase = isHumanTurn && !!this._humanPhase && this._canProposeTradeNow();
+
+			// Status line: unmistakable "whose turn", per the plan's turn-indicator goal.
+			let statusText, statusCls;
+			if (isHumanTurn) {
+				statusText = this._humanPhase === 'preRoll' ? '🎲 Your turn — roll when ready' : (this._humanPhase === 'action' ? '✅ Your turn — manage, trade, or end' : '⏳ Your turn…');
+				statusCls = 'you';
+			} else {
+				const active = this.game.players[this.game.currentPlayerIdx];
+				statusText = `💭 ${active.name} is thinking…`;
+				statusCls = 'ai';
+			}
+
+			if (!myActionPhase) {
+				// Not the human's interactive phase (AI turn, or human turn mid-roll/mid-animation):
+				// just the status line, no buttons.
+				this.actionBarEl.className = 'mono-action-bar ' + statusCls;
+				this.actionBarEl.innerHTML = `<div class="mono-action-status" style="${isHumanTurn ? 'color:' + PLAYER_COLORS[this.humanId] : ''}">${statusText}</div>`;
+				return;
+			}
+
+			// Interactive: primary button + action triggers.
+			const buildable = human.properties.filter(pos => this.game.canBuildOn(human, pos));
+			// Manage covers sell-house / mortgage / unmortgage - available whenever you own anything.
+			const manageable = human.properties;
+			const otherPlayers = this.game.activePlayers().filter(p => p.id !== human.id);
+			// Primary button: "Roll Dice" before the roll, "Roll Again" after a doubles roll (another
+			// roll follows - see rollsAgain), and "End Turn" on a normal post-landing.
+			const rollAgain = this._humanPhase === 'action' && this._rollsAgain;
+			const primaryLabel = this._humanPhase === 'preRoll' ? '🎲 Roll Dice' : (rollAgain ? '🎲 Roll Again' : 'End Turn ▶');
+			const primaryIsRoll = this._humanPhase === 'preRoll' || rollAgain;
+
+			// No status text/checkbox here - the buttons themselves make it clear it's your turn and
+			// what you can do. The status line only appears in the non-interactive state below (AI
+			// turns / mid-roll), where there are no buttons to convey it.
+			this.actionBarEl.className = 'mono-action-bar you interactive';
+			this.actionBarEl.innerHTML = `
+				<div class="mono-action-btns">
+					<button class="mono-btn small ghost" id="mono-ab-build" ${buildable.length ? '' : 'disabled title="No properties ready to build on"'}>🏠 Build</button>
+					<button class="mono-btn small ghost" id="mono-ab-manage" ${manageable.length ? '' : 'disabled'}>🏦 Manage</button>
+					<button class="mono-btn small ghost" id="mono-ab-trade" ${otherPlayers.length ? '' : 'disabled'}>🤝 Trade</button>
+					<button class="mono-btn ${primaryIsRoll ? 'primary' : ''}" id="mono-ab-primary">${primaryLabel}</button>
+				</div>
+			`;
+
+			this.actionBarEl.querySelector('#mono-ab-primary').onclick = () => {
+				if (primaryIsRoll) {
+					// preRoll, or a doubles "Roll Again": end this action loop (resolve done); the engine
+					// proceeds to the next roll. Flag _autoRoll so _showRollButton throws the dice
+					// straight away rather than making the player click a second on-board Roll button.
+					this._autoRoll = true;
+					this._resolveAction({ type: 'done' });
+				} else {
+					this._resolveAction({ type: 'done' });
+				}
+			};
+			const buildBtn = this.actionBarEl.querySelector('#mono-ab-build');
+			const manageBtn = this.actionBarEl.querySelector('#mono-ab-manage');
+			const tradeBtn = this.actionBarEl.querySelector('#mono-ab-trade');
+			if (buildBtn && !buildBtn.disabled) buildBtn.onclick = () => this._toggleActionPopover('build', buildBtn);
+			if (manageBtn && !manageBtn.disabled) manageBtn.onclick = () => this._toggleActionPopover('manage', manageBtn);
+			if (tradeBtn && !tradeBtn.disabled) tradeBtn.onclick = () => { this._closeActionPopover(); this._openTradeTray(this._actionCtx); };
+		}
+
+		/** Build/Manage open an inline popover above the bar (not a modal) listing the eligible
+		 * properties. Picking one resolves the action immediately; the engine loops the action phase
+		 * so the bar reopens for the next choice. */
+		_toggleActionPopover(which, anchorBtn) {
+			const existing = this.actionBarEl.querySelector('.mono-action-popover');
+			const wasThis = existing && existing.dataset.which === which;
+			this._closeActionPopover();
+			if (wasThis) return; // second click on the same trigger closes it
+
+			const human = this.game.players[this.humanId];
+			let rows = '';
+			if (which === 'build') {
+				const buildable = human.properties.filter(pos => this.game.canBuildOn(human, pos));
+				rows = buildable.map(pos => {
+					const space = this.game.getSpace(pos);
+					const afford = human.money >= space.houseCost;
+					const isHotel = this.game.properties[pos].houses === 4;
+					return `<button class="mono-btn small" data-action="build" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + space.houseCost + '"'}>🏠 ${isHotel ? 'Build hotel' : 'Build house'} on ${space.name} <span class="mono-action-cost">$${space.houseCost}</span></button>`;
+				}).join('') || '<p class="mono-hint">Nothing to build right now.</p>';
+			} else {
+				const sellableHouses = human.properties.filter(pos => this.game.properties[pos].houses > 0);
+				const mortgageable = human.properties.filter(pos => !this.game.properties[pos].mortgaged && this.game.properties[pos].houses === 0);
+				const unmortgageable = human.properties.filter(pos => this.game.properties[pos].mortgaged);
+				rows = [
+					...sellableHouses.map(pos => `<button class="mono-btn small" data-action="sellHouse" data-pos="${pos}">🔻 Sell house on ${this.game.getSpace(pos).name}</button>`),
+					...mortgageable.map(pos => {
+						const space = this.game.getSpace(pos);
+						return `<button class="mono-btn small" data-action="mortgage" data-pos="${pos}">🏦 Mortgage ${space.name} <span class="mono-action-cost">+$${Math.floor(space.price / 2)}</span></button>`;
+					}),
+					...unmortgageable.map(pos => {
+						const space = this.game.getSpace(pos);
+						const cost = Math.ceil(space.price / 2 * 1.1);
+						const afford = human.money >= cost;
+						return `<button class="mono-btn small" data-action="unmortgage" data-pos="${pos}" ${afford ? '' : 'disabled title="Need $' + cost + '"'}>🔓 Unmortgage ${space.name} <span class="mono-action-cost">-$${cost}</span></button>`;
+					})
+				].join('') || '<p class="mono-hint">Nothing to manage right now.</p>';
+			}
+			const pop = document.createElement('div');
+			pop.className = 'mono-action-popover';
+			pop.dataset.which = which;
+			pop.innerHTML = `<div class="mono-action-popover-title">${which === 'build' ? 'Build' : 'Manage properties'}</div>${rows}`;
+			this.actionBarEl.appendChild(pop);
+			pop.querySelectorAll('[data-action]').forEach(btn => {
+				if (btn.disabled) return;
 				btn.onclick = () => {
 					const action = btn.dataset.action;
-					const pos = btn.dataset.pos !== undefined ? Number(btn.dataset.pos) : undefined;
-					this._hideModal();
-					this.humanAgent.resolve('action', { type: action, pos });
+					const pos = Number(btn.dataset.pos);
+					this._resolveAction({ type: action, pos });
 				};
 			});
-			const tradeBtn = this.modalEl.querySelector('#mono-act-trade');
-			if (tradeBtn) tradeBtn.onclick = () => this._modalTradeBuilder(ctx, otherPlayers);
 		}
 
 		/** @param prefill optional. Two uses:
@@ -2197,8 +2702,8 @@
 		 * reflects what would actually clear their acceptance threshold. Values what the target would
 		 * RECEIVE vs GIVE UP, both priced from the target's perspective; a non-negative net (after their
 		 * fairness margin) reads as likely-accept. No-ops for a human target (no genome to estimate). */
-		_updateTradeFairness(targetId, state) {
-			const el = this.modalEl.querySelector('#mono-trade-fairness');
+		_updateTradeFairness(targetId, state, scope) {
+			const el = (scope || this.modalEl).querySelector('#mono-trade-fairness');
 			if (!el) return;
 			const target = this.game.players[targetId];
 			const empty = !state.offerProps.length && !state.requestProps.length && !state.offerMoney && !state.requestMoney && !state.offerCards && !state.requestCards;
@@ -2223,136 +2728,339 @@
 				+ `<div class="mono-fairness-detail">They receive ≈$${Math.round(theyGet)} · give up ≈$${Math.round(theyGive)}</div>`;
 		}
 
-		_modalTradeBuilder(ctx, otherPlayers, prefill) {
-			const player = ctx.player;
-			let targetId = (prefill && prefill.targetId !== undefined) ? prefill.targetId : otherPlayers[0].id;
-			const openedFromBoardClick = !!prefill && !prefill.rejected;
-			// carries the in-progress offer across re-renders (target switch, "ask price" clicks)
-			// within this one builder session, seeded from prefill on first open
-			const state = {
-				offerProps: (prefill && prefill.offerProps) || [],
-				requestProps: (prefill && prefill.requestPos !== undefined) ? [prefill.requestPos] : ((prefill && prefill.requestProps) || []),
-				offerMoney: (prefill && prefill.offerMoney) || 0,
-				requestMoney: (prefill && prefill.requestMoney) || 0,
-				offerCards: (prefill && prefill.offerCards) || 0,
-				requestCards: (prefill && prefill.requestCards) || 0
-			};
-			const readState = () => {
-				state.offerProps = [...this.modalEl.querySelectorAll('[data-group="offer"]:checked')].map(el => Number(el.value));
-				state.requestProps = [...this.modalEl.querySelectorAll('[data-group="request"]:checked')].map(el => Number(el.value));
-				state.offerMoney = Number(this.modalEl.querySelector('#mono-trade-offer-money').value) || 0;
-				state.requestMoney = Number(this.modalEl.querySelector('#mono-trade-request-money').value) || 0;
-				state.offerCards = this.modalEl.querySelector('#mono-trade-offer-card').checked ? 1 : 0;
-				state.requestCards = this.modalEl.querySelector('#mono-trade-request-card').checked ? 1 : 0;
-			};
-			// Live-updates the board/player panels to preview what THIS in-progress (not yet sent)
-			// offer would do, without touching the modal itself - re-rendering the modal on every
-			// keystroke/checkbox click would blow away focus/cursor position mid-edit. Reads the DOM
-			// into `state` first so the preview always reflects exactly what's currently checked/typed.
-			const updatePreview = () => {
-				readState();
-				this._tradePreview = {
-					fromId: player.id, toId: targetId,
-					offerProps: state.offerProps, requestProps: state.requestProps,
-					offerMoney: state.offerMoney, requestMoney: state.requestMoney,
-					offerCards: state.offerCards, requestCards: state.requestCards
-				};
-				this._renderBoardState();
-				this._renderPlayers();
-				this._updateTradeFairness(targetId, state);
-			};
-			const renderBuilder = () => {
-				const target = this.game.players[targetId];
-				const myProps = player.properties;
-				const theirProps = target.properties;
-				const propCheckboxes = (props, prefix) => props.map(pos => {
-					const space = this.game.getSpace(pos);
-					const preChecked = (prefix === 'offer' ? state.offerProps : state.requestProps).includes(pos);
-					const askBtn = prefix === 'request' && target.agent
-						? ` <button type="button" class="mono-btn small secondary mono-ask-price" data-pos="${pos}">Ask price</button><span class="mono-hint mono-ask-result" data-pos="${pos}"></span>`
-						: '';
-					return `<label class="mono-checkbox-row"><input type="checkbox" data-group="${prefix}" value="${pos}" ${preChecked ? 'checked' : ''}> ${space.name}</label>${askBtn}`;
-				}).join('') || '<p class="mono-hint">none</p>';
+		// ---- Trade tray (docked side panel, non-modal) ----
+		// Replaces the old trade-builder modal. Because it's docked rather than a full-screen modal,
+		// the live board stays visible and clickable behind it: clicking one of YOUR properties adds it
+		// to "You give", clicking a rival's (owned by the current target) adds it to "You get". The two
+		// sides show as removable chips; cash/jail-card inputs and the live "will they accept?" fairness
+		// meter are unchanged from the old builder. this._tradeSession holds the open tray's state so
+		// board clicks (_tradeAddProp) can reach it.
 
-				this._showModal(`
-					<h3>Propose Trade</h3>
-					${prefill && prefill.rejected ? `<p class="mono-hint" style="color:var(--accent-red,#e63946)">${target.name} rejected your last offer - adjust it and resend.</p>` : ''}
-					<label>Trade with: </label>
-					<select id="mono-trade-target">
-						${otherPlayers.map(p => `<option value="${p.id}" ${p.id === targetId ? 'selected' : ''}>${p.name}</option>`).join('')}
-					</select>
-					<div class="mono-trade-cols">
-						<div>
-							<h4>You give</h4>
-							${propCheckboxes(myProps, 'offer')}
-							<label>Cash: <input type="number" id="mono-trade-offer-money" value="${state.offerMoney}" min="0" max="${player.money}" class="mono-input small"></label>
-							<label class="mono-checkbox-row"><input type="checkbox" id="mono-trade-offer-card" ${state.offerCards ? 'checked' : ''} ${player.getOutOfJailFree > 0 ? '' : 'disabled'}> Get Out of Jail Free card</label>
-						</div>
-						<div>
-							<h4>You get</h4>
-							${propCheckboxes(theirProps, 'request')}
-							<label>Cash: <input type="number" id="mono-trade-request-money" value="${state.requestMoney}" min="0" max="${target.money}" class="mono-input small"></label>
-							<label class="mono-checkbox-row"><input type="checkbox" id="mono-trade-request-card" ${state.requestCards ? 'checked' : ''} ${target.getOutOfJailFree > 0 ? '' : 'disabled'}> Get Out of Jail Free card</label>
-						</div>
-					</div>
-					<div class="mono-trade-fairness" id="mono-trade-fairness"></div>
-					<div class="mono-modal-actions">
-						<button class="mono-btn" id="mono-trade-send">Send Offer</button>
-						<button class="mono-btn secondary" id="mono-trade-cancel">Cancel</button>
-					</div>
-				`);
-				this.modalEl.querySelector('#mono-trade-target').onchange = (e) => {
-					readState();
-					state.requestProps = []; // switching targets invalidates any "you get" picks from the old target
-					state.requestMoney = 0;
-					state.requestCards = 0;
-					targetId = Number(e.target.value);
-					renderBuilder();
-				};
-				this.modalEl.querySelectorAll('.mono-ask-price').forEach(btn => {
-					btn.onclick = () => {
-						const pos = Number(btn.dataset.pos);
-						const estimate = this._estimateAskingPrice(target, pos);
-						const resultEl = this.modalEl.querySelector(`.mono-ask-result[data-pos="${pos}"]`);
-						if (resultEl) resultEl.textContent = estimate != null ? `≈ $${estimate} (or equivalent value in cash/properties/cards)` : '';
-					};
-				});
-				// live board/player preview: update on every checkbox toggle and as cash amounts are
-				// typed (input, not just change/blur, so the board reflects each keystroke)
-				this.modalEl.querySelectorAll('[data-group]').forEach(cb => { cb.onchange = updatePreview; });
-				this.modalEl.querySelector('#mono-trade-offer-money').oninput = updatePreview;
-				this.modalEl.querySelector('#mono-trade-request-money').oninput = updatePreview;
-				this.modalEl.querySelector('#mono-trade-offer-card').onchange = updatePreview;
-				this.modalEl.querySelector('#mono-trade-request-card').onchange = updatePreview;
-				updatePreview(); // reflect this render's starting state (including target switches and prefilled reopens) immediately
-				this.modalEl.querySelector('#mono-trade-send').onclick = () => {
-					readState();
-					this._lastTradeAttempt = { targetId, offerProps: state.offerProps, requestProps: state.requestProps, offerMoney: state.offerMoney, requestMoney: state.requestMoney, offerCards: state.offerCards, requestCards: state.requestCards };
-					this._tradePreview = null;
-					this._renderBoardState();
-					this._renderPlayers();
-					this._hideModal();
-					this.humanAgent.resolve('action', {
-						type: 'proposeTrade',
-						trade: { toId: targetId, offerProps: state.offerProps, requestProps: state.requestProps, offerMoney: state.offerMoney, requestMoney: state.requestMoney, offerCards: state.offerCards, requestCards: state.requestCards }
-					});
-				};
-				this.modalEl.querySelector('#mono-trade-cancel').onclick = () => {
-					this._lastTradeAttempt = null;
-					this._tradePreview = null;
-					this._renderBoardState();
-					this._renderPlayers();
-					this._hideModal();
-					if (openedFromBoardClick) {
-						// came straight from clicking the board, not from the action menu - cancelling
-						// should return to the action menu, not silently end the turn
-						this._modalAction(ctx);
-					} else {
-						this.humanAgent.resolve('action', { type: 'done' });
-					}
-				};
+		/** @param prefill optional. {targetId, requestPos} jumps to that owner with the clicked property
+		 *  pre-added; the {offerProps,...,rejected} shape reopens a just-rejected offer to adjust. */
+		_openTradeTray(ctx, prefill) {
+			const player = ctx.player;
+			const otherPlayers = this.game.activePlayers().filter(p => p.id !== player.id);
+			if (!otherPlayers.length) return;
+			let targetId = (prefill && prefill.targetId !== undefined) ? prefill.targetId : otherPlayers[0].id;
+			this._tradeSession = {
+				ctx, player, otherPlayers,
+				get targetId() { return targetId; },
+				set targetId(v) { targetId = v; },
+				state: {
+					offerProps: (prefill && prefill.offerProps) ? prefill.offerProps.slice() : [],
+					requestProps: (prefill && prefill.requestPos !== undefined) ? [prefill.requestPos] : ((prefill && prefill.requestProps) ? prefill.requestProps.slice() : []),
+					offerMoney: (prefill && prefill.offerMoney) || 0,
+					requestMoney: (prefill && prefill.requestMoney) || 0,
+					offerCards: (prefill && prefill.offerCards) || 0,
+					requestCards: (prefill && prefill.requestCards) || 0
+				},
+				rejected: !!(prefill && prefill.rejected)
 			};
-			renderBuilder();
+			this.tradeTrayEl.style.display = 'flex';
+			this._renderTradeTray();
+		}
+
+		_tradeTrayOpen() { return !!this._tradeSession && this.tradeTrayEl && this.tradeTrayEl.style.display !== 'none'; }
+
+		/** Board/dock click-to-add entry point. `pos` is a property; routes it to the correct side of
+		 * the open tray (yours -> "give", the current target's -> "get"), toggling if already present. */
+		_tradeAddProp(pos) {
+			if (!this._tradeTrayOpen()) return false;
+			const s = this._tradeSession;
+			const prop = this.game.properties[pos];
+			if (!prop || prop.owner === null) return false;
+			if (prop.owner === s.player.id) {
+				const i = s.state.offerProps.indexOf(pos);
+				if (i >= 0) s.state.offerProps.splice(i, 1); else s.state.offerProps.push(pos);
+			} else if (prop.owner === s.targetId) {
+				const i = s.state.requestProps.indexOf(pos);
+				if (i >= 0) s.state.requestProps.splice(i, 1); else s.state.requestProps.push(pos);
+			} else {
+				// clicked a property owned by someone who isn't the current trade target: switch the
+				// trade to that owner and add it to "you get"
+				if (this.game.players[prop.owner].bankrupt) return false;
+				s.targetId = prop.owner;
+				s.state.requestProps = [pos];
+				s.state.requestMoney = 0; s.state.requestCards = 0;
+			}
+			this._renderTradeTray();
+			return true;
+		}
+
+		/** Reads the tray's cash/card inputs back into session state (props are managed directly by
+		 * chip/board clicks, not the DOM), then pushes the live preview + fairness readout. */
+		_readTradeInputs() {
+			const s = this._tradeSession; if (!s) return;
+			const om = this.tradeTrayEl.querySelector('#mono-trade-offer-money');
+			const rm = this.tradeTrayEl.querySelector('#mono-trade-request-money');
+			const oc = this.tradeTrayEl.querySelector('#mono-trade-offer-card');
+			const rc = this.tradeTrayEl.querySelector('#mono-trade-request-card');
+			if (om) s.state.offerMoney = Number(om.value) || 0;
+			if (rm) s.state.requestMoney = Number(rm.value) || 0;
+			if (oc) s.state.offerCards = oc.checked ? 1 : 0;
+			if (rc) s.state.requestCards = rc.checked ? 1 : 0;
+		}
+
+		_updateTradePreview() {
+			const s = this._tradeSession; if (!s) return;
+			this._tradePreview = {
+				fromId: s.player.id, toId: s.targetId,
+				offerProps: s.state.offerProps, requestProps: s.state.requestProps,
+				offerMoney: s.state.offerMoney, requestMoney: s.state.requestMoney,
+				offerCards: s.state.offerCards, requestCards: s.state.requestCards
+			};
+			this._renderBoardState();
+			this._renderPlayers();
+			this._updateTradeFairness(s.targetId, s.state, this.tradeTrayEl);
+		}
+
+		_renderTradeTray() {
+			const s = this._tradeSession;
+			if (!s) return;
+			const player = s.player;
+			const target = this.game.players[s.targetId];
+
+			// side as removable chips
+			const chips = (posList, side) => posList.map(pos => {
+				const space = this.game.getSpace(pos);
+				const barColor = (space.group && GROUP_COLORS[space.group]) || (space.type === 'rail' ? '#555' : (space.type === 'utility' ? '#888' : '#999'));
+				return `<button class="mono-trade-chip" data-side="${side}" data-pos="${pos}" title="Remove"><span class="mono-trade-chip-bar" style="background:${barColor}"></span>${space.name} <span class="mono-trade-chip-x">×</span></button>`;
+			}).join('') || '<span class="mono-hint">Click your board tiles to add</span>';
+			const theirChips = (posList, side) => posList.map(pos => {
+				const space = this.game.getSpace(pos);
+				const barColor = (space.group && GROUP_COLORS[space.group]) || (space.type === 'rail' ? '#555' : (space.type === 'utility' ? '#888' : '#999'));
+				const ask = target.agent ? ` <span class="mono-trade-chip-ask" data-pos="${pos}" title="Estimated asking value"></span>` : '';
+				return `<button class="mono-trade-chip" data-side="${side}" data-pos="${pos}" title="Remove"><span class="mono-trade-chip-bar" style="background:${barColor}"></span>${space.name} <span class="mono-trade-chip-x">×</span>${ask}</button>`;
+			}).join('') || `<span class="mono-hint">Click ${target.name}'s tiles to add</span>`;
+
+			this.tradeTrayEl.innerHTML = `
+				<div class="mono-trade-tray-head">
+					<h3>🤝 Propose Trade</h3>
+					<button class="mono-tray-close" id="mono-trade-close" title="Cancel" aria-label="Cancel">×</button>
+				</div>
+				${s.rejected ? `<p class="mono-hint" style="color:var(--accent-red,#e63946)">${target.name} rejected your last offer — adjust it and resend.</p>` : ''}
+				<label class="mono-trade-target-row">Trade with:
+					<select id="mono-trade-target">
+						${s.otherPlayers.map(p => `<option value="${p.id}" ${p.id === s.targetId ? 'selected' : ''}>${p.name}</option>`).join('')}
+					</select>
+				</label>
+				<p class="mono-hint mono-trade-help">Click properties on the board (or the chips below) to add or remove them.${target.agent ? ' Or pick just one of theirs and <b>ask what they want for it</b>.' : ''}</p>
+				<div class="mono-trade-side-panel give">
+					<div class="mono-trade-side-head">You give</div>
+					<div class="mono-trade-chips">${chips(s.state.offerProps, 'offer')}</div>
+					<div class="mono-trade-extras">
+						<label>Cash $<input type="number" id="mono-trade-offer-money" value="${s.state.offerMoney}" min="0" max="${player.money}" class="mono-input small"></label>
+						<label class="mono-trade-cardbox"><input type="checkbox" id="mono-trade-offer-card" ${s.state.offerCards ? 'checked' : ''} ${player.getOutOfJailFree > 0 ? '' : 'disabled'}> 🎟️ Jail card</label>
+					</div>
+				</div>
+				<div class="mono-trade-side-panel get">
+					<div class="mono-trade-side-head">You get</div>
+					<div class="mono-trade-chips">${theirChips(s.state.requestProps, 'request')}</div>
+					<div class="mono-trade-extras">
+						<label>Cash $<input type="number" id="mono-trade-request-money" value="${s.state.requestMoney}" min="0" max="${target.money}" class="mono-input small"></label>
+						<label class="mono-trade-cardbox"><input type="checkbox" id="mono-trade-request-card" ${s.state.requestCards ? 'checked' : ''} ${target.getOutOfJailFree > 0 ? '' : 'disabled'}> 🎟️ Jail card</label>
+					</div>
+				</div>
+				<div class="mono-trade-fairness" id="mono-trade-fairness"></div>
+				<div class="mono-trade-tray-actions">
+					<button class="mono-btn" id="mono-trade-send">Send Offer</button>
+					<button class="mono-btn secondary" id="mono-trade-cancel">Cancel</button>
+				</div>
+				${target.agent ? `<button class="mono-btn secondary mono-trade-ask" id="mono-trade-ask" ${s.state.requestProps.length === 1 ? '' : 'disabled title="Pick exactly one of their properties to ask about"'}>🗣️ Ask what they want for it</button>` : ''}
+			`;
+
+			// chip clicks remove that property from its side
+			this.tradeTrayEl.querySelectorAll('.mono-trade-chip').forEach(chip => {
+				chip.onclick = () => {
+					const pos = Number(chip.dataset.pos);
+					const list = chip.dataset.side === 'offer' ? s.state.offerProps : s.state.requestProps;
+					const i = list.indexOf(pos);
+					if (i >= 0) list.splice(i, 1);
+					this._renderTradeTray();
+				};
+			});
+			// asking-value hints for the target's properties (AI targets only)
+			this.tradeTrayEl.querySelectorAll('.mono-trade-chip-ask').forEach(el => {
+				const est = this._estimateAskingPrice(target, Number(el.dataset.pos));
+				if (est != null) el.textContent = `≈$${est}`;
+			});
+			this.tradeTrayEl.querySelector('#mono-trade-target').onchange = (e) => {
+				this._readTradeInputs();
+				s.state.requestProps = []; // switching targets invalidates "you get" picks from the old target
+				s.state.requestMoney = 0; s.state.requestCards = 0;
+				s.targetId = Number(e.target.value);
+				this._renderTradeTray();
+			};
+			const om = this.tradeTrayEl.querySelector('#mono-trade-offer-money');
+			const rm = this.tradeTrayEl.querySelector('#mono-trade-request-money');
+			const oc = this.tradeTrayEl.querySelector('#mono-trade-offer-card');
+			const rc = this.tradeTrayEl.querySelector('#mono-trade-request-card');
+			const onInput = () => { this._readTradeInputs(); this._updateTradePreview(); };
+			om.oninput = onInput; rm.oninput = onInput; oc.onchange = onInput; rc.onchange = onInput;
+
+			this._updateTradePreview();
+
+			this.tradeTrayEl.querySelector('#mono-trade-send').onclick = () => this._sendTrade();
+			this.tradeTrayEl.querySelector('#mono-trade-cancel').onclick = () => this._cancelTrade();
+			this.tradeTrayEl.querySelector('#mono-trade-close').onclick = () => this._cancelTrade();
+			const askBtn = this.tradeTrayEl.querySelector('#mono-trade-ask');
+			if (askBtn && !askBtn.disabled) askBtn.onclick = () => this._askWhatTheyWant();
+		}
+
+		/** "What do you want for this?" - the human has selected exactly one of the target AI's
+		 * properties (in "You get") and asks the AI to name its price instead of building an offer.
+		 * The AI composes what it would want in return (its own valuation x fairness margin, as a cash
+		 * ask, plus any property swap it would take - the same math composeCounterOffer/_estimateAskingPrice
+		 * use), and that comes back as a concrete offer the human can Accept / Counter / Reject via the
+		 * normal negotiation UI. Accepting simply sends that trade as the human's own proposeTrade
+		 * action, which the AI then accepts (it meets its own threshold) - so no engine change is needed. */
+		_askWhatTheyWant() {
+			const s = this._tradeSession;
+			if (!s || s.state.requestProps.length !== 1) return;
+			const pos = s.state.requestProps[0];
+			const target = this.game.players[s.targetId];
+			if (!target.agent || !target.agent.genome) return;
+			const ctx = s.ctx;
+			// Build the AI's asking-offer as a proposer-framed trade where the AI (proposer) gives the
+			// asked property and requests its price from the human. Framed so it slots straight into
+			// _showTradeOffer, which already labels it "You receive / You give up" from the human's view.
+			const askTrade = this._composeAiAsk(target, s.player, pos);
+			this._closeTradeTray();
+			// Present it exactly like an AI-initiated offer. But accepting/countering here must resolve
+			// the human's pending decideAction as a proposeTrade (not decideTradeResponse), so use a
+			// dedicated presenter that reuses the same modal UI but the proposeTrade resolution path.
+			this._negotiationRound = 0;
+			this._showAskedOffer(ctx, target, askTrade, 'initial');
+		}
+
+		/** Composes the AI target's asking terms for giving up `pos` to `human`: a cash price at its
+		 * own valuation x fairness margin, optionally taking one of the human's properties as part
+		 * swap to reduce the cash. Returned proposer-framed (proposer = the AI):
+		 *   offerProps=[pos] (AI gives), requestMoney / requestProps / requestCards (AI wants). */
+		_composeAiAsk(aiPlayer, human, pos) {
+			const genome = aiPlayer.agent.genome;
+			// What the AI wants in total value for its property: its own valuation x fairness margin,
+			// plus a tiny buffer so that when the human accepts and re-sends this as a proposeTrade, the
+			// AI's own evaluateTrade (same margin) reliably clears rather than landing exactly on the
+			// borderline where rounding could tip it to a reject.
+			const price = Math.round(estimateAssetValue(this.game, aiPlayer.id, pos, genome) * genome.tradeFairnessMargin) + 5;
+			let remaining = price;
+			let requestProps = [];
+			// If the human owns a property the AI would value receiving (e.g. completes/advances an AI
+			// group), take it as part of the price to cut the cash - reuses the same swap-candidate
+			// heuristic the AI uses when it proposes. Priced from the AI's own perspective.
+			const swap = this._findAiWantedSwap(aiPlayer, human, pos, genome);
+			if (swap) {
+				requestProps = [swap.pos];
+				remaining -= swap.value;
+			}
+			// cap the cash ask at what the human can actually pay (leave them a small buffer)
+			const requestMoney = Math.max(0, Math.min(Math.round(remaining), human.money));
+			return {
+				toId: human.id,           // proposer-framed target = the human
+				offerProps: [pos], offerMoney: 0, offerCards: 0,   // AI gives the asked property
+				requestProps, requestMoney, requestCards: 0        // AI wants this in return
+			};
+		}
+
+		/** Picks one of `human`'s properties the AI would most want to receive as part of its asking
+		 * price for `pos` (highest value to the AI), or null. Read-only heuristic mirroring the AI's
+		 * own swap preference; value is priced from the AI's perspective so it offsets the cash 1:1. */
+		_findAiWantedSwap(aiPlayer, human, pos, genome) {
+			let best = null;
+			const price = estimateAssetValue(this.game, aiPlayer.id, pos, genome) * genome.tradeFairnessMargin;
+			for (const hp of human.properties) {
+				const v = estimateAssetValue(this.game, aiPlayer.id, hp, genome);
+				// only swap in a property the AI genuinely values and that doesn't overshoot the price
+				if (v > 40 && v <= price && (!best || v > best.value)) best = { pos: hp, value: v };
+			}
+			return best;
+		}
+
+		/** Presents the AI's asking-offer (proposer-framed, proposer = the AI `seller`) to the human
+		 * with Accept / Counter / Reject - visually identical to _showTradeOffer (an AI-initiated
+		 * trade), but this is happening during the HUMAN's own decideAction, so Accept resolves it as a
+		 * proposeTrade the human sends back (the AI then accepts it, since it's the AI's own price), and
+		 * Counter drops the human into the trade builder prefilled with these terms to adjust. Reject
+		 * returns to the action bar. @param trade proposer-framed (seller gives offer*, wants request*). */
+		_showAskedOffer(ctx, seller, trade, source) {
+			const header = `🗣️ ${seller.name} says they'd trade it for:`;
+			// human-framed conversion for readouts/prefill: human RECEIVES the seller's offer* side,
+			// GIVES the seller's request* side.
+			const humanReceives = this._describeTradeSide(trade.offerProps, trade.offerMoney, trade.offerCards);
+			const humanGives = this._describeTradeSide(trade.requestProps, trade.requestMoney, trade.requestCards);
+			this._showModal(`
+				<h3>${header}</h3>
+				<div class="mono-trade-response">
+					<div class="mono-trade-side get">
+						<div class="mono-trade-side-head">You receive</div>
+						<div>${humanReceives}</div>
+					</div>
+					<div class="mono-trade-side give">
+						<div class="mono-trade-side-head">You give up</div>
+						<div>${humanGives}</div>
+					</div>
+				</div>
+				<div class="mono-modal-actions">
+					<button class="mono-btn" id="mono-ask-accept">Accept</button>
+					<button class="mono-btn secondary" id="mono-ask-counter">Counter…</button>
+					<button class="mono-btn secondary" id="mono-ask-reject">Reject</button>
+				</div>
+			`);
+			// human-framed proposeTrade: human gives the seller's request* side, wants the seller's offer* side
+			const humanTrade = {
+				toId: seller.id,
+				offerProps: (trade.requestProps || []).slice(), offerMoney: trade.requestMoney || 0, offerCards: trade.requestCards || 0,
+				requestProps: (trade.offerProps || []).slice(), requestMoney: trade.offerMoney || 0, requestCards: trade.offerCards || 0
+			};
+			this.modalEl.querySelector('#mono-ask-accept').onclick = () => {
+				this._lastTradeAttempt = Object.assign({ targetId: seller.id }, humanTrade);
+				this._hideModal();
+				this._humanPhase = null;
+				this._renderActionBar();
+				this.humanAgent.resolve('action', { type: 'proposeTrade', trade: humanTrade });
+			};
+			this.modalEl.querySelector('#mono-ask-reject').onclick = () => { this._hideModal(); this._renderActionBar(); };
+			this.modalEl.querySelector('#mono-ask-counter').onclick = () => {
+				// reopen the trade builder prefilled with these terms (human-framed) so they can adjust
+				// and either send it, or ask again
+				this._hideModal();
+				this._openTradeTray(ctx, {
+					targetId: seller.id,
+					offerProps: humanTrade.offerProps, requestProps: humanTrade.requestProps,
+					offerMoney: humanTrade.offerMoney, requestMoney: humanTrade.requestMoney,
+					offerCards: humanTrade.offerCards, requestCards: humanTrade.requestCards
+				});
+			};
+		}
+
+		_sendTrade() {
+			const s = this._tradeSession; if (!s) return;
+			this._readTradeInputs();
+			const trade = { toId: s.targetId, offerProps: s.state.offerProps.slice(), requestProps: s.state.requestProps.slice(), offerMoney: s.state.offerMoney, requestMoney: s.state.requestMoney, offerCards: s.state.offerCards, requestCards: s.state.requestCards };
+			this._lastTradeAttempt = Object.assign({ targetId: s.targetId }, trade);
+			this._closeTradeTray();
+			this._humanPhase = null;
+			this._renderActionBar(); // drop to the waiting state while the offer is evaluated
+			this.humanAgent.resolve('action', { type: 'proposeTrade', trade });
+		}
+
+		_cancelTrade() {
+			this._lastTradeAttempt = null;
+			this._closeTradeTray();
+			// don't end the turn - just return to the action bar so the player can do something else
+			this._renderActionBar();
+		}
+
+		/** Tears down the tray and clears the board's trade preview. Does NOT resolve the pending
+		 * action (cancel returns to the action bar; send resolves separately). */
+		_closeTradeTray() {
+			this._tradeSession = null;
+			this._tradePreview = null;
+			if (this.tradeTrayEl) { this.tradeTrayEl.style.display = 'none'; this.tradeTrayEl.innerHTML = ''; }
+			this._renderBoardState();
+			this._renderPlayers();
 		}
 
 		// ---- Trade response with counteroffers ----
