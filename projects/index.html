@@ -7,6 +7,58 @@
 	<link rel="stylesheet" href="projects.css">
 </head>
 <body>
+	<svg class="icon-sprite" aria-hidden="true" focusable="false">
+		<symbol id="i-tictactoe" viewBox="0 0 24 24">
+			<path d="M3.5 8.5l7 7M10.5 8.5l-7 7"/>
+			<circle cx="17" cy="12" r="3.5"/>
+		</symbol>
+		<symbol id="i-city" viewBox="0 0 24 24">
+			<path d="M2 21h20"/>
+			<path d="M4 21V11h6v10M14 21V4h6v17"/>
+			<path d="M6 14h2M6 17h2M16 8h2M16 12h2M16 16h2"/>
+		</symbol>
+		<symbol id="i-farm" viewBox="0 0 24 24">
+			<path d="M12 21v-9"/>
+			<path d="M12 12C12 8 9 6 5 6c0 4 3 6 7 6z"/>
+			<path d="M12 14c0-3.5 2.5-5.5 6-5.5 0 3.5-2.5 5.5-6 5.5z"/>
+			<path d="M6 21h12"/>
+		</symbol>
+		<symbol id="i-monopoly" viewBox="0 0 24 24">
+			<rect x="3.5" y="3.5" width="17" height="17" rx="2"/>
+			<circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/>
+			<circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+			<circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/>
+		</symbol>
+		<symbol id="i-audio" viewBox="0 0 24 24">
+			<path d="M3 12v1M7 7v10M11 4v16M15 8v8M19 11v2"/>
+		</symbol>
+		<symbol id="i-cart" viewBox="0 0 24 24">
+			<path d="M2 4h3l2.5 11h10L20 7H6"/>
+			<circle cx="9" cy="19" r="1.6"/>
+			<circle cx="17" cy="19" r="1.6"/>
+		</symbol>
+		<symbol id="i-map" viewBox="0 0 24 24">
+			<path d="M9 3L3 5.5v15L9 18l6 3 6-2.5v-15L15 6z"/>
+			<path d="M9 3v15M15 6v15"/>
+		</symbol>
+		<symbol id="i-timeline" viewBox="0 0 24 24">
+			<path d="M3 14h18"/>
+			<path d="M7 12v4M12 12v4M17 12v4"/>
+			<path d="M12 10V8"/>
+			<circle cx="12" cy="6" r="2"/>
+		</symbol>
+		<symbol id="i-mood" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="9"/>
+			<path d="M8.5 14.5a4.5 4.5 0 007 0"/>
+			<path d="M9 9.5v.01M15 9.5v.01"/>
+		</symbol>
+		<symbol id="i-doc" viewBox="0 0 24 24">
+			<path d="M6 2h8l4 4v16H6z"/>
+			<path d="M14 2v4h4"/>
+			<path d="M9 12h6M9 16h6M9 8h2"/>
+		</symbol>
+	</svg>
+
 	<header>
 		<h1>Projects</h1>
 		<nav class="nav-buttons">
@@ -14,21 +66,91 @@
 			<a href="/blog/" class="button">blog</a>
 		</nav>
 	</header>
-	
+
 	<main>
 		<p>here are some of my projects:</p>
-		
-		<div class="project-list">
-			<a href="/tictactoe/" class="project-button">tic tac toe</a>
-			<a href="/citybuilder/" class="project-button">city builder</a>
-			<a href="/farmofsouls/" class="project-button">farm of souls</a>
-			<a href="https://gyberecordinghelper.com" class="project-button">gybe recording helper</a>
-			<a href="/cmn450-blog/" class="project-button">cmn450 blog</a>
-			<a href="/timeline-tracker/" class="project-button">timeline tracker</a>
-			<a href="/walk-your-city/" class="project-button">walk your city</a>
-			<a href="/how-was-my-day/" class="project-button">how was my day</a>
-			<a href="/grocerypal/" class="project-button">GroceryPal</a>
-			<a href="/monopoly/" class="project-button">monopoly</a>
+
+		<h2 class="group-title">games</h2>
+		<div class="project-grid">
+			<a href="/monopoly/" class="project-card" data-path="monopoly">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-monopoly"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">monopoly</span>
+					<time class="project-date" datetime="2026-07-24">2026-07-24</time>
+				</span>
+			</a>
+			<a href="/farmofsouls/" class="project-card" data-path="farmofsouls">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-farm"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">farm of souls</span>
+					<time class="project-date" datetime="2026-07-12">2026-07-12</time>
+				</span>
+			</a>
+			<a href="/citybuilder/" class="project-card" data-path="citybuilder">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-city"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">city builder</span>
+					<time class="project-date" datetime="2026-07-09">2026-07-09</time>
+				</span>
+			</a>
+			<a href="/tictactoe/" class="project-card" data-path="tictactoe">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-tictactoe"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">tic tac toe</span>
+					<time class="project-date" datetime="2026-03-04">2026-03-04</time>
+				</span>
+			</a>
+		</div>
+
+		<h2 class="group-title">tools</h2>
+		<div class="project-grid">
+			<a href="/grocerypal/" class="project-card" data-path="grocerypal">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-cart"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">GroceryPal</span>
+					<time class="project-date" datetime="2026-07-09">2026-07-09</time>
+				</span>
+			</a>
+			<a href="/walk-your-city/" class="project-card" data-path="walk-your-city">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-map"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">walk your city</span>
+					<time class="project-date" datetime="2026-06-20">2026-06-20</time>
+				</span>
+			</a>
+			<a href="/timeline-tracker/" class="project-card" data-path="timeline-tracker">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-timeline"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">timeline tracker</span>
+					<time class="project-date" datetime="2026-04-24">2026-04-24</time>
+				</span>
+			</a>
+			<a href="https://gyberecordinghelper.com" class="project-card">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-audio"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">gybe recording helper</span>
+					<span class="project-date">external</span>
+				</span>
+				<span class="external" aria-label="external link">&#8599;</span>
+			</a>
+		</div>
+
+		<h2 class="group-title">data &amp; writing</h2>
+		<div class="project-grid">
+			<a href="/how-was-my-day/" class="project-card" data-path="how-was-my-day">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-mood"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">how was my day</span>
+					<time class="project-date" datetime="2026-05-10">2026-05-10</time>
+				</span>
+			</a>
+			<a href="/cmn450-blog/" class="project-card" data-path="cmn450-blog">
+				<span class="project-icon"><svg viewBox="0 0 24 24"><use href="#i-doc"></use></svg></span>
+				<span class="project-text">
+					<span class="project-name">cmn450 blog</span>
+					<time class="project-date" datetime="2026-04-01">2026-04-01</time>
+				</span>
+			</a>
 		</div>
 	</main>
 </body>

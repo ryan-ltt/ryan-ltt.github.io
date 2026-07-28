@@ -68,28 +68,95 @@ main
 	max-width: 900px;
 	margin: 0 auto;
 }
-.project-list
+.icon-sprite
+{
+	display: none;
+}
+.group-title
+{
+	color: black;
+	font-family: Monaco;
+	font-size: 13px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	margin: 35px 0 15px 0;
+	padding-bottom: 6px;
+	border-bottom: 2px solid black;
+}
+.project-grid
+{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 15px;
+}
+.project-card
 {
 	display: flex;
-	flex-direction: column;
+	align-items: center;
 	gap: 15px;
-	margin-top: 20px;
-}
-.project-button
-{
-	display: inline-block;
-	padding: 15px 25px;
+	padding: 15px;
 	background-color: white;
 	border: 2px solid black;
 	color: black;
 	text-decoration: none;
 	font-family: Monaco;
-	font-size: 16px;
+	font-size: 15px;
 	transition: all 0.2s ease;
-	width: fit-content;
 }
-.project-button:hover
+.project-card:hover
 {
 	background-color: black;
 	color: white;
+	transform: translate(-2px, -2px);
+	box-shadow: 4px 4px 0 black;
+}
+.project-icon
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 42px;
+	height: 42px;
+	border: 2px solid currentColor;
+}
+.project-icon svg
+{
+	width: 24px;
+	height: 24px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.8;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+.project-text
+{
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.project-name
+{
+	line-height: 1.3;
+}
+.project-date
+{
+	font-size: 11px;
+	letter-spacing: 1px;
+	line-height: 1.3;
+	opacity: 0.5;
+	transition: opacity 0.2s ease;
+}
+.project-card:hover .project-date
+{
+	opacity: 0.7;
+}
+.external
+{
+	flex-shrink: 0;
+	font-size: 13px;
+	opacity: 0.6;
 }
