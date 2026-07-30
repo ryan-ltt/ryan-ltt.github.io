@@ -1,0 +1,839 @@
+/* Same flat vocabulary as the rest of the site: lightblue paper, Monaco, 2px
+ * black borders, and hover states that invert to black. */
+
+body
+{
+	display: block;
+	background-color: lightblue;
+	padding: 0;
+	margin: 0;
+	font-family: Monaco, monospace;
+	line-height: 1.6;
+}
+header
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 40px;
+	max-width: 1180px;
+	margin: 0 auto;
+}
+h1
+{
+	color: black;
+	margin: 0;
+	font-family: Monaco, monospace;
+	font-size: 32px;
+}
+p
+{
+	color: #333333;
+	margin: 15px 0;
+	font-size: 16px;
+}
+a
+{
+	color: #0066cc;
+	text-decoration: underline;
+}
+a:hover
+{
+	color: #004499;
+}
+main
+{
+	padding: 0 40px 40px 40px;
+	max-width: 1180px;
+	margin: 0 auto;
+}
+.nav-buttons
+{
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+.button
+{
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: white;
+	border: 2px solid black;
+	color: black;
+	text-decoration: none;
+	font-family: Monaco, monospace;
+	font-size: 14px;
+	transition: all 0.2s ease;
+}
+.button:hover
+{
+	background-color: black;
+	color: white;
+}
+
+/* ------------------------------------------------------------------- screens */
+
+.screen
+{
+	display: none;
+}
+.screen.is-visible
+{
+	display: block;
+}
+.layout
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: 20px;
+	align-items: start;
+}
+.board-pane
+{
+	background-color: #a8d8ea;
+	border: 2px solid black;
+	padding: 10px;
+	position: sticky;
+	top: 20px;
+}
+.board
+{
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 78vh;
+}
+.panel
+{
+	background-color: white;
+	border: 2px solid black;
+	padding: 15px;
+	font-size: 13px;
+	max-height: 84vh;
+	overflow-y: auto;
+}
+.panel-head
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	padding-bottom: 10px;
+	border-bottom: 2px solid black;
+}
+.panel-head-vp
+{
+	font-size: 11px;
+	letter-spacing: 1px;
+	opacity: 0.6;
+}
+.block
+{
+	margin-top: 15px;
+	padding-top: 15px;
+	border-top: 2px solid black;
+}
+.block:first-child
+{
+	margin-top: 0;
+	padding-top: 0;
+	border-top: none;
+}
+.sub-block
+{
+	margin-top: 12px;
+	padding: 10px;
+	border: 2px dashed #999999;
+}
+h3
+{
+	margin: 0 0 8px 0;
+	font-size: 11px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+h3 small
+{
+	letter-spacing: 0;
+	text-transform: none;
+	opacity: 0.55;
+	font-size: 11px;
+}
+h4
+{
+	margin: 12px 0 6px 0;
+	font-size: 11px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+.hint
+{
+	margin: 6px 0;
+	font-size: 11px;
+	color: #555555;
+	line-height: 1.5;
+}
+.hint.ok { color: #2f6b3f; }
+.hint.warn { color: #9a6b12; }
+.hint.bad { color: #b02a1e; }
+.notice
+{
+	margin: 10px 0 0 0;
+	padding: 8px 10px;
+	background-color: #fff3cd;
+	border: 2px solid black;
+	font-size: 12px;
+	color: #222222;
+}
+
+/* ------------------------------------------------------------------- buttons */
+
+.btn
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 8px 12px;
+	background-color: white;
+	border: 2px solid black;
+	color: black;
+	font-family: Monaco, monospace;
+	font-size: 12px;
+	line-height: 1.3;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.btn:hover:not([disabled])
+{
+	background-color: black;
+	color: white;
+}
+.btn[disabled]
+{
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+.btn.is-active
+{
+	background-color: black;
+	color: white;
+}
+.btn--primary
+{
+	background-color: #1f3d5c;
+	border-color: black;
+	color: white;
+}
+.btn--primary:hover:not([disabled])
+{
+	background-color: black;
+}
+.btn--ghost
+{
+	border-width: 2px;
+	font-size: 11px;
+	padding: 5px 9px;
+}
+.btn--small
+{
+	padding: 5px 9px;
+	font-size: 11px;
+}
+.btn--wide
+{
+	display: flex;
+	width: 100%;
+	margin-top: 10px;
+}
+.btn--build
+{
+	flex-direction: column;
+	gap: 2px;
+	padding: 8px 6px;
+}
+.btn--build small
+{
+	font-size: 9px;
+	opacity: 0.6;
+	letter-spacing: 0;
+}
+.btn-grid
+{
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 6px;
+}
+.btn-row
+{
+	display: flex;
+	gap: 6px;
+	margin-top: 8px;
+}
+.btn-row .btn
+{
+	flex: 1;
+}
+.btn-row--wrap
+{
+	flex-wrap: wrap;
+}
+.btn-row--wrap .btn
+{
+	flex: 0 0 auto;
+}
+
+/* --------------------------------------------------------------- small parts */
+
+.swatch
+{
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border: 2px solid black;
+	flex-shrink: 0;
+}
+.chip-dot
+{
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	border: 1px solid black;
+	margin-right: 4px;
+	flex-shrink: 0;
+}
+.chips
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+.chip
+{
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 7px;
+	border: 2px solid black;
+	background-color: white;
+	font-size: 11px;
+}
+.chip--empty
+{
+	opacity: 0.4;
+}
+.chip b
+{
+	margin-left: 4px;
+}
+.chip i,
+.pick i
+{
+	font-style: normal;
+	margin-left: 4px;
+	font-size: 9px;
+	opacity: 0.55;
+}
+.pick-row
+{
+	display: flex;
+	gap: 5px;
+	margin: 5px 0;
+}
+.pick-row--wrap
+{
+	flex-wrap: wrap;
+}
+.pick
+{
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 7px;
+	border: 2px solid black;
+	background-color: white;
+	font-family: Monaco, monospace;
+	font-size: 11px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.pick:hover:not([disabled]),
+.pick.is-active
+{
+	background-color: black;
+	color: white;
+}
+.pick[disabled]
+{
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+.pick--num
+{
+	min-width: 34px;
+	justify-content: center;
+}
+.pick--red
+{
+	color: #b02a1e;
+}
+.pick--red.is-active
+{
+	color: white;
+}
+.field
+{
+	display: block;
+	font-size: 11px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+input[type="text"],
+textarea
+{
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	margin-top: 4px;
+	padding: 7px 8px;
+	border: 2px solid black;
+	background-color: white;
+	font-family: Monaco, monospace;
+	font-size: 12px;
+	color: black;
+}
+.turn-bar
+{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 12px;
+	padding: 8px 10px;
+	border: 2px solid black;
+	border-left-width: 8px;
+	background-color: #f6f6f0;
+}
+.turn-name
+{
+	font-size: 14px;
+}
+.turn-name em
+{
+	font-size: 10px;
+	opacity: 0.6;
+}
+.turn-prompt
+{
+	flex-basis: 100%;
+	font-size: 11px;
+	color: #555555;
+}
+.dice
+{
+	margin-left: auto;
+	padding: 2px 6px;
+	border: 2px solid black;
+	background-color: white;
+	font-size: 11px;
+}
+.card-row
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 0;
+	border-bottom: 1px dotted #cccccc;
+	font-size: 12px;
+}
+.card-row:last-child
+{
+	border-bottom: none;
+}
+.card-row span
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+.card-row em
+{
+	font-style: normal;
+	font-size: 10px;
+	opacity: 0.55;
+}
+.card-row small
+{
+	opacity: 0.55;
+	font-size: 10px;
+}
+.player-row
+{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding: 5px 6px;
+	border: 2px solid transparent;
+	font-size: 12px;
+}
+.player-row.is-current
+{
+	border-color: black;
+	background-color: #f6f6f0;
+}
+.player-name
+{
+	flex: 1;
+}
+.player-stats
+{
+	display: flex;
+	gap: 6px;
+	align-items: baseline;
+	font-size: 10px;
+}
+.player-stats i
+{
+	font-style: normal;
+	opacity: 0.55;
+}
+.badges
+{
+	flex-basis: 100%;
+	font-size: 10px;
+	opacity: 0.7;
+}
+.player-setup
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 6px;
+}
+.player-setup input
+{
+	margin-top: 0;
+	flex: 1;
+}
+.trade-table
+{
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 11px;
+	margin: 6px 0;
+}
+.trade-table th
+{
+	font-size: 9px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	text-align: center;
+	opacity: 0.6;
+	padding-bottom: 4px;
+}
+.trade-table td
+{
+	padding: 3px 2px;
+	border-top: 1px dotted #cccccc;
+}
+.stepper
+{
+	white-space: nowrap;
+	text-align: center;
+}
+.stepper button
+{
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	border: 2px solid black;
+	background-color: white;
+	font-family: Monaco, monospace;
+	font-size: 12px;
+	line-height: 1;
+	cursor: pointer;
+}
+.stepper button:hover
+{
+	background-color: black;
+	color: white;
+}
+.stepper b
+{
+	display: inline-block;
+	min-width: 20px;
+}
+.block--offer
+{
+	background-color: #fffbe8;
+}
+.log
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-height: 200px;
+	overflow-y: auto;
+	font-size: 11px;
+}
+.log li
+{
+	padding: 3px 0;
+	border-bottom: 1px dotted #dddddd;
+	color: #333333;
+}
+.log .log-phase { font-weight: bold; }
+.log .log-roll { color: #1f3d5c; }
+.log .log-gain { color: #2f6b3f; }
+.log .log-build { color: #333333; }
+.log .log-warn { color: #b02a1e; }
+.log .log-trade { color: #6b4a9a; }
+.log .log-card { color: #8a5a12; }
+.log .log-award { font-weight: bold; color: #1f3d5c; }
+.log .log-dim { opacity: 0.55; }
+
+/* -------------------------------------------------------------------- modals */
+
+.modal
+{
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 20;
+	background-color: rgba(0, 0, 0, 0.45);
+	padding: 20px;
+	overflow-y: auto;
+}
+.modal.is-open
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.dialog
+{
+	width: 100%;
+	max-width: 360px;
+	background-color: white;
+	border: 2px solid black;
+	box-shadow: 6px 6px 0 black;
+	padding: 18px;
+	font-size: 13px;
+}
+.dialog h2
+{
+	margin: 0 0 10px 0;
+	font-size: 16px;
+}
+.dialog .btn
+{
+	margin-top: 6px;
+}
+.dialog .btn--wide
+{
+	justify-content: flex-start;
+	gap: 8px;
+}
+
+/* --------------------------------------------------------------- board pieces */
+
+.c-sea
+{
+	fill: #a8d8ea;
+	stroke: #7fb8cc;
+	stroke-width: 1;
+}
+.c-hex
+{
+	stroke: #111111;
+	stroke-width: 2.5;
+}
+.c-hex-label
+{
+	text-anchor: middle;
+	font-family: Monaco, monospace;
+	font-size: 11px;
+	fill: rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+}
+.c-token
+{
+	fill: #fffdf5;
+	stroke: #111111;
+	stroke-width: 2;
+	pointer-events: none;
+}
+.c-token-num
+{
+	text-anchor: middle;
+	dominant-baseline: central;
+	font-family: Monaco, monospace;
+	font-size: 27px;
+	font-weight: bold;
+	fill: #1a1a1a;
+	pointer-events: none;
+}
+.c-token-num--red
+{
+	fill: #b02a1e;
+}
+.c-pip
+{
+	fill: #444444;
+	pointer-events: none;
+}
+.c-pip--red
+{
+	fill: #b02a1e;
+}
+.c-port
+{
+	stroke: #111111;
+	stroke-width: 2;
+}
+.c-port-label
+{
+	text-anchor: middle;
+	font-family: Monaco, monospace;
+	font-size: 15px;
+	fill: #111111;
+	pointer-events: none;
+}
+.c-port-line
+{
+	stroke: #111111;
+	stroke-width: 2.5;
+	stroke-dasharray: 7 5;
+	opacity: 0.45;
+}
+.c-robber
+{
+	fill: #2b2b2b;
+	stroke: #000000;
+	stroke-width: 2;
+	pointer-events: none;
+}
+.c-road-edge
+{
+	stroke: #111111;
+	stroke-width: 21;
+	stroke-linecap: round;
+	pointer-events: none;
+}
+.c-road
+{
+	stroke-width: 13;
+	stroke-linecap: round;
+	pointer-events: none;
+}
+.c-building
+{
+	stroke: #111111;
+	stroke-width: 3;
+	pointer-events: none;
+}
+
+/* --------------------------------------------------------- interactive targets */
+
+.c-hit
+{
+	fill: transparent;
+	cursor: pointer;
+}
+.board--editable .c-hit:hover
+{
+	fill: rgba(255, 255, 255, 0.35);
+}
+.c-add-hex
+{
+	fill: transparent;
+	stroke: #111111;
+	stroke-width: 3;
+	stroke-dasharray: 8 7;
+	opacity: 0.3;
+	cursor: pointer;
+}
+.c-add-hex:hover
+{
+	opacity: 1;
+	fill: rgba(255, 255, 255, 0.5);
+}
+.c-target-hex
+{
+	fill: rgba(0, 0, 0, 0.08);
+	stroke: #111111;
+	stroke-width: 3;
+	stroke-dasharray: 9 7;
+	cursor: pointer;
+}
+.c-target-hex:hover
+{
+	fill: rgba(0, 0, 0, 0.3);
+}
+.c-target-vertex
+{
+	fill: rgba(255, 255, 255, 0.9);
+	stroke: #111111;
+	stroke-width: 3;
+	cursor: pointer;
+	animation: c-pulse 1.5s ease-in-out infinite;
+}
+.c-target-vertex:hover
+{
+	fill: #111111;
+	animation: none;
+}
+.c-target-edge,
+.c-target-coast
+{
+	stroke: rgba(0, 0, 0, 0.35);
+	stroke-width: 16;
+	stroke-linecap: round;
+	stroke-dasharray: 12 9;
+	cursor: pointer;
+}
+.c-target-edge:hover,
+.c-target-coast:hover
+{
+	stroke: #111111;
+}
+@keyframes c-pulse
+{
+	0%, 100% { opacity: 0.65; }
+	50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce)
+{
+	.c-target-vertex { animation: none; }
+}
+
+/* -------------------------------------------------------------------- narrow */
+
+@media (max-width: 860px)
+{
+	header, main
+	{
+		padding-left: 18px;
+		padding-right: 18px;
+	}
+	.layout
+	{
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.board-pane
+	{
+		position: static;
+	}
+	.board
+	{
+		max-height: none;
+	}
+	.panel
+	{
+		max-height: none;
+	}
+	.btn-grid
+	{
+		grid-template-columns: repeat(2, 1fr);
+	}
+}

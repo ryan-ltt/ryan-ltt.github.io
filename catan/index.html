@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>catan</title>
+	<link rel="stylesheet" href="catan.css">
+</head>
+<body>
+	<header>
+		<h1>catan</h1>
+		<nav class="nav-buttons">
+			<a href="/" class="button">home</a>
+			<a href="/projects/" class="button">projects</a>
+		</nav>
+	</header>
+
+	<main>
+		<!-- ------------------------------------------------------------- menu -->
+		<section id="screen-menu" class="screen is-visible">
+			<p>a settlers-style client where the board is yours to draw. play one of the
+			presets, or open the editor and lay out your own hexes, numbers and ports.</p>
+
+			<div class="layout">
+				<div class="board-pane">
+					<svg id="menu-preview" class="board" aria-label="board preview"></svg>
+				</div>
+				<aside id="menu-setup" class="panel"></aside>
+			</div>
+		</section>
+
+		<!-- ----------------------------------------------------------- editor -->
+		<section id="screen-editor" class="screen">
+			<div class="layout">
+				<div class="board-pane">
+					<svg id="editor-board" class="board board--editable" aria-label="map editor board"></svg>
+				</div>
+				<aside id="editor-panel" class="panel"></aside>
+			</div>
+			<div id="editor-modal" class="modal"></div>
+		</section>
+
+		<!-- ------------------------------------------------------------- game -->
+		<section id="screen-game" class="screen">
+			<div class="layout">
+				<div class="board-pane">
+					<svg id="game-board" class="board" aria-label="game board"></svg>
+				</div>
+				<aside id="game-panel" class="panel"></aside>
+			</div>
+			<div id="game-modal" class="modal"></div>
+		</section>
+	</main>
+
+	<script src="js/hex.js"></script>
+	<script src="js/map.js"></script>
+	<script src="js/render.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/ai.js"></script>
+	<script src="js/editor.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
