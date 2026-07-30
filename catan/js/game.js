@@ -43,6 +43,24 @@ window.CatanGame = (function () {
 		}, 0);
 	}
 
+	function totalOf(counts) {
+		return Object.keys(counts).reduce(function (sum, key) {
+			return sum + counts[key];
+		}, 0);
+	}
+
+	/* Redacted views replace another player's hand with a bare count, so anything
+	 * that only wants the size has to cope with both shapes. */
+	function handSize(player) {
+		return typeof player.resources === 'number' ? player.resources : countCards(player.resources);
+	}
+
+	function devTotal(player) {
+		const ready = typeof player.dev === 'number' ? player.dev : totalOf(player.dev);
+		const pending = typeof player.devPending === 'number' ? player.devPending : totalOf(player.devPending);
+		return ready + pending;
+	}
+
 	function canAfford(res, cost) {
 		return Object.keys(cost).every(function (key) {
 			return (res[key] || 0) >= cost[key];
@@ -55,11 +73,30 @@ window.CatanGame = (function () {
 		}).join(' + ');
 	}
 
+	/* The 5-6 player extension's defining rule. With five or six at the table the
+	 * wait between your turns doubles, so between every pair of turns everyone
+	 * else gets a chance to build - which is also what stops six players from
+	 * running out of board before anyone can react. On by default at five, and
+	 * forceable either way. */
+	function wantsSpecialBuild(opts, playerCount) {
+		if (opts.specialBuild === undefined || opts.specialBuild === null) return playerCount >= 5;
+		return !!opts.specialBuild;
+	}
+
 	function Game(map, playerConfigs, options) {
 		const opts = options || {};
 		this.map = map;
 		this.board = M.buildBoard(map);
-		this.targetVP = opts.targetVP || (map.hexes.length > 24 ? 12 : 10);
+		/* Ten, on every board size. The large board used to default to twelve, but
+		 * with six players it fills at roughly four buildings each - everyone tops
+		 * out around ten or eleven with no vertices left, no cities left and an
+		 * empty deck, and the game cannot be won at all. Measured at 2 unwinnable
+		 * games in 2000 at twelve, none in 2000 at ten. Ten is also what the
+		 * 5-6 player extension actually specifies. Still overridable in the menu. */
+		this.targetVP = opts.targetVP || 10;
+		this.specialBuild = wantsSpecialBuild(opts, playerConfigs.length);
+		this.buildOrder = [];   // seats still owed a special build, in turn order
+		this.buildIndex = 0;
 		this.buildings = {};   // vertexKey -> { owner, type }
 		this.roads = {};       // edgeKey   -> owner
 		this.robber = this.board.robber;
@@ -137,9 +174,26 @@ window.CatanGame = (function () {
 		if (this.log.length > 300) this.log.shift();
 	};
 
+	/* Whose input the game is waiting on. Three different orders live here: the
+	 * snake during setup, the special build queue between turns, and plain turn
+	 * order the rest of the time. Everything that asks "is this your turn" must
+	 * go through this rather than turn % players.length. */
 	Game.prototype.current = function () {
 		if (this.phase === 'setup') return this.players[this.setupOrder[this.setupIndex]];
+		if (this.phase === 'build') return this.players[this.buildOrder[this.buildIndex]];
 		return this.players[this.turn % this.players.length];
+	};
+
+	/* The player whose turn it is, even mid special build. */
+	Game.prototype.activePlayer = function () {
+		if (this.phase === 'setup') return this.players[this.setupOrder[this.setupIndex]];
+		return this.players[this.turn % this.players.length];
+	};
+
+	/* Roads, settlements, cities and development cards are the only things you may
+	 * buy in the special build phase - no trading, no playing cards. */
+	Game.prototype.canBuildNow = function () {
+		return this.phase === 'main' || this.phase === 'build';
 	};
 
 	Game.prototype.player = function (id) {
@@ -428,7 +482,7 @@ window.CatanGame = (function () {
 		hex.corners.forEach(function (vk) {
 			const b = this.buildings[vk];
 			if (!b || b.owner === me) return;
-			if (countCards(this.players[b.owner].resources) > 0) found[b.owner] = true;
+			if (handSize(this.players[b.owner]) > 0) found[b.owner] = true;
 		}, this);
 		return Object.keys(found).map(Number);
 	};
@@ -486,7 +540,7 @@ window.CatanGame = (function () {
 	/* ----------------------------------------------------------------- building */
 
 	Game.prototype.buildRoad = function (edgeKey) {
-		if (this.phase !== 'main') return fail('you can only build after rolling');
+		if (!this.canBuildNow()) return fail('you can only build after rolling');
 		const player = this.current();
 		if (Object.keys(player.roads).length >= LIMITS.road) return fail('you have used all 15 roads');
 		if (this.roads[edgeKey] !== undefined) return fail('there is already a road there');
@@ -506,7 +560,7 @@ window.CatanGame = (function () {
 	};
 
 	Game.prototype.buildSettlement = function (vertexKey) {
-		if (this.phase !== 'main') return fail('you can only build after rolling');
+		if (!this.canBuildNow()) return fail('you can only build after rolling');
 		const player = this.current();
 		if (Object.keys(player.settlements).length >= LIMITS.settlement) return fail('all 5 settlements are on the board - upgrade one to a city first');
 		if (!this.vertexIsFree(vertexKey)) return fail('too close to another settlement');
@@ -524,7 +578,7 @@ window.CatanGame = (function () {
 	};
 
 	Game.prototype.buildCity = function (vertexKey) {
-		if (this.phase !== 'main') return fail('you can only build after rolling');
+		if (!this.canBuildNow()) return fail('you can only build after rolling');
 		const player = this.current();
 		const building = this.buildings[vertexKey];
 		if (!building || building.owner !== player.id || building.type !== 'settlement') {
@@ -550,7 +604,7 @@ window.CatanGame = (function () {
 	/* -------------------------------------------------------------- development */
 
 	Game.prototype.buyDev = function () {
-		if (this.phase !== 'main') return fail('you can only buy after rolling');
+		if (!this.canBuildNow()) return fail('you can only buy after rolling');
 		const player = this.current();
 		if (!this.devDeck.length) return fail('the development deck is empty');
 		if (!canAfford(player.resources, COSTS.dev)) return fail('a development card costs ' + costLabel(COSTS.dev));
@@ -574,6 +628,7 @@ window.CatanGame = (function () {
 
 	Game.prototype.playDev = function (type, args) {
 		const player = this.current();
+		if (this.phase === 'build') return fail('no development cards during the special build phase');
 		if (this.phase !== 'main' && !(this.phase === 'roll' && type === 'knight')) {
 			return fail('you cannot play that card right now');
 		}
@@ -649,6 +704,7 @@ window.CatanGame = (function () {
 	};
 
 	Game.prototype.tradeBank = function (giveRes, getRes) {
+		if (this.phase === 'build') return fail('no trading during the special build phase');
 		if (this.phase !== 'main') return fail('you can only trade after rolling');
 		const player = this.current();
 		if (giveRes === getRes) return fail('pick two different resources');
@@ -664,6 +720,7 @@ window.CatanGame = (function () {
 	};
 
 	Game.prototype.openOffer = function (give, want) {
+		if (this.phase === 'build') return fail('no trading during the special build phase');
 		if (this.phase !== 'main') return fail('you can only trade after rolling');
 		const player = this.current();
 		if (!countCards(give) || !countCards(want)) return fail('offer at least one card and ask for at least one');
@@ -843,7 +900,10 @@ window.CatanGame = (function () {
 
 	/* --------------------------------------------------------------------- turn */
 
+	/* Doubles as "done building" during the special build phase, so the button in
+	 * the corner keeps meaning "I am finished, pass it on". */
 	Game.prototype.endTurn = function () {
+		if (this.phase === 'build') return this.passSpecialBuild();
 		if (this.phase === 'setup') return fail('finish setting up first');
 		if (this.phase === 'roll') return fail('roll the dice first');
 		if (this.phase !== 'main') return fail('finish the current action first');
@@ -858,9 +918,135 @@ window.CatanGame = (function () {
 		this.freeRoads = 0;
 		this.playedDevThisTurn = false;
 		this.dice = null;
+
+		if (this.specialBuild && this.players.length > 1) {
+			// Everyone else, in turn order, starting with whoever rolls next.
+			const count = this.players.length;
+			const active = this.turn % count;
+			this.buildOrder = [];
+			for (let i = 1; i < count; i++) this.buildOrder.push((active + i) % count);
+			this.buildIndex = 0;
+			this.phase = 'build';
+			this.note('special build - ' + this.current().name + ' may build or buy', 'phase');
+			return ok();
+		}
+
+		return this.beginNextTurn();
+	};
+
+	Game.prototype.passSpecialBuild = function () {
+		this.buildIndex++;
+		if (this.buildIndex < this.buildOrder.length) {
+			this.note(this.current().name + ' may build or buy', 'phase');
+			return ok();
+		}
+		return this.beginNextTurn();
+	};
+
+	Game.prototype.beginNextTurn = function () {
+		this.buildOrder = [];
+		this.buildIndex = 0;
 		this.turn++;
 		this.phase = 'roll';
 		this.note('--- ' + this.current().name + ' to play', 'phase');
+		return ok();
+	};
+
+	/* ------------------------------------------------ serialisation and views */
+
+	/* `board` is deliberately absent: it is derived from the map by buildBoard, it
+	 * is far larger than everything else put together, and rebuilding it costs
+	 * nothing. Everything listed here is already plain JSON. */
+	Game.prototype.toJSON = function () {
+		return {
+			v: 1,
+			map: this.map, targetVP: this.targetVP,
+			specialBuild: this.specialBuild, buildOrder: this.buildOrder, buildIndex: this.buildIndex,
+			buildings: this.buildings, roads: this.roads, robber: this.robber,
+			players: this.players, bank: this.bank, devDeck: this.devDeck,
+			turn: this.turn, phase: this.phase, dice: this.dice,
+			winner: this.winner, offer: this.offer,
+			pendingDiscards: this.pendingDiscards,
+			freeRoads: this.freeRoads, playedDevThisTurn: this.playedDevThisTurn,
+			preRobberPhase: this.preRobberPhase, awaitingSteal: this.awaitingSteal,
+			largestArmy: this.largestArmy, longestRoadHolder: this.longestRoadHolder,
+			setupOrder: this.setupOrder, setupIndex: this.setupIndex,
+			setupStep: this.setupStep, lastSetupVertex: this.lastSetupVertex,
+			log: this.log
+		};
+	};
+
+	Game.fromJSON = function (data) {
+		const game = Object.create(Game.prototype);
+		Object.assign(game, data);
+		game.board = M.buildBoard(data.map);
+		return game;
+	};
+
+	/* What seat `seat` is allowed to see. This is the security boundary: anything
+	 * not rewritten below is public. Other players' hands become a *number* rather
+	 * than a zeroed object on purpose - a reader that forgets to redact crashes
+	 * loudly in testing instead of quietly leaking.
+	 *
+	 * Pass seat === null for a spectator view (nobody's cards).
+	 *
+	 * The result shares objects with the live game, so it is meant to be
+	 * serialised straight onto the wire, never handed to something that mutates. */
+	Game.prototype.viewFor = function (seat) {
+		const view = this.toJSON();
+		if (this.phase === 'over') return view;   // the game is done - reveal everything
+		view.devDeck = this.deckCount();
+		view.players = view.players.map(function (p) {
+			if (p.id === seat) return p;
+			return Object.assign({}, p, {
+				resources: handSize(p),
+				dev: typeof p.dev === 'number' ? p.dev : totalOf(p.dev),
+				devPending: typeof p.devPending === 'number' ? p.devPending : totalOf(p.devPending)
+			});
+		});
+		return view;
+	};
+
+	Game.prototype.deckCount = function () {
+		return typeof this.devDeck === 'number' ? this.devDeck : this.devDeck.length;
+	};
+
+	/* ---------------------------------------------------------- authorisation */
+
+	/* Every state mutation goes through one of these. Read-only helpers are not
+	 * listed because they never leave the client that asks. */
+	const ACTIONS = {
+		placeSetupSettlement: 1, placeSetupRoad: 1, rollDice: 1, endTurn: 1,
+		buildRoad: 1, buildSettlement: 1, buildCity: 1, buyDev: 1,
+		playDev: 1, moveRobber: 1, chooseVictim: 1, discard: 1,
+		tradeBank: 1, openOffer: 1, respondToOffer: 1, acceptTradeWith: 1,
+		cancelOffer: 1
+	};
+
+	/* Who may send what, right now. Purely a question of identity - the methods
+	 * themselves still enforce the rules. Three actions are legitimately
+	 * out-of-turn, which is the whole reason this is not just "is it your turn".
+	 *
+	 * `current()` is used rather than turn % players.length because during setup
+	 * the order is a snake, not a cycle. */
+	Game.prototype.authorise = function (seat, action, args) {
+		if (!ACTIONS[action]) return fail('unknown action');
+		if (!this.players[seat]) return fail('you are not seated in this game');
+		if (this.phase === 'over') return fail('the game is over');
+		const list = args || [];
+
+		if (action === 'discard') {
+			if (Number(list[0]) !== seat) return fail('you can only discard your own cards');
+			if (!this.pendingDiscards[seat]) return fail('you do not need to discard');
+			return ok();
+		}
+		if (action === 'respondToOffer') {
+			if (Number(list[0]) !== seat) return fail('you can only answer for yourself');
+			if (!this.offer || this.offer.responses[seat] === undefined) return fail('there is no offer for you');
+			return ok();
+		}
+		if (this.phase === 'discard') return fail('waiting for the discards');
+		if (this.current().id !== seat) return fail('it is not your turn');
 		return ok();
 	};
 
@@ -878,8 +1064,11 @@ window.CatanGame = (function () {
 		LIMITS: LIMITS,
 		DEV_LABELS: DEV_LABELS,
 		PLAYER_COLORS: PLAYER_COLORS,
+		ACTIONS: ACTIONS,
 		emptyResources: emptyResources,
 		countCards: countCards,
+		handSize: handSize,
+		devTotal: devTotal,
 		canAfford: canAfford,
 		costLabel: costLabel,
 		describe: describe

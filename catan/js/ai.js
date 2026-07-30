@@ -236,6 +236,8 @@ window.CatanAI = (function () {
 	function step(game) {
 		const player = game.current();
 
+		if (game.phase === 'build') return specialBuild(game, player);
+
 		if (game.phase === 'roll') {
 			// A knight before the roll both clears the robber and chases largest army.
 			const robbedHex = game.board.hexes[game.robber];
@@ -322,6 +324,43 @@ window.CatanAI = (function () {
 			if (player.dev.knight > 0 && G.countCards(player.resources) < 4) {
 				if (game.playDev('knight').ok) return true;
 			}
+		}
+
+		return false;
+	}
+
+	/* The special build phase between turns: you may buy, but not trade and not
+	 * play cards, so this is the main-turn priority list with those steps removed.
+	 * Returns false as soon as there is nothing worth buying, which is what passes
+	 * the phase along - a bot that never returns false freezes the table. */
+	function specialBuild(game, player) {
+		if (G.canAfford(player.resources, G.COSTS.city)) {
+			const spot = best(game.legalCities(player.id), function (vk) {
+				return vertexScore(game, vk);
+			});
+			if (spot && game.buildCity(spot).ok) return true;
+		}
+
+		if (G.canAfford(player.resources, G.COSTS.settlement)) {
+			const spot = best(game.legalSettlements(player.id), function (vk) {
+				return vertexScore(game, vk, player.id);
+			});
+			if (spot && game.buildSettlement(spot).ok) return true;
+		}
+
+		const roads = roadOptions(game, player);
+		const boxedIn = game.legalSettlements(player.id).length === 0;
+		const roadsLeft = Object.keys(player.roads).length < G.LIMITS.road;
+		if (roadsLeft && roads.length && roads[0].score > (boxedIn ? 0.5 : 6) &&
+			G.canAfford(player.resources, G.COSTS.road)) {
+			if (game.buildRoad(roads[0].edge).ok) return true;
+		}
+
+		// Cards you buy here are not playable until your own next turn anyway, so
+		// only spend on one when the hand is big enough to be at risk from a 7.
+		if (game.devDeck.length && G.canAfford(player.resources, G.COSTS.dev) &&
+			G.countCards(player.resources) >= 8) {
+			if (game.buyDev().ok) return true;
 		}
 
 		return false;

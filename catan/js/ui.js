@@ -1,6 +1,11 @@
 /* Game screen: draws the board and side panel from engine state and turns
- * clicks back into engine calls. All rules live in game.js - this file only
- * decides what is worth showing and when the bots get to move. */
+ * clicks back into net calls. All rules live in game.js - this file only decides
+ * what is worth showing and when the bots get to move.
+ *
+ * Nothing here mutates the game directly. Every action goes out through
+ * `net.send`, which either applies it in this tab (single player, or hosting) or
+ * posts it to whoever is hosting. `game` is therefore a *view*: the real thing
+ * when authoritative, a redacted copy when a guest. */
 window.CatanUI = (function () {
 	'use strict';
 
@@ -13,6 +18,8 @@ window.CatanUI = (function () {
 	const MAX_BOT_STEPS = 60;
 
 	let game = null;
+	let net = null;
+	let seat = null;       // the seat this browser plays, or null for hot seat
 	let hooks = {};
 	let els = {};
 	let timer = null;
@@ -34,9 +41,11 @@ window.CatanUI = (function () {
 		});
 	}
 
-	function start(map, playerConfigs, options, callbacks) {
+	function start(connection, callbacks) {
 		hooks = callbacks || {};
-		game = new G.Game(map, playerConfigs, options);
+		net = connection;
+		seat = net.seat;
+		game = net.game();
 		ui = {
 			mode: null, panel: null, bankGive: null, bankGet: null,
 			offer: { give: G.emptyResources(), want: G.emptyResources() },
@@ -50,7 +59,13 @@ window.CatanUI = (function () {
 		els.board.addEventListener('click', onBoardClick);
 		els.panel.addEventListener('click', onPanelClick);
 		els.modal.addEventListener('click', onModalClick);
-		render();
+
+		net.onUpdate(function () {
+			update();
+			if (net.authoritative) schedule(120);
+		});
+
+		update();
 		schedule();
 		return game;
 	}
@@ -58,15 +73,81 @@ window.CatanUI = (function () {
 	function stop() {
 		if (timer) clearTimeout(timer);
 		timer = null;
+		if (net) net.close();
+		net = null;
 		game = null;
 	}
 
+	/* Bots, and therefore the timer, only exist where the real state does. */
 	function schedule(delay) {
 		if (timer) clearTimeout(timer);
+		timer = null;
+		if (!net || !net.authoritative) return;
 		timer = setTimeout(tick, delay === undefined ? BOT_DELAY : delay);
 	}
 
+	/* Send an intent and re-render on the answer. Guests answer over the network,
+	 * so the callback may land a round trip later - or never, if the tab has
+	 * moved on by then. */
+	function send(action, args, cb) {
+		if (!net) return;
+		net.send(action, args, function (result) {
+			if (!net) return;
+			if (cb) cb(result || { ok: true });
+			else report(result);
+		});
+	}
+
+	/* Guests hold no state of their own, so a new view has to be picked up and
+	 * anything it implies (a discard due, a finished game) acted on. Hosts run
+	 * that logic in tick() instead, where the bots also live. */
+	function update() {
+		if (!net) return;
+		if (!net.authoritative) {
+			game = net.game();
+			if (!game) return;
+			if (!mine(game.current().id)) ui.mode = null;
+			if (!ui.modal) {
+				if (game.phase === 'over') ui.modal = { kind: 'gameover' };
+				else openMyDiscard();
+			}
+		}
+		render();
+	}
+
+	/* Whether this browser may act for a seat. Hot seat: anyone not a bot, which
+	 * is exactly today's behaviour. Online: your own seat and nobody else's. */
+	function mine(playerId) {
+		if (!game || !game.players[playerId]) return false;
+		if (seat === null) return !game.players[playerId].isBot;
+		return playerId === seat;
+	}
+
+	/* Something happened outside the game worth saying out loud - the host closing
+	 * their tab, mostly, which otherwise just looks like everyone going quiet. */
+	function notice(text) {
+		if (!net) return;
+		ui.message = text;
+		render();
+	}
+
+	function openMyDiscard() {
+		if (!game || game.phase !== 'discard' || ui.modal) return false;
+		const owed = Object.keys(game.pendingDiscards).map(Number).filter(mine);
+		if (!owed.length) return false;
+		ui.modal = { kind: 'discard', playerId: owed[0], picks: G.emptyResources() };
+		return true;
+	}
+
 	/* --------------------------------------------------------------- bot driving */
+
+	/* Bots act on the state directly rather than through net.send: they are the
+	 * host's own code, running where the real hands are, so there is nobody to
+	 * authorise them against. Each step is followed by a push to the guests. */
+	function refresh() {
+		net.sync();
+		render();
+	}
 
 	function tick() {
 		timer = null;
@@ -81,15 +162,17 @@ window.CatanUI = (function () {
 			})[0];
 			if (bot !== undefined) {
 				game.discard(bot, AI.discard(game, bot));
-				render();
+				refresh();
 				schedule();
 				return;
 			}
-			const human = Object.keys(game.pendingDiscards).map(Number)[0];
-			if (human !== undefined) {
-				openModal('discard', { playerId: human, picks: G.emptyResources() });
+			// Remote humans discard for themselves; their action reschedules us.
+			if (openMyDiscard()) {
+				render();
 				return;
 			}
+			render();
+			return;
 		}
 
 		const player = game.current();
@@ -101,7 +184,7 @@ window.CatanUI = (function () {
 		if (game.phase === 'setup') {
 			if (game.setupStep === 'settlement') game.placeSetupSettlement(AI.setupSettlement(game));
 			else game.placeSetupRoad(AI.setupRoad(game));
-			render();
+			refresh();
 			schedule();
 			return;
 		}
@@ -109,20 +192,21 @@ window.CatanUI = (function () {
 		if (game.phase === 'robber') {
 			const choice = AI.robberChoice(game);
 			game.moveRobber(choice.hex, choice.victim);
-			render();
+			refresh();
 			schedule();
 			return;
 		}
 
-		if (game.phase === 'roll' || game.phase === 'main') {
+		// 'build' is the special build phase between turns, where endTurn means
+		// "done building" rather than "next player".
+		if (game.phase === 'roll' || game.phase === 'main' || game.phase === 'build') {
 			botSteps++;
 			const wantsMore = botSteps < MAX_BOT_STEPS && AI.step(game);
-			render();
-			if (!wantsMore && game.phase === 'main') {
+			if (!wantsMore && game.canBuildNow()) {
 				game.endTurn();
 				botSteps = 0;
-				render();
 			}
+			refresh();
 			schedule();
 			return;
 		}
@@ -135,7 +219,7 @@ window.CatanUI = (function () {
 	function onBoardClick(event) {
 		const target = event.target.closest('[data-hex],[data-vertex],[data-edge]');
 		if (!target || !game) return;
-		if (game.current().isBot && game.phase !== 'discard') return;
+		if (!mine(game.current().id) && game.phase !== 'discard') return;
 
 		if (target.dataset.vertex) handleVertex(target.dataset.vertex);
 		else if (target.dataset.edge) handleEdge(target.dataset.edge);
@@ -143,42 +227,42 @@ window.CatanUI = (function () {
 	}
 
 	function handleVertex(key) {
-		if (game.phase === 'setup') return report(game.placeSetupSettlement(key));
-		if (ui.mode === 'settlement') {
-			const result = game.buildSettlement(key);
-			if (result.ok) ui.mode = null;
-			return report(result);
-		}
-		if (ui.mode === 'city') {
-			const result = game.buildCity(key);
-			if (result.ok) ui.mode = null;
-			return report(result);
+		if (game.phase === 'setup') return send('placeSetupSettlement', [key]);
+		if (ui.mode === 'settlement' || ui.mode === 'city') {
+			const action = ui.mode === 'city' ? 'buildCity' : 'buildSettlement';
+			return send(action, [key], function (result) {
+				if (result.ok) ui.mode = null;
+				report(result);
+			});
 		}
 	}
 
 	function handleEdge(key) {
-		if (game.phase === 'setup') return report(game.placeSetupRoad(key));
+		if (game.phase === 'setup') return send('placeSetupRoad', [key]);
 		if (ui.mode === 'road') {
-			const result = game.buildRoad(key);
-			if (result.ok && game.freeRoads === 0) ui.mode = null;
-			return report(result);
+			return send('buildRoad', [key], function (result) {
+				if (result.ok && game.freeRoads === 0) ui.mode = null;
+				report(result);
+			});
 		}
 	}
 
 	function handleHex(key) {
 		if (game.phase !== 'robber') return;
-		const result = game.moveRobber(key);
-		if (result.ok && result.chooseVictim) {
-			openModal('steal', { candidates: result.chooseVictim });
-			return;
-		}
-		report(result);
+		send('moveRobber', [key], function (result) {
+			if (result.ok && result.chooseVictim) {
+				openModal('steal', { candidates: result.chooseVictim });
+				return;
+			}
+			report(result);
+		});
 	}
 
 	function report(result) {
+		if (!net) return;
 		ui.message = result && !result.ok ? result.error : '';
-		render();
-		if (result && result.ok) schedule(120);
+		update();
+		if (net.authoritative && result && result.ok) schedule(120);
 	}
 
 	/* ---------------------------------------------------------------- panel input */
@@ -194,11 +278,11 @@ window.CatanUI = (function () {
 			if (hooks.onExit) hooks.onExit();
 			return;
 		}
-		if (act === 'roll') return report(game.rollDice());
+		if (act === 'roll') return send('rollDice');
 		if (act === 'end-turn') {
 			ui.mode = null;
 			ui.panel = null;
-			return report(game.endTurn());
+			return send('endTurn');
 		}
 		if (act === 'mode') {
 			ui.mode = ui.mode === value ? null : value;
@@ -209,13 +293,14 @@ window.CatanUI = (function () {
 			ui.panel = ui.panel === value ? null : value;
 			return render();
 		}
-		if (act === 'buy-dev') return report(game.buyDev());
+		if (act === 'buy-dev') return send('buyDev');
 		if (act === 'play-card') {
 			if (value === 'yearOfPlenty') return openModal('yearOfPlenty', { picks: [] });
 			if (value === 'monopoly') return openModal('monopoly');
-			const result = game.playDev(value);
-			if (result.ok && value === 'roadBuilding') ui.mode = 'road';
-			return report(result);
+			return send('playDev', [value], function (result) {
+				if (result.ok && value === 'roadBuilding') ui.mode = 'road';
+				report(result);
+			});
 		}
 		if (act === 'bank-give') {
 			ui.bankGive = ui.bankGive === value ? null : value;
@@ -226,12 +311,13 @@ window.CatanUI = (function () {
 			return render();
 		}
 		if (act === 'bank-trade') {
-			const result = game.tradeBank(ui.bankGive, ui.bankGet);
-			if (result.ok) {
-				ui.bankGive = null;
-				ui.bankGet = null;
-			}
-			return report(result);
+			return send('tradeBank', [ui.bankGive, ui.bankGet], function (result) {
+				if (result.ok) {
+					ui.bankGive = null;
+					ui.bankGet = null;
+				}
+				report(result);
+			});
 		}
 		if (act === 'offer-adjust') {
 			const parts = value.split(':');
@@ -239,31 +325,21 @@ window.CatanUI = (function () {
 			side[parts[1]] = Math.max(0, Math.min(19, side[parts[1]] + Number(parts[2])));
 			return render();
 		}
-		if (act === 'offer-send') {
-			const result = game.openOffer(clone(ui.offer.give), clone(ui.offer.want));
-			if (result.ok) {
-				game.players.forEach(function (p) {
-					if (p.isBot && game.offer.responses[p.id] !== undefined) {
-						game.respondToOffer(p.id, AI.respond(game, p.id));
-					}
-				});
-			}
-			return report(result);
-		}
+		// Bot replies are the host's job now - see botsRespond in net.js.
+		if (act === 'offer-send') return send('openOffer', [clone(ui.offer.give), clone(ui.offer.want)]);
 		if (act === 'offer-cancel') {
-			game.cancelOffer();
 			ui.offer = { give: G.emptyResources(), want: G.emptyResources() };
-			return render();
+			return send('cancelOffer');
 		}
 		if (act === 'offer-respond') {
 			const parts = value.split(':');
-			game.respondToOffer(Number(parts[0]), parts[1] === 'yes');
-			return render();
+			return send('respondToOffer', [Number(parts[0]), parts[1] === 'yes']);
 		}
 		if (act === 'offer-accept') {
-			const result = game.acceptTradeWith(Number(value));
-			if (result.ok) ui.offer = { give: G.emptyResources(), want: G.emptyResources() };
-			return report(result);
+			return send('acceptTradeWith', [Number(value)], function (result) {
+				if (result.ok) ui.offer = { give: G.emptyResources(), want: G.emptyResources() };
+				report(result);
+			});
 		}
 	}
 
@@ -298,33 +374,36 @@ window.CatanUI = (function () {
 			return render();
 		}
 		if (act === 'discard-confirm') {
-			const result = game.discard(ui.modal.playerId, ui.modal.picks);
-			if (!result.ok) {
-				ui.message = result.error;
-				return render();
-			}
-			return closeModal();
-		}
-		if (act === 'steal') {
-			game.chooseVictim(Number(value));
-			return closeModal();
-		}
-		if (act === 'monopoly') {
-			game.playDev('monopoly', { resource: value });
-			return closeModal();
-		}
-		if (act === 'yop-pick') {
-			ui.modal.picks.push(value);
-			if (ui.modal.picks.length === 2) {
-				const result = game.playDev('yearOfPlenty', { resources: ui.modal.picks });
+			return send('discard', [ui.modal.playerId, clone(ui.modal.picks)], function (result) {
 				if (!result.ok) {
 					ui.message = result.error;
-					ui.modal.picks = [];
 					return render();
 				}
 				return closeModal();
-			}
-			return render();
+			});
+		}
+		if (act === 'steal') {
+			return send('chooseVictim', [Number(value)], function () {
+				closeModal();
+			});
+		}
+		if (act === 'monopoly') {
+			return send('playDev', ['monopoly', { resource: value }], function () {
+				closeModal();
+			});
+		}
+		if (act === 'yop-pick') {
+			ui.modal.picks.push(value);
+			if (ui.modal.picks.length < 2) return render();
+			const picks = ui.modal.picks;
+			return send('playDev', ['yearOfPlenty', { resources: picks }], function (result) {
+				if (!result.ok) {
+					ui.message = result.error;
+					if (ui.modal) ui.modal.picks = [];
+					return render();
+				}
+				return closeModal();
+			});
 		}
 		if (act === 'yop-cancel') return closeModal();
 		if (act === 'exit') {
@@ -345,7 +424,7 @@ window.CatanUI = (function () {
 
 	function drawBoard() {
 		const player = game.current();
-		const human = !player.isBot;
+		const human = mine(player.id);
 		const opts = { robber: game.robber, game: game };
 
 		if (game.phase === 'setup' && human) {
@@ -355,7 +434,7 @@ window.CatanUI = (function () {
 			opts.hexTargets = Object.keys(game.board.hexes).filter(function (key) {
 				return key !== game.robber;
 			});
-		} else if (human && game.phase === 'main') {
+		} else if (human && game.canBuildNow()) {
 			if (ui.mode === 'road') opts.edgeTargets = game.legalRoads(player.id);
 			if (ui.mode === 'settlement') opts.vertexTargets = game.legalSettlements(player.id);
 			if (ui.mode === 'city') opts.vertexTargets = game.legalCities(player.id);
@@ -369,47 +448,74 @@ window.CatanUI = (function () {
 		return [
 			'<div class="panel-head">',
 			'<button class="btn btn--ghost" data-act="quit">leave game</button>',
+			roomMarkup(),
 			'<span class="panel-head-vp">first to ' + game.targetVP + '</span>',
 			'</div>',
 			turnMarkup(player),
 			ui.message ? '<p class="notice">' + esc(ui.message) + '</p>' : '',
 			handBlock(player),
-			player.isBot ? '' : actionsMarkup(player),
+			mine(player.id) ? actionsMarkup(player) : '',
 			offerMarkup(),
 			playersMarkup(),
 			logMarkup()
 		].join('');
 	}
 
+	/* Hosting is worth stating plainly: the host's browser holds every hand, and
+	 * closing the tab ends the game for everyone. */
+	function roomMarkup() {
+		if (!hooks.room) return '';
+		return '<span class="panel-head-room" title="' +
+			(net.mode === 'host'
+				? 'you are hosting - keep this tab open, and you can see everyone&#39;s cards'
+				: 'hosted by ' + esc(hooks.room.host || 'another player')) + '">' +
+			esc(hooks.room.code) + (net.mode === 'host' ? ' &middot; hosting' : '') + '</span>';
+	}
+
 	function turnMarkup(player) {
 		const dice = game.dice
 			? '<span class="dice">' + game.dice[0] + ' + ' + game.dice[1] + ' = ' + (game.dice[0] + game.dice[1]) + '</span>'
 			: '';
+		// During the special build phase the turn bar follows whoever is building,
+		// so it has to say whose turn it still actually is.
+		const aside = game.phase === 'build'
+			? '<span class="turn-tag">special build &middot; ' + esc(game.activePlayer().name) + "'s turn</span>"
+			: '';
 		return '<div class="turn-bar" style="border-left-color:' + player.fill + '">' +
 			'<span class="swatch" style="background:' + player.fill + '"></span>' +
 			'<span class="turn-name">' + esc(player.name) + (player.isBot ? ' <em>(bot)</em>' : '') + '</span>' +
-			dice +
+			dice + aside +
 			'<span class="turn-prompt">' + esc(prompt(player)) + '</span>' +
 			'</div>';
 	}
 
 	function prompt(player) {
+		const yours = mine(player.id);
 		if (game.phase === 'over') return game.players[game.winner].name + ' wins';
-		if (game.phase === 'discard') return 'discarding down to half';
-		if (game.phase === 'robber') return player.isBot ? 'moving the robber' : 'click a hex to move the robber';
+		if (game.phase === 'discard') {
+			if (seat === null) return 'discarding down to half';
+			return game.pendingDiscards[seat] ? 'pick cards to discard' : 'waiting on the discards';
+		}
+		if (game.phase === 'robber') return yours ? 'click a hex to move the robber' : 'moving the robber';
 		if (game.phase === 'setup') {
-			if (player.isBot) return 'setting up';
+			if (!yours) return 'setting up';
 			return game.setupStep === 'settlement' ? 'click a spot to settle' : 'click an edge for your first road';
 		}
-		if (game.phase === 'roll') return player.isBot ? 'thinking' : 'roll the dice';
-		if (ui.mode) return 'click a highlighted spot to build a ' + ui.mode;
-		return player.isBot ? 'taking a turn' : 'build, trade, or end your turn';
+		if (game.phase === 'roll') return yours ? 'roll the dice' : (player.isBot ? 'thinking' : 'waiting on the roll');
+		if (yours && ui.mode) return 'click a highlighted spot to build a ' + ui.mode;
+		if (game.phase === 'build') {
+			if (yours) return 'build or buy before the next roll - no trading';
+			return player.isBot ? 'considering a build' : 'taking their special build';
+		}
+		if (yours) return 'build, trade, or end your turn';
+		return player.isBot ? 'taking a turn' : 'taking their turn';
 	}
 
-	/* While the bots take their turns a lone human still wants to see their cards.
-	 * With several humans at one keyboard nothing is shown off-turn, so hands stay
-	 * private. */
+	/* Online you always look at your own hand. At one keyboard a lone human still
+	 * wants theirs while the bots play, but with several humans nothing is shown
+	 * off-turn so hands stay private. */
 	function handBlock(player) {
+		if (seat !== null) return handMarkup(game.players[seat], 'your hand');
 		if (!player.isBot) return handMarkup(player, 'your hand');
 		const humans = game.players.filter(function (p) {
 			return !p.isBot;
@@ -449,8 +555,17 @@ window.CatanUI = (function () {
 			return out + '</div>';
 		}
 
+		// The special build phase buys the same four things and nothing else: no
+		// trading, no playing cards, so those controls are simply absent rather
+		// than present and refusing.
+		const special = game.phase === 'build';
+		if (special) {
+			out += '<p class="hint">special build - you can buy, but not trade or play cards. ' +
+				'anything you buy now is playable on your own turn.</p>';
+		}
+
 		const buildable = [
-			{ mode: 'road', label: 'road', cost: G.COSTS.road, free: game.freeRoads > 0 },
+			{ mode: 'road', label: 'road', cost: G.COSTS.road, free: !special && game.freeRoads > 0 },
 			{ mode: 'settlement', label: 'settlement', cost: G.COSTS.settlement },
 			{ mode: 'city', label: 'city', cost: G.COSTS.city }
 		];
@@ -462,29 +577,24 @@ window.CatanUI = (function () {
 				(affordable ? '' : ' disabled') + '>' +
 				esc(item.label) + '<small>' + (item.free ? 'free' : esc(G.costLabel(item.cost))) + '</small></button>';
 		});
-		const canBuy = game.devDeck.length && G.canAfford(player.resources, G.COSTS.dev);
+		const canBuy = game.deckCount() && G.canAfford(player.resources, G.COSTS.dev);
 		out += '<button class="btn btn--build" data-act="buy-dev"' + (canBuy ? '' : ' disabled') + '>' +
 			'card<small>' + esc(G.costLabel(G.COSTS.dev)) + '</small></button>';
 		out += '</div>';
 
 		out += '<div class="btn-row">';
-		out += '<button class="btn' + (ui.panel === 'trade' ? ' is-active' : '') + '" data-act="panel" data-value="trade">trade</button>';
-		out += '<button class="btn' + (ui.panel === 'cards' ? ' is-active' : '') + '" data-act="panel" data-value="cards">' +
-			'cards <b>' + devCount(player) + '</b></button>';
-		out += '<button class="btn btn--primary" data-act="end-turn">end turn</button>';
+		if (!special) {
+			out += '<button class="btn' + (ui.panel === 'trade' ? ' is-active' : '') + '" data-act="panel" data-value="trade">trade</button>';
+			out += '<button class="btn' + (ui.panel === 'cards' ? ' is-active' : '') + '" data-act="panel" data-value="cards">' +
+				'cards <b>' + G.devTotal(player) + '</b></button>';
+		}
+		out += '<button class="btn btn--primary" data-act="end-turn">' +
+			(special ? 'done building' : 'end turn') + '</button>';
 		out += '</div>';
 
-		if (ui.panel === 'trade') out += tradeMarkup(player);
-		if (ui.panel === 'cards') out += cardsMarkup(player);
+		if (!special && ui.panel === 'trade') out += tradeMarkup(player);
+		if (!special && ui.panel === 'cards') out += cardsMarkup(player);
 		return out + '</div>';
-	}
-
-	function devCount(player) {
-		return Object.keys(player.dev).reduce(function (sum, key) {
-			return sum + player.dev[key];
-		}, 0) + Object.keys(player.devPending).reduce(function (sum, key) {
-			return sum + player.devPending[key];
-		}, 0);
 	}
 
 	function tradeMarkup(player) {
@@ -537,7 +647,7 @@ window.CatanUI = (function () {
 		}).join('');
 		return '<div class="sub-block"><h4>development cards</h4>' +
 			(rows || '<p class="hint">no cards yet</p>') +
-			'<p class="hint">' + game.devDeck.length + ' left in the deck</p></div>';
+			'<p class="hint">' + game.deckCount() + ' left in the deck</p></div>';
 	}
 
 	function offerMarkup() {
@@ -553,20 +663,21 @@ window.CatanUI = (function () {
 			const state = offer.responses[id];
 			out += '<div class="card-row"><span><span class="swatch" style="background:' + other.fill + '"></span>' +
 				esc(other.name) + '</span>';
-			if (state === 'pending' && !other.isBot) {
+			if (state === 'pending' && mine(id)) {
 				out += '<span><button class="btn btn--small" data-act="offer-respond" data-value="' + id + ':yes">accept</button>' +
 					'<button class="btn btn--small" data-act="offer-respond" data-value="' + id + ':no">pass</button></span>';
 			} else if (state === 'accept') {
-				out += from.isBot
-					? '<em>accepted</em>'
-					: '<button class="btn btn--small btn--primary" data-act="offer-accept" data-value="' + id + '">trade</button>';
+				// Only the player who made the offer gets to close it.
+				out += mine(offer.from)
+					? '<button class="btn btn--small btn--primary" data-act="offer-accept" data-value="' + id + '">trade</button>'
+					: '<em>accepted</em>';
 			} else {
 				out += '<em>' + (state === 'pending' ? 'waiting' : 'passed') + '</em>';
 			}
 			out += '</div>';
 		});
-		out += '<button class="btn btn--small" data-act="offer-cancel">withdraw</button></div>';
-		return out;
+		if (mine(offer.from)) out += '<button class="btn btn--small" data-act="offer-cancel">withdraw</button>';
+		return out + '</div>';
 	}
 
 	function playersMarkup() {
@@ -577,10 +688,11 @@ window.CatanUI = (function () {
 			if (game.largestArmy === p.id) badges.push('largest army');
 			return '<div class="player-row' + (isCurrent ? ' is-current' : '') + '">' +
 				'<span class="swatch" style="background:' + p.fill + '"></span>' +
-				'<span class="player-name">' + esc(p.name) + '</span>' +
+				'<span class="player-name">' + esc(p.name) +
+				(p.id === seat ? ' <em>(you)</em>' : p.isBot ? ' <em>(bot)</em>' : '') + '</span>' +
 				'<span class="player-stats">' +
 				'<b title="victory points">' + game.publicPoints(p) + ' vp</b>' +
-				'<i title="resource cards">' + G.countCards(p.resources) + ' cards</i>' +
+				'<i title="resource cards">' + G.handSize(p) + ' cards</i>' +
 				'<i title="knights played">' + p.knightsPlayed + ' kn</i>' +
 				'<i title="longest road">' + p.longestRoad + ' rd</i>' +
 				'</span>' +
@@ -628,7 +740,7 @@ window.CatanUI = (function () {
 				const p = game.players[id];
 				return '<button class="btn btn--wide" data-modal="steal" data-value="' + id + '">' +
 					'<span class="swatch" style="background:' + p.fill + '"></span>' + esc(p.name) +
-					' <small>' + G.countCards(p.resources) + ' cards</small></button>';
+					' <small>' + G.handSize(p) + ' cards</small></button>';
 			}).join('');
 			return dialog('steal from whom?', buttons);
 		}
@@ -672,5 +784,5 @@ window.CatanUI = (function () {
 		return '<div class="dialog"><h2>' + esc(title) + '</h2>' + body + '</div>';
 	}
 
-	return { start: start, stop: stop };
+	return { start: start, stop: stop, notice: notice };
 })();

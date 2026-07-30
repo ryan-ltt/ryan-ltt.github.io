@@ -40,6 +40,16 @@
 			<div id="editor-modal" class="modal"></div>
 		</section>
 
+		<!-- ------------------------------------------------------------ lobby -->
+		<section id="screen-lobby" class="screen">
+			<div class="layout">
+				<div class="board-pane">
+					<svg id="lobby-preview" class="board" aria-label="board preview"></svg>
+				</div>
+				<aside id="lobby-panel" class="panel"></aside>
+			</div>
+		</section>
+
 		<!-- ------------------------------------------------------------- game -->
 		<section id="screen-game" class="screen">
 			<div class="layout">
@@ -52,13 +62,20 @@
 		</section>
 	</main>
 
+	<!-- Trystero is ESM-only and the rest of the site is not. Module scripts are
+	     deferred, so this runs before DOMContentLoaded and window.CatanTransport
+	     is ready by the time main.js boots - but nothing may assume it loaded. -->
+	<script type="module" src="js/transport.js"></script>
+
 	<script src="js/hex.js"></script>
 	<script src="js/map.js"></script>
 	<script src="js/render.js"></script>
 	<script src="js/game.js"></script>
 	<script src="js/ai.js"></script>
+	<script src="js/net.js"></script>
 	<script src="js/editor.js"></script>
 	<script src="js/ui.js"></script>
+	<script src="js/lobby.js"></script>
 	<script src="js/main.js"></script>
 </body>
 </html>
