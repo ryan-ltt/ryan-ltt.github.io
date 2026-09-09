@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>nmh archive</title>
+	<script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');</script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="nmh-archive.css">
+	<script src="nmh-data.js"></script>
+</head>
+<body>
+	<header>
+		<div class="header-title">
+			<h1>nmh archive</h1>
+			<p class="header-subtitle">neutral milk hotel songs &amp; live recordings</p>
+		</div>
+		<nav class="nav-buttons">
+			<a href="/" class="button">home</a>
+			<a href="/projects/" class="button">projects</a>
+			<button class="button" id="themeToggle" onclick="toggleTheme()" title="toggle dark mode">&#9681;</button>
+		</nav>
+	</header>
+
+	<main>
+		<p>data from <a href="https://neutralmilkhotel.org/song.htm" target="_blank" rel="noopener">neutralmilkhotel.org</a>
+		(song index &amp; bootography) &middot; <a href="https://archive.org/details/NeutralMilkHotelLive" target="_blank" rel="noopener">archive.org</a>.</p>
+
+		<div class="tabs">
+			<button class="tab-btn active" onclick="switchTab('songs')">songs</button>
+			<button class="tab-btn" onclick="switchTab('recordings')">recordings</button>
+		</div>
+
+		<!-- SONGS TAB -->
+		<div class="tab-panel active" id="tab-songs">
+			<p style="font-size:13px;margin:0 0 12px 0;">every known neutral milk hotel song, including demos, live-only material and alternate titles.</p>
+			<input type="text" class="search-box" id="songSearch" placeholder="filter songs..." oninput="renderSongs()">
+			<div class="opts-row"><span class="count-label" id="songCount"></span></div>
+			<table class="song-table">
+				<thead>
+					<tr>
+						<th onclick="sortSongs('title')" id="th-title">song</th>
+						<th onclick="sortSongs('type')" id="th-type">type</th>
+						<th onclick="sortSongs('plays')" id="th-plays">times played</th>
+					</tr>
+				</thead>
+				<tbody id="songBody"></tbody>
+			</table>
+			<div class="no-results" id="songEmpty" style="display:none;">no songs match that filter.</div>
+		</div>
+
+		<!-- RECORDINGS TAB -->
+		<div class="tab-panel" id="tab-recordings">
+			<p style="font-size:13px;margin:0 0 8px 0;">shows grouped by year. click a year to open it, then a row to see its setlist.</p>
+			<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
+				<label class="switch-label">
+					<span class="toggle-switch">
+						<input type="checkbox" id="recordingsOnly" onchange="renderShows()">
+						<span class="toggle-slider"></span>
+					</span>
+					recordings only
+				</label>
+				<label class="switch-label">
+					<span class="toggle-switch">
+						<input type="checkbox" id="setlistsOnly" onchange="renderShows()">
+						<span class="toggle-slider"></span>
+					</span>
+					setlists only
+				</label>
+			</div>
+			<input type="text" class="search-box" id="showSearch" placeholder="filter by date, venue, city or song..." oninput="renderShows()">
+			<div class="opts-row"><span class="count-label" id="showCount"></span></div>
+			<div id="showList"></div>
+			<div class="no-results" id="showEmpty" style="display:none;">no shows match that filter.</div>
+		</div>
+
+	</main>
+
+	<script>
+	function toggleTheme() {
+		var d = document.documentElement.classList.toggle('dark');
+		try { localStorage.setItem('theme', d ? 'dark' : 'light'); } catch (e) {}
+	}
+
+	function switchTab(name) {
+		document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+		document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+		document.getElementById('tab-' + name).classList.add('active');
+		document.querySelector('.tab-btn[onclick*="' + name + '"]').classList.add('active');
+	}
+
+	function esc(s) {
+		return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+			return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+		});
+	}
+
+	/* normalize: fold punctuation, number-words and part-labels */
+	var NUMWORD = { one: '1', two: '2', three: '3', pts: 'pt', parts: 'pt', part: 'pt' };
+	function norm(s) {
+		var t = String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+		t = t.split(' ').map(function (w) { return NUMWORD[w] || w; }).join(' ');
+		return t.replace(/^the /, '').replace(/\s+/g, ' ').trim();
+	}
+
+	/* ---- setlist -> song matching ----
+	   Setlists spell songs inconsistently ("Ruby Bulbs" vs "Rubby Bulbs",
+	   "Pt. One" vs "Pt. 1", medleys joined by "/"). ALIASES maps a spelling
+	   found in setlists to the canonical title in NMH_SONGS. Add entries here
+	   when a new setlist spelling shows up as unmatched. */
+	var ALIASES = {
+		'ruby bulbs': 'Rubby Bulbs', 'bomb drop': 'Rubby Bulbs', 'beautiful baby': 'Rubby Bulbs',
+		'gardenhead': 'Gardenhead / Leave Me Alone', 'leave me alone': 'Gardenhead / Leave Me Alone',
+		'my dreamgirl': "My Dream Girl Don't Exist", 'dreamgirl': "My Dream Girl Don't Exist",
+		'my dreamgirl don t exist': "My Dream Girl Don't Exist",
+		'through my tears': 'Message Sent', 'synthetic flying machine': 'King of Carrot Flowers Pt. 3',
+		'up and over': 'King of Carrot Flowers Pt. 3', 'jesus christ': 'King of Carrot Flowers Pt. 2',
+		'golden leaf': 'Goldaline', 'worms': 'Worms In The Wind',
+		'carnival': 'untitled ("Ghost" coda)', 'untitled': 'untitled ("Ghost" coda)',
+		'penny arcade in california': 'untitled ("Ghost" coda)', 'swallowed': 'April 1st',
+		'i bring jennifer': 'Jennifer', 'beautiful face': 'In the Aeroplane Over the Sea',
+		'glow into you': "Where You'll Find Me Now", 'you can deny all your addictions': 'A&E Melody',
+		'love you on a tuesday': 'Tuesday Moon', 'now i m going down': 'Going Down',
+		'she did a lot of acid': 'Acid', 'hypnotic sounds': 'Aunt Eggma Blowtorch',
+		'los angelos car song': 'Los Angeles', 'baby for pree': 'A Baby for Pree',
+		'ferriswheel on fire': 'Ferris Wheel on Fire', 'snow song': 'Snow Song, Pt. 1'
+	};
+
+	var KOCF = {
+		'1': 'King of Carrot Flowers Pt. 1',
+		'2': 'King of Carrot Flowers Pt. 2',
+		'3': 'King of Carrot Flowers Pt. 3'
+	};
+
+	var TITLE_SET = {};
+	NMH_SONGS.forEach(function (s) { TITLE_SET[s.title] = true; });
+
+	/* normalized phrase -> canonical title */
+	var PHRASE_MAP = {};
+	NMH_SONGS.forEach(function (s) {
+		var n = norm(s.title);
+		if (n) PHRASE_MAP[n] = s.title;
+	});
+	Object.keys(ALIASES).forEach(function (k) {
+		if (TITLE_SET[ALIASES[k]]) PHRASE_MAP[norm(k)] = ALIASES[k];
+	});
+	var PHRASES = Object.keys(PHRASE_MAP);
+
+	/* songs named in one setlist entry (entries may be medleys) */
+	function songsInEntry(entry) {
+		var found = {};
+		String(entry).split(/\s*\/\s*/).forEach(function (seg) {
+			var n = norm(seg);
+			if (!n) return;
+
+			/* "King of Carrot Flowers Pts 2 and 3" -> parts 2 and 3 */
+			var m = n.match(/^king of carrot flowers(?: pt)?([\d\s]+)$/);
+			if (m) {
+				(m[1].match(/\d/g) || []).forEach(function (d) {
+					if (KOCF[d]) found[KOCF[d]] = true;
+				});
+				return;
+			}
+
+			var cands = PHRASES.filter(function (p) { return n.indexOf(p) !== -1; });
+			/* keep only maximal matches so "Two-Headed Boy" does not also
+			   match inside "Two-Headed Boy Pt. 2" */
+			cands.filter(function (p) {
+				return !cands.some(function (q) { return p !== q && q.indexOf(p) !== -1; });
+			}).forEach(function (p) { found[PHRASE_MAP[p]] = true; });
+		});
+		return Object.keys(found);
+	}
+
+	/* ---- play counts (a song counts once per show) ---- */
+	var playCounts = {};
+	NMH_SONGS.forEach(function (s) { playCounts[s.title] = 0; });
+	NMH_SHOWS.forEach(function (show) {
+		var seen = {};
+		show.setlist.forEach(function (entry) {
+			songsInEntry(entry).forEach(function (t) {
+				if (!seen[t]) { seen[t] = true; playCounts[t] = (playCounts[t] || 0) + 1; }
+			});
+		});
+	});
+
+	/* ---- songs tab ---- */
+	var songSort = { key: 'title', dir: 1 };
+
+	function sortSongs(key) {
+		if (songSort.key === key) { songSort.dir *= -1; }
+		else { songSort.key = key; songSort.dir = (key === 'plays' ? -1 : 1); }
+		renderSongs();
+	}
+
+	function renderSongs() {
+		var q = norm(document.getElementById('songSearch').value);
+		var rows = NMH_SONGS.filter(function (s) {
+			if (!q) return true;
+			return norm(s.title + ' ' + (s.aka || '') + ' ' + (s.alt || '') + ' ' +
+				(s.credit || '') + ' ' + s.type).indexOf(q) !== -1;
+		});
+
+		rows.sort(function (a, b) {
+			var k = songSort.key, x, y;
+			if (k === 'plays') { x = playCounts[a.title] || 0; y = playCounts[b.title] || 0; }
+			else { x = norm(a[k]); y = norm(b[k]); }
+			if (x < y) return -1 * songSort.dir;
+			if (x > y) return 1 * songSort.dir;
+			return norm(a.title) < norm(b.title) ? -1 : 1;
+		});
+
+		var arrow = function (k) { return songSort.key === k ? (songSort.dir === 1 ? ' ▾' : ' ▴') : ''; };
+		document.getElementById('th-title').textContent = 'song' + arrow('title');
+		document.getElementById('th-type').textContent = 'type' + arrow('type');
+		document.getElementById('th-plays').textContent = 'times played' + arrow('plays');
+
+		document.getElementById('songBody').innerHTML = rows.map(function (s) {
+			var note = '';
+			if (s.aka) note += 'see &quot;' + esc(s.aka) + '&quot;';
+			if (s.alt) note += (note ? ' &middot; ' : '') + 'aka &quot;' + esc(s.alt) + '&quot;';
+			if (s.credit) note += (note ? ' &middot; ' : '') + esc(s.credit);
+			if (s.unconfirmed) note += (note ? ' &middot; ' : '') + 'unconfirmed title';
+
+			var cls = 'badge';
+			if (s.type === 'album') cls += ' album';
+			else if (s.type === 'single') cls += ' single';
+			else if (s.type === 'alt. title' || s.type === 'mislabel' ||
+					 s.type === 'alt. title / mislabel') cls += ' dim';
+
+			var n = playCounts[s.title] || 0;
+			return '<tr><td><span class="song-title">' + esc(s.title) + '</span>' +
+				(note ? '<span class="song-note">' + note + '</span>' : '') + '</td>' +
+				'<td><span class="' + cls + '">' + esc(s.type) + '</span></td>' +
+				'<td><span class="played-count">' + (n || '&mdash;') + '</span></td></tr>';
+		}).join('');
+
+		document.getElementById('songEmpty').style.display = rows.length ? 'none' : '';
+		document.getElementById('songCount').textContent =
+			rows.length + ' of ' + NMH_SONGS.length + ' songs';
+	}
+
+	/* ---- recordings tab ---- */
+
+	/* only actual recordings are linked -- reviews, mailto and dead relative
+	   links from the source are dropped. */
+	function isRecordingLink(url) {
+		var u = String(url || '').toLowerCase();
+		return u.indexOf('youtube.com') !== -1 || u.indexOf('youtu.be') !== -1 ||
+			u.indexOf('archive.org') !== -1;
+	}
+
+	var openYears = {};   /* year -> bool */
+	var openShows = {};   /* show id -> bool */
+
+	/* two shows share the date 1998-08-18, so rows are keyed by index */
+	NMH_SHOWS.forEach(function (s, i) { s._id = i; });
+
+	function toggleYear(y) {
+		openYears[y] = !openYears[y];
+		renderShows();
+	}
+	function toggleShow(id) {
+		var open = !openShows[id];
+		openShows[id] = open;
+		var body = document.getElementById('sl-' + id);
+		var tog = document.getElementById('tg-' + id);
+		if (body) body.classList.toggle('open', open);
+		if (tog) {
+			tog.textContent = open ? '\u2212' : '+';   /* minus sign, not a hyphen */
+			if (tog.parentNode) tog.parentNode.title = open ? 'hide details' : 'show details';
+		}
+	}
+
+	function renderShows() {
+		var q = norm(document.getElementById('showSearch').value);
+		var recOnly = document.getElementById('recordingsOnly').checked;
+		var setOnly = document.getElementById('setlistsOnly').checked;
+
+		var rows = NMH_SHOWS.filter(function (s) {
+			if (recOnly && s.no_recording) return false;
+			if (setOnly && !s.setlist.length) return false;
+			if (!q) return true;
+			/* the normalized haystack renders the date as "1996 07 04",
+			   so a typed "1996-07" normalizes to "1996 07" and matches. */
+			return norm([s.date, s.venue, s.city, s.format, s.source, s.quality,
+				s.notes, s.setlist.join(' ')].join(' ')).indexOf(q) !== -1;
+		});
+
+		/* group by year, oldest first */
+		var years = [], byYear = {};
+		rows.slice().sort(function (a, b) {
+			return String(a.date).localeCompare(String(b.date));
+		}).forEach(function (s) {
+			var y = s.year || 'unknown';
+			if (!byYear[y]) { byYear[y] = []; years.push(y); }
+			byYear[y].push(s);
+		});
+
+		/* a search auto-opens the matching years */
+		var html = years.map(function (y) {
+			var list = byYear[y];
+			var open = q ? true : !!openYears[y];
+			var nRec = list.filter(function (s) { return !s.no_recording; }).length;
+
+			var body = list.map(function (s) {
+				var id = s._id;
+				var isOpen = !!openShows[id];
+
+				var info = [];
+				if (s.no_recording) info.push('no recording');
+				else {
+					if (s.format) info.push(s.format);
+					if (s.source) info.push(s.source);
+					if (s.quality) info.push(s.quality);
+				}
+
+				var recs = (s.links || []).filter(function (l) { return isRecordingLink(l.url); });
+				var recHtml = recs.length
+					? '<span class="era-show-recs">' + recs.map(function (l) {
+						var host = l.url.toLowerCase().indexOf('archive.org') !== -1 ? 'archive' : 'video';
+						return '<a href="' + esc(l.url) + '" target="_blank" rel="noopener"' +
+							' onclick="event.stopPropagation()" title="' +
+							esc(l.text || '') + '">' + host + '</a>';
+					}).join('') + '</span>'
+					: '';
+
+				var setlist = s.setlist.length
+					? '<ol>' + s.setlist.map(function (t) {
+						var hit = q && norm(t).indexOf(q) !== -1;
+						return '<li>' + (hit ? '<span class="matched">' + esc(t) + '</span>' : esc(t)) + '</li>';
+					}).join('') + '</ol>'
+					: '<em>setlist unknown</em>';
+				if (s.length) setlist += '<div class="lineage">length: ' + esc(s.length) + '</div>';
+				if (s.lineage) setlist += '<div class="lineage">' + esc(s.lineage) + '</div>';
+				if (s.notes) setlist += '<div class="notes">' + esc(s.notes) + '</div>';
+
+				return '<div class="era-show-row" onclick="toggleShow(' + id + ')"' +
+					' title="' + (isOpen ? 'hide details' : 'show details') + '">' +
+					'<span class="era-show-date">' + esc(s.date) + '</span>' +
+					'<span class="era-show-venue">' + esc(s.venue) +
+						(s.city ? ', ' + esc(s.city) : '') + '</span>' +
+					(info.length ? '<span class="era-show-info">' + esc(info.join(' / ')) + '</span>' : '') +
+					recHtml +
+					'<span class="era-show-toggle" id="tg-' + id + '">' +
+						(isOpen ? '\u2212' : '+') + '</span>' +
+					'</div>' +
+					'<div class="era-show-setlist' + (isOpen ? ' open' : '') + '" id="sl-' + id + '">' +
+						setlist + '</div>';
+			}).join('');
+
+			return '<div class="era-block">' +
+				'<div class="era-header" onclick="toggleYear(\'' + esc(y) + '\')">' +
+					'<span class="era-title">' + esc(y) + '</span>' +
+					'<span class="era-meta">' + list.length + ' show' + (list.length === 1 ? '' : 's') +
+						' &middot; ' + nRec + ' recorded' +
+						'<span class="era-toggle">' + (open ? '▾' : '▸') + '</span></span>' +
+				'</div>' +
+				'<div class="era-body' + (open ? ' open' : '') + '">' + body + '</div>' +
+			'</div>';
+		}).join('');
+
+		document.getElementById('showList').innerHTML = html;
+		document.getElementById('showEmpty').style.display = rows.length ? 'none' : '';
+		document.getElementById('showCount').textContent =
+			rows.length + ' of ' + NMH_SHOWS.length + ' shows';
+	}
+
+	renderSongs();
+	renderShows();
+	</script>
+</body>
+</html>
