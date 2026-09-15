@@ -519,7 +519,8 @@ function unitWord(r, n) {
 }
 function tipHtml(r) {
   const n = tripsAt(r);
-  return `<b>${esc(r.short)} ${esc(r.name)}</b><span>${fmt(capAt(r))} passengers/hr · ${n} ${unitWord(r, n)}</span>`;
+  const title = RAIL.has(r.short) ? r.name : `${r.short} ${r.name}`; // rail names already read "Line 1 (…)"
+  return `<b>${esc(title)}</b><span>${fmt(capAt(r))} passengers/hr · ${n} ${unitWord(r, n)}</span>`;
 }
 
 /* stations and line bullets */
