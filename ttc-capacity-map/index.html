@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TTC Capacity Map</title>
+<meta name="description" content="Every TTC route drawn as wide as the passengers per hour its schedule can carry.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>.leaflet-image-layer,.leaflet-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane,.leaflet-pane>canvas,.leaflet-pane>svg,.leaflet-tile,.leaflet-tile-container,.leaflet-zoom-box{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:0 0}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important;width:auto;padding:0}.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-bottom,.leaflet-top{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity .2s linear;-moz-transition:opacity .2s linear;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}svg.leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform .25s cubic-bezier(0,0,.25,1);-moz-transition:-moz-transform .25s cubic-bezier(0,0,.25,1);transition:transform .25s cubic-bezier(0,0,.25,1)}.leaflet-pan-anim .leaflet-tile,.leaflet-zoom-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-control,.leaflet-popup-pane{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-image-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-image-layer.leaflet-interactive,.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline-offset:1px}.leaflet-container a{color:#0078a8}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}.leaflet-container{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;font-size:12px;font-size:.75rem;line-height:1.5}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:focus,.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block;font-size:13px;font-size:1.08333em}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,.8);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:focus,.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;-moz-box-sizing:border-box;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers{box-shadow:none}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-layers{border:2px solid rgba(0,0,0,.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;font-size:1.08333em;min-height:1px}.leaflet-popup-content p{margin:17px 0;margin:1.3em 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:0 0}.leaflet-container a.leaflet-popup-close-button:focus,.leaflet-container a.leaflet-popup-close-button:hover{color:#585858}.leaflet-popup-scrolled{overflow:auto}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto}.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before,.leaflet-tooltip-top:before{position:absolute;pointer-events:none;border:6px solid transparent;background:0 0;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}@media print{.leaflet-control{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
+<style>
+:root{
+  --lake:#C6D5DD; --land:#E2E4DE; --city:#F3F4EF; --boundary:#98A29E;
+  --panel:#FAFBF8; --panel-2:#EEF0EB; --ink:#172024; --ink-2:#48545A; --ink-3:#737F84; --rule:#D6DBD5;
+  --focus:#2F6BCF; --station-fill:#FFFFFF;
+  --line1:#C99A00; --line2:#00853A; --line4:#9C1C66; --line5:#D9661A; --line6:#8C8A87;
+  --streetcar:#C8321E; --bus:#2F6BCF; --abus:#008F7D; --community:#8B5CC7;
+  --shadow:0 1px 2px rgb(23 32 36 / .08),0 10px 30px rgb(23 32 36 / .12);
+  --font-display:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+  --font-body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --rail-w:384px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --lake:#0A1115; --land:#151B1E; --city:#1C2326; --boundary:#4B575B;
+    --panel:#11171A; --panel-2:#192023; --ink:#E3E8E6; --ink-2:#A9B3B6; --ink-3:#7C878B; --rule:#283134;
+    --focus:#5B8FE8; --station-fill:#11171A;
+    --line1:#E0B21A; --line2:#1FA85A; --line4:#C24A8E; --line5:#EC8036; --line6:#A3A19D;
+    --streetcar:#E8553F; --bus:#5B8FE8; --abus:#1FA08E; --community:#9A78D8;
+    --shadow:0 1px 2px rgb(0 0 0 / .4),0 10px 30px rgb(0 0 0 / .45);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --lake:#0A1115; --land:#151B1E; --city:#1C2326; --boundary:#4B575B;
+  --panel:#11171A; --panel-2:#192023; --ink:#E3E8E6; --ink-2:#A9B3B6; --ink-3:#7C878B; --rule:#283134;
+  --focus:#5B8FE8; --station-fill:#11171A;
+  --line1:#E0B21A; --line2:#1FA85A; --line4:#C24A8E; --line5:#EC8036; --line6:#A3A19D;
+  --streetcar:#E8553F; --bus:#5B8FE8; --abus:#1FA08E; --community:#9A78D8;
+  --shadow:0 1px 2px rgb(0 0 0 / .4),0 10px 30px rgb(0 0 0 / .45);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--panel);color:var(--ink);font:15px/1.45 var(--font-body);-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+.app{display:grid;grid-template-columns:var(--rail-w) 1fr;height:100vh;height:100dvh}
+.rail{background:var(--panel);border-right:1px solid var(--rule);overflow-y:auto;display:flex;flex-direction:column;min-height:0}
+.stage{position:relative;min-width:0;min-height:0}
+#map{position:absolute;inset:0;background:var(--land)}
+
+/* ---- rail ---- */
+.brand{padding:22px 20px 18px;border-bottom:1px solid var(--rule);display:grid;gap:8px}
+.sitenav{display:flex;gap:6px;margin-bottom:4px}
+.sitenav a{font-size:12.5px;line-height:1;padding:5px 10px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;color:var(--ink-2)}
+.sitenav a:hover{color:var(--ink);border-color:var(--ink-3)}
+.eyebrow{margin:0;font:600 11px/1.2 var(--font-body);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.brand h1{font-size:30px;line-height:1.02;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.brand h1 .mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--streetcar);color:#fff;font:700 13px/1 var(--font-display);letter-spacing:.02em;flex:none}
+.dek{margin:0;color:var(--ink-2);max-width:46ch}
+.dek b{color:var(--ink);font-weight:600}
+
+.section{padding:16px 20px;border-bottom:1px solid var(--rule);display:grid;gap:14px}
+.lab{font:600 11px/1.2 var(--font-body);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.ctl{display:grid;gap:6px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--panel-2);border-radius:8px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:6px;padding:6px 8px;font-size:13.5px;font-weight:500;color:var(--ink-2);cursor:pointer;line-height:1.2}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0 / .12);font-weight:600}
+.hint{margin:0;font-size:13px;color:var(--ink-3)}
+
+.layers{border:0;margin:0;padding:0;display:grid;gap:8px}
+.layers legend{padding:0;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chip span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;border:1px solid var(--rule);font-size:13px;font-weight:500;color:var(--ink-3);background:transparent;user-select:none}
+.chip span::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-3)}
+.chip input:checked + span{color:var(--ink);background:var(--panel-2);border-color:transparent}
+.chip input:checked + span::before{background:var(--ink);border-color:var(--ink)}
+.chip input:focus-visible + span{outline:2px solid var(--focus);outline-offset:1px}
+
+/* legend */
+.wkey{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 12px}
+.wkey svg{display:block;overflow:visible}
+.wkey .v{font:500 12.5px/1 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.anatomy{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;font-size:13px;color:var(--ink-2)}
+.anatomy p{margin:0}
+.anatomy b{color:var(--ink);font-weight:600}
+.vkey{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:13.5px}
+.vkey li{display:contents}
+.vkey .n{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.vkey .l{font:500 12px/1.6 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}
+.sw{width:22px;height:6px;border-radius:3px;background:var(--c);flex:none}
+.sw.dash{background:repeating-linear-gradient(90deg,var(--c) 0 5px,transparent 5px 9px)}
+.bullet{--c:var(--bus);display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 5px;border-radius:999px;background:var(--c);color:#fff;font:600 12px/1 var(--font-display);letter-spacing:.01em;flex:none}
+.bullet.lt{color:#172024}
+.bullet.sq{border-radius:5px}
+.bullet.lg{min-width:40px;height:40px;font-size:18px;padding:0 8px}
+.vgroup{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);grid-column:1/-1;margin-top:6px}
+
+/* route list */
+.routes{padding:16px 0 0;display:grid;gap:10px;flex:1}
+.rhead{padding:0 20px;display:grid;gap:8px}
+.rhead .top{display:flex;justify-content:space-between;align-items:baseline}
+.rhead .count{font-size:12.5px;color:var(--ink-3)}
+#q{width:100%;border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:7px 10px;font-size:14px}
+#q::placeholder{color:var(--ink-3)}
+.cols{display:grid;grid-template-columns:1fr 92px;padding:0 20px;font-size:11.5px;color:var(--ink-3)}
+.cols span:last-child{text-align:right}
+#list{list-style:none;margin:0;padding:0 8px 12px}
+.row{width:100%;display:grid;grid-template-columns:auto 1fr 92px;grid-template-rows:auto auto;column-gap:10px;row-gap:4px;align-items:center;border:0;background:transparent;text-align:left;padding:7px 12px;border-radius:8px;cursor:pointer}
+.row:hover{background:var(--panel-2)}
+.row[aria-pressed="true"]{background:var(--panel-2);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.row .bullet{grid-row:1/3}
+.row .rn{font-weight:600;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .rn small{display:block;font-weight:400;font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .nums{grid-row:1/3;grid-column:3;text-align:right;font:500 13px/1.25 var(--font-mono);font-variant-numeric:tabular-nums}
+.row .nums small{display:block;color:var(--ink-3);font-size:11.5px}
+.row .bar{grid-column:2;height:6px;position:relative;border-radius:3px;background:transparent}
+.row .bar i,.row .bar b{position:absolute;left:0;top:0;height:100%;border-radius:3px}
+.row .bar i{background:var(--tint)}
+.row .bar b{background:var(--c);top:1.5px;height:3px}
+.empty{padding:12px 20px;color:var(--ink-3);font-size:14px}
+
+.railfoot{padding:14px 20px 18px;border-top:1px solid var(--rule);display:grid;gap:8px;font-size:12.5px;color:var(--ink-3)}
+.railfoot p{margin:0}
+.linkbtn{justify-self:start;border:1px solid var(--ink);background:transparent;border-radius:8px;padding:7px 12px;font-weight:600;font-size:14px;cursor:pointer}
+.linkbtn:hover{background:var(--ink);color:var(--panel)}
+a{color:var(--ink);text-decoration-color:var(--ink-3);text-underline-offset:2px}
+a:hover{text-decoration-color:var(--ink)}
+
+/* ---- drawer ---- */
+.drawer{position:absolute;top:12px;right:12px;width:376px;max-width:calc(100% - 24px);max-height:calc(100% - 24px);overflow-y:auto;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);z-index:900;padding:16px 18px 18px;display:grid;gap:14px;align-content:start}
+.dh{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.dh h2{font-size:21px;line-height:1.1;font-weight:600}
+.dh p{margin:2px 0 0;font-size:13px;color:var(--ink-3)}
+.x{border:0;background:var(--panel-2);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;color:var(--ink-2)}
+.x:hover{color:var(--ink)}
+.note{margin:0;font-size:13px;padding:8px 10px;border-radius:8px;background:var(--panel-2);color:var(--ink-2)}
+.note b{color:var(--ink)}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fig{display:grid;gap:3px;align-content:start}
+.fig .k{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.fig .k i{width:14px;height:8px;border-radius:2px;background:var(--c)}
+.fig .k i.t{background:var(--tint)}
+.fig .v{font:500 26px/1.05 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.fig .v u{text-decoration:none;font:500 12px/1 var(--font-body);color:var(--ink-3);margin-left:4px;letter-spacing:0}
+.fig .w{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.chart{margin:0;display:grid;gap:6px}
+.chart svg{width:100%;height:auto;display:block;touch-action:none}
+.chart text{font:11px var(--font-mono);fill:var(--ink-3)}
+.legendrow{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-2)}
+.legendrow span{display:inline-flex;align-items:center;gap:6px}
+.legendrow svg{width:22px;height:8px}
+.readout{margin:0;min-height:1.4em;font:12.5px/1.4 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.drawer h3{font-size:14px;font-weight:600;letter-spacing:.01em}
+.dsec{display:grid;gap:6px}
+.dsec p{margin:0;font-size:13.5px;color:var(--ink-2)}
+.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+.vt th,.vt td{padding:4px 4px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+.vt th{font-weight:600;color:var(--ink-3);white-space:nowrap}
+.vt td small{display:block;color:var(--ink-3);font-size:11px}
+.tablewrap{overflow-x:auto}
+.br{list-style:none;margin:0;padding:0;display:grid;gap:3px;font-size:13px;color:var(--ink-2)}
+.br b{font-family:var(--font-mono);font-weight:500;color:var(--ink);display:inline-block;min-width:3.2em}
+.src{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:13px;color:var(--ink-2)}
+.src li::marker{font:500 11px var(--font-mono);color:var(--ink-3)}
+
+/* ---- hour bar ---- */
+.hourbar{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:800;background:var(--panel);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;width:min(640px,calc(100% - 24px))}
+.hourbar .seg{grid-auto-columns:auto}
+.hourbar output{font:500 15px/1 var(--font-mono);font-variant-numeric:tabular-nums;min-width:8.5ch;text-align:right}
+#hour{width:100%;accent-color:var(--ink)}
+.play{border:0;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--panel);cursor:pointer;display:grid;place-items:center}
+.play svg{width:14px;height:14px;fill:currentColor}
+
+/* ---- leaflet overrides ---- */
+.leaflet-container{font:13px/1.4 var(--font-body);background:var(--land)}
+.leaflet-control-attribution{background:color-mix(in srgb,var(--panel) 85%,transparent)!important;color:var(--ink-3)!important;font-size:11px}
+.leaflet-control-attribution a{color:var(--ink-2)!important}
+.leaflet-bar a{background:var(--panel)!important;color:var(--ink)!important;border-color:var(--rule)!important}
+.leaflet-bar{border:0!important;box-shadow:var(--shadow)!important}
+.leaflet-tooltip.rtip{background:var(--panel);color:var(--ink);border:0;border-radius:8px;box-shadow:var(--shadow);padding:7px 10px;display:grid;gap:1px}
+.leaflet-tooltip.rtip::before{display:none}
+.rtip b{font-weight:600}
+.rtip span{font:12px var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.leaflet-tooltip.stn{background:transparent;border:0;box-shadow:none;padding:0;color:var(--ink);font:600 11.5px/1 var(--font-body);text-shadow:0 0 3px var(--city),0 0 3px var(--city),0 0 2px var(--city)}
+.leaflet-tooltip.stn::before{display:none}
+.zlo .leaflet-tooltip.stn{display:none}
+.mapbullet{background:none;border:0}
+.mapbullet .bullet{box-shadow:0 0 0 2px var(--city);cursor:pointer}
+
+/* ---- method dialog ---- */
+dialog{border:0;border-radius:14px;padding:0;width:min(760px,calc(100% - 32px));max-height:calc(100% - 48px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+dialog::backdrop{background:rgb(10 15 18 / .45)}
+.mwrap{padding:24px 28px 28px;display:grid;gap:18px}
+.mwrap header{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.mwrap h2{font-size:26px;font-weight:600}
+.mwrap h3{font-size:16px;font-weight:600;margin-top:4px}
+.mwrap p,.mwrap li{max-width:68ch;color:var(--ink-2)}
+.mwrap p{margin:0}
+.mwrap ul,.mwrap ol{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.formula{font:500 14px/1.5 var(--font-mono);background:var(--panel-2);padding:10px 12px;border-radius:8px;color:var(--ink);overflow-x:auto}
+.lt-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.lt-table th,.lt-table td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.lt-table th{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.lt-table td.num{text-align:right}
+.tag{display:inline-block;font:600 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;background:var(--panel-2);color:var(--ink-2)}
+.tag.d{box-shadow:inset 0 0 0 1px var(--ink-3)}
+.fatal{padding:24px;font-size:16px}
+
+@media (max-width: 760px){
+  .app{display:flex;flex-direction:column;height:auto}
+  .stage{order:-1;height:62vh;flex:none}
+  .rail{border-right:0;border-top:1px solid var(--rule);overflow:visible}
+  .brand h1{font-size:26px}
+  .drawer{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-width:none;max-height:72vh;border-radius:14px 14px 0 0;z-index:1200}
+  .hourbar{grid-template-columns:auto 1fr auto;bottom:10px}
+  .hourbar .seg{grid-column:1/-1}
+  .mwrap{padding:18px 16px 22px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Map controls and route list">
+    <header class="brand">
+      <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
+      <p class="eyebrow" id="eyebrow">TTC schedule · Sept 6 – Oct 31, 2026</p>
+      <h1><span class="mark" aria-hidden="true">TTC</span>Capacity Map</h1>
+      <p class="dek">Every route is drawn as wide as the <b>passengers per hour</b> its schedule can carry. The pale outer band is the busiest hour of the week; the solid core is the quietest regular hour.</p>
+    </header>
+
+    <section class="section" aria-label="Display options">
+      <div class="ctl">
+        <span class="lab" id="lab-view">Show</span>
+        <div class="seg" role="group" aria-labelledby="lab-view">
+          <button type="button" id="v-range" aria-pressed="true">Busiest vs quietest</button>
+          <button type="button" id="v-hour" aria-pressed="false">A single hour</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="lab" id="lab-basis">Passengers per vehicle</span>
+        <div class="seg" role="group" aria-labelledby="lab-basis">
+          <button type="button" id="b-std" aria-pressed="true">Peak standard</button>
+          <button type="button" id="b-period" aria-pressed="false">By time of day</button>
+        </div>
+        <p class="hint" id="basis-hint"></p>
+      </div>
+      <div class="ctl">
+        <span class="lab" id="lab-scale">Line width</span>
+        <div class="seg" role="group" aria-labelledby="lab-scale">
+          <button type="button" id="s-sqrt" aria-pressed="true">Compressed</button>
+          <button type="button" id="s-lin" aria-pressed="false">True to scale</button>
+        </div>
+        <p class="hint" id="scale-hint"></p>
+      </div>
+      <fieldset class="layers">
+        <legend class="lab">Networks</legend>
+        <div class="chips" id="chips"></div>
+      </fieldset>
+    </section>
+
+    <section class="section" aria-label="Legend">
+      <span class="lab">Reading the lines</span>
+      <div class="anatomy">
+        <svg id="anatomy" width="96" height="44" viewBox="0 0 96 44" aria-hidden="true"></svg>
+        <p><b>Outer band</b> busiest scheduled hour.<br><b>Core</b> <span id="core-def">quietest regular hour (6 AM – 1 AM)</span>.<br><b>Dashed core</b> express route.</p>
+      </div>
+      <div class="wkey" id="wkey" aria-label="Line width scale at the current zoom"></div>
+      <ul class="vkey" id="vkey"></ul>
+    </section>
+
+    <section class="routes" aria-label="Routes ranked by capacity">
+      <div class="rhead">
+        <div class="top"><label class="lab" for="q">Routes by capacity</label><span class="count" id="count"></span></div>
+        <input id="q" type="search" placeholder="Route number or name" autocomplete="off">
+      </div>
+      <div class="cols"><span>Route</span><span id="cols-num">Busiest / quietest</span></div>
+      <ol id="list"></ol>
+    </section>
+
+    <footer class="railfoot">
+      <button type="button" class="linkbtn" id="open-method">Method &amp; sources</button>
+      <p>Capacity is scheduled, not observed: trips in the TTC's published GTFS schedule × the TTC's planning load for each vehicle.</p>
+    </footer>
+  </aside>
+
+  <main class="stage">
+    <div id="map" role="application" aria-label="Map of TTC routes drawn by capacity"></div>
+    <div class="hourbar" id="hourbar" hidden>
+      <div class="seg" role="group" aria-label="Day of week">
+        <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
+        <button type="button" data-day="saturday" aria-pressed="false">Sat</button>
+        <button type="button" data-day="sunday" aria-pressed="false">Sun</button>
+      </div>
+      <button type="button" class="play" id="play" aria-label="Play through the day"><svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg></button>
+      <input type="range" id="hour" min="0" max="23" step="1" value="8" aria-label="Hour of day">
+      <output id="hour-out" for="hour">8–9 AM</output>
+    </div>
+    <section class="drawer" id="drawer" hidden aria-live="polite"></section>
+  </main>
+</div>
+
+<dialog id="method" aria-labelledby="method-title">
+  <div class="mwrap">
+    <header>
+      <div>
+        <p class="eyebrow">How this map is built</p>
+        <h2 id="method-title">Method &amp; sources</h2>
+      </div>
+      <button type="button" class="x" id="close-method" aria-label="Close method and sources">×</button>
+    </header>
+
+    <section class="dsec">
+      <h3>What a line's width measures</h3>
+      <p>Scheduled capacity: the most passengers a route's timetable can move past its busiest point in one clock hour, at the TTC's own planning load for each vehicle. It is not ridership, and it is not a crush-load maximum.</p>
+      <div class="formula">capacity (pph) = Σ trips departing the busiest stop in that hour × planning load of each trip's vehicle</div>
+      <ul>
+        <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins. That is where branches and short-turns overlap, which is the TTC's "maximum load point" idea applied to supply.</li>
+        <li><b>Outer band</b> = the highest hourly capacity across a sample weekday, Saturday and Sunday.</li>
+        <li><b>Core</b> = the lowest hourly capacity during regular hours (6 AM – 1 AM; Blue Night routes 1 – 6 AM). The first and last operating hour of each day are skipped so start-up and wind-down trips don't count. Peak-only routes use their lowest operating hour.</li>
+        <li><b>Sample days</b> in the schedule's validity window, avoiding holidays: Tuesday Sept 15, Saturday Sept 19 and Sunday Sept 20, 2026.</li>
+      </ul>
+    </section>
+
+    <section class="dsec">
+      <h3>Passengers per vehicle</h3>
+      <p>Vehicle types come from the TTC Service Summary, branch by branch and period by period (so an articulated bus in the AM peak and a 12 m bus on Sunday are counted correctly, and streetcar routes temporarily run by buses are counted as buses). Loads come from the TTC Service Standards, Table 4.</p>
+      <div class="tablewrap"><table class="lt-table" id="loads-table"></table></div>
+      <p><span class="tag d">Derived</span> The TTC has not published crowding standards for Line 5 or Line 6, so these apply the streetcar standard's ratios. The Flexity Outlook streetcar's 130-passenger peak standard is 52% of its 251 crush load, and its 70-passenger off-peak standard equals its 70 seats.</p>
+      <ul>
+        <li><b>Line 5 (Flexity Freedom, 2-car trains):</b> 251 crush per car × 0.52 ≈ 130 per car, so 260 per train peak. Off-peak uses 70 seats per car (assumed equal to Flexity Outlook), so 140 per train.</li>
+        <li><b>Line 6 (48 m Citadis Spirit, single vehicles):</b> 336 maximum × 0.52 ≈ 174 peak; 120 seats off-peak.</li>
+        <li><b>Community bus:</b> 11 passengers, per the TTC's Community Bus page.</li>
+        <li><b>Line 2</b> is counted as T1 trains (1,000) and <b>Line 1</b> as Toronto Rocket trains (1,100).</li>
+      </ul>
+    </section>
+
+    <section class="dsec">
+      <h3>Two ways to count a vehicle</h3>
+      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load all day, so the width reflects only how often vehicles come and how big they are. <b>By time of day</b> follows the Service Standards literally: peak loads 6–9 AM and 3–7 PM on weekdays, and the lower off-peak comfort standard at all other times.</p>
+    </section>
+
+    <section class="dsec">
+      <h3>Limits worth knowing</h3>
+      <ul>
+        <li>Scheduled service, not delivered service. Gaps, bunching, diversions and unscheduled extras aren't reflected.</li>
+        <li>Routes sharing a street are not added together. Each route is drawn on its own, with thicker routes underneath.</li>
+        <li>Hourly counts move by ±1 vehicle when a headway doesn't divide evenly into 60 minutes.</li>
+        <li>Line 5 opened February 8, 2026 and Line 6 on December 7, 2025. Both are still settling in, and their schedules may change.</li>
+        <li>The Service Summary covers the full length of each branch. Trips in the GTFS feed without a branch letter take the vehicle type used on that route in the same period.</li>
+      </ul>
+    </section>
+
+    <section class="dsec">
+      <h3>Sources</h3>
+      <ol class="src" id="all-sources"></ol>
+    </section>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data.js"></script>
+<script>
+(() => {
+"use strict";
+const D = window.TTC;
+if (!D || !window.L) {
+  document.body.insertAdjacentHTML("afterbegin", '<p class="fatal">The map data or map library did not load. Check your connection, or run <code>scripts/build_capacity.py</code> and reload.</p>');
+  return;
+}
+
+/* ---------- sources ---------- */
+const SUMMARY_URL = "https://cdn.ttc.ca/-/media/Project/TTC/DevProto/Documents/Home/Transparency-and-accountability/Service-Summary-2026-09-06.pdf?rev=8a73444f06f74841991fef5d61041cfc";
+const STANDARDS_URL = "https://cdn.ttc.ca/-/media/Project/TTC/DevProto/Documents/Home/About-the-TTC/Projects-Landing-Page/Transit-Planning/Service-Standards_May-2024.pdf?rev=6c96a85cc0a64147ad424f949dabce64";
+const S = {
+  gtfs: { t: "City of Toronto Open Data — TTC Routes and Schedules (GTFS), feed valid Sept 6 – Oct 31, 2026", u: "https://open.toronto.ca/dataset/ttc-routes-and-schedules/" },
+  summary: { t: "TTC Service Summary, September 6 to October 31, 2026 (vehicle types by branch and period)", u: SUMMARY_URL },
+  standards: { t: "TTC Service Standards (May 2024), Table 4: Vehicle Crowding Standards, p. 14", u: STANDARDS_URL + "#page=15" },
+  overview: { t: "TTC — Overview of TTC Service Standards, Strategic Planning Committee, Sept 3, 2025 (same crowding table, p. 9)", u: "https://www.toronto.ca/legdocs/mmis/2025/tts/bgrd/backgroundfile-258190.pdf" },
+  outlook: { t: "Transit Toronto — The Toronto Flexity Outlook LRVs (70 seats, 132 service load, 251 crush)", u: "https://transittoronto.ca/streetcar/4506.shtml" },
+  freedom: { t: "Wikipedia — Flexity Freedom (251 maximum per five-module car, citing Bombardier's brochure)", u: "https://en.wikipedia.org/wiki/Flexity_Freedom" },
+  line5: { t: "Transit Toronto — Line 5 Eglinton (two-car trains at opening)", u: "https://transittoronto.ca/streetcar/4124.shtml" },
+  line5open: { t: "TTC — Phased start to service on Line 5 Eglinton (Feb 2026)", u: "https://www.ttc.ca/news/2026/February/TTC-to-begin-phased-start-to-service-on-Line-5-Eglinton" },
+  line6: { t: "Metrolinx — Finch West LRT FAQ (48 m vehicle, 120 seats + 216 standing = 336)", u: "https://assets.metrolinx.com/image/upload/v1663240053/Documents/Metrolinx/Finch-West-LRT-FAQs-Revised-June9.pdf" },
+  line6open: { t: "TTC — Now Open: Line 6 Finch West", u: "https://www.ttc.ca/riding-the-ttc/Line-6-Finch-West" },
+  community: { t: "TTC — Community Bus (up to 11 ambulatory customers)", u: "https://www.ttc.ca/wheel-trans/learn-more-about-community-bus" },
+  changes: { t: "Steve Munro — TTC Service Changes Effective Sept 6, 2026 (context on express and vehicle changes)", u: "https://stevemunro.ca/2026/09/04/ttc-service-changes-effective-sunday-september-6-2026-part-ii/" },
+  boundary: { t: "City of Toronto Open Data — Regional Municipal Boundary (Open Government Licence – Toronto)", u: "https://open.toronto.ca/dataset/regional-municipal-boundary/" },
+  osm: { t: "Lake Ontario shoreline © OpenStreetMap contributors (ODbL), relation 1206310", u: "https://www.openstreetmap.org/relation/1206310" },
+};
+const LOAD_SOURCES = { Bus: ["standards"], ABus: ["standards"], LFsc: ["standards", "outlook"], TR6: ["standards"], T1_6: ["standards"], TR4: ["standards"], LFLRV: ["line5", "freedom", "outlook", "standards"], LRV: ["line6", "outlook", "standards"], CB: ["community"] };
+
+/* ---------- constants ---------- */
+const RAIL = new Set(["1", "2", "4", "5", "6"]);
+const DAYS = ["weekday", "saturday", "sunday"];
+const DAY_LABEL = { weekday: "Weekday", saturday: "Saturday", sunday: "Sunday" };
+const VT_KEY = { Bus: "bus", ABus: "abus", LFsc: "streetcar", CB: "community" };
+const VT_SHORT = { Bus: "12 m bus", ABus: "Artic bus", LFsc: "Streetcar", CB: "Community bus", TR6: "TR 6-car", T1_6: "T1 6-car", TR4: "TR 4-car", LFLRV: "2-car LRT", LRV: "48 m LRV" };
+const MODES = [
+  ["subway", "Subway"], ["lrt", "Light rail"], ["streetcar", "Streetcar"], ["bus", "Bus"],
+  ["express", "Express bus"], ["community", "Community bus"], ["night", "Blue Night"],
+];
+const MODE_LABEL = Object.fromEntries(MODES);
+const nf = new Intl.NumberFormat("en-CA");
+const fmt = v => nf.format(Math.round(v));
+const compact = v => v >= 1000 ? (v / 1000).toFixed(v >= 10000 || v % 1000 === 0 ? 0 : 1) + "k" : String(Math.round(v));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const hr12 = h => ({ n: h % 12 === 0 ? 12 : h % 12, m: h < 12 ? "AM" : "PM" });
+function fmtRange(h) {
+  const a = hr12(h), b = hr12((h + 1) % 24);
+  return a.m === b.m ? `${a.n}–${b.n} ${a.m}` : `${a.n} ${a.m}–${b.n} ${b.m}`;
+}
+const fmtHour = h => { const a = hr12(h); return `${a.n} ${a.m}`; };
+
+/* ---------- colour tokens ---------- */
+let C = {};
+const TOKENS = ["line1", "line2", "line4", "line5", "line6", "streetcar", "bus", "abus", "community", "city", "land", "lake", "boundary", "ink", "ink-2", "ink-3", "rule", "station-fill", "panel", "panel-2"];
+function readTokens() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of TOKENS) C[k] = cs.getPropertyValue("--" + k).trim();
+}
+function rgb(h) { h = h.replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join(""); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function mix(a, b, t) { const A = rgb(a), B = rgb(b); return "#" + A.map((v, i) => Math.round(v * (1 - t) + B[i] * t).toString(16).padStart(2, "0")).join(""); }
+readTokens();
+
+/* ---------- data prep ---------- */
+const routes = D.routes.filter(r => r.geom.length && r.stats.std.max.v > 0);
+for (const r of routes) {
+  r.key = RAIL.has(r.short) ? "line" + r.short : (VT_KEY[r.vehicle] || "bus");
+  r.light = r.key === "line1";
+}
+const MAXCAP = Math.max(...routes.map(r => r.stats.std.max.v));
+const byId = new Map(routes.map(r => [r.id, r]));
+
+const state = {
+  view: "range", basis: "std", scale: "sqrt", day: "weekday", hour: 8, selected: null, query: "",
+  layers: { subway: true, lrt: true, streetcar: true, bus: true, express: true, community: true, night: false },
+};
+
+/* ---------- map ---------- */
+const map = L.map("map", { zoomControl: false, minZoom: 9, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
+L.control.zoom({ position: "bottomright" }).addTo(map);
+map.attributionControl.setPrefix(false).addAttribution('Schedule: <a href="https://open.toronto.ca/dataset/ttc-routes-and-schedules/">TTC GTFS</a> · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
+
+map.createPane("base").style.zIndex = 250;
+map.createPane("routes").style.zIndex = 420;
+map.createPane("stations").style.zIndex = 640;
+const baseR = L.canvas({ pane: "base", padding: 0.5 });
+const routeR = L.canvas({ pane: "routes", padding: 0.4, tolerance: 5 });
+const stnR = L.canvas({ pane: "stations", padding: 0.4 });
+
+const bm = D.basemap;
+const base = {};
+if (bm) {
+  base.city = L.polygon(bm.city, { renderer: baseR, stroke: false, fillOpacity: 1, interactive: false }).addTo(map);
+  base.lake = L.polygon(bm.lake, { renderer: baseR, stroke: false, fillOpacity: 1, interactive: false }).addTo(map);
+  base.boundary = L.polyline(bm.boundary, { renderer: baseR, weight: 1.2, dashArray: "5 5", interactive: false }).addTo(map);
+}
+function styleBase() {
+  if (!bm) return;
+  base.city.setStyle({ fillColor: C.city });
+  base.lake.setStyle({ fillColor: C.lake });
+  base.boundary.setStyle({ color: C.boundary });
+}
+
+/* widths */
+function zoomFactor() { return Math.pow(2, (map.getZoom() - 11) * 0.32); }
+function unitWidth(cap) { return state.scale === "sqrt" ? Math.sqrt(cap / MAXCAP) : cap / MAXCAP; }
+function px(cap) {
+  if (!cap) return 0;
+  const w = 34 * unitWidth(cap) * zoomFactor();
+  return Math.max(state.scale === "sqrt" ? 1.2 : 0.8, w);
+}
+
+/* route layers, thickest first so thin routes stay visible on top */
+routes.sort((a, b) => b.stats.std.max.v - a.stats.std.max.v);
+const routeGroup = L.layerGroup().addTo(map);
+for (const r of routes) {
+  const o = { renderer: routeR, lineCap: "round", lineJoin: "round", smoothFactor: 1 };
+  r.outer = L.polyline(r.geom, o);
+  r.inner = L.polyline(r.geom, { ...o, interactive: false });
+  r.outer.bindTooltip(() => tipHtml(r), { sticky: true, className: "rtip", direction: "top", offset: [0, -10], opacity: 1 });
+  r.outer.on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); });
+}
+map.on("click", () => { if (state.selected) select(null); });
+
+function values(r) {
+  const s = r.stats[state.basis];
+  if (state.view === "range") return { outer: s.max.v, inner: s.min ? s.min.v : 0 };
+  return { outer: s.max.v, inner: r.hourly[state.day][state.basis][state.hour] };
+}
+function visible(r) { return state.layers[r.mode]; }
+
+function rebuildOrder() {
+  routeGroup.clearLayers();
+  for (const r of routes) if (visible(r)) { routeGroup.addLayer(r.outer); routeGroup.addLayer(r.inner); }
+  if (state.selected && visible(state.selected)) { state.selected.outer.bringToFront(); state.selected.inner.bringToFront(); }
+}
+
+function styleRoutes() {
+  const sel = state.selected;
+  for (const r of routes) {
+    if (!visible(r)) continue;
+    const { outer, inner } = values(r);
+    const col = C[r.key];
+    const tint = mix(col, C.city, 0.6);
+    const dim = sel && sel !== r;
+    const ow = px(outer);
+    const iw = inner > 0 ? Math.min(px(inner), ow) : 0;
+    r.outer.setStyle({ color: dim ? mix(tint, C.city, 0.65) : tint, weight: ow, opacity: 1 });
+    const dash = r.mode === "express" && iw > 0 ? `${(iw * 0.4 + 3).toFixed(1)} ${(iw * 1.25 + 4).toFixed(1)}` : null;
+    r.inner.setStyle({ color: dim ? mix(col, C.city, 0.75) : col, weight: Math.max(iw, 0.01), opacity: iw > 0 ? 1 : 0, dashArray: dash });
+  }
+  if (sel && visible(sel)) { sel.outer.bringToFront(); sel.inner.bringToFront(); }
+}
+
+function tipHtml(r) {
+  const s = r.stats[state.basis];
+  const now = state.view === "hour" ? ` · ${fmt(r.hourly[state.day][state.basis][state.hour])} at ${fmtRange(state.hour)}` : "";
+  return `<b>${esc(r.short)} ${esc(r.name)}</b><span>${fmt(s.max.v)} busiest · ${s.min ? fmt(s.min.v) : "—"} quietest${now}</span>`;
+}
+
+/* stations and line bullets */
+const stationLayer = L.layerGroup();
+const stationMarkers = D.stations.map(s => {
+  const m = L.circleMarker([s.lat, s.lon], { renderer: stnR, radius: 3.4, weight: 1.6, fillOpacity: 1, interactive: false });
+  m.bindTooltip(esc(s.name), { permanent: true, direction: "right", className: "stn", offset: [5, 0] });
+  stationLayer.addLayer(m);
+  return m;
+});
+const bulletLayer = L.layerGroup().addTo(map);
+for (const r of routes.filter(r => RAIL.has(r.short))) {
+  const longest = r.geom.reduce((a, b) => (b.length > a.length ? b : a));
+  for (const f of [0.12, 0.88]) {
+    const p = longest[Math.floor((longest.length - 1) * f)];
+    const icon = L.divIcon({ className: "mapbullet", html: `<span class="bullet${r.light ? " lt" : ""}" style="--c:var(--${r.key})">${esc(r.short)}</span>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+    L.marker(p, { icon, keyboard: false, title: `Line ${r.short} ${r.name}` }).on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); }).addTo(bulletLayer);
+  }
+}
+function styleStations() { for (const m of stationMarkers) m.setStyle({ color: C.ink, fillColor: C["station-fill"] }); }
+function zoomClasses() {
+  const z = map.getZoom();
+  if (z >= 12.5 && state.layers.subway) { if (!map.hasLayer(stationLayer)) stationLayer.addTo(map); } else if (map.hasLayer(stationLayer)) map.removeLayer(stationLayer);
+  map.getContainer().classList.toggle("zlo", z < 13.5);
+}
+
+/* ---------- legend ---------- */
+function renderAnatomy() {
+  const svg = document.getElementById("anatomy");
+  const col = C.abus, tint = mix(col, C.city, 0.6);
+  svg.innerHTML = `<rect x="0" y="0" width="96" height="44" rx="6" fill="${C.city}"/>
+    <line x1="14" y1="22" x2="82" y2="22" stroke="${tint}" stroke-width="22" stroke-linecap="round"/>
+    <line x1="14" y1="22" x2="82" y2="22" stroke="${col}" stroke-width="8" stroke-linecap="round"/>`;
+}
+function renderWidthKey() {
+  const vals = [500, 2000, 10000, 25000];
+  const html = vals.map(v => {
+    const w = Math.min(px(v), 40);
+    const h = Math.max(w + 4, 12);
+    return `<svg width="84" height="${h.toFixed(0)}" viewBox="0 0 84 ${h.toFixed(0)}" aria-hidden="true"><line x1="${w / 2 + 1}" y1="${h / 2}" x2="${83 - w / 2}" y2="${h / 2}" stroke="${C["ink-3"]}" stroke-width="${w.toFixed(2)}" stroke-linecap="round"/></svg><span class="v">${fmt(v)} passengers/hr${px(v) > 40 ? " (drawn wider)" : ""}</span>`;
+  }).join("");
+  document.getElementById("wkey").innerHTML = html;
+  document.getElementById("scale-hint").textContent = state.scale === "sqrt"
+    ? "Width follows the square root of capacity so bus routes stay readable. Compare numbers, not widths."
+    : "Width is proportional to capacity: a line twice as wide carries twice as many people.";
+}
+function renderVehicleKey() {
+  const L_ = D.loads;
+  const rows = [
+    ["Rapid transit (per train)"],
+    ["line1", "Line 1 · 6-car TR", L_.TR6, true], ["line2", "Line 2 · 6-car T1", L_.T1_6], ["line4", "Line 4 · 4-car TR", L_.TR4],
+    ["line5", "Line 5 · 2-car LRT", L_.LFLRV], ["line6", "Line 6 · 48 m LRV", L_.LRV],
+    ["Surface (per vehicle)"],
+    ["streetcar", "Streetcar · 30 m", L_.LFsc], ["abus", "Articulated bus · 18 m", L_.ABus], ["bus", "Bus · 12 m", L_.Bus],
+    ["community", "Community bus", L_.CB], ["express", "Express (dashed core)", null],
+  ];
+  document.getElementById("vkey").innerHTML = rows.map(r => {
+    if (r.length === 1) return `<li><span class="vgroup">${r[0]}</span></li>`;
+    const [k, label, load] = r;
+    const sw = k.startsWith("line") ? `<span class="bullet${k === "line1" ? " lt" : ""}" style="--c:var(--${k});min-width:20px;height:20px;font-size:11px">${k.slice(4)}</span>`
+      : k === "express" ? `<span class="sw dash" style="--c:var(--ink-2)"></span>` : `<span class="sw" style="--c:var(--${k})"></span>`;
+    const l = load ? `${fmt(load.peak)} / ${fmt(load.off)}${load.basis === "DERIVED" ? "*" : ""}` : "";
+    return `<li><span class="n">${sw}${esc(label.replace(/^Line \d · /, ""))}</span><span class="l">${l}</span></li>`;
+  }).join("") + `<li><span class="hint" style="grid-column:1/-1">Peak / off-peak planning load. * Derived: see Method &amp; sources.</span></li>`;
+}
+
+/* ---------- chips ---------- */
+const chips = document.getElementById("chips");
+chips.innerHTML = MODES.map(([k, label]) => `<label class="chip"><input type="checkbox" id="layer-${k}" ${state.layers[k] ? "checked" : ""}><span>${label}</span></label>`).join("");
+chips.addEventListener("change", e => {
+  const k = e.target.id.replace("layer-", "");
+  state.layers[k] = e.target.checked;
+  if (state.selected && !visible(state.selected)) select(null);
+  rebuildOrder(); styleRoutes(); renderList(); zoomClasses();
+  bulletLayer.eachLayer(m => m.getElement() && (m.getElement().style.display = state.layers.subway || state.layers.lrt ? "" : "none"));
+});
+
+/* ---------- list ---------- */
+const listEl = document.getElementById("list");
+function listValue(r) { return state.view === "hour" ? r.hourly[state.day][state.basis][state.hour] : r.stats[state.basis].max.v; }
+function renderList() {
+  const q = state.query.trim().toLowerCase();
+  const items = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q)))
+    .sort((a, b) => listValue(b) - listValue(a) || a.short.localeCompare(b.short, "en", { numeric: true }));
+  document.getElementById("count").textContent = `${items.length} of ${routes.length}`;
+  document.getElementById("cols-num").textContent = state.view === "hour" ? `${fmtRange(state.hour)} / busiest` : "Busiest / quietest";
+  const top = unitWidth(MAXCAP);
+  listEl.innerHTML = items.length ? items.map(r => {
+    const s = r.stats[state.basis];
+    const a = state.view === "hour" ? r.hourly[state.day][state.basis][state.hour] : s.max.v;
+    const b = state.view === "hour" ? s.max.v : (s.min ? s.min.v : 0);
+    const outerV = state.view === "hour" ? s.max.v : s.max.v, innerV = state.view === "hour" ? a : b;
+    const col = C[r.key];
+    return `<li><button type="button" class="row" data-id="${esc(r.id)}" aria-pressed="${state.selected === r}" style="--c:${col};--tint:${mix(col, C.city, 0.6)}">
+      <span class="bullet${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
+      <span class="rn">${esc(r.name)}<small>${MODE_LABEL[r.mode]} · ${esc(VT_SHORT[r.vehicle] || r.vehicle)}</small></span>
+      <span class="bar" aria-hidden="true"><i style="width:${(100 * unitWidth(outerV) / top).toFixed(1)}%"></i><b style="width:${(100 * unitWidth(innerV) / top).toFixed(1)}%"></b></span>
+      <span class="nums">${fmt(a)}<small>${b ? fmt(b) : "—"}</small></span>
+    </button></li>`;
+  }).join("") : `<li class="empty">No routes match “${esc(state.query)}” in the networks shown.</li>`;
+}
+listEl.addEventListener("click", e => {
+  const b = e.target.closest(".row");
+  if (b) select(byId.get(b.dataset.id), true);
+});
+document.getElementById("q").addEventListener("input", e => { state.query = e.target.value; renderList(); });
+
+/* ---------- selection & drawer ---------- */
+const drawer = document.getElementById("drawer");
+function select(r, fly) {
+  state.selected = r;
+  styleRoutes();
+  renderDrawer();
+  listEl.querySelectorAll(".row").forEach(b => b.setAttribute("aria-pressed", String(!!r && b.dataset.id === r.id)));
+  try { history.replaceState(null, "", r ? "#route=" + encodeURIComponent(r.short) : location.pathname + location.search); } catch (_) {}
+  if (r && fly) {
+    const wide = window.innerWidth > 760;
+    map.flyToBounds(r.outer.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [wide ? 420 : 40, wide ? 40 : 40], maxZoom: 14, duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
+  }
+}
+
+function unitWord(r, n) {
+  const one = n === 1;
+  if (["1", "2", "4", "5"].includes(r.short)) return one ? "train" : "trains";
+  if (r.short === "6") return one ? "LRV" : "LRVs";
+  return one ? "vehicle" : "vehicles";
+}
+function dominant(counter) { let best = null, n = -1; for (const [k, v] of Object.entries(counter || {})) if (v > n) { best = k; n = v; } return best; }
+
+function vehiclesUsed(r) {
+  const tally = {};
+  for (const d of DAYS) for (const c of r.vehicles[d]) for (const [k, v] of Object.entries(c)) tally[k] = (tally[k] || 0) + v;
+  return Object.entries(tally).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+}
+
+function renderDrawer() {
+  const r = state.selected;
+  if (!r) { drawer.hidden = true; drawer.innerHTML = ""; return; }
+  drawer.hidden = false;
+  const s = r.stats[state.basis];
+  const used = vehiclesUsed(r);
+  const col = C[r.key], tint = mix(col, C.city, 0.6);
+  const each = (v, n) => n ? ` ≈ ${fmt(v / n)} each` : "";
+  const minFig = s.min
+    ? `<span class="v">${fmt(s.min.v)}<u>pph</u></span><span class="w">${DAY_LABEL[s.min.day]} ${fmtRange(s.min.hour)} · ${s.min.trips} ${unitWord(r, s.min.trips)}${each(s.min.v, s.min.trips)}</span>`
+    : `<span class="v">—</span><span class="w">Not enough regular hours to measure</span>`;
+
+  // vehicle table
+  const uniform = used.length === 1;
+  let vehHtml;
+  if (uniform) {
+    const L0 = D.loads[used[0]];
+    vehHtml = `<p>${esc(L0.label)} in every period: <span class="num">${fmt(L0.peak)}</span> peak / <span class="num">${fmt(L0.off)}</span> off-peak passengers.</p>`;
+  } else {
+    const rowsH = DAYS.map(d => `<tr><th scope="row">${DAY_LABEL[d].slice(0, 3)}</th>${r.vehicles[d].map((c, p) => {
+      const v = dominant(c);
+      return `<td>${v ? esc(VT_SHORT[v] || v) : "—"}<small>${esc(D.periodNames[d][p])}</small></td>`;
+    }).join("")}</tr>`).join("");
+    vehHtml = `<div class="tablewrap"><table class="vt"><tbody>${rowsH}</tbody></table></div>
+      <p>${used.map(v => `${esc(D.loads[v].label)}: <span class="num">${fmt(D.loads[v].peak)}</span> / <span class="num">${fmt(D.loads[v].off)}</span>`).join(" · ")}</p>`;
+  }
+
+  const branches = Object.entries(r.branches || {});
+  const pages = r.summaryPages || [];
+  const srcItems = [
+    `<a href="${S.gtfs.u}" target="_blank" rel="noopener">${esc(S.gtfs.t)}</a>. Route ID <span class="num">${esc(r.id)}</span>: ${DAYS.map(d => `${fmt(r.trips[d] || 0)} ${DAY_LABEL[d].toLowerCase()} trips`).join(", ")} on the sample days.`,
+    pages.length && !RAIL.has(r.short) || pages.length ? `<a href="${SUMMARY_URL}#page=${pages[0] || 1}" target="_blank" rel="noopener">${esc(S.summary.t)}</a>, PDF p. ${pages.join(", ")}.` : `${esc(S.summary.t)}: route not listed; default vehicle for its mode used.`,
+    ...[...new Set(used.flatMap(v => LOAD_SOURCES[v] || []))].map(k => `<a href="${S[k].u}" target="_blank" rel="noopener">${esc(S[k].t)}</a>`),
+  ];
+  if (r.short === "5") srcItems.push(`<a href="${S.line5open.u}" target="_blank" rel="noopener">${esc(S.line5open.t)}</a>`);
+  if (r.short === "6") srcItems.push(`<a href="${S.line6open.u}" target="_blank" rel="noopener">${esc(S.line6open.t)}</a>`);
+
+  drawer.innerHTML = `
+    <header class="dh">
+      <span class="bullet lg${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
+      <div><h2>${esc(r.name)}</h2><p>${MODE_LABEL[r.mode]} · ${used.map(v => esc(VT_SHORT[v] || v)).join(", ")}</p></div>
+      <button type="button" class="x" id="dclose" aria-label="Close route details">×</button>
+    </header>
+    ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
+    <div class="figs">
+      <div class="fig" style="--c:${col};--tint:${tint}"><span class="k"><i class="t"></i>Busiest hour</span><span class="v">${fmt(s.max.v)}<u>pph</u></span><span class="w">${DAY_LABEL[s.max.day]} ${fmtRange(s.max.hour)} · ${s.max.trips} ${unitWord(r, s.max.trips)}${each(s.max.v, s.max.trips)}</span></div>
+      <div class="fig" style="--c:${col}"><span class="k"><i></i>Quietest regular hour</span>${minFig}</div>
+    </div>
+    <figure class="chart">
+      <div class="legendrow" aria-hidden="true">
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${col}" stroke-width="2.5"/></svg>Weekday</span>
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-2"]}" stroke-width="2" stroke-dasharray="5 3"/></svg>Saturday</span>
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="2" stroke-dasharray="1.5 3" stroke-linecap="round"/></svg>Sunday</span>
+      </div>
+      ${chartSvg(r)}
+      <p class="readout" id="readout">Passengers per hour at the busiest point. Hover or drag across the chart.</p>
+    </figure>
+    <div class="dsec"><h3>Vehicles</h3>${vehHtml}</div>
+    ${branches.length > 1 ? `<div class="dsec"><h3>Branches</h3><ul class="br">${branches.map(([b, d]) => `<li><b>${esc(b)}</b>${esc(d)}</li>`).join("")}</ul></div>` : ""}
+    <div class="dsec"><h3>Sources for this route</h3><ol class="src">${srcItems.map(i => `<li>${i}</li>`).join("")}</ol></div>`;
+  document.getElementById("dclose").addEventListener("click", () => select(null));
+  wireChart(r);
+}
+
+/* ---------- hourly chart ---------- */
+const ORDER = Array.from({ length: 24 }, (_, i) => (i + 4) % 24); // service day: 4 AM → 3 AM
+const CH = { W: 340, H: 158, l: 38, r: 8, t: 8, b: 22 };
+function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); for (const f of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (f * p >= v) return f * p; return 10 * p; }
+function chartSvg(r) {
+  const series = DAYS.map(d => ORDER.map(h => r.hourly[d][state.basis][h]));
+  const ymax = niceMax(Math.max(1, ...series.flat()));
+  const x = i => CH.l + i * (CH.W - CH.l - CH.r) / 23;
+  const y = v => CH.t + (CH.H - CH.t - CH.b) * (1 - v / ymax);
+  const col = C[r.key];
+  const grid = [0, ymax / 2, ymax].map(v => `<line x1="${CH.l}" x2="${CH.W - CH.r}" y1="${y(v)}" y2="${y(v)}" stroke="${C.rule}" stroke-width="1"/><text x="${CH.l - 6}" y="${y(v) + 3.5}" text-anchor="end">${compact(v)}</text>`).join("");
+  const xt = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]].map(([i, t]) => `<text x="${x(i)}" y="${CH.H - 6}" text-anchor="middle">${t}</text>`).join("");
+  const line = arr => arr.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const area = `${line(series[0])}L${x(23)},${y(0)}L${x(0)},${y(0)}Z`;
+  const s = r.stats[state.basis];
+  const mark = (p, hollow) => p ? `<circle cx="${x(ORDER.indexOf(p.hour)).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="4.5" fill="${hollow ? C.panel : col}" stroke="${hollow ? col : C.panel}" stroke-width="2"/>` : "";
+  const hl = state.view === "hour" ? `<rect x="${(x(ORDER.indexOf(state.hour)) - 5).toFixed(1)}" y="${CH.t}" width="10" height="${CH.H - CH.t - CH.b}" fill="${C["panel-2"]}"/>` : "";
+  return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for route ${esc(r.short)}: weekday, Saturday and Sunday">
+    ${hl}${grid}${xt}
+    <path d="${area}" fill="${col}" fill-opacity="0.12"/>
+    <path d="${line(series[2])}" fill="none" stroke="${C["ink-3"]}" stroke-width="2" stroke-dasharray="1.5 3.5" stroke-linecap="round"/>
+    <path d="${line(series[1])}" fill="none" stroke="${C["ink-2"]}" stroke-width="2" stroke-dasharray="5 3"/>
+    <path d="${line(series[0])}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>
+    ${mark(s.max, false)}${mark(s.min, true)}
+    <line id="xh" x1="0" x2="0" y1="${CH.t}" y2="${CH.H - CH.b}" stroke="${C.ink}" stroke-width="1" opacity="0"/>
+    <rect id="hit" x="${CH.l}" y="0" width="${CH.W - CH.l - CH.r}" height="${CH.H}" fill="transparent"/>
+  </svg>`;
+}
+function wireChart(r) {
+  const svg = document.getElementById("chart"), hit = document.getElementById("hit"), xh = document.getElementById("xh"), out = document.getElementById("readout");
+  if (!svg) return;
+  const move = e => {
+    const box = svg.getBoundingClientRect();
+    const sx = (e.clientX - box.left) * CH.W / box.width;
+    const i = Math.max(0, Math.min(23, Math.round((sx - CH.l) / ((CH.W - CH.l - CH.r) / 23))));
+    const h = ORDER[i];
+    const xx = CH.l + i * (CH.W - CH.l - CH.r) / 23;
+    xh.setAttribute("x1", xx); xh.setAttribute("x2", xx); xh.setAttribute("opacity", "0.5");
+    const v = d => r.hourly[d][state.basis][h], n = d => r.hourly[d].n[h];
+    out.textContent = `${fmtRange(h)} · Wkdy ${fmt(v("weekday"))} (${n("weekday")}) · Sat ${fmt(v("saturday"))} (${n("saturday")}) · Sun ${fmt(v("sunday"))} (${n("sunday")})`;
+  };
+  hit.addEventListener("pointermove", move);
+  hit.addEventListener("pointerdown", move);
+  hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour at the busiest point, with vehicles per hour in brackets."; });
+}
+
+/* ---------- controls ---------- */
+function setPressed(ids, on) { for (const id of ids) document.getElementById(id).setAttribute("aria-pressed", String(id === on)); }
+function basisHint() {
+  document.getElementById("basis-hint").textContent = state.basis === "std"
+    ? "Every trip counts at its vehicle's peak planning load: 51 on a 12 m bus, 77 articulated, 130 streetcar, 1,100 on a Line 1 train."
+    : "Peak loads 6–9 AM and 3–7 PM on weekdays; the off-peak seated standard at all other times (35 on a 12 m bus, 540 on a Line 1 train).";
+}
+function refresh({ order = false, drawerToo = true } = {}) {
+  if (order) rebuildOrder();
+  styleRoutes(); renderList(); renderWidthKey();
+  if (drawerToo) renderDrawer();
+}
+document.getElementById("v-range").onclick = () => { state.view = "range"; stopPlay(); setPressed(["v-range", "v-hour"], "v-range"); document.getElementById("hourbar").hidden = true; document.getElementById("core-def").textContent = "quietest regular hour (6 AM – 1 AM)"; refresh(); };
+document.getElementById("v-hour").onclick = () => { state.view = "hour"; setPressed(["v-range", "v-hour"], "v-hour"); document.getElementById("hourbar").hidden = false; document.getElementById("core-def").textContent = "capacity in the chosen hour"; refresh(); };
+document.getElementById("b-std").onclick = () => { state.basis = "std"; setPressed(["b-std", "b-period"], "b-std"); basisHint(); refresh(); };
+document.getElementById("b-period").onclick = () => { state.basis = "period"; setPressed(["b-std", "b-period"], "b-period"); basisHint(); refresh(); };
+document.getElementById("s-sqrt").onclick = () => { state.scale = "sqrt"; setPressed(["s-sqrt", "s-lin"], "s-sqrt"); refresh({ drawerToo: false }); };
+document.getElementById("s-lin").onclick = () => { state.scale = "linear"; setPressed(["s-sqrt", "s-lin"], "s-lin"); refresh({ drawerToo: false }); };
+
+const hourEl = document.getElementById("hour"), hourOut = document.getElementById("hour-out");
+function setHour(h) { state.hour = h; hourEl.value = h; hourOut.textContent = fmtRange(h); refresh(); }
+hourEl.addEventListener("input", () => { stopPlay(); setHour(+hourEl.value); });
+document.querySelectorAll("#hourbar [data-day]").forEach(b => b.addEventListener("click", () => {
+  state.day = b.dataset.day;
+  document.querySelectorAll("#hourbar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+  refresh();
+}));
+let timer = null;
+const playBtn = document.getElementById("play");
+function stopPlay() { if (timer) { clearInterval(timer); timer = null; playBtn.innerHTML = '<svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg>'; playBtn.setAttribute("aria-label", "Play through the day"); } }
+playBtn.addEventListener("click", () => {
+  if (timer) return stopPlay();
+  playBtn.innerHTML = '<svg viewBox="0 0 14 14"><path d="M2.5 1.5h3.2v11H2.5zM8.3 1.5h3.2v11H8.3z"/></svg>';
+  playBtn.setAttribute("aria-label", "Pause");
+  timer = setInterval(() => setHour((state.hour + 1) % 24), 900);
+});
+
+document.getElementById("open-method").addEventListener("click", () => document.getElementById("method").showModal());
+document.getElementById("close-method").addEventListener("click", () => document.getElementById("method").close());
+
+/* method dialog content */
+(function methodContent() {
+  const order = ["TR6", "T1_6", "TR4", "LFLRV", "LRV", "LFsc", "ABus", "Bus", "CB"];
+  document.getElementById("loads-table").innerHTML = `<thead><tr><th>Vehicle</th><th class="num">Peak</th><th class="num">Off-peak</th><th>Basis</th></tr></thead><tbody>${order.map(k => {
+    const l = D.loads[k];
+    const tag = l.basis === "DERIVED" ? '<span class="tag d">Derived</span>' : `<span class="tag">${esc(l.basis)}</span>`;
+    return `<tr><td>${esc(l.label)}</td><td class="num">${fmt(l.peak)}</td><td class="num">${fmt(l.off)}</td><td>${tag}</td></tr>`;
+  }).join("")}</tbody>`;
+  document.getElementById("all-sources").innerHTML = Object.values(S).map(s => `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")
+    + `<li>Data built ${esc(D.generated)} from the GTFS feed valid ${esc(D.feed.start)}–${esc(D.feed.end)}.</li>`;
+})();
+
+/* ---------- theme ---------- */
+function retheme() { readTokens(); styleBase(); styleStations(); styleRoutes(); renderAnatomy(); renderWidthKey(); renderList(); renderDrawer(); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+map.on("zoomend", () => { styleRoutes(); renderWidthKey(); zoomClasses(); });
+
+/* ---------- boot ---------- */
+if (bm) map.fitBounds(base.city.getBounds(), { padding: [12, 12] }); else map.setView([43.715, -79.39], 11);
+basisHint(); styleBase(); styleStations(); rebuildOrder(); styleRoutes();
+renderAnatomy(); renderWidthKey(); renderVehicleKey(); renderList(); zoomClasses();
+const m = location.hash.match(/route=([^&]+)/);
+if (m) { const r = routes.find(x => x.short === decodeURIComponent(m[1])); if (r) select(r, true); }
+})();
+</script>
+</body>
+</html>
