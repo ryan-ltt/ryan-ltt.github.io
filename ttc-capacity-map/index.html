@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>TTC Capacity Map</title>
-<meta name="description" content="Every TTC route drawn as wide as the passengers per hour its schedule can carry.">
+<meta name="description" content="Every TTC route drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
@@ -92,15 +92,12 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .wkey{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 12px}
 .wkey svg{display:block;overflow:visible}
 .wkey .v{font:500 12.5px/1 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
-.anatomy{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;font-size:13px;color:var(--ink-2)}
-.anatomy p{margin:0}
-.anatomy b{color:var(--ink);font-weight:600}
 .vkey{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:13.5px}
 .vkey li{display:contents}
 .vkey .n{display:flex;align-items:center;gap:8px;color:var(--ink)}
 .vkey .l{font:500 12px/1.6 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}
 .sw{width:22px;height:6px;border-radius:3px;background:var(--c);flex:none}
-.sw.dash{background:repeating-linear-gradient(90deg,var(--c) 0 5px,transparent 5px 9px)}
+.sw.dash{border-radius:0;background:repeating-linear-gradient(90deg,var(--c) 0 8px,transparent 8px 11px)}
 .bullet{--c:var(--bus);display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 5px;border-radius:999px;background:var(--c);color:#fff;font:600 12px/1 var(--font-display);letter-spacing:.01em;flex:none}
 .bullet.lt{color:#172024}
 .bullet.sq{border-radius:5px}
@@ -108,16 +105,15 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .vgroup{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);grid-column:1/-1;margin-top:6px}
 
 /* route list */
-.routes{padding:16px 0 0;display:grid;gap:10px;flex:1}
+.routes{padding:16px 0 0;display:grid;gap:10px;flex:1;align-content:start}
 .rhead{padding:0 20px;display:grid;gap:8px}
-.rhead .top{display:flex;justify-content:space-between;align-items:baseline}
-.rhead .count{font-size:12.5px;color:var(--ink-3)}
+.rhead .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.rhead .count{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
 #q{width:100%;border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:7px 10px;font-size:14px}
 #q::placeholder{color:var(--ink-3)}
-.cols{display:grid;grid-template-columns:1fr 92px;padding:0 20px;font-size:11.5px;color:var(--ink-3)}
-.cols span:last-child{text-align:right}
+.cols{display:grid;grid-template-columns:1fr auto;padding:0 20px;font-size:11.5px;color:var(--ink-3)}
 #list{list-style:none;margin:0;padding:0 8px 12px}
-.row{width:100%;display:grid;grid-template-columns:auto 1fr 92px;grid-template-rows:auto auto;column-gap:10px;row-gap:4px;align-items:center;border:0;background:transparent;text-align:left;padding:7px 12px;border-radius:8px;cursor:pointer}
+.row{width:100%;display:grid;grid-template-columns:auto 1fr 76px;grid-template-rows:auto auto;column-gap:10px;row-gap:4px;align-items:center;border:0;background:transparent;text-align:left;padding:7px 12px;border-radius:8px;cursor:pointer}
 .row:hover{background:var(--panel-2)}
 .row[aria-pressed="true"]{background:var(--panel-2);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .row .bullet{grid-row:1/3}
@@ -125,10 +121,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .row .rn small{display:block;font-weight:400;font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .nums{grid-row:1/3;grid-column:3;text-align:right;font:500 13px/1.25 var(--font-mono);font-variant-numeric:tabular-nums}
 .row .nums small{display:block;color:var(--ink-3);font-size:11.5px}
-.row .bar{grid-column:2;height:6px;position:relative;border-radius:3px;background:transparent}
-.row .bar i,.row .bar b{position:absolute;left:0;top:0;height:100%;border-radius:3px}
-.row .bar i{background:var(--tint)}
-.row .bar b{background:var(--c);top:1.5px;height:3px}
+.row .bar{grid-column:2;height:4px;border-radius:2px;background:var(--c);min-width:2px}
 .empty{padding:12px 20px;color:var(--ink-3);font-size:14px}
 
 .railfoot{padding:14px 20px 18px;border-top:1px solid var(--rule);display:grid;gap:8px;font-size:12.5px;color:var(--ink-3)}
@@ -138,8 +131,18 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 a{color:var(--ink);text-decoration-color:var(--ink-3);text-underline-offset:2px}
 a:hover{text-decoration-color:var(--ink)}
 
+/* ---- time bar ---- */
+.timebar{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:800;background:var(--panel);box-shadow:var(--shadow);border-radius:12px;padding:10px 16px 8px;display:grid;grid-template-columns:auto auto 1fr auto;gap:14px;align-items:center;width:min(720px,calc(100% - 24px))}
+.timebar .seg{grid-auto-columns:auto}
+.timebar output{font:500 16px/1 var(--font-mono);font-variant-numeric:tabular-nums;min-width:8.5ch;text-align:right}
+.slider{position:relative;padding-bottom:16px}
+#hour{width:100%;margin:0;accent-color:var(--ink);display:block}
+.ticks span{position:absolute;bottom:0;transform:translateX(-50%);font:10.5px/1 var(--font-mono);color:var(--ink-3);white-space:nowrap}
+.play{border:0;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--panel);cursor:pointer;display:grid;place-items:center}
+.play svg{width:14px;height:14px;fill:currentColor}
+
 /* ---- drawer ---- */
-.drawer{position:absolute;top:12px;right:12px;width:376px;max-width:calc(100% - 24px);max-height:calc(100% - 24px);overflow-y:auto;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);z-index:900;padding:16px 18px 18px;display:grid;gap:14px;align-content:start}
+.drawer{position:absolute;top:12px;right:12px;width:376px;max-width:calc(100% - 24px);max-height:calc(100% - 110px);overflow-y:auto;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);z-index:900;padding:16px 18px 18px;display:grid;gap:14px;align-content:start}
 .dh{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
 .dh h2{font-size:21px;line-height:1.1;font-weight:600}
 .dh p{margin:2px 0 0;font-size:13px;color:var(--ink-3)}
@@ -147,14 +150,11 @@ a:hover{text-decoration-color:var(--ink)}
 .x:hover{color:var(--ink)}
 .note{margin:0;font-size:13px;padding:8px 10px;border-radius:8px;background:var(--panel-2);color:var(--ink-2)}
 .note b{color:var(--ink)}
-.figs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fig{display:grid;gap:3px;align-content:start}
-.fig .k{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:6px}
-.fig .k i{width:14px;height:8px;border-radius:2px;background:var(--c)}
-.fig .k i.t{background:var(--tint)}
-.fig .v{font:500 26px/1.05 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.fig .v u{text-decoration:none;font:500 12px/1 var(--font-body);color:var(--ink-3);margin-left:4px;letter-spacing:0}
-.fig .w{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.fig .k{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.fig .v{font:500 30px/1.05 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.fig .v u{text-decoration:none;font:500 13px/1 var(--font-body);color:var(--ink-3);margin-left:5px;letter-spacing:0}
+.fig .w{font-size:13px;color:var(--ink-2);line-height:1.35}
 .chart{margin:0;display:grid;gap:6px}
 .chart svg{width:100%;height:auto;display:block;touch-action:none}
 .chart text{font:11px var(--font-mono);fill:var(--ink-3)}
@@ -174,14 +174,6 @@ a:hover{text-decoration-color:var(--ink)}
 .br b{font-family:var(--font-mono);font-weight:500;color:var(--ink);display:inline-block;min-width:3.2em}
 .src{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:13px;color:var(--ink-2)}
 .src li::marker{font:500 11px var(--font-mono);color:var(--ink-3)}
-
-/* ---- hour bar ---- */
-.hourbar{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:800;background:var(--panel);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;width:min(640px,calc(100% - 24px))}
-.hourbar .seg{grid-auto-columns:auto}
-.hourbar output{font:500 15px/1 var(--font-mono);font-variant-numeric:tabular-nums;min-width:8.5ch;text-align:right}
-#hour{width:100%;accent-color:var(--ink)}
-.play{border:0;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--panel);cursor:pointer;display:grid;place-items:center}
-.play svg{width:14px;height:14px;fill:currentColor}
 
 /* ---- leaflet overrides ---- */
 .leaflet-container{font:13px/1.4 var(--font-body);background:var(--land)}
@@ -220,12 +212,12 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
 @media (max-width: 760px){
   .app{display:flex;flex-direction:column;height:auto}
-  .stage{order:-1;height:62vh;flex:none}
+  .stage{order:-1;height:66vh;flex:none}
   .rail{border-right:0;border-top:1px solid var(--rule);overflow:visible}
   .brand h1{font-size:26px}
   .drawer{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-width:none;max-height:72vh;border-radius:14px 14px 0 0;z-index:1200}
-  .hourbar{grid-template-columns:auto 1fr auto;bottom:10px}
-  .hourbar .seg{grid-column:1/-1}
+  .timebar{grid-template-columns:auto 1fr auto;bottom:10px;gap:10px 12px;padding:10px 12px 8px}
+  .timebar .seg{grid-column:1/-1}
   .mwrap{padding:18px 16px 22px}
 }
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
@@ -237,19 +229,12 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
   <aside class="rail" id="rail" aria-label="Map controls and route list">
     <header class="brand">
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
-      <p class="eyebrow" id="eyebrow">TTC schedule · Sept 6 – Oct 31, 2026</p>
+      <p class="eyebrow">TTC schedule · Sept 6 – Oct 31, 2026</p>
       <h1><span class="mark" aria-hidden="true">TTC</span>Capacity Map</h1>
-      <p class="dek">Every route is drawn as wide as the <b>passengers per hour</b> its schedule can carry. The pale outer band is the busiest hour of the week; the solid core is the quietest regular hour.</p>
+      <p class="dek">Every route is drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the network through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
-      <div class="ctl">
-        <span class="lab" id="lab-view">Show</span>
-        <div class="seg" role="group" aria-labelledby="lab-view">
-          <button type="button" id="v-range" aria-pressed="true">Busiest vs quietest</button>
-          <button type="button" id="v-hour" aria-pressed="false">A single hour</button>
-        </div>
-      </div>
       <div class="ctl">
         <span class="lab" id="lab-basis">Passengers per vehicle</span>
         <div class="seg" role="group" aria-labelledby="lab-basis">
@@ -273,21 +258,17 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
     </section>
 
     <section class="section" aria-label="Legend">
-      <span class="lab">Reading the lines</span>
-      <div class="anatomy">
-        <svg id="anatomy" width="96" height="44" viewBox="0 0 96 44" aria-hidden="true"></svg>
-        <p><b>Outer band</b> busiest scheduled hour.<br><b>Core</b> <span id="core-def">quietest regular hour (6 AM – 1 AM)</span>.<br><b>Dashed core</b> express route.</p>
-      </div>
-      <div class="wkey" id="wkey" aria-label="Line width scale at the current zoom"></div>
+      <span class="lab">Line width at this zoom</span>
+      <div class="wkey" id="wkey"></div>
       <ul class="vkey" id="vkey"></ul>
     </section>
 
     <section class="routes" aria-label="Routes ranked by capacity">
       <div class="rhead">
-        <div class="top"><label class="lab" for="q">Routes by capacity</label><span class="count" id="count"></span></div>
+        <div class="top"><label class="lab" for="q" id="list-title">Routes by capacity</label><span class="count" id="count"></span></div>
         <input id="q" type="search" placeholder="Route number or name" autocomplete="off">
       </div>
-      <div class="cols"><span>Route</span><span id="cols-num">Busiest / quietest</span></div>
+      <div class="cols"><span>Route</span><span>Passengers / hr</span></div>
       <ol id="list"></ol>
     </section>
 
@@ -299,14 +280,17 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
   <main class="stage">
     <div id="map" role="application" aria-label="Map of TTC routes drawn by capacity"></div>
-    <div class="hourbar" id="hourbar" hidden>
+    <div class="timebar" id="timebar">
       <div class="seg" role="group" aria-label="Day of week">
         <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
         <button type="button" data-day="saturday" aria-pressed="false">Sat</button>
         <button type="button" data-day="sunday" aria-pressed="false">Sun</button>
       </div>
       <button type="button" class="play" id="play" aria-label="Play through the day"><svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg></button>
-      <input type="range" id="hour" min="0" max="23" step="1" value="8" aria-label="Hour of day">
+      <div class="slider">
+        <input type="range" id="hour" min="0" max="23" step="1" value="4" aria-label="Hour of day">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+      </div>
       <output id="hour-out" for="hour">8–9 AM</output>
     </div>
     <section class="drawer" id="drawer" hidden aria-live="polite"></section>
@@ -325,13 +309,12 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
     <section class="dsec">
       <h3>What a line's width measures</h3>
-      <p>Scheduled capacity: the most passengers a route's timetable can move past its busiest point in one clock hour, at the TTC's own planning load for each vehicle. It is not ridership, and it is not a crush-load maximum.</p>
+      <p>Scheduled capacity in the chosen hour: the most passengers a route's timetable can move past its busiest point in that clock hour, at the TTC's own planning load for each vehicle. It is not ridership, and it is not a crush-load maximum.</p>
       <div class="formula">capacity (pph) = Σ trips departing the busiest stop in that hour × planning load of each trip's vehicle</div>
       <ul>
         <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins. That is where branches and short-turns overlap, which is the TTC's "maximum load point" idea applied to supply.</li>
-        <li><b>Outer band</b> = the highest hourly capacity across a sample weekday, Saturday and Sunday.</li>
-        <li><b>Core</b> = the lowest hourly capacity during regular hours (6 AM – 1 AM; Blue Night routes 1 – 6 AM). The first and last operating hour of each day are skipped so start-up and wind-down trips don't count. Peak-only routes use their lowest operating hour.</li>
-        <li><b>Sample days</b> in the schedule's validity window, avoiding holidays: Tuesday Sept 15, Saturday Sept 19 and Sunday Sept 20, 2026.</li>
+        <li><b>Days.</b> Each day type is a real sample day in the schedule's validity window, avoiding holidays: Tuesday Sept 15, Saturday Sept 19 and Sunday Sept 20, 2026.</li>
+        <li><b>Late night.</b> After about 1 AM, subway and daytime routes show only their last trips finishing their runs, so they look thin before disappearing. Overnight service is the Blue Night network, which you can turn on under Networks.</li>
       </ul>
     </section>
 
@@ -350,7 +333,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
     <section class="dsec">
       <h3>Two ways to count a vehicle</h3>
-      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load all day, so the width reflects only how often vehicles come and how big they are. <b>By time of day</b> follows the Service Standards literally: peak loads 6–9 AM and 3–7 PM on weekdays, and the lower off-peak comfort standard at all other times.</p>
+      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load, so the width reflects only how often vehicles come and how big they are. <b>By time of day</b> follows the Service Standards literally: peak loads 6–9 AM and 3–7 PM on weekdays, and the lower off-peak comfort standard at all other times.</p>
     </section>
 
     <section class="dsec">
@@ -414,6 +397,7 @@ const MODES = [
   ["express", "Express bus"], ["community", "Community bus"], ["night", "Blue Night"],
 ];
 const MODE_LABEL = Object.fromEntries(MODES);
+const ORDER = Array.from({ length: 24 }, (_, i) => (i + 4) % 24); // service day: 4 AM → 3 AM
 const nf = new Intl.NumberFormat("en-CA");
 const fmt = v => nf.format(Math.round(v));
 const compact = v => v >= 1000 ? (v / 1000).toFixed(v >= 10000 || v % 1000 === 0 ? 0 : 1) + "k" : String(Math.round(v));
@@ -423,7 +407,6 @@ function fmtRange(h) {
   const a = hr12(h), b = hr12((h + 1) % 24);
   return a.m === b.m ? `${a.n}–${b.n} ${a.m}` : `${a.n} ${a.m}–${b.n} ${b.m}`;
 }
-const fmtHour = h => { const a = hr12(h); return `${a.n} ${a.m}`; };
 
 /* ---------- colour tokens ---------- */
 let C = {};
@@ -446,13 +429,16 @@ const MAXCAP = Math.max(...routes.map(r => r.stats.std.max.v));
 const byId = new Map(routes.map(r => [r.id, r]));
 
 const state = {
-  view: "range", basis: "std", scale: "sqrt", day: "weekday", hour: 8, selected: null, query: "",
+  basis: "std", scale: "sqrt", day: "weekday", hour: 8, selected: null, query: "",
   layers: { subway: true, lrt: true, streetcar: true, bus: true, express: true, community: true, night: false },
 };
+const capAt = r => r.hourly[state.day][state.basis][state.hour];
+const tripsAt = r => r.hourly[state.day].n[state.hour];
+const visible = r => state.layers[r.mode];
 
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 9, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
-L.control.zoom({ position: "bottomright" }).addTo(map);
+L.control.zoom({ position: "topleft" }).addTo(map);
 map.attributionControl.setPrefix(false).addAttribution('Schedule: <a href="https://open.toronto.ca/dataset/ttc-routes-and-schedules/">TTC GTFS</a> · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
 
 map.createPane("base").style.zIndex = 250;
@@ -483,63 +469,57 @@ function zoomFactor() { return Math.pow(2, (map.getZoom() - 11) * 0.32); }
 function unitWidth(cap) { return state.scale === "sqrt" ? Math.sqrt(cap / MAXCAP) : cap / MAXCAP; }
 function px(cap) {
   if (!cap) return 0;
-  const w = 34 * unitWidth(cap) * zoomFactor();
-  return Math.max(state.scale === "sqrt" ? 1.2 : 0.8, w);
+  return Math.max(state.scale === "sqrt" ? 1.2 : 0.8, 34 * unitWidth(cap) * zoomFactor());
 }
 
-/* route layers, thickest first so thin routes stay visible on top */
+/* route layers: drawn thickest-first (by weekly peak) so thin routes stay on top */
 routes.sort((a, b) => b.stats.std.max.v - a.stats.std.max.v);
 const routeGroup = L.layerGroup().addTo(map);
 let hovered = null;
 for (const r of routes) {
-  const o = { renderer: routeR, lineCap: "round", lineJoin: "round", smoothFactor: 1 };
-  r.outer = L.polyline(r.geom, o);
-  r.inner = L.polyline(r.geom, { ...o, interactive: false });
-  r.outer.bindTooltip(() => tipHtml(r), { sticky: true, className: "rtip", direction: "top", offset: [0, -10], opacity: 1 });
-  r.outer.on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); });
-  r.outer.on("mouseover", () => { hovered = r; styleRoute(r); });
-  r.outer.on("mouseout", () => { if (hovered === r) hovered = null; styleRoute(r); });
+  r.line = L.polyline(r.geom, { renderer: routeR, lineJoin: "round", smoothFactor: 1 });
+  r.line.bindTooltip(() => tipHtml(r), { sticky: true, className: "rtip", direction: "top", offset: [0, -10], opacity: 1 });
+  r.line.on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); });
+  r.line.on("mouseover", () => { hovered = r; styleRoute(r); });
+  r.line.on("mouseout", () => { if (hovered === r) hovered = null; styleRoute(r); });
 }
 map.on("click", () => { if (state.selected) select(null); });
 
-function values(r) {
-  const s = r.stats[state.basis];
-  if (state.view === "range") return { outer: s.max.v, inner: s.min ? s.min.v : 0 };
-  return { outer: s.max.v, inner: r.hourly[state.day][state.basis][state.hour] };
-}
-function visible(r) { return state.layers[r.mode]; }
-
 function rebuildOrder() {
+  // Routes not running in this hour are removed entirely so they can't be hovered.
   routeGroup.clearLayers();
-  for (const r of routes) if (visible(r)) { routeGroup.addLayer(r.outer); routeGroup.addLayer(r.inner); }
-  if (state.selected && visible(state.selected)) { state.selected.outer.bringToFront(); state.selected.inner.bringToFront(); }
+  for (const r of routes) if (visible(r) && capAt(r) > 0) routeGroup.addLayer(r.line);
+  const sel = state.selected;
+  if (sel && routeGroup.hasLayer(sel.line)) sel.line.bringToFront();
 }
 
 function styleRoute(r) {
-  if (!visible(r)) return;
-  const sel = state.selected;
-  const { outer, inner } = values(r);
+  if (!routeGroup.hasLayer(r.line)) return;
   const col = C[r.key];
+  const w = px(capAt(r));
   const hot = hovered === r;
-  const tint = mix(col, C.city, hot ? 0.3 : 0.6);  // hovered band darkens toward the route colour
-  const dim = sel && sel !== r && !hot;
-  const ow = px(outer);
-  const iw = inner > 0 ? Math.min(px(inner), ow) : 0;
-  r.outer.setStyle({ color: dim ? mix(tint, C.city, 0.65) : tint, weight: ow, opacity: 1 });
-  const dash = r.mode === "express" && iw > 0 ? `${(iw * 0.4 + 3).toFixed(1)} ${(iw * 1.25 + 4).toFixed(1)}` : null;
-  r.inner.setStyle({ color: dim ? mix(col, C.city, 0.75) : col, weight: Math.max(iw, 0.01), opacity: iw > 0 ? 1 : 0, dashArray: dash });
-}
-
-function styleRoutes() {
-  for (const r of routes) styleRoute(r);
   const sel = state.selected;
-  if (sel && visible(sel)) { sel.outer.bringToFront(); sel.inner.bringToFront(); }
+  const dim = sel && sel !== r && !hot;
+  const express = r.mode === "express";
+  r.line.setStyle({
+    color: hot ? mix(col, C.ink, 0.28) : dim ? mix(col, C.city, 0.72) : col,
+    weight: w,
+    opacity: 1,
+    lineCap: express ? "butt" : "round",
+    dashArray: express ? `${(w * 2 + 6).toFixed(1)} ${Math.max(3, w * 0.55).toFixed(1)}` : null,
+  });
 }
+function styleRoutes() { for (const r of routes) styleRoute(r); }
 
+function unitWord(r, n) {
+  const one = n === 1;
+  if (["1", "2", "4", "5"].includes(r.short)) return one ? "train" : "trains";
+  if (r.short === "6") return one ? "LRV" : "LRVs";
+  return one ? "vehicle" : "vehicles";
+}
 function tipHtml(r) {
-  const s = r.stats[state.basis];
-  const now = state.view === "hour" ? ` · ${fmt(r.hourly[state.day][state.basis][state.hour])} at ${fmtRange(state.hour)}` : "";
-  return `<b>${esc(r.short)} ${esc(r.name)}</b><span>${fmt(s.max.v)} busiest · ${s.min ? fmt(s.min.v) : "—"} quietest${now}</span>`;
+  const n = tripsAt(r);
+  return `<b>${esc(r.short)} ${esc(r.name)}</b><span>${fmt(capAt(r))} passengers/hr · ${n} ${unitWord(r, n)}</span>`;
 }
 
 /* stations and line bullets */
@@ -562,26 +542,20 @@ for (const r of routes.filter(r => RAIL.has(r.short))) {
 function styleStations() { for (const m of stationMarkers) m.setStyle({ color: C.ink, fillColor: C["station-fill"] }); }
 function zoomClasses() {
   const z = map.getZoom();
-  if (z >= 12.5 && state.layers.subway) { if (!map.hasLayer(stationLayer)) stationLayer.addTo(map); } else if (map.hasLayer(stationLayer)) map.removeLayer(stationLayer);
+  const want = z >= 12.5 && (state.layers.subway || state.layers.lrt);
+  if (want && !map.hasLayer(stationLayer)) stationLayer.addTo(map);
+  if (!want && map.hasLayer(stationLayer)) map.removeLayer(stationLayer);
   map.getContainer().classList.toggle("zlo", z < 13.5);
 }
 
 /* ---------- legend ---------- */
-function renderAnatomy() {
-  const svg = document.getElementById("anatomy");
-  const col = C.abus, tint = mix(col, C.city, 0.6);
-  svg.innerHTML = `<rect x="0" y="0" width="96" height="44" rx="6" fill="${C.city}"/>
-    <line x1="14" y1="22" x2="82" y2="22" stroke="${tint}" stroke-width="22" stroke-linecap="round"/>
-    <line x1="14" y1="22" x2="82" y2="22" stroke="${col}" stroke-width="8" stroke-linecap="round"/>`;
-}
 function renderWidthKey() {
   const vals = [500, 2000, 10000, 25000];
-  const html = vals.map(v => {
+  document.getElementById("wkey").innerHTML = vals.map(v => {
     const w = Math.min(px(v), 40);
     const h = Math.max(w + 4, 12);
     return `<svg width="84" height="${h.toFixed(0)}" viewBox="0 0 84 ${h.toFixed(0)}" aria-hidden="true"><line x1="${w / 2 + 1}" y1="${h / 2}" x2="${83 - w / 2}" y2="${h / 2}" stroke="${C["ink-3"]}" stroke-width="${w.toFixed(2)}" stroke-linecap="round"/></svg><span class="v">${fmt(v)} passengers/hr${px(v) > 40 ? " (drawn wider)" : ""}</span>`;
   }).join("");
-  document.getElementById("wkey").innerHTML = html;
   document.getElementById("scale-hint").textContent = state.scale === "sqrt"
     ? "Width follows the square root of capacity so bus routes stay readable. Compare numbers, not widths."
     : "Width is proportional to capacity: a line twice as wide carries twice as many people.";
@@ -590,11 +564,11 @@ function renderVehicleKey() {
   const L_ = D.loads;
   const rows = [
     ["Rapid transit (per train)"],
-    ["line1", "Line 1 · 6-car TR", L_.TR6, true], ["line2", "Line 2 · 6-car T1", L_.T1_6], ["line4", "Line 4 · 4-car TR", L_.TR4],
-    ["line5", "Line 5 · 2-car LRT", L_.LFLRV], ["line6", "Line 6 · 48 m LRV", L_.LRV],
+    ["line1", "6-car TR", L_.TR6], ["line2", "6-car T1", L_.T1_6], ["line4", "4-car TR", L_.TR4],
+    ["line5", "2-car LRT", L_.LFLRV], ["line6", "48 m LRV", L_.LRV],
     ["Surface (per vehicle)"],
     ["streetcar", "Streetcar · 30 m", L_.LFsc], ["abus", "Articulated bus · 18 m", L_.ABus], ["bus", "Bus · 12 m", L_.Bus],
-    ["community", "Community bus", L_.CB], ["express", "Express (dashed core)", null],
+    ["community", "Community bus", L_.CB], ["express", "Express route (dashed)", null],
   ];
   document.getElementById("vkey").innerHTML = rows.map(r => {
     if (r.length === 1) return `<li><span class="vgroup">${r[0]}</span></li>`;
@@ -602,7 +576,7 @@ function renderVehicleKey() {
     const sw = k.startsWith("line") ? `<span class="bullet${k === "line1" ? " lt" : ""}" style="--c:var(--${k});min-width:20px;height:20px;font-size:11px">${k.slice(4)}</span>`
       : k === "express" ? `<span class="sw dash" style="--c:var(--ink-2)"></span>` : `<span class="sw" style="--c:var(--${k})"></span>`;
     const l = load ? `${fmt(load.peak)} / ${fmt(load.off)}${load.basis === "DERIVED" ? "*" : ""}` : "";
-    return `<li><span class="n">${sw}${esc(label.replace(/^Line \d · /, ""))}</span><span class="l">${l}</span></li>`;
+    return `<li><span class="n">${sw}${esc(label)}</span><span class="l">${l}</span></li>`;
   }).join("") + `<li><span class="hint" style="grid-column:1/-1">Peak / off-peak planning load. * Derived: see Method &amp; sources.</span></li>`;
 }
 
@@ -610,36 +584,33 @@ function renderVehicleKey() {
 const chips = document.getElementById("chips");
 chips.innerHTML = MODES.map(([k, label]) => `<label class="chip"><input type="checkbox" id="layer-${k}" ${state.layers[k] ? "checked" : ""}><span>${label}</span></label>`).join("");
 chips.addEventListener("change", e => {
-  const k = e.target.id.replace("layer-", "");
-  state.layers[k] = e.target.checked;
-  if (state.selected && !visible(state.selected)) select(null);
-  rebuildOrder(); styleRoutes(); renderList(); zoomClasses();
+  state.layers[e.target.id.replace("layer-", "")] = e.target.checked;
+  if (state.selected && !visible(state.selected)) state.selected = null;
+  refresh();
+  zoomClasses();
   bulletLayer.eachLayer(m => m.getElement() && (m.getElement().style.display = state.layers.subway || state.layers.lrt ? "" : "none"));
 });
 
 /* ---------- list ---------- */
 const listEl = document.getElementById("list");
-function listValue(r) { return state.view === "hour" ? r.hourly[state.day][state.basis][state.hour] : r.stats[state.basis].max.v; }
 function renderList() {
   const q = state.query.trim().toLowerCase();
-  const items = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q)))
-    .sort((a, b) => listValue(b) - listValue(a) || a.short.localeCompare(b.short, "en", { numeric: true }));
-  document.getElementById("count").textContent = `${items.length} of ${routes.length}`;
-  document.getElementById("cols-num").textContent = state.view === "hour" ? `${fmtRange(state.hour)} / busiest` : "Busiest / quietest";
+  const matches = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q)));
+  const items = matches.filter(r => capAt(r) > 0)
+    .sort((a, b) => capAt(b) - capAt(a) || a.short.localeCompare(b.short, "en", { numeric: true }));
+  const when = `${DAY_LABEL[state.day]}, ${fmtRange(state.hour)}`;
+  document.getElementById("list-title").textContent = `Routes running · ${when}`;
+  document.getElementById("count").textContent = `${items.length} of ${matches.length}`;
   const top = unitWidth(MAXCAP);
   listEl.innerHTML = items.length ? items.map(r => {
-    const s = r.stats[state.basis];
-    const a = state.view === "hour" ? r.hourly[state.day][state.basis][state.hour] : s.max.v;
-    const b = state.view === "hour" ? s.max.v : (s.min ? s.min.v : 0);
-    const outerV = state.view === "hour" ? s.max.v : s.max.v, innerV = state.view === "hour" ? a : b;
-    const col = C[r.key];
-    return `<li><button type="button" class="row" data-id="${esc(r.id)}" aria-pressed="${state.selected === r}" style="--c:${col};--tint:${mix(col, C.city, 0.6)}">
+    const v = capAt(r), n = tripsAt(r);
+    return `<li><button type="button" class="row" data-id="${esc(r.id)}" aria-pressed="${state.selected === r}" style="--c:${C[r.key]}">
       <span class="bullet${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
       <span class="rn">${esc(r.name)}<small>${MODE_LABEL[r.mode]} · ${esc(VT_SHORT[r.vehicle] || r.vehicle)}</small></span>
-      <span class="bar" aria-hidden="true"><i style="width:${(100 * unitWidth(outerV) / top).toFixed(1)}%"></i><b style="width:${(100 * unitWidth(innerV) / top).toFixed(1)}%"></b></span>
-      <span class="nums">${fmt(a)}<small>${b ? fmt(b) : "—"}</small></span>
+      <span class="bar" aria-hidden="true" style="width:${(100 * unitWidth(v) / top).toFixed(1)}%"></span>
+      <span class="nums">${fmt(v)}<small>${n} ${unitWord(r, n)}</small></span>
     </button></li>`;
-  }).join("") : `<li class="empty">No routes match “${esc(state.query)}” in the networks shown.</li>`;
+  }).join("") : `<li class="empty">${matches.length ? `None of these routes run ${esc(when)}.` : `No routes match “${esc(state.query)}” in the networks shown.`}</li>`;
 }
 listEl.addEventListener("click", e => {
   const b = e.target.closest(".row");
@@ -651,24 +622,18 @@ document.getElementById("q").addEventListener("input", e => { state.query = e.ta
 const drawer = document.getElementById("drawer");
 function select(r, fly) {
   state.selected = r;
+  if (r && routeGroup.hasLayer(r.line)) r.line.bringToFront();
   styleRoutes();
   renderDrawer();
   listEl.querySelectorAll(".row").forEach(b => b.setAttribute("aria-pressed", String(!!r && b.dataset.id === r.id)));
-  try { history.replaceState(null, "", r ? "#route=" + encodeURIComponent(r.short) : location.pathname + location.search); } catch (_) {}
+  writeHash();
   if (r && fly) {
     const wide = window.innerWidth > 760;
-    map.flyToBounds(r.outer.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [wide ? 420 : 40, wide ? 40 : 40], maxZoom: 14, duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
+    map.flyToBounds(r.line.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [wide ? 420 : 40, wide ? 110 : 90], maxZoom: 14, duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
   }
 }
 
-function unitWord(r, n) {
-  const one = n === 1;
-  if (["1", "2", "4", "5"].includes(r.short)) return one ? "train" : "trains";
-  if (r.short === "6") return one ? "LRV" : "LRVs";
-  return one ? "vehicle" : "vehicles";
-}
 function dominant(counter) { let best = null, n = -1; for (const [k, v] of Object.entries(counter || {})) if (v > n) { best = k; n = v; } return best; }
-
 function vehiclesUsed(r) {
   const tally = {};
   for (const d of DAYS) for (const c of r.vehicles[d]) for (const [k, v] of Object.entries(c)) tally[k] = (tally[k] || 0) + v;
@@ -679,58 +644,54 @@ function renderDrawer() {
   const r = state.selected;
   if (!r) { drawer.hidden = true; drawer.innerHTML = ""; return; }
   drawer.hidden = false;
-  const s = r.stats[state.basis];
   const used = vehiclesUsed(r);
-  const col = C[r.key], tint = mix(col, C.city, 0.6);
-  const each = (v, n) => n ? ` ≈ ${fmt(v / n)} each` : "";
-  const minFig = s.min
-    ? `<span class="v">${fmt(s.min.v)}<u>pph</u></span><span class="w">${DAY_LABEL[s.min.day]} ${fmtRange(s.min.hour)} · ${s.min.trips} ${unitWord(r, s.min.trips)}${each(s.min.v, s.min.trips)}</span>`
-    : `<span class="v">—</span><span class="w">Not enough regular hours to measure</span>`;
+  const col = C[r.key];
+  const v = capAt(r), n = tripsAt(r);
+  const when = `${DAY_LABEL[state.day]} · ${fmtRange(state.hour)}`;
+  const fig = v > 0
+    ? `<span class="v">${fmt(v)}<u>passengers/hr</u></span><span class="w">${n} ${unitWord(r, n)} at the busiest stop, ≈ ${fmt(v / n)} passengers each</span>`
+    : `<span class="v">—</span><span class="w">Not running in this hour</span>`;
 
-  // vehicle table
-  const uniform = used.length === 1;
   let vehHtml;
-  if (uniform) {
+  if (used.length === 1) {
     const L0 = D.loads[used[0]];
     vehHtml = `<p>${esc(L0.label)} in every period: <span class="num">${fmt(L0.peak)}</span> peak / <span class="num">${fmt(L0.off)}</span> off-peak passengers.</p>`;
   } else {
     const rowsH = DAYS.map(d => `<tr><th scope="row">${DAY_LABEL[d].slice(0, 3)}</th>${r.vehicles[d].map((c, p) => {
-      const v = dominant(c);
-      return `<td>${v ? esc(VT_SHORT[v] || v) : "—"}<small>${esc(D.periodNames[d][p])}</small></td>`;
+      const vt = dominant(c);
+      return `<td>${vt ? esc(VT_SHORT[vt] || vt) : "—"}<small>${esc(D.periodNames[d][p])}</small></td>`;
     }).join("")}</tr>`).join("");
     vehHtml = `<div class="tablewrap"><table class="vt"><tbody>${rowsH}</tbody></table></div>
-      <p>${used.map(v => `${esc(D.loads[v].label)}: <span class="num">${fmt(D.loads[v].peak)}</span> / <span class="num">${fmt(D.loads[v].off)}</span>`).join(" · ")}</p>`;
+      <p>${used.map(k => `${esc(D.loads[k].label)}: <span class="num">${fmt(D.loads[k].peak)}</span> / <span class="num">${fmt(D.loads[k].off)}</span>`).join(" · ")}</p>`;
   }
 
   const branches = Object.entries(r.branches || {});
   const pages = r.summaryPages || [];
   const srcItems = [
     `<a href="${S.gtfs.u}" target="_blank" rel="noopener">${esc(S.gtfs.t)}</a>. Route ID <span class="num">${esc(r.id)}</span>: ${DAYS.map(d => `${fmt(r.trips[d] || 0)} ${DAY_LABEL[d].toLowerCase()} trips`).join(", ")} on the sample days.`,
-    pages.length && !RAIL.has(r.short) || pages.length ? `<a href="${SUMMARY_URL}#page=${pages[0] || 1}" target="_blank" rel="noopener">${esc(S.summary.t)}</a>, PDF p. ${pages.join(", ")}.` : `${esc(S.summary.t)}: route not listed; default vehicle for its mode used.`,
-    ...[...new Set(used.flatMap(v => LOAD_SOURCES[v] || []))].map(k => `<a href="${S[k].u}" target="_blank" rel="noopener">${esc(S[k].t)}</a>`),
+    pages.length ? `<a href="${SUMMARY_URL}#page=${pages[0]}" target="_blank" rel="noopener">${esc(S.summary.t)}</a>, PDF p. ${pages.join(", ")}.` : `${esc(S.summary.t)}: route not listed; default vehicle for its mode used.`,
+    ...[...new Set(used.flatMap(k => LOAD_SOURCES[k] || []))].map(k => `<a href="${S[k].u}" target="_blank" rel="noopener">${esc(S[k].t)}</a>`),
   ];
   if (r.short === "5") srcItems.push(`<a href="${S.line5open.u}" target="_blank" rel="noopener">${esc(S.line5open.t)}</a>`);
   if (r.short === "6") srcItems.push(`<a href="${S.line6open.u}" target="_blank" rel="noopener">${esc(S.line6open.t)}</a>`);
 
+  const others = DAYS.filter(d => d !== state.day);
   drawer.innerHTML = `
     <header class="dh">
       <span class="bullet lg${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
-      <div><h2>${esc(r.name)}</h2><p>${MODE_LABEL[r.mode]} · ${used.map(v => esc(VT_SHORT[v] || v)).join(", ")}</p></div>
+      <div><h2>${esc(r.name)}</h2><p>${MODE_LABEL[r.mode]} · ${used.map(k => esc(VT_SHORT[k] || k)).join(", ")}</p></div>
       <button type="button" class="x" id="dclose" aria-label="Close route details">×</button>
     </header>
     ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
-    <div class="figs">
-      <div class="fig" style="--c:${col};--tint:${tint}"><span class="k"><i class="t"></i>Busiest hour</span><span class="v">${fmt(s.max.v)}<u>pph</u></span><span class="w">${DAY_LABEL[s.max.day]} ${fmtRange(s.max.hour)} · ${s.max.trips} ${unitWord(r, s.max.trips)}${each(s.max.v, s.max.trips)}</span></div>
-      <div class="fig" style="--c:${col}"><span class="k"><i></i>Quietest regular hour</span>${minFig}</div>
-    </div>
+    <div class="fig"><span class="k">${esc(when)}</span>${fig}</div>
     <figure class="chart">
       <div class="legendrow" aria-hidden="true">
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${col}" stroke-width="2.5"/></svg>Weekday</span>
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-2"]}" stroke-width="2" stroke-dasharray="5 3"/></svg>Saturday</span>
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="2" stroke-dasharray="1.5 3" stroke-linecap="round"/></svg>Sunday</span>
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${col}" stroke-width="2.5"/></svg>${DAY_LABEL[state.day]}</span>
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="5 3"/></svg>${DAY_LABEL[others[0]]}</span>
+        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="1.5 3" stroke-linecap="round"/></svg>${DAY_LABEL[others[1]]}</span>
       </div>
       ${chartSvg(r)}
-      <p class="readout" id="readout">Passengers per hour at the busiest point. Hover or drag across the chart.</p>
+      <p class="readout" id="readout">Passengers per hour through the day. Click the chart to jump to an hour.</p>
     </figure>
     <div class="dsec"><h3>Vehicles</h3>${vehHtml}</div>
     ${branches.length > 1 ? `<div class="dsec"><h3>Branches</h3><ul class="br">${branches.map(([b, d]) => `<li><b>${esc(b)}</b>${esc(d)}</li>`).join("")}</ul></div>` : ""}
@@ -740,92 +701,100 @@ function renderDrawer() {
 }
 
 /* ---------- hourly chart ---------- */
-const ORDER = Array.from({ length: 24 }, (_, i) => (i + 4) % 24); // service day: 4 AM → 3 AM
 const CH = { W: 340, H: 158, l: 38, r: 8, t: 8, b: 22 };
+const cx = i => CH.l + i * (CH.W - CH.l - CH.r) / 23;
 function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); for (const f of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (f * p >= v) return f * p; return 10 * p; }
 function chartSvg(r) {
-  const series = DAYS.map(d => ORDER.map(h => r.hourly[d][state.basis][h]));
-  const ymax = niceMax(Math.max(1, ...series.flat()));
-  const x = i => CH.l + i * (CH.W - CH.l - CH.r) / 23;
+  const series = Object.fromEntries(DAYS.map(d => [d, ORDER.map(h => r.hourly[d][state.basis][h])]));
+  const ymax = niceMax(Math.max(1, ...Object.values(series).flat()));
   const y = v => CH.t + (CH.H - CH.t - CH.b) * (1 - v / ymax);
   const col = C[r.key];
   const grid = [0, ymax / 2, ymax].map(v => `<line x1="${CH.l}" x2="${CH.W - CH.r}" y1="${y(v)}" y2="${y(v)}" stroke="${C.rule}" stroke-width="1"/><text x="${CH.l - 6}" y="${y(v) + 3.5}" text-anchor="end">${compact(v)}</text>`).join("");
-  const xt = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]].map(([i, t]) => `<text x="${x(i)}" y="${CH.H - 6}" text-anchor="middle">${t}</text>`).join("");
-  const line = arr => arr.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
-  const area = `${line(series[0])}L${x(23)},${y(0)}L${x(0)},${y(0)}Z`;
-  const s = r.stats[state.basis];
-  const mark = (p, hollow) => p ? `<circle cx="${x(ORDER.indexOf(p.hour)).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="4.5" fill="${hollow ? C.panel : col}" stroke="${hollow ? col : C.panel}" stroke-width="2"/>` : "";
-  const hl = state.view === "hour" ? `<rect x="${(x(ORDER.indexOf(state.hour)) - 5).toFixed(1)}" y="${CH.t}" width="10" height="${CH.H - CH.t - CH.b}" fill="${C["panel-2"]}"/>` : "";
-  return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for route ${esc(r.short)}: weekday, Saturday and Sunday">
-    ${hl}${grid}${xt}
+  const xt = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]].map(([i, t]) => `<text x="${cx(i)}" y="${CH.H - 6}" text-anchor="middle">${t}</text>`).join("");
+  const line = arr => arr.map((v, i) => `${i ? "L" : "M"}${cx(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const cur = series[state.day];
+  const area = `${line(cur)}L${cx(23)},${y(0)}L${cx(0)},${y(0)}Z`;
+  const others = DAYS.filter(d => d !== state.day);
+  const i = ORDER.indexOf(state.hour);
+  return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for route ${esc(r.short)} on weekday, Saturday and Sunday">
+    <rect x="${(cx(i) - 6).toFixed(1)}" y="${CH.t}" width="12" height="${CH.H - CH.t - CH.b}" rx="2" fill="${C["panel-2"]}"/>
+    ${grid}${xt}
     <path d="${area}" fill="${col}" fill-opacity="0.12"/>
-    <path d="${line(series[2])}" fill="none" stroke="${C["ink-3"]}" stroke-width="2" stroke-dasharray="1.5 3.5" stroke-linecap="round"/>
-    <path d="${line(series[1])}" fill="none" stroke="${C["ink-2"]}" stroke-width="2" stroke-dasharray="5 3"/>
-    <path d="${line(series[0])}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>
-    ${mark(s.max, false)}${mark(s.min, true)}
+    <path d="${line(series[others[1]])}" fill="none" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="1.5 3.5" stroke-linecap="round"/>
+    <path d="${line(series[others[0]])}" fill="none" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <path d="${line(cur)}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="${cx(i).toFixed(1)}" cy="${y(cur[i]).toFixed(1)}" r="4.5" fill="${col}" stroke="${C.panel}" stroke-width="2"/>
     <line id="xh" x1="0" x2="0" y1="${CH.t}" y2="${CH.H - CH.b}" stroke="${C.ink}" stroke-width="1" opacity="0"/>
-    <rect id="hit" x="${CH.l}" y="0" width="${CH.W - CH.l - CH.r}" height="${CH.H}" fill="transparent"/>
+    <rect id="hit" x="${CH.l - 6}" y="0" width="${CH.W - CH.l - CH.r + 12}" height="${CH.H}" fill="transparent" style="cursor:pointer"/>
   </svg>`;
 }
 function wireChart(r) {
   const svg = document.getElementById("chart"), hit = document.getElementById("hit"), xh = document.getElementById("xh"), out = document.getElementById("readout");
   if (!svg) return;
-  const move = e => {
+  const indexAt = e => {
     const box = svg.getBoundingClientRect();
     const sx = (e.clientX - box.left) * CH.W / box.width;
-    const i = Math.max(0, Math.min(23, Math.round((sx - CH.l) / ((CH.W - CH.l - CH.r) / 23))));
-    const h = ORDER[i];
-    const xx = CH.l + i * (CH.W - CH.l - CH.r) / 23;
-    xh.setAttribute("x1", xx); xh.setAttribute("x2", xx); xh.setAttribute("opacity", "0.5");
-    const v = d => r.hourly[d][state.basis][h], n = d => r.hourly[d].n[h];
-    out.textContent = `${fmtRange(h)} · Wkdy ${fmt(v("weekday"))} (${n("weekday")}) · Sat ${fmt(v("saturday"))} (${n("saturday")}) · Sun ${fmt(v("sunday"))} (${n("sunday")})`;
+    return Math.max(0, Math.min(23, Math.round((sx - CH.l) / ((CH.W - CH.l - CH.r) / 23))));
   };
-  hit.addEventListener("pointermove", move);
-  hit.addEventListener("pointerdown", move);
-  hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour at the busiest point, with vehicles per hour in brackets."; });
+  hit.addEventListener("pointermove", e => {
+    const i = indexAt(e), h = ORDER[i];
+    xh.setAttribute("x1", cx(i)); xh.setAttribute("x2", cx(i)); xh.setAttribute("opacity", "0.5");
+    const part = d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][state.basis][h])}`;
+    out.textContent = `${fmtRange(h)} · ${DAYS.map(part).join(" · ")}`;
+  });
+  hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour through the day. Click the chart to jump to an hour."; });
+  hit.addEventListener("click", e => { stopPlay(); setHour(ORDER[indexAt(e)]); });
 }
 
-/* ---------- controls ---------- */
+/* ---------- time controls ---------- */
+const hourEl = document.getElementById("hour"), hourOut = document.getElementById("hour-out");
+document.getElementById("ticks").innerHTML = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]]
+  .map(([i, t]) => `<span style="left:calc(${(i / 23).toFixed(4)} * (100% - 16px) + 8px)">${t}</span>`).join("");
+
+function refresh() {
+  rebuildOrder(); styleRoutes(); renderList(); renderWidthKey(); renderDrawer();
+}
+function setHour(h) {
+  state.hour = h;
+  hourEl.value = ORDER.indexOf(h);
+  hourOut.textContent = fmtRange(h);
+  refresh(); writeHash();
+}
+function setDay(d) {
+  state.day = d;
+  document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === d)));
+  refresh(); writeHash();
+}
+hourEl.addEventListener("input", () => { stopPlay(); setHour(ORDER[+hourEl.value]); });
+document.querySelectorAll("#timebar [data-day]").forEach(b => b.addEventListener("click", () => setDay(b.dataset.day)));
+
+let timer = null;
+const playBtn = document.getElementById("play");
+const PLAY_ICON = '<svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg>';
+const PAUSE_ICON = '<svg viewBox="0 0 14 14"><path d="M2.5 1.5h3.2v11H2.5zM8.3 1.5h3.2v11H8.3z"/></svg>';
+function stopPlay() { if (timer) { clearInterval(timer); timer = null; playBtn.innerHTML = PLAY_ICON; playBtn.setAttribute("aria-label", "Play through the day"); } }
+playBtn.addEventListener("click", () => {
+  if (timer) return stopPlay();
+  playBtn.innerHTML = PAUSE_ICON;
+  playBtn.setAttribute("aria-label", "Pause");
+  timer = setInterval(() => setHour(ORDER[(ORDER.indexOf(state.hour) + 1) % 24]), 900);
+});
+
+/* ---------- other controls ---------- */
 function setPressed(ids, on) { for (const id of ids) document.getElementById(id).setAttribute("aria-pressed", String(id === on)); }
 function basisHint() {
   document.getElementById("basis-hint").textContent = state.basis === "std"
     ? "Every trip counts at its vehicle's peak planning load: 51 on a 12 m bus, 77 articulated, 130 streetcar, 1,100 on a Line 1 train."
     : "Peak loads 6–9 AM and 3–7 PM on weekdays; the off-peak seated standard at all other times (35 on a 12 m bus, 540 on a Line 1 train).";
 }
-function refresh({ order = false, drawerToo = true } = {}) {
-  if (order) rebuildOrder();
-  styleRoutes(); renderList(); renderWidthKey();
-  if (drawerToo) renderDrawer();
-}
-document.getElementById("v-range").onclick = () => { state.view = "range"; stopPlay(); setPressed(["v-range", "v-hour"], "v-range"); document.getElementById("hourbar").hidden = true; document.getElementById("core-def").textContent = "quietest regular hour (6 AM – 1 AM)"; refresh(); };
-document.getElementById("v-hour").onclick = () => { state.view = "hour"; setPressed(["v-range", "v-hour"], "v-hour"); document.getElementById("hourbar").hidden = false; document.getElementById("core-def").textContent = "capacity in the chosen hour"; refresh(); };
 document.getElementById("b-std").onclick = () => { state.basis = "std"; setPressed(["b-std", "b-period"], "b-std"); basisHint(); refresh(); };
 document.getElementById("b-period").onclick = () => { state.basis = "period"; setPressed(["b-std", "b-period"], "b-period"); basisHint(); refresh(); };
-document.getElementById("s-sqrt").onclick = () => { state.scale = "sqrt"; setPressed(["s-sqrt", "s-lin"], "s-sqrt"); refresh({ drawerToo: false }); };
-document.getElementById("s-lin").onclick = () => { state.scale = "linear"; setPressed(["s-sqrt", "s-lin"], "s-lin"); refresh({ drawerToo: false }); };
-
-const hourEl = document.getElementById("hour"), hourOut = document.getElementById("hour-out");
-function setHour(h) { state.hour = h; hourEl.value = h; hourOut.textContent = fmtRange(h); refresh(); }
-hourEl.addEventListener("input", () => { stopPlay(); setHour(+hourEl.value); });
-document.querySelectorAll("#hourbar [data-day]").forEach(b => b.addEventListener("click", () => {
-  state.day = b.dataset.day;
-  document.querySelectorAll("#hourbar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
-  refresh();
-}));
-let timer = null;
-const playBtn = document.getElementById("play");
-function stopPlay() { if (timer) { clearInterval(timer); timer = null; playBtn.innerHTML = '<svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg>'; playBtn.setAttribute("aria-label", "Play through the day"); } }
-playBtn.addEventListener("click", () => {
-  if (timer) return stopPlay();
-  playBtn.innerHTML = '<svg viewBox="0 0 14 14"><path d="M2.5 1.5h3.2v11H2.5zM8.3 1.5h3.2v11H8.3z"/></svg>';
-  playBtn.setAttribute("aria-label", "Pause");
-  timer = setInterval(() => setHour((state.hour + 1) % 24), 900);
-});
+document.getElementById("s-sqrt").onclick = () => { state.scale = "sqrt"; setPressed(["s-sqrt", "s-lin"], "s-sqrt"); styleRoutes(); renderList(); renderWidthKey(); };
+document.getElementById("s-lin").onclick = () => { state.scale = "linear"; setPressed(["s-sqrt", "s-lin"], "s-lin"); styleRoutes(); renderList(); renderWidthKey(); };
 
 document.getElementById("open-method").addEventListener("click", () => document.getElementById("method").showModal());
 document.getElementById("close-method").addEventListener("click", () => document.getElementById("method").close());
 
-/* method dialog content */
 (function methodContent() {
   const order = ["TR6", "T1_6", "TR4", "LFLRV", "LRV", "LFsc", "ABus", "Bus", "CB"];
   document.getElementById("loads-table").innerHTML = `<thead><tr><th>Vehicle</th><th class="num">Peak</th><th class="num">Off-peak</th><th>Basis</th></tr></thead><tbody>${order.map(k => {
@@ -837,19 +806,36 @@ document.getElementById("close-method").addEventListener("click", () => document
     + `<li>Data built ${esc(D.generated)} from the GTFS feed valid ${esc(D.feed.start)}–${esc(D.feed.end)}.</li>`;
 })();
 
+/* ---------- address ---------- */
+function writeHash() {
+  const p = new URLSearchParams({ day: state.day, hour: String(state.hour) });
+  if (state.selected) p.set("route", state.selected.short);
+  try { history.replaceState(null, "", "#" + p.toString()); } catch (_) {}
+}
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (DAYS.includes(p.get("day"))) state.day = p.get("day");
+  const h = Number(p.get("hour"));
+  if (p.has("hour") && Number.isInteger(h) && h >= 0 && h < 24) state.hour = h;
+  return p.get("route");
+}
+
 /* ---------- theme ---------- */
-function retheme() { readTokens(); styleBase(); styleStations(); styleRoutes(); renderAnatomy(); renderWidthKey(); renderList(); renderDrawer(); }
+function retheme() { readTokens(); styleBase(); styleStations(); styleRoutes(); renderWidthKey(); renderList(); renderDrawer(); }
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
 new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
 map.on("zoomend", () => { styleRoutes(); renderWidthKey(); zoomClasses(); });
 
 /* ---------- boot ---------- */
+const startRoute = readHash();
 if (bm) map.fitBounds(base.city.getBounds(), { padding: [12, 12] }); else map.setView([43.715, -79.39], 11);
-basisHint(); styleBase(); styleStations(); rebuildOrder(); styleRoutes();
-renderAnatomy(); renderWidthKey(); renderVehicleKey(); renderList(); zoomClasses();
-const m = location.hash.match(/route=([^&]+)/);
-if (m) { const r = routes.find(x => x.short === decodeURIComponent(m[1])); if (r) select(r, true); }
+basisHint(); styleBase(); styleStations(); renderVehicleKey(); zoomClasses();
+document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === state.day)));
+hourEl.value = ORDER.indexOf(state.hour);
+hourOut.textContent = fmtRange(state.hour);
+refresh();
+if (startRoute) { const r = routes.find(x => x.short === startRoute); if (r) select(r, true); }
 })();
 </script>
 </body>
