@@ -44,6 +44,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{margin:0;background:var(--panel);color:var(--ink);font:15px/1.45 var(--font-body);-webkit-font-smoothing:antialiased}
 button,input{font:inherit;color:inherit}
@@ -457,6 +458,8 @@ map.attributionControl.setPrefix(false).addAttribution('Schedule: <a href="https
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
 map.createPane("stations").style.zIndex = 640;
+// Each canvas covers the whole map and swallows mouse events, so only the routes canvas may receive them.
+for (const pane of ["base", "stations"]) map.getPane(pane).style.pointerEvents = "none";
 const baseR = L.canvas({ pane: "base", padding: 0.5 });
 const routeR = L.canvas({ pane: "routes", padding: 0.4, tolerance: 5 });
 const stnR = L.canvas({ pane: "stations", padding: 0.4 });
@@ -487,12 +490,15 @@ function px(cap) {
 /* route layers, thickest first so thin routes stay visible on top */
 routes.sort((a, b) => b.stats.std.max.v - a.stats.std.max.v);
 const routeGroup = L.layerGroup().addTo(map);
+let hovered = null;
 for (const r of routes) {
   const o = { renderer: routeR, lineCap: "round", lineJoin: "round", smoothFactor: 1 };
   r.outer = L.polyline(r.geom, o);
   r.inner = L.polyline(r.geom, { ...o, interactive: false });
   r.outer.bindTooltip(() => tipHtml(r), { sticky: true, className: "rtip", direction: "top", offset: [0, -10], opacity: 1 });
   r.outer.on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); });
+  r.outer.on("mouseover", () => { hovered = r; styleRoute(r); });
+  r.outer.on("mouseout", () => { if (hovered === r) hovered = null; styleRoute(r); });
 }
 map.on("click", () => { if (state.selected) select(null); });
 
@@ -509,20 +515,24 @@ function rebuildOrder() {
   if (state.selected && visible(state.selected)) { state.selected.outer.bringToFront(); state.selected.inner.bringToFront(); }
 }
 
-function styleRoutes() {
+function styleRoute(r) {
+  if (!visible(r)) return;
   const sel = state.selected;
-  for (const r of routes) {
-    if (!visible(r)) continue;
-    const { outer, inner } = values(r);
-    const col = C[r.key];
-    const tint = mix(col, C.city, 0.6);
-    const dim = sel && sel !== r;
-    const ow = px(outer);
-    const iw = inner > 0 ? Math.min(px(inner), ow) : 0;
-    r.outer.setStyle({ color: dim ? mix(tint, C.city, 0.65) : tint, weight: ow, opacity: 1 });
-    const dash = r.mode === "express" && iw > 0 ? `${(iw * 0.4 + 3).toFixed(1)} ${(iw * 1.25 + 4).toFixed(1)}` : null;
-    r.inner.setStyle({ color: dim ? mix(col, C.city, 0.75) : col, weight: Math.max(iw, 0.01), opacity: iw > 0 ? 1 : 0, dashArray: dash });
-  }
+  const { outer, inner } = values(r);
+  const col = C[r.key];
+  const hot = hovered === r;
+  const tint = mix(col, C.city, hot ? 0.3 : 0.6);  // hovered band darkens toward the route colour
+  const dim = sel && sel !== r && !hot;
+  const ow = px(outer);
+  const iw = inner > 0 ? Math.min(px(inner), ow) : 0;
+  r.outer.setStyle({ color: dim ? mix(tint, C.city, 0.65) : tint, weight: ow, opacity: 1 });
+  const dash = r.mode === "express" && iw > 0 ? `${(iw * 0.4 + 3).toFixed(1)} ${(iw * 1.25 + 4).toFixed(1)}` : null;
+  r.inner.setStyle({ color: dim ? mix(col, C.city, 0.75) : col, weight: Math.max(iw, 0.01), opacity: iw > 0 ? 1 : 0, dashArray: dash });
+}
+
+function styleRoutes() {
+  for (const r of routes) styleRoute(r);
+  const sel = state.selected;
   if (sel && visible(sel)) { sel.outer.bringToFront(); sel.inner.bringToFront(); }
 }
 
