@@ -879,9 +879,9 @@ map.on("zoomend", () => { styleRoutes(); renderWidthKey(); zoomClasses(); });
 
 /* ---------- boot ---------- */
 const startRoute = readHash();
-const allBounds = L.latLngBounds([]);
-for (const r of routes) for (const g of r.geom) for (const p of g) allBounds.extend(p);
-map.fitBounds(allBounds, { padding: [10, 10] });
+// Open on the GTHA core: GO's bus network reaches Peterborough and Cobourg, which would
+// otherwise zoom the whole region out to nothing. Panning beyond it is still allowed.
+map.fitBounds(L.latLngBounds([[43.10, -80.30], [44.20, -78.60]]), { padding: [8, 8] });
 basisHint(); styleBase(); styleStations(); renderClassKey(); zoomClasses();
 document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === state.day)));
 hourEl.value = ORDER.indexOf(state.hour);
