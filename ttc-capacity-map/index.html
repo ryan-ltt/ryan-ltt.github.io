@@ -235,14 +235,6 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
     </header>
 
     <section class="section" aria-label="Display options">
-      <div class="ctl">
-        <span class="lab" id="lab-basis">Passengers per vehicle</span>
-        <div class="seg" role="group" aria-labelledby="lab-basis">
-          <button type="button" id="b-std" aria-pressed="true">Peak standard</button>
-          <button type="button" id="b-period" aria-pressed="false">By time of day</button>
-        </div>
-        <p class="hint" id="basis-hint"></p>
-      </div>
       <fieldset class="filters">
         <legend class="lab">Agencies <button type="button" class="alltoggle" id="ag-all">TTC only</button></legend>
         <div class="chips" id="agency-chips"></div>
@@ -258,6 +250,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <div class="wkey" id="wkey"></div>
       <p class="hint">Width is proportional to capacity: a line twice as wide carries twice as many people.</p>
       <ul class="ckey" id="ckey"></ul>
+      <p class="hint">Every trip counts at its vehicle’s peak planning load — 51 on a TTC 12 m bus, 72 on a Viva artic, 1,944 on a 12-car GO train.</p>
     </section>
 
     <section class="routes" aria-label="Routes ranked by capacity">
@@ -318,7 +311,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
     <section class="dsec">
       <h3>Passengers per vehicle</h3>
-      <p>Where an agency publishes a loading standard, that standard is used. Where none exists, the TTC's Service Standards figure for the same vehicle type is applied so every line on the map is measured the same way. The route panel names the basis for each route.</p>
+      <p>Every trip is counted at its vehicle’s <b>peak</b> planning load, all day, so width reflects how often vehicles come and how big they are. Where an agency publishes a loading standard, that standard is used. Where none exists, the TTC's Service Standards figure for the same vehicle type is applied so every line on the map is measured the same way. The route panel names the basis for each route.</p>
       <div class="tablewrap"><table class="lt-table" id="loads-table"></table></div>
     </section>
 
@@ -332,11 +325,6 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated. Brampton runs 40-foot buses on Züm too, and its realtime feed needs an API key, so these four routes are overstated.</li>
         <li><b>MiWay, Hamilton and Durham:</b> none publishes an articulated assignment, so the map watches their realtime feeds. Every vehicle broadcasts its fleet number, and the published rosters say which numbers are 60-foot artics. Where a route runs a mix, it is counted at the observed proportion rather than all-or-nothing — Durham’s eight artics work PULSE 900 and 901, but most trips there are still 40-foot buses. The route panel shows the share and how many sightings it rests on.</li>
       </ul>
-    </section>
-
-    <section class="dsec">
-      <h3>Two ways to count a vehicle</h3>
-      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load, so width reflects only how often vehicles come and how big they are. <b>By time of day</b> uses each agency's off-peak standard outside weekday 6–9 AM and 3–7 PM.</p>
     </section>
 
     <section class="dsec">
@@ -423,6 +411,7 @@ const CLASS_KEY = [
   ["community", "Community bus", "small accessible buses"],
 ];
 const ORDER = Array.from({ length: 24 }, (_, i) => (i + 4) % 24); // service day: 4 AM → 3 AM
+const BASIS = "std";  // every trip at its vehicle's peak planning load
 const nf = new Intl.NumberFormat("en-CA");
 const fmt = v => nf.format(Math.round(v));
 const compact = v => v >= 1000 ? (v / 1000).toFixed(v >= 10000 || v % 1000 === 0 ? 0 : 1) + "k" : String(Math.round(v));
@@ -460,11 +449,11 @@ const MAXCAP = Math.max(...routes.map(r => r.stats.std.max.v));
 const byId = new Map(routes.map(r => [r.id, r]));
 
 const state = {
-  basis: "std", day: "weekday", hour: 8, selected: null, query: "",
+  day: "weekday", hour: 8, selected: null, query: "",
   agencies: new Set(Object.keys(D.agencies)),
   types: new Set(TYPES.map(t => t[0]).filter(t => t !== "night")),
 };
-const capAt = r => r.hourly[state.day][state.basis][state.hour];
+const capAt = r => r.hourly[state.day][BASIS][state.hour];
 const tripsAt = r => r.hourly[state.day].n[state.hour];
 const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 
@@ -775,7 +764,7 @@ const CH = { W: 340, H: 158, l: 40, r: 8, t: 8, b: 22 };
 const cx = i => CH.l + i * (CH.W - CH.l - CH.r) / 23;
 function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); for (const f of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (f * p >= v) return f * p; return 10 * p; }
 function chartSvg(r) {
-  const series = Object.fromEntries(DAYS.map(d => [d, ORDER.map(h => r.hourly[d][state.basis][h])]));
+  const series = Object.fromEntries(DAYS.map(d => [d, ORDER.map(h => r.hourly[d][BASIS][h])]));
   const ymax = niceMax(Math.max(1, ...Object.values(series).flat()));
   const y = v => CH.t + (CH.H - CH.t - CH.b) * (1 - v / ymax);
   const col = C[r.key];
@@ -808,7 +797,7 @@ function wireChart(r) {
   hit.addEventListener("pointermove", e => {
     const i = indexAt(e), h = ORDER[i];
     xh.setAttribute("x1", cx(i)); xh.setAttribute("x2", cx(i)); xh.setAttribute("opacity", "0.5");
-    out.textContent = `${fmtRange(h)} · ${DAYS.map(d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][state.basis][h])}`).join(" · ")}`;
+    out.textContent = `${fmtRange(h)} · ${DAYS.map(d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][BASIS][h])}`).join(" · ")}`;
   });
   hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour through the day. Click the chart to jump to an hour."; });
   hit.addEventListener("click", e => { stopPlay(); setHour(ORDER[indexAt(e)]); });
@@ -848,13 +837,6 @@ playBtn.addEventListener("click", () => {
 
 /* ---------- other controls ---------- */
 function setPressed(ids, on) { for (const id of ids) document.getElementById(id).setAttribute("aria-pressed", String(id === on)); }
-function basisHint() {
-  document.getElementById("basis-hint").textContent = state.basis === "std"
-    ? "Every trip counts at its vehicle's peak planning load — 51 on a TTC 12 m bus, 72 on a Viva artic, 1,944 on a 12-car GO train."
-    : "Each agency's off-peak standard outside weekday 6–9 AM and 3–7 PM. GO and UP are seated capacity either way.";
-}
-document.getElementById("b-std").onclick = () => { state.basis = "std"; setPressed(["b-std", "b-period"], "b-std"); basisHint(); refresh(); };
-document.getElementById("b-period").onclick = () => { state.basis = "period"; setPressed(["b-std", "b-period"], "b-period"); basisHint(); refresh(); };
 
 document.getElementById("open-method").addEventListener("click", () => document.getElementById("method").showModal());
 document.getElementById("close-method").addEventListener("click", () => document.getElementById("method").close());
@@ -898,7 +880,7 @@ const startRoute = readHash();
 // Open on the GTHA core: GO's bus network reaches Peterborough and Cobourg, which would
 // otherwise zoom the whole region out to nothing. Panning beyond it is still allowed.
 map.fitBounds(L.latLngBounds([[43.10, -80.30], [44.20, -78.60]]), { padding: [8, 8] });
-basisHint(); styleBase(); styleStations(); renderClassKey(); zoomClasses();
+styleBase(); styleStations(); renderClassKey(); zoomClasses();
 document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === state.day)));
 hourEl.value = ORDER.indexOf(state.hour);
 hourOut.textContent = fmtRange(state.hour);
