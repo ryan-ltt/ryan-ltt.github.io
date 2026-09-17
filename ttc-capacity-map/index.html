@@ -555,8 +555,26 @@ function unitWord(r, n) {
   if (r.agency === "ttc" && r.short === "6") return one ? "LRV" : "LRVs";
   return one ? "vehicle" : "vehicles";
 }
+// Several agencies repeat the route number in the name ("Route 101", "Mayfield 201"),
+// which would show it twice beside the numbered badge. Strip it only where it merely repeats.
+const NAME_CACHE = new Map();
+function displayName(r) {
+  if (NAME_CACHE.has(r.id)) return NAME_CACHE.get(r.id);
+  const short = r.short.trim().toLowerCase();
+  let n = r.name.trim();
+  const low = n.toLowerCase();
+  for (const token of ["route " + short, short]) {
+    if (low.startsWith(token)) { n = n.slice(token.length).replace(/^[\s:–—-]+/, ""); break; }
+    if (low.endsWith(token)) { n = n.slice(0, n.length - token.length).replace(/[\s:–—-]+$/, ""); break; }
+  }
+  NAME_CACHE.set(r.id, n.trim());
+  return NAME_CACHE.get(r.id);
+}
+function nameFor(r) { return displayName(r) || (D.agencies[r.agency] || {}).full || r.name; }
 function routeTitle(r) {
-  return (r.agency === "ttc" && TTC_RAIL.has(r.short)) ? r.name : `${r.short} ${r.name}`;
+  if (r.agency === "ttc" && TTC_RAIL.has(r.short)) return r.name;
+  const n = displayName(r);
+  return n ? `${r.short} ${n}` : `${r.short} ${(D.agencies[r.agency] || {}).name || ""}`.trim();
 }
 function tipHtml(r) {
   const n = tripsAt(r);
@@ -658,7 +676,7 @@ function renderList() {
     const v = capAt(r), n = tripsAt(r);
     return `<li><button type="button" class="row" data-id="${esc(r.id)}" aria-pressed="${state.selected === r}" style="--c:${C[r.key]}">
       <span class="bullet${r.light ? " lt" : ""}${r.agency === "ttc" && TTC_RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
-      <span class="rn">${esc(r.name)}<small>${esc(r.agencyName)} · ${esc(MODE_LABEL[r.mode] || r.mode)}</small></span>
+      <span class="rn">${esc(nameFor(r))}<small>${esc(r.agencyName)} · ${esc(MODE_LABEL[r.mode] || r.mode)}</small></span>
       <span class="bar" aria-hidden="true" style="width:${(100 * unitWidth(v) / top).toFixed(1)}%"></span>
       <span class="nums">${fmt(v)}<small>${n} ${unitWord(r, n)}</small></span>
     </button></li>`;
@@ -730,7 +748,7 @@ function renderDrawer() {
   drawer.innerHTML = `
     <header class="dh">
       <span class="bullet lg${r.light ? " lt" : ""}${r.agency === "ttc" && TTC_RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
-      <div><h2>${esc(r.name)}</h2><p>${esc((D.agencies[r.agency] || {}).full || r.agency)} · ${esc(MODE_LABEL[r.mode] || r.mode)}</p></div>
+      <div><h2>${esc(nameFor(r))}</h2><p>${esc(displayName(r) ? ((D.agencies[r.agency] || {}).full || r.agency) + " · " : "")}${esc(MODE_LABEL[r.mode] || r.mode)}</p></div>
       <button type="button" class="x" id="dclose" aria-label="Close route details">×</button>
     </header>
     ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
