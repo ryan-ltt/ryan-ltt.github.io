@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>TTC Capacity Map</title>
-<meta name="description" content="Every TTC route drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
+<title>GTHA Capacity Map</title>
+<meta name="description" content="Every transit route in the Greater Toronto and Hamilton Area drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
@@ -14,12 +14,12 @@
   --panel:#FAFBF8; --panel-2:#EEF0EB; --ink:#172024; --ink-2:#48545A; --ink-3:#737F84; --rule:#D6DBD5;
   --focus:#2F6BCF; --station-fill:#FFFFFF;
   --line1:#C99A00; --line2:#00853A; --line4:#9C1C66; --line5:#D9661A; --line6:#8C8A87;
-  --streetcar:#C8321E; --bus:#2F6BCF; --abus:#008F7D; --community:#8B5CC7;
+  --streetcar:#C8321E; --bus:#2F6BCF; --brt:#008F7D; --community:#8B5CC7; --rail:#2F9E4F;
   --shadow:0 1px 2px rgb(23 32 36 / .08),0 10px 30px rgb(23 32 36 / .12);
   --font-display:"Jost","Futura","Century Gothic",system-ui,sans-serif;
   --font-body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
-  --rail-w:384px;
+  --rail-w:392px;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
@@ -28,7 +28,7 @@
     --panel:#11171A; --panel-2:#192023; --ink:#E3E8E6; --ink-2:#A9B3B6; --ink-3:#7C878B; --rule:#283134;
     --focus:#5B8FE8; --station-fill:#11171A;
     --line1:#E0B21A; --line2:#1FA85A; --line4:#C24A8E; --line5:#EC8036; --line6:#A3A19D;
-    --streetcar:#E8553F; --bus:#5B8FE8; --abus:#1FA08E; --community:#9A78D8;
+    --streetcar:#E8553F; --bus:#5B8FE8; --brt:#1FA08E; --community:#9A78D8; --rail:#38A15C;
     --shadow:0 1px 2px rgb(0 0 0 / .4),0 10px 30px rgb(0 0 0 / .45);
     color-scheme:dark;
   }
@@ -38,7 +38,7 @@
   --panel:#11171A; --panel-2:#192023; --ink:#E3E8E6; --ink-2:#A9B3B6; --ink-3:#7C878B; --rule:#283134;
   --focus:#5B8FE8; --station-fill:#11171A;
   --line1:#E0B21A; --line2:#1FA85A; --line4:#C24A8E; --line5:#EC8036; --line6:#A3A19D;
-  --streetcar:#E8553F; --bus:#5B8FE8; --abus:#1FA08E; --community:#9A78D8;
+  --streetcar:#E8553F; --bus:#5B8FE8; --brt:#1FA08E; --community:#9A78D8; --rail:#38A15C;
   --shadow:0 1px 2px rgb(0 0 0 / .4),0 10px 30px rgb(0 0 0 / .45);
   color-scheme:dark;
 }
@@ -63,8 +63,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .sitenav a{font-size:12.5px;line-height:1;padding:5px 10px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;color:var(--ink-2)}
 .sitenav a:hover{color:var(--ink);border-color:var(--ink-3)}
 .eyebrow{margin:0;font:600 11px/1.2 var(--font-body);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
-.brand h1{font-size:30px;line-height:1.02;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
-.brand h1 .mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--streetcar);color:#fff;font:700 13px/1 var(--font-display);letter-spacing:.02em;flex:none}
+.brand h1{font-size:29px;line-height:1.02;font-weight:600;letter-spacing:-.01em}
 .dek{margin:0;color:var(--ink-2);max-width:46ch}
 .dek b{color:var(--ink);font-weight:600}
 
@@ -77,32 +76,32 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0 / .12);font-weight:600}
 .hint{margin:0;font-size:13px;color:var(--ink-3)}
 
-.layers{border:0;margin:0;padding:0;display:grid;gap:8px}
-.layers legend{padding:0;margin-bottom:8px}
+.filters{border:0;margin:0;padding:0;display:grid;gap:8px}
+.filters legend{padding:0;margin-bottom:8px;display:flex;justify-content:space-between;width:100%;align-items:baseline;gap:8px}
+.alltoggle{border:0;background:transparent;color:var(--ink-3);font:500 12px var(--font-body);cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0}
+.alltoggle:hover{color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{position:relative}
 .chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .chip span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;border:1px solid var(--rule);font-size:13px;font-weight:500;color:var(--ink-3);background:transparent;user-select:none}
-.chip span::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-3)}
+.chip span::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-3);background:var(--dot,transparent)}
 .chip input:checked + span{color:var(--ink);background:var(--panel-2);border-color:transparent}
-.chip input:checked + span::before{background:var(--ink);border-color:var(--ink)}
+.chip input:checked + span::before{background:var(--dot,var(--ink));border-color:var(--dot,var(--ink))}
 .chip input:focus-visible + span{outline:2px solid var(--focus);outline-offset:1px}
 
 /* legend */
 .wkey{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 12px}
 .wkey svg{display:block;overflow:visible}
 .wkey .v{font:500 12.5px/1 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
-.vkey{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:13.5px}
-.vkey li{display:contents}
-.vkey .n{display:flex;align-items:center;gap:8px;color:var(--ink)}
-.vkey .l{font:500 12px/1.6 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}
+.ckey{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px}
+.ckey li{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.ckey small{color:var(--ink-3);font-size:12px}
 .sw{width:22px;height:6px;border-radius:3px;background:var(--c);flex:none}
 .sw.dash{border-radius:0;background:repeating-linear-gradient(90deg,var(--c) 0 8px,transparent 8px 11px)}
 .bullet{--c:var(--bus);display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 5px;border-radius:999px;background:var(--c);color:#fff;font:600 12px/1 var(--font-display);letter-spacing:.01em;flex:none}
 .bullet.lt{color:#172024}
 .bullet.sq{border-radius:5px}
-.bullet.lg{min-width:40px;height:40px;font-size:18px;padding:0 8px}
-.vgroup{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);grid-column:1/-1;margin-top:6px}
+.bullet.lg{min-width:40px;height:40px;font-size:17px;padding:0 8px}
 
 /* route list */
 .routes{padding:16px 0 0;display:grid;gap:10px;flex:1;align-content:start}
@@ -144,7 +143,7 @@ a:hover{text-decoration-color:var(--ink)}
 /* ---- drawer ---- */
 .drawer{position:absolute;top:12px;right:12px;width:376px;max-width:calc(100% - 24px);max-height:calc(100% - 110px);overflow-y:auto;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);z-index:900;padding:16px 18px 18px;display:grid;gap:14px;align-content:start}
 .dh{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
-.dh h2{font-size:21px;line-height:1.1;font-weight:600}
+.dh h2{font-size:20px;line-height:1.1;font-weight:600}
 .dh p{margin:2px 0 0;font-size:13px;color:var(--ink-3)}
 .x{border:0;background:var(--panel-2);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;color:var(--ink-2)}
 .x:hover{color:var(--ink)}
@@ -174,6 +173,8 @@ a:hover{text-decoration-color:var(--ink)}
 .br b{font-family:var(--font-mono);font-weight:500;color:var(--ink);display:inline-block;min-width:3.2em}
 .src{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:13px;color:var(--ink-2)}
 .src li::marker{font:500 11px var(--font-mono);color:var(--ink-3)}
+.tag{display:inline-block;font:600 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;background:var(--panel-2);color:var(--ink-2)}
+.tag.est{box-shadow:inset 0 0 0 1px var(--ink-3)}
 
 /* ---- leaflet overrides ---- */
 .leaflet-container{font:13px/1.4 var(--font-body);background:var(--land)}
@@ -184,6 +185,7 @@ a:hover{text-decoration-color:var(--ink)}
 .leaflet-tooltip.rtip{background:var(--panel);color:var(--ink);border:0;border-radius:8px;box-shadow:var(--shadow);padding:7px 10px;display:grid;gap:1px}
 .leaflet-tooltip.rtip::before{display:none}
 .rtip b{font-weight:600}
+.rtip i{font-style:normal;font-size:11.5px;color:var(--ink-3)}
 .rtip span{font:12px var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
 .leaflet-tooltip.stn{background:transparent;border:0;box-shadow:none;padding:0;color:var(--ink);font:600 11.5px/1 var(--font-body);text-shadow:0 0 3px var(--city),0 0 3px var(--city),0 0 2px var(--city)}
 .leaflet-tooltip.stn::before{display:none}
@@ -192,7 +194,7 @@ a:hover{text-decoration-color:var(--ink)}
 .mapbullet .bullet{box-shadow:0 0 0 2px var(--city);cursor:pointer}
 
 /* ---- method dialog ---- */
-dialog{border:0;border-radius:14px;padding:0;width:min(760px,calc(100% - 32px));max-height:calc(100% - 48px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+dialog{border:0;border-radius:14px;padding:0;width:min(780px,calc(100% - 32px));max-height:calc(100% - 48px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
 dialog::backdrop{background:rgb(10 15 18 / .45)}
 .mwrap{padding:24px 28px 28px;display:grid;gap:18px}
 .mwrap header{display:flex;justify-content:space-between;align-items:start;gap:16px}
@@ -205,16 +207,14 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 .lt-table{width:100%;border-collapse:collapse;font-size:13.5px}
 .lt-table th,.lt-table td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
 .lt-table th{font:600 11px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.lt-table td.num{text-align:right}
-.tag{display:inline-block;font:600 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;background:var(--panel-2);color:var(--ink-2)}
-.tag.d{box-shadow:inset 0 0 0 1px var(--ink-3)}
+.lt-table td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
 .fatal{padding:24px;font-size:16px}
 
 @media (max-width: 760px){
   .app{display:flex;flex-direction:column;height:auto}
   .stage{order:-1;height:66vh;flex:none}
   .rail{border-right:0;border-top:1px solid var(--rule);overflow:visible}
-  .brand h1{font-size:26px}
+  .brand h1{font-size:25px}
   .drawer{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-width:none;max-height:72vh;border-radius:14px 14px 0 0;z-index:1200}
   .timebar{grid-template-columns:auto 1fr auto;bottom:10px;gap:10px 12px;padding:10px 12px 8px}
   .timebar .seg{grid-column:1/-1}
@@ -229,9 +229,9 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
   <aside class="rail" id="rail" aria-label="Map controls and route list">
     <header class="brand">
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
-      <p class="eyebrow">TTC schedule · Sept 6 – Oct 31, 2026</p>
-      <h1><span class="mark" aria-hidden="true">TTC</span>Capacity Map</h1>
-      <p class="dek">Every route is drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the network through the day.</p>
+      <p class="eyebrow" id="eyebrow">Greater Toronto &amp; Hamilton · Fall 2026 schedules</p>
+      <h1>GTHA Capacity Map</h1>
+      <p class="dek">Every route from eleven agencies, drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the region through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -251,22 +251,26 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         </div>
         <p class="hint" id="scale-hint"></p>
       </div>
-      <fieldset class="layers">
-        <legend class="lab">Networks</legend>
-        <div class="chips" id="chips"></div>
+      <fieldset class="filters">
+        <legend class="lab">Agencies <button type="button" class="alltoggle" id="ag-all">TTC only</button></legend>
+        <div class="chips" id="agency-chips"></div>
+      </fieldset>
+      <fieldset class="filters">
+        <legend class="lab">Service types</legend>
+        <div class="chips" id="type-chips"></div>
       </fieldset>
     </section>
 
     <section class="section" aria-label="Legend">
       <span class="lab">Line width at this zoom</span>
       <div class="wkey" id="wkey"></div>
-      <ul class="vkey" id="vkey"></ul>
+      <ul class="ckey" id="ckey"></ul>
     </section>
 
     <section class="routes" aria-label="Routes ranked by capacity">
       <div class="rhead">
         <div class="top"><label class="lab" for="q" id="list-title">Routes by capacity</label><span class="count" id="count"></span></div>
-        <input id="q" type="search" placeholder="Route number or name" autocomplete="off">
+        <input id="q" type="search" placeholder="Route number, name or agency" autocomplete="off">
       </div>
       <div class="cols"><span>Route</span><span>Passengers / hr</span></div>
       <ol id="list"></ol>
@@ -274,12 +278,13 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
     <footer class="railfoot">
       <button type="button" class="linkbtn" id="open-method">Method &amp; sources</button>
-      <p>Capacity is scheduled, not observed: trips in the TTC's published GTFS schedule × the TTC's planning load for each vehicle.</p>
+      <p>Capacity is scheduled, not observed: trips in each agency's published GTFS schedule × the planning load for each vehicle.</p>
+      <p>Data used in this product or service is provided with the permission of Metrolinx.</p>
     </footer>
   </aside>
 
   <main class="stage">
-    <div id="map" role="application" aria-label="Map of TTC routes drawn by capacity"></div>
+    <div id="map" role="application" aria-label="Map of GTHA transit routes drawn by capacity"></div>
     <div class="timebar" id="timebar">
       <div class="seg" role="group" aria-label="Day of week">
         <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
@@ -309,41 +314,46 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
 
     <section class="dsec">
       <h3>What a line's width measures</h3>
-      <p>Scheduled capacity in the chosen hour: the most passengers a route's timetable can move past its busiest point in that clock hour, at the TTC's own planning load for each vehicle. It is not ridership, and it is not a crush-load maximum.</p>
+      <p>Scheduled capacity in the chosen hour: the most passengers a route's timetable can move past its busiest point in that clock hour, at the planning load for each vehicle. It is not ridership, and it is not a crush-load maximum.</p>
       <div class="formula">capacity (pph) = Σ trips departing the busiest stop in that hour × planning load of each trip's vehicle</div>
       <ul>
-        <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins. That is where branches and short-turns overlap, which is the TTC's "maximum load point" idea applied to supply.</li>
-        <li><b>Days.</b> Each day type is a real sample day in the schedule's validity window, avoiding holidays: Tuesday Sept 15, Saturday Sept 19 and Sunday Sept 20, 2026.</li>
-        <li><b>Late night.</b> After about 1 AM, subway and daytime routes show only their last trips finishing their runs, so they look thin before disappearing. Overnight service is the Blue Night network, which you can turn on under Networks.</li>
+        <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins — where branches and short-turns overlap.</li>
+        <li><b>Days.</b> Real sample days inside every feed's validity window: Tuesday Sept 22, Saturday Sept 26 and Sunday Sept 27, 2026.</li>
+        <li><b>Late night.</b> After about 1 AM, daytime routes show only their last trips finishing their runs. Overnight service is the TTC's Blue Night network and a few regional night routes.</li>
       </ul>
     </section>
 
     <section class="dsec">
       <h3>Passengers per vehicle</h3>
-      <p>Vehicle types come from the TTC Service Summary, branch by branch and period by period (so an articulated bus in the AM peak and a 12 m bus on Sunday are counted correctly, and streetcar routes temporarily run by buses are counted as buses). Loads come from the TTC Service Standards, Table 4.</p>
+      <p>Where an agency publishes a loading standard, that standard is used. Where none exists, the TTC's Service Standards figure for the same vehicle type is applied so every line on the map is measured the same way. The route panel names the basis for each route.</p>
       <div class="tablewrap"><table class="lt-table" id="loads-table"></table></div>
-      <p><span class="tag d">Derived</span> The TTC has not published crowding standards for Line 5 or Line 6, so these apply the streetcar standard's ratios. The Flexity Outlook streetcar's 130-passenger peak standard is 52% of its 251 crush load, and its 70-passenger off-peak standard equals its 70 seats.</p>
+    </section>
+
+    <section class="dsec">
+      <h3>How each agency's vehicles are assigned</h3>
       <ul>
-        <li><b>Line 5 (Flexity Freedom, 2-car trains):</b> 251 crush per car × 0.52 ≈ 130 per car, so 260 per train peak. Off-peak uses 70 seats per car (assumed equal to Flexity Outlook), so 140 per train.</li>
-        <li><b>Line 6 (48 m Citadis Spirit, single vehicles):</b> 336 maximum × 0.52 ≈ 174 peak; 120 seats off-peak.</li>
-        <li><b>Community bus:</b> 11 passengers, per the TTC's Community Bus page.</li>
-        <li><b>Line 2</b> is counted as T1 trains (1,000) and <b>Line 1</b> as Toronto Rocket trains (1,100).</li>
+        <li><b>TTC:</b> the Service Summary lists the vehicle for every branch and period, so articulated buses, streetcars and bus-replaced streetcar routes are counted exactly.</li>
+        <li><b>GO rail:</b> Metrolinx publishes no per-trip consist. The map assumes its standard 12-car train in peak and 10 off-peak, 6 on Richmond Hill, at 162 seats per coach. These are estimates and the biggest source of error on the map.</li>
+        <li><b>GO bus and UP Express:</b> counted at seated capacity — 57 per coach, 173 per UP train.</li>
+        <li><b>YRT:</b> Viva routes counted as 60-foot articulated, others as 40-foot, using YRT's own Table 11 figures.</li>
+        <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated; Hamilton's 10 B-Line likewise.</li>
+        <li><b>MiWay, Halton agencies:</b> no articulated assignment is published, so all trips are counted as 12 m buses. MiWay runs articulated buses on some corridors, so its busiest routes are understated.</li>
       </ul>
     </section>
 
     <section class="dsec">
       <h3>Two ways to count a vehicle</h3>
-      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load, so the width reflects only how often vehicles come and how big they are. <b>By time of day</b> follows the Service Standards literally: peak loads 6–9 AM and 3–7 PM on weekdays, and the lower off-peak comfort standard at all other times.</p>
+      <p><b>Peak standard</b> (default) counts every trip at its vehicle's peak load, so width reflects only how often vehicles come and how big they are. <b>By time of day</b> uses each agency's off-peak standard outside weekday 6–9 AM and 3–7 PM.</p>
     </section>
 
     <section class="dsec">
       <h3>Limits worth knowing</h3>
       <ul>
-        <li>Scheduled service, not delivered service. Gaps, bunching, diversions and unscheduled extras aren't reflected.</li>
-        <li>Routes sharing a street are not added together. Each route is drawn on its own, with thicker routes underneath.</li>
-        <li>Hourly counts move by ±1 vehicle when a headway doesn't divide evenly into 60 minutes.</li>
-        <li>Line 5 opened February 8, 2026 and Line 6 on December 7, 2025. Both are still settling in, and their schedules may change.</li>
-        <li>The Service Summary covers the full length of each branch. Trips in the GTFS feed without a branch letter take the vehicle type used on that route in the same period.</li>
+        <li>Scheduled service, not delivered service.</li>
+        <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
+        <li>Feeds come from eleven agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li>School and seasonal routes appear only if they run on the sample days. Hamilton lists 80 routes but runs 31 on a normal weekday.</li>
+        <li>GO's seated-capacity basis is not comparable to the TTC's standing-load standards: a GO train counted at seats only still dwarfs a bus counted with standees.</li>
       </ul>
     </section>
 
@@ -369,34 +379,56 @@ if (!D || !window.L) {
 const SUMMARY_URL = "https://cdn.ttc.ca/-/media/Project/TTC/DevProto/Documents/Home/Transparency-and-accountability/Service-Summary-2026-09-06.pdf?rev=8a73444f06f74841991fef5d61041cfc";
 const STANDARDS_URL = "https://cdn.ttc.ca/-/media/Project/TTC/DevProto/Documents/Home/About-the-TTC/Projects-Landing-Page/Transit-Planning/Service-Standards_May-2024.pdf?rev=6c96a85cc0a64147ad424f949dabce64";
 const S = {
-  gtfs: { t: "City of Toronto Open Data — TTC Routes and Schedules (GTFS), feed valid Sept 6 – Oct 31, 2026", u: "https://open.toronto.ca/dataset/ttc-routes-and-schedules/" },
-  summary: { t: "TTC Service Summary, September 6 to October 31, 2026 (vehicle types by branch and period)", u: SUMMARY_URL },
   standards: { t: "TTC Service Standards (May 2024), Table 4: Vehicle Crowding Standards, p. 14", u: STANDARDS_URL + "#page=15" },
-  overview: { t: "TTC — Overview of TTC Service Standards, Strategic Planning Committee, Sept 3, 2025 (same crowding table, p. 9)", u: "https://www.toronto.ca/legdocs/mmis/2025/tts/bgrd/backgroundfile-258190.pdf" },
-  outlook: { t: "Transit Toronto — The Toronto Flexity Outlook LRVs (70 seats, 132 service load, 251 crush)", u: "https://transittoronto.ca/streetcar/4506.shtml" },
-  freedom: { t: "Wikipedia — Flexity Freedom (251 maximum per five-module car, citing Bombardier's brochure)", u: "https://en.wikipedia.org/wiki/Flexity_Freedom" },
-  line5: { t: "Transit Toronto — Line 5 Eglinton (two-car trains at opening)", u: "https://transittoronto.ca/streetcar/4124.shtml" },
-  line5open: { t: "TTC — Phased start to service on Line 5 Eglinton (Feb 2026)", u: "https://www.ttc.ca/news/2026/February/TTC-to-begin-phased-start-to-service-on-Line-5-Eglinton" },
-  line6: { t: "Metrolinx — Finch West LRT FAQ (48 m vehicle, 120 seats + 216 standing = 336)", u: "https://assets.metrolinx.com/image/upload/v1663240053/Documents/Metrolinx/Finch-West-LRT-FAQs-Revised-June9.pdf" },
-  line6open: { t: "TTC — Now Open: Line 6 Finch West", u: "https://www.ttc.ca/riding-the-ttc/Line-6-Finch-West" },
+  summary: { t: "TTC Service Summary, September 6 to October 31, 2026 (vehicle types by branch and period)", u: SUMMARY_URL },
   community: { t: "TTC — Community Bus (up to 11 ambulatory customers)", u: "https://www.ttc.ca/wheel-trans/learn-more-about-community-bus" },
-  changes: { t: "Steve Munro — TTC Service Changes Effective Sept 6, 2026 (context on express and vehicle changes)", u: "https://stevemunro.ca/2026/09/04/ttc-service-changes-effective-sunday-september-6-2026-part-ii/" },
-  boundary: { t: "City of Toronto Open Data — Regional Municipal Boundary (Open Government Licence – Toronto)", u: "https://open.toronto.ca/dataset/regional-municipal-boundary/" },
-  osm: { t: "Lake Ontario shoreline © OpenStreetMap contributors (ODbL), relation 1206310", u: "https://www.openstreetmap.org/relation/1206310" },
+  outlook: { t: "Transit Toronto — Flexity Outlook streetcars (70 seats, 132 service load, 251 crush)", u: "https://transittoronto.ca/streetcar/4506.shtml" },
+  line5: { t: "Transit Toronto — Line 5 Eglinton (two-car trains at opening)", u: "https://transittoronto.ca/streetcar/4124.shtml" },
+  line6: { t: "Metrolinx — Finch West LRT FAQ (48 m vehicle, 120 seats + 216 standing)", u: "https://assets.metrolinx.com/image/upload/v1663240053/Documents/Metrolinx/Finch-West-LRT-FAQs-Revised-June9.pdf" },
+  gobilevel: { t: "Metrolinx / Bombardier BiLevel coach — 162 seats per coach, standard 12-car train", u: "https://www.metrolinx.com/en/discover/go-transit-is-making-trains-longer-to-give-passengers-more-room" },
+  gobus: { t: "Metrolinx — What's in the GO bus fleet (coach and double-decker seating)", u: "https://www.metrolinx.com/en/discover/whats-in-the-go-bus-fleet" },
+  upex: { t: "UP Express rolling stock — Nippon Sharyo DMU seating", u: "https://en.wikipedia.org/wiki/Union_Pearson_Express" },
+  yrt: { t: "York Region Transit — Transit Service Guidelines, Table 11: Vehicle Capacity Guidelines", u: "https://www.york.ca/media/69131/download" },
+  drt: { t: "Durham Region Transit — Service Guidelines (vehicle capacity: 54/36 standard, 78/52 articulated)", u: "https://www.durhamregiontransit.com/en/travelling-with-us/service-guidelines.aspx" },
+  osm: { t: "Lake Ontario shoreline © OpenStreetMap contributors (ODbL)", u: "https://www.openstreetmap.org/relation/1206310" },
+  boundary: { t: "City of Toronto — Regional Municipal Boundary (Open Government Licence – Toronto)", u: "https://open.toronto.ca/dataset/regional-municipal-boundary/" },
 };
-const LOAD_SOURCES = { Bus: ["standards"], ABus: ["standards"], LFsc: ["standards", "outlook"], TR6: ["standards"], T1_6: ["standards"], TR4: ["standards"], LFLRV: ["line5", "freedom", "outlook", "standards"], LRV: ["line6", "outlook", "standards"], CB: ["community"] };
+const FEED_SOURCE = {
+  ttc: { t: "City of Toronto Open Data — TTC Routes and Schedules (GTFS)", u: "https://open.toronto.ca/dataset/ttc-routes-and-schedules/" },
+  go: { t: "Metrolinx Open Data — GO Transit GTFS", u: "https://www.gotransit.com/en/partner-with-us/software-developers" },
+  up: { t: "Metrolinx Open Data — UP Express GTFS", u: "https://www.gotransit.com/en/partner-with-us/software-developers" },
+  yrt: { t: "York Region Transit — Open Data (GTFS)", u: "https://www.yrt.ca/en/about-us/open-data.aspx" },
+  miway: { t: "City of Mississauga — MiWay developer download (GTFS)", u: "https://www.mississauga.ca/miway-transit/developer-download/" },
+  brampton: { t: "Brampton GeoHub — Brampton Transit schedule data (GTFS)", u: "https://geohub.brampton.ca/pages/brampton-transit" },
+  durham: { t: "Durham Region Open Data — GTFS static schedule", u: "https://opendata.durham.ca/datasets/931bc536b42e4b3aa72270dab4133c90" },
+  hsr: { t: "Open Hamilton — HSR transit feed (GTFS)", u: "https://open.hamilton.ca/documents/6eeccf172c824c2db0484aea54ed7fe4" },
+  oakville: { t: "Town of Oakville — Oakville Transit route information (GTFS)", u: "https://www.oakville.ca/data/oakville-transit-route-information.html" },
+  burlington: { t: "City of Burlington Open Data — Transit schedule data (GTFS)", u: "https://navburl-burlington.opendata.arcgis.com/datasets/Burlington::transit-schedule-data-gtfs" },
+  milton: { t: "Milton Transit GTFS (Metrolinx-hosted)", u: "https://discover-milton.hub.arcgis.com/datasets/milton-gtfs-1/about" },
+};
 
 /* ---------- constants ---------- */
-const RAIL = new Set(["1", "2", "4", "5", "6"]);
+const TTC_RAIL = new Set(["1", "2", "4", "5", "6"]);
 const DAYS = ["weekday", "saturday", "sunday"];
 const DAY_LABEL = { weekday: "Weekday", saturday: "Saturday", sunday: "Sunday" };
-const VT_KEY = { Bus: "bus", ABus: "abus", LFsc: "streetcar", CB: "community" };
-const VT_SHORT = { Bus: "12 m bus", ABus: "Artic bus", LFsc: "Streetcar", CB: "Community bus", TR6: "TR 6-car", T1_6: "T1 6-car", TR4: "TR 4-car", LFLRV: "2-car LRT", LRV: "48 m LRV" };
-const MODES = [
-  ["subway", "Subway"], ["lrt", "Light rail"], ["streetcar", "Streetcar"], ["bus", "Bus"],
-  ["express", "Express bus"], ["community", "Community bus"], ["night", "Blue Night"],
+const TYPES = [
+  ["rapid", "Subway & LRT", r => r.mode === "subway" || r.mode === "lrt"],
+  ["rail", "GO & UP rail", r => r.mode === "rail"],
+  ["streetcar", "Streetcar", r => r.mode === "streetcar"],
+  ["brt", "BRT & articulated", r => r.mode === "brt"],
+  ["express", "Express bus", r => r.mode === "express"],
+  ["bus", "Local & regional bus", r => r.mode === "bus" || r.mode === "regional"],
+  ["community", "Community bus", r => r.mode === "community"],
+  ["night", "Overnight", r => r.mode === "night"],
 ];
-const MODE_LABEL = Object.fromEntries(MODES);
+const MODE_LABEL = { subway: "Subway", lrt: "Light rail", streetcar: "Streetcar", bus: "Bus", express: "Express bus", community: "Community bus", night: "Overnight bus", rail: "Commuter rail", regional: "Regional bus", brt: "BRT" };
+const CLASS_KEY = [
+  ["rail", "Commuter rail", "GO trains, UP Express"],
+  ["brt", "BRT & articulated buses", "Viva, Züm, B-Line, TTC artics"],
+  ["streetcar", "Streetcar", "TTC 500-series"],
+  ["bus", "Bus", "local, express and regional"],
+  ["community", "Community bus", "small accessible buses"],
+];
 const ORDER = Array.from({ length: 24 }, (_, i) => (i + 4) % 24); // service day: 4 AM → 3 AM
 const nf = new Intl.NumberFormat("en-CA");
 const fmt = v => nf.format(Math.round(v));
@@ -410,7 +442,7 @@ function fmtRange(h) {
 
 /* ---------- colour tokens ---------- */
 let C = {};
-const TOKENS = ["line1", "line2", "line4", "line5", "line6", "streetcar", "bus", "abus", "community", "city", "land", "lake", "boundary", "ink", "ink-2", "ink-3", "rule", "station-fill", "panel", "panel-2"];
+const TOKENS = ["line1", "line2", "line4", "line5", "line6", "streetcar", "bus", "brt", "community", "rail", "city", "land", "lake", "boundary", "ink", "ink-2", "ink-3", "rule", "station-fill", "panel", "panel-2"];
 function readTokens() {
   const cs = getComputedStyle(document.documentElement);
   for (const k of TOKENS) C[k] = cs.getPropertyValue("--" + k).trim();
@@ -422,24 +454,31 @@ readTokens();
 /* ---------- data prep ---------- */
 const routes = D.routes.filter(r => r.geom.length && r.stats.std.max.v > 0);
 for (const r of routes) {
-  r.key = RAIL.has(r.short) ? "line" + r.short : (VT_KEY[r.vehicle] || "bus");
+  r.key = (r.agency === "ttc" && TTC_RAIL.has(r.short)) ? "line" + r.short
+    : r.mode === "rail" ? "rail"
+    : r.mode === "streetcar" ? "streetcar"
+    : r.mode === "brt" || /ABUS|VIVA60/.test(r.vehicle || "") ? "brt"
+    : r.mode === "community" ? "community" : "bus";
   r.light = r.key === "line1";
+  r.type = (TYPES.find(([, , test]) => test(r)) || ["bus"])[0];
+  r.agencyName = (D.agencies[r.agency] || {}).name || r.agency;
 }
 const MAXCAP = Math.max(...routes.map(r => r.stats.std.max.v));
 const byId = new Map(routes.map(r => [r.id, r]));
 
 const state = {
   basis: "std", scale: "sqrt", day: "weekday", hour: 8, selected: null, query: "",
-  layers: { subway: true, lrt: true, streetcar: true, bus: true, express: true, community: true, night: false },
+  agencies: new Set(Object.keys(D.agencies)),
+  types: new Set(TYPES.map(t => t[0]).filter(t => t !== "night")),
 };
 const capAt = r => r.hourly[state.day][state.basis][state.hour];
 const tripsAt = r => r.hourly[state.day].n[state.hour];
-const visible = r => state.layers[r.mode];
+const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 
 /* ---------- map ---------- */
-const map = L.map("map", { zoomControl: false, minZoom: 9, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
+const map = L.map("map", { zoomControl: false, minZoom: 8, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedule: <a href="https://open.toronto.ca/dataset/ttc-routes-and-schedules/">TTC GTFS</a> · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 11 GTHA agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
@@ -477,7 +516,7 @@ routes.sort((a, b) => b.stats.std.max.v - a.stats.std.max.v);
 const routeGroup = L.layerGroup().addTo(map);
 let hovered = null;
 for (const r of routes) {
-  r.line = L.polyline(r.geom, { renderer: routeR, lineJoin: "round", smoothFactor: 1 });
+  r.line = L.polyline(r.geom, { renderer: routeR, lineJoin: "round", smoothFactor: 1.4 });
   r.line.bindTooltip(() => tipHtml(r), { sticky: true, className: "rtip", direction: "top", offset: [0, -10], opacity: 1 });
   r.line.on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); });
   r.line.on("mouseover", () => { hovered = r; styleRoute(r); });
@@ -486,7 +525,6 @@ for (const r of routes) {
 map.on("click", () => { if (state.selected) select(null); });
 
 function rebuildOrder() {
-  // Routes not running in this hour are removed entirely so they can't be hovered.
   routeGroup.clearLayers();
   for (const r of routes) if (visible(r) && capAt(r) > 0) routeGroup.addLayer(r.line);
   const sel = state.selected;
@@ -500,27 +538,29 @@ function styleRoute(r) {
   const hot = hovered === r;
   const sel = state.selected;
   const dim = sel && sel !== r && !hot;
-  const express = r.mode === "express";
+  const dashed = r.mode === "express" || r.mode === "brt";
   r.line.setStyle({
     color: hot ? mix(col, C.ink, 0.28) : dim ? mix(col, C.city, 0.72) : col,
     weight: w,
     opacity: 1,
-    lineCap: express ? "butt" : "round",
-    dashArray: express ? `${(w * 2 + 6).toFixed(1)} ${Math.max(3, w * 0.55).toFixed(1)}` : null,
+    lineCap: dashed ? "butt" : "round",
+    dashArray: dashed ? `${(w * 2 + 6).toFixed(1)} ${Math.max(3, w * 0.55).toFixed(1)}` : null,
   });
 }
 function styleRoutes() { for (const r of routes) styleRoute(r); }
 
 function unitWord(r, n) {
   const one = n === 1;
-  if (["1", "2", "4", "5"].includes(r.short)) return one ? "train" : "trains";
-  if (r.short === "6") return one ? "LRV" : "LRVs";
+  if (r.mode === "rail" || (r.agency === "ttc" && ["1", "2", "4", "5"].includes(r.short))) return one ? "train" : "trains";
+  if (r.agency === "ttc" && r.short === "6") return one ? "LRV" : "LRVs";
   return one ? "vehicle" : "vehicles";
+}
+function routeTitle(r) {
+  return (r.agency === "ttc" && TTC_RAIL.has(r.short)) ? r.name : `${r.short} ${r.name}`;
 }
 function tipHtml(r) {
   const n = tripsAt(r);
-  const title = RAIL.has(r.short) ? r.name : `${r.short} ${r.name}`; // rail names already read "Line 1 (…)"
-  return `<b>${esc(title)}</b><span>${fmt(capAt(r))} passengers/hr · ${n} ${unitWord(r, n)}</span>`;
+  return `<b>${esc(routeTitle(r))}</b><i>${esc((D.agencies[r.agency] || {}).full || r.agency)}</i><span>${fmt(capAt(r))} passengers/hr · ${n} ${unitWord(r, n)}</span>`;
 }
 
 /* stations and line bullets */
@@ -532,18 +572,18 @@ const stationMarkers = D.stations.map(s => {
   return m;
 });
 const bulletLayer = L.layerGroup().addTo(map);
-for (const r of routes.filter(r => RAIL.has(r.short))) {
+for (const r of routes.filter(r => (r.agency === "ttc" && TTC_RAIL.has(r.short)) || r.mode === "rail")) {
   const longest = r.geom.reduce((a, b) => (b.length > a.length ? b : a));
   for (const f of [0.12, 0.88]) {
     const p = longest[Math.floor((longest.length - 1) * f)];
-    const icon = L.divIcon({ className: "mapbullet", html: `<span class="bullet${r.light ? " lt" : ""}" style="--c:var(--${r.key})">${esc(r.short)}</span>`, iconSize: [24, 24], iconAnchor: [12, 12] });
-    L.marker(p, { icon, keyboard: false, title: `Line ${r.short} ${r.name}` }).on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); }).addTo(bulletLayer);
+    const icon = L.divIcon({ className: "mapbullet", html: `<span class="bullet${r.light ? " lt" : ""}" style="--c:var(--${r.key})">${esc(r.short)}</span>`, iconSize: [26, 24], iconAnchor: [13, 12] });
+    L.marker(p, { icon, keyboard: false, title: routeTitle(r) }).on("click", e => { L.DomEvent.stopPropagation(e); select(r, false); }).addTo(bulletLayer);
   }
 }
 function styleStations() { for (const m of stationMarkers) m.setStyle({ color: C.ink, fillColor: C["station-fill"] }); }
 function zoomClasses() {
   const z = map.getZoom();
-  const want = z >= 12.5 && (state.layers.subway || state.layers.lrt);
+  const want = z >= 12 && (state.types.has("rapid") || state.types.has("rail"));
   if (want && !map.hasLayer(stationLayer)) stationLayer.addTo(map);
   if (!want && map.hasLayer(stationLayer)) map.removeLayer(stationLayer);
   map.getContainer().classList.toggle("zlo", z < 13.5);
@@ -561,57 +601,69 @@ function renderWidthKey() {
     ? "Width follows the square root of capacity so bus routes stay readable. Compare numbers, not widths."
     : "Width is proportional to capacity: a line twice as wide carries twice as many people.";
 }
-function renderVehicleKey() {
-  const L_ = D.loads;
-  const rows = [
-    ["Rapid transit (per train)"],
-    ["line1", "6-car TR", L_.TR6], ["line2", "6-car T1", L_.T1_6], ["line4", "4-car TR", L_.TR4],
-    ["line5", "2-car LRT", L_.LFLRV], ["line6", "48 m LRV", L_.LRV],
-    ["Surface (per vehicle)"],
-    ["streetcar", "Streetcar · 30 m", L_.LFsc], ["abus", "Articulated bus · 18 m", L_.ABus], ["bus", "Bus · 12 m", L_.Bus],
-    ["community", "Community bus", L_.CB], ["express", "Express route (dashed)", null],
-  ];
-  document.getElementById("vkey").innerHTML = rows.map(r => {
-    if (r.length === 1) return `<li><span class="vgroup">${r[0]}</span></li>`;
-    const [k, label, load] = r;
-    const sw = k.startsWith("line") ? `<span class="bullet${k === "line1" ? " lt" : ""}" style="--c:var(--${k});min-width:20px;height:20px;font-size:11px">${k.slice(4)}</span>`
-      : k === "express" ? `<span class="sw dash" style="--c:var(--ink-2)"></span>` : `<span class="sw" style="--c:var(--${k})"></span>`;
-    const l = load ? `${fmt(load.peak)} / ${fmt(load.off)}${load.basis === "DERIVED" ? "*" : ""}` : "";
-    return `<li><span class="n">${sw}${esc(label)}</span><span class="l">${l}</span></li>`;
-  }).join("") + `<li><span class="hint" style="grid-column:1/-1">Peak / off-peak planning load. * Derived: see Method &amp; sources.</span></li>`;
+function renderClassKey() {
+  document.getElementById("ckey").innerHTML = CLASS_KEY.map(([k, label, note]) =>
+    `<li><span class="sw" style="--c:var(--${k})"></span>${esc(label)} <small>${esc(note)}</small></li>`).join("")
+    + `<li><span class="sw dash" style="--c:var(--ink-2)"></span>Dashed <small>express and BRT routes</small></li>`
+    + `<li><span class="sw" style="--c:var(--line1)"></span>Subway &amp; LRT <small>official line colours, numbered</small></li>`;
 }
 
-/* ---------- chips ---------- */
-const chips = document.getElementById("chips");
-chips.innerHTML = MODES.map(([k, label]) => `<label class="chip"><input type="checkbox" id="layer-${k}" ${state.layers[k] ? "checked" : ""}><span>${label}</span></label>`).join("");
-chips.addEventListener("change", e => {
-  state.layers[e.target.id.replace("layer-", "")] = e.target.checked;
+/* ---------- filters ---------- */
+const agencyChips = document.getElementById("agency-chips");
+agencyChips.innerHTML = Object.entries(D.agencies).map(([k, a]) =>
+  `<label class="chip"><input type="checkbox" id="ag-${k}" ${state.agencies.has(k) ? "checked" : ""}><span>${esc(a.name)}</span></label>`).join("");
+agencyChips.addEventListener("change", e => {
+  const k = e.target.id.replace("ag-", "");
+  e.target.checked ? state.agencies.add(k) : state.agencies.delete(k);
+  afterFilter();
+});
+const typeChips = document.getElementById("type-chips");
+typeChips.innerHTML = TYPES.map(([k, label]) => {
+  const dot = k === "rapid" ? "var(--line1)" : k === "rail" ? "var(--rail)" : k === "streetcar" ? "var(--streetcar)"
+    : k === "brt" ? "var(--brt)" : k === "community" ? "var(--community)" : "var(--bus)";
+  return `<label class="chip"><input type="checkbox" id="ty-${k}" ${state.types.has(k) ? "checked" : ""}><span style="--dot:${dot}">${esc(label)}</span></label>`;
+}).join("");
+typeChips.addEventListener("change", e => {
+  const k = e.target.id.replace("ty-", "");
+  e.target.checked ? state.types.add(k) : state.types.delete(k);
+  afterFilter();
+});
+function afterFilter() {
   if (state.selected && !visible(state.selected)) state.selected = null;
   refresh();
   zoomClasses();
-  bulletLayer.eachLayer(m => m.getElement() && (m.getElement().style.display = state.layers.subway || state.layers.lrt ? "" : "none"));
+  bulletLayer.eachLayer(m => m.getElement() && (m.getElement().style.display = state.types.has("rapid") || state.types.has("rail") ? "" : "none"));
+}
+document.getElementById("ag-all").addEventListener("click", e => {
+  const ttcOnly = state.agencies.size !== 1 || !state.agencies.has("ttc");
+  state.agencies = new Set(ttcOnly ? ["ttc"] : Object.keys(D.agencies));
+  e.target.textContent = ttcOnly ? "All agencies" : "TTC only";
+  agencyChips.querySelectorAll("input").forEach(i => { i.checked = state.agencies.has(i.id.replace("ag-", "")); });
+  afterFilter();
 });
 
 /* ---------- list ---------- */
 const listEl = document.getElementById("list");
 function renderList() {
   const q = state.query.trim().toLowerCase();
-  const matches = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q)));
+  const matches = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q) || r.agencyName.toLowerCase().includes(q)));
   const items = matches.filter(r => capAt(r) > 0)
     .sort((a, b) => capAt(b) - capAt(a) || a.short.localeCompare(b.short, "en", { numeric: true }));
   const when = `${DAY_LABEL[state.day]}, ${fmtRange(state.hour)}`;
   document.getElementById("list-title").textContent = `Routes running · ${when}`;
   document.getElementById("count").textContent = `${items.length} of ${matches.length}`;
   const top = unitWidth(MAXCAP);
-  listEl.innerHTML = items.length ? items.map(r => {
+  const shown = items.slice(0, 260);
+  listEl.innerHTML = items.length ? shown.map(r => {
     const v = capAt(r), n = tripsAt(r);
     return `<li><button type="button" class="row" data-id="${esc(r.id)}" aria-pressed="${state.selected === r}" style="--c:${C[r.key]}">
-      <span class="bullet${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
-      <span class="rn">${esc(r.name)}<small>${MODE_LABEL[r.mode]} · ${esc(VT_SHORT[r.vehicle] || r.vehicle)}</small></span>
+      <span class="bullet${r.light ? " lt" : ""}${r.agency === "ttc" && TTC_RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
+      <span class="rn">${esc(r.name)}<small>${esc(r.agencyName)} · ${esc(MODE_LABEL[r.mode] || r.mode)}</small></span>
       <span class="bar" aria-hidden="true" style="width:${(100 * unitWidth(v) / top).toFixed(1)}%"></span>
       <span class="nums">${fmt(v)}<small>${n} ${unitWord(r, n)}</small></span>
     </button></li>`;
-  }).join("") : `<li class="empty">${matches.length ? `None of these routes run ${esc(when)}.` : `No routes match “${esc(state.query)}” in the networks shown.`}</li>`;
+  }).join("") + (items.length > shown.length ? `<li class="empty">${items.length - shown.length} more — narrow the search or filters.</li>` : "")
+    : `<li class="empty">${matches.length ? `None of these routes run ${esc(when)}.` : "No routes match the current filters."}</li>`;
 }
 listEl.addEventListener("click", e => {
   const b = e.target.closest(".row");
@@ -633,7 +685,6 @@ function select(r, fly) {
     map.flyToBounds(r.line.getBounds(), { paddingTopLeft: [40, 40], paddingBottomRight: [wide ? 420 : 40, wide ? 110 : 90], maxZoom: 14, duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
   }
 }
-
 function dominant(counter) { let best = null, n = -1; for (const [k, v] of Object.entries(counter || {})) if (v > n) { best = k; n = v; } return best; }
 function vehiclesUsed(r) {
   const tally = {};
@@ -653,48 +704,48 @@ function renderDrawer() {
     ? `<span class="v">${fmt(v)}<u>passengers/hr</u></span><span class="w">${n} ${unitWord(r, n)} at the busiest stop, ≈ ${fmt(v / n)} passengers each</span>`
     : `<span class="v">—</span><span class="w">Not running in this hour</span>`;
 
-  let vehHtml;
-  if (used.length === 1) {
-    const L0 = D.loads[used[0]];
-    vehHtml = `<p>${esc(L0.label)} in every period: <span class="num">${fmt(L0.peak)}</span> peak / <span class="num">${fmt(L0.off)}</span> off-peak passengers.</p>`;
-  } else {
-    const rowsH = DAYS.map(d => `<tr><th scope="row">${DAY_LABEL[d].slice(0, 3)}</th>${r.vehicles[d].map((c, p) => {
+  const loadRows = used.map(k => {
+    const l = D.loads[k];
+    const est = /estimate|yardstick/i.test(l.basis);
+    return `<tr><td>${esc(l.label)}</td><td class="num">${fmt(l.peak)}</td><td class="num">${fmt(l.off)}</td><td><span class="tag${est ? " est" : ""}">${esc(l.basis)}</span></td></tr>`;
+  }).join("");
+
+  let periodHtml = "";
+  if (used.length > 1) {
+    periodHtml = `<div class="tablewrap"><table class="vt"><tbody>${DAYS.map(d => `<tr><th scope="row">${DAY_LABEL[d].slice(0, 3)}</th>${r.vehicles[d].map((c, p) => {
       const vt = dominant(c);
-      return `<td>${vt ? esc(VT_SHORT[vt] || vt) : "—"}<small>${esc(D.periodNames[d][p])}</small></td>`;
-    }).join("")}</tr>`).join("");
-    vehHtml = `<div class="tablewrap"><table class="vt"><tbody>${rowsH}</tbody></table></div>
-      <p>${used.map(k => `${esc(D.loads[k].label)}: <span class="num">${fmt(D.loads[k].peak)}</span> / <span class="num">${fmt(D.loads[k].off)}</span>`).join(" · ")}</p>`;
+      return `<td>${vt ? esc((D.loads[vt].label || vt).replace(/ \(seated\)/, "")) : "—"}<small>${esc(D.periodNames[d][p])}</small></td>`;
+    }).join("")}</tr>`).join("")}</tbody></table></div>`;
   }
 
   const branches = Object.entries(r.branches || {});
   const pages = r.summaryPages || [];
+  const feed = FEED_SOURCE[r.agency];
   const srcItems = [
-    `<a href="${S.gtfs.u}" target="_blank" rel="noopener">${esc(S.gtfs.t)}</a>. Route ID <span class="num">${esc(r.id)}</span>: ${DAYS.map(d => `${fmt(r.trips[d] || 0)} ${DAY_LABEL[d].toLowerCase()} trips`).join(", ")} on the sample days.`,
-    pages.length ? `<a href="${SUMMARY_URL}#page=${pages[0]}" target="_blank" rel="noopener">${esc(S.summary.t)}</a>, PDF p. ${pages.join(", ")}.` : `${esc(S.summary.t)}: route not listed; default vehicle for its mode used.`,
-    ...[...new Set(used.flatMap(k => LOAD_SOURCES[k] || []))].map(k => `<a href="${S[k].u}" target="_blank" rel="noopener">${esc(S[k].t)}</a>`),
+    `<a href="${feed.u}" target="_blank" rel="noopener">${esc(feed.t)}</a>. Route <span class="num">${esc(r.short)}</span>: ${DAYS.map(d => `${fmt(r.trips[d] || 0)} ${DAY_LABEL[d].toLowerCase()} trips`).join(", ")} on the sample days.`,
   ];
-  if (r.short === "5") srcItems.push(`<a href="${S.line5open.u}" target="_blank" rel="noopener">${esc(S.line5open.t)}</a>`);
-  if (r.short === "6") srcItems.push(`<a href="${S.line6open.u}" target="_blank" rel="noopener">${esc(S.line6open.t)}</a>`);
+  if (r.agency === "ttc" && pages.length) srcItems.push(`<a href="${SUMMARY_URL}#page=${pages[0]}" target="_blank" rel="noopener">${esc(S.summary.t)}</a>, PDF p. ${pages.join(", ")}.`);
+  for (const k of [...new Set(used.map(u => D.loads[u].src))]) if (S[k]) srcItems.push(`<a href="${S[k].u}" target="_blank" rel="noopener">${esc(S[k].t)}</a>`);
 
-  const others = DAYS.filter(d => d !== state.day);
   drawer.innerHTML = `
     <header class="dh">
-      <span class="bullet lg${r.light ? " lt" : ""}${RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
-      <div><h2>${esc(r.name)}</h2><p>${MODE_LABEL[r.mode]} · ${used.map(k => esc(VT_SHORT[k] || k)).join(", ")}</p></div>
+      <span class="bullet lg${r.light ? " lt" : ""}${r.agency === "ttc" && TTC_RAIL.has(r.short) ? "" : " sq"}" style="--c:var(--${r.key})">${esc(r.short)}</span>
+      <div><h2>${esc(r.name)}</h2><p>${esc((D.agencies[r.agency] || {}).full || r.agency)} · ${esc(MODE_LABEL[r.mode] || r.mode)}</p></div>
       <button type="button" class="x" id="dclose" aria-label="Close route details">×</button>
     </header>
     ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
     <div class="fig"><span class="k">${esc(when)}</span>${fig}</div>
     <figure class="chart">
       <div class="legendrow" aria-hidden="true">
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${col}" stroke-width="2.5"/></svg>${DAY_LABEL[state.day]}</span>
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="5 3"/></svg>${DAY_LABEL[others[0]]}</span>
-        <span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="1.5 3" stroke-linecap="round"/></svg>${DAY_LABEL[others[1]]}</span>
+        ${DAYS.map((d, i) => `<span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${d === state.day ? col : C["ink-3"]}" stroke-width="${d === state.day ? 2.5 : 1.5}" ${d === state.day ? "" : `stroke-dasharray="${i % 2 ? "1.5 3" : "5 3"}"`}/></svg>${DAY_LABEL[d]}</span>`).join("")}
       </div>
       ${chartSvg(r)}
       <p class="readout" id="readout">Passengers per hour through the day. Click the chart to jump to an hour.</p>
     </figure>
-    <div class="dsec"><h3>Vehicles</h3>${vehHtml}</div>
+    <div class="dsec"><h3>Vehicles &amp; planning load</h3>
+      <div class="tablewrap"><table class="lt-table"><thead><tr><th>Vehicle</th><th class="num">Peak</th><th class="num">Off-peak</th><th>Basis</th></tr></thead><tbody>${loadRows}</tbody></table></div>
+      ${periodHtml}
+    </div>
     ${branches.length > 1 ? `<div class="dsec"><h3>Branches</h3><ul class="br">${branches.map(([b, d]) => `<li><b>${esc(b)}</b>${esc(d)}</li>`).join("")}</ul></div>` : ""}
     <div class="dsec"><h3>Sources for this route</h3><ol class="src">${srcItems.map(i => `<li>${i}</li>`).join("")}</ol></div>`;
   document.getElementById("dclose").addEventListener("click", () => select(null));
@@ -702,7 +753,7 @@ function renderDrawer() {
 }
 
 /* ---------- hourly chart ---------- */
-const CH = { W: 340, H: 158, l: 38, r: 8, t: 8, b: 22 };
+const CH = { W: 340, H: 158, l: 40, r: 8, t: 8, b: 22 };
 const cx = i => CH.l + i * (CH.W - CH.l - CH.r) / 23;
 function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); for (const f of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (f * p >= v) return f * p; return 10 * p; }
 function chartSvg(r) {
@@ -714,13 +765,12 @@ function chartSvg(r) {
   const xt = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]].map(([i, t]) => `<text x="${cx(i)}" y="${CH.H - 6}" text-anchor="middle">${t}</text>`).join("");
   const line = arr => arr.map((v, i) => `${i ? "L" : "M"}${cx(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const cur = series[state.day];
-  const area = `${line(cur)}L${cx(23)},${y(0)}L${cx(0)},${y(0)}Z`;
   const others = DAYS.filter(d => d !== state.day);
   const i = ORDER.indexOf(state.hour);
-  return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for route ${esc(r.short)} on weekday, Saturday and Sunday">
+  return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for ${esc(routeTitle(r))} on weekday, Saturday and Sunday">
     <rect x="${(cx(i) - 6).toFixed(1)}" y="${CH.t}" width="12" height="${CH.H - CH.t - CH.b}" rx="2" fill="${C["panel-2"]}"/>
     ${grid}${xt}
-    <path d="${area}" fill="${col}" fill-opacity="0.12"/>
+    <path d="${line(cur)}L${cx(23)},${y(0)}L${cx(0)},${y(0)}Z" fill="${col}" fill-opacity="0.12"/>
     <path d="${line(series[others[1]])}" fill="none" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="1.5 3.5" stroke-linecap="round"/>
     <path d="${line(series[others[0]])}" fill="none" stroke="${C["ink-3"]}" stroke-width="1.5" stroke-dasharray="5 3"/>
     <path d="${line(cur)}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>
@@ -740,8 +790,7 @@ function wireChart(r) {
   hit.addEventListener("pointermove", e => {
     const i = indexAt(e), h = ORDER[i];
     xh.setAttribute("x1", cx(i)); xh.setAttribute("x2", cx(i)); xh.setAttribute("opacity", "0.5");
-    const part = d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][state.basis][h])}`;
-    out.textContent = `${fmtRange(h)} · ${DAYS.map(part).join(" · ")}`;
+    out.textContent = `${fmtRange(h)} · ${DAYS.map(d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][state.basis][h])}`).join(" · ")}`;
   });
   hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour through the day. Click the chart to jump to an hour."; });
   hit.addEventListener("click", e => { stopPlay(); setHour(ORDER[indexAt(e)]); });
@@ -752,9 +801,7 @@ const hourEl = document.getElementById("hour"), hourOut = document.getElementByI
 document.getElementById("ticks").innerHTML = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]]
   .map(([i, t]) => `<span style="left:calc(${(i / 23).toFixed(4)} * (100% - 16px) + 8px)">${t}</span>`).join("");
 
-function refresh() {
-  rebuildOrder(); styleRoutes(); renderList(); renderWidthKey(); renderDrawer();
-}
+function refresh() { rebuildOrder(); styleRoutes(); renderList(); renderWidthKey(); renderDrawer(); }
 function setHour(h) {
   state.hour = h;
   hourEl.value = ORDER.indexOf(h);
@@ -785,8 +832,8 @@ playBtn.addEventListener("click", () => {
 function setPressed(ids, on) { for (const id of ids) document.getElementById(id).setAttribute("aria-pressed", String(id === on)); }
 function basisHint() {
   document.getElementById("basis-hint").textContent = state.basis === "std"
-    ? "Every trip counts at its vehicle's peak planning load: 51 on a 12 m bus, 77 articulated, 130 streetcar, 1,100 on a Line 1 train."
-    : "Peak loads 6–9 AM and 3–7 PM on weekdays; the off-peak seated standard at all other times (35 on a 12 m bus, 540 on a Line 1 train).";
+    ? "Every trip counts at its vehicle's peak planning load — 51 on a TTC 12 m bus, 72 on a Viva artic, 1,944 on a 12-car GO train."
+    : "Each agency's off-peak standard outside weekday 6–9 AM and 3–7 PM. GO and UP are seated capacity either way.";
 }
 document.getElementById("b-std").onclick = () => { state.basis = "std"; setPressed(["b-std", "b-period"], "b-std"); basisHint(); refresh(); };
 document.getElementById("b-period").onclick = () => { state.basis = "period"; setPressed(["b-std", "b-period"], "b-period"); basisHint(); refresh(); };
@@ -797,20 +844,22 @@ document.getElementById("open-method").addEventListener("click", () => document.
 document.getElementById("close-method").addEventListener("click", () => document.getElementById("method").close());
 
 (function methodContent() {
-  const order = ["TR6", "T1_6", "TR4", "LFLRV", "LRV", "LFsc", "ABus", "Bus", "CB"];
+  const order = Object.keys(D.loads);
   document.getElementById("loads-table").innerHTML = `<thead><tr><th>Vehicle</th><th class="num">Peak</th><th class="num">Off-peak</th><th>Basis</th></tr></thead><tbody>${order.map(k => {
     const l = D.loads[k];
-    const tag = l.basis === "DERIVED" ? '<span class="tag d">Derived</span>' : `<span class="tag">${esc(l.basis)}</span>`;
-    return `<tr><td>${esc(l.label)}</td><td class="num">${fmt(l.peak)}</td><td class="num">${fmt(l.off)}</td><td>${tag}</td></tr>`;
+    const est = /estimate|yardstick/i.test(l.basis);
+    return `<tr><td>${esc(l.label)}</td><td class="num">${fmt(l.peak)}</td><td class="num">${fmt(l.off)}</td><td><span class="tag${est ? " est" : ""}">${esc(l.basis)}</span></td></tr>`;
   }).join("")}</tbody>`;
-  document.getElementById("all-sources").innerHTML = Object.values(S).map(s => `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")
-    + `<li>Data built ${esc(D.generated)} from the GTFS feed valid ${esc(D.feed.start)}–${esc(D.feed.end)}.</li>`;
+  const feeds = Object.entries(FEED_SOURCE).map(([k, s]) => `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("");
+  document.getElementById("all-sources").innerHTML = feeds
+    + Object.values(S).map(s => `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")
+    + `<li>Data built ${esc(D.generated)} from schedules sampled on ${Object.values(D.feed.sampleDays).join(", ")}.</li>`;
 })();
 
 /* ---------- address ---------- */
 function writeHash() {
   const p = new URLSearchParams({ day: state.day, hour: String(state.hour) });
-  if (state.selected) p.set("route", state.selected.short);
+  if (state.selected) p.set("route", state.selected.id);
   try { history.replaceState(null, "", "#" + p.toString()); } catch (_) {}
 }
 function readHash() {
@@ -822,7 +871,7 @@ function readHash() {
 }
 
 /* ---------- theme ---------- */
-function retheme() { readTokens(); styleBase(); styleStations(); styleRoutes(); renderWidthKey(); renderList(); renderDrawer(); }
+function retheme() { readTokens(); styleBase(); styleStations(); styleRoutes(); renderWidthKey(); renderClassKey(); renderList(); renderDrawer(); }
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
 new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
@@ -830,13 +879,15 @@ map.on("zoomend", () => { styleRoutes(); renderWidthKey(); zoomClasses(); });
 
 /* ---------- boot ---------- */
 const startRoute = readHash();
-if (bm) map.fitBounds(base.city.getBounds(), { padding: [12, 12] }); else map.setView([43.715, -79.39], 11);
-basisHint(); styleBase(); styleStations(); renderVehicleKey(); zoomClasses();
+const allBounds = L.latLngBounds([]);
+for (const r of routes) for (const g of r.geom) for (const p of g) allBounds.extend(p);
+map.fitBounds(allBounds, { padding: [10, 10] });
+basisHint(); styleBase(); styleStations(); renderClassKey(); zoomClasses();
 document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === state.day)));
 hourEl.value = ORDER.indexOf(state.hour);
 hourOut.textContent = fmtRange(state.hour);
 refresh();
-if (startRoute) { const r = routes.find(x => x.short === startRoute); if (r) select(r, true); }
+if (startRoute) { const r = byId.get(startRoute) || routes.find(x => x.short === startRoute); if (r) select(r, true); }
 })();
 </script>
 </body>
