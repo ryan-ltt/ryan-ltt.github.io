@@ -243,14 +243,6 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         </div>
         <p class="hint" id="basis-hint"></p>
       </div>
-      <div class="ctl">
-        <span class="lab" id="lab-scale">Line width</span>
-        <div class="seg" role="group" aria-labelledby="lab-scale">
-          <button type="button" id="s-sqrt" aria-pressed="true">Compressed</button>
-          <button type="button" id="s-lin" aria-pressed="false">True to scale</button>
-        </div>
-        <p class="hint" id="scale-hint"></p>
-      </div>
       <fieldset class="filters">
         <legend class="lab">Agencies <button type="button" class="alltoggle" id="ag-all">TTC only</button></legend>
         <div class="chips" id="agency-chips"></div>
@@ -264,6 +256,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
     <section class="section" aria-label="Legend">
       <span class="lab">Line width at this zoom</span>
       <div class="wkey" id="wkey"></div>
+      <p class="hint">Width is proportional to capacity: a line twice as wide carries twice as many people.</p>
       <ul class="ckey" id="ckey"></ul>
     </section>
 
@@ -467,7 +460,7 @@ const MAXCAP = Math.max(...routes.map(r => r.stats.std.max.v));
 const byId = new Map(routes.map(r => [r.id, r]));
 
 const state = {
-  basis: "std", scale: "sqrt", day: "weekday", hour: 8, selected: null, query: "",
+  basis: "std", day: "weekday", hour: 8, selected: null, query: "",
   agencies: new Set(Object.keys(D.agencies)),
   types: new Set(TYPES.map(t => t[0]).filter(t => t !== "night")),
 };
@@ -505,10 +498,10 @@ function styleBase() {
 
 /* widths */
 function zoomFactor() { return Math.pow(2, (map.getZoom() - 11) * 0.32); }
-function unitWidth(cap) { return state.scale === "sqrt" ? Math.sqrt(cap / MAXCAP) : cap / MAXCAP; }
+function unitWidth(cap) { return cap / MAXCAP; }  // true to scale
 function px(cap) {
   if (!cap) return 0;
-  return Math.max(state.scale === "sqrt" ? 1.2 : 0.8, 34 * unitWidth(cap) * zoomFactor());
+  return Math.max(0.8, 34 * unitWidth(cap) * zoomFactor());
 }
 
 /* route layers: drawn thickest-first (by weekly peak) so thin routes stay on top */
@@ -624,9 +617,6 @@ function renderWidthKey() {
     const h = Math.max(w + 4, 12);
     return `<svg width="84" height="${h.toFixed(0)}" viewBox="0 0 84 ${h.toFixed(0)}" aria-hidden="true"><line x1="${w / 2 + 1}" y1="${h / 2}" x2="${83 - w / 2}" y2="${h / 2}" stroke="${C["ink-3"]}" stroke-width="${w.toFixed(2)}" stroke-linecap="round"/></svg><span class="v">${fmt(v)} passengers/hr${px(v) > 40 ? " (drawn wider)" : ""}</span>`;
   }).join("");
-  document.getElementById("scale-hint").textContent = state.scale === "sqrt"
-    ? "Width follows the square root of capacity so bus routes stay readable. Compare numbers, not widths."
-    : "Width is proportional to capacity: a line twice as wide carries twice as many people.";
 }
 function renderClassKey() {
   document.getElementById("ckey").innerHTML = CLASS_KEY.map(([k, label, note]) =>
@@ -865,8 +855,6 @@ function basisHint() {
 }
 document.getElementById("b-std").onclick = () => { state.basis = "std"; setPressed(["b-std", "b-period"], "b-std"); basisHint(); refresh(); };
 document.getElementById("b-period").onclick = () => { state.basis = "period"; setPressed(["b-std", "b-period"], "b-period"); basisHint(); refresh(); };
-document.getElementById("s-sqrt").onclick = () => { state.scale = "sqrt"; setPressed(["s-sqrt", "s-lin"], "s-sqrt"); styleRoutes(); renderList(); renderWidthKey(); };
-document.getElementById("s-lin").onclick = () => { state.scale = "linear"; setPressed(["s-sqrt", "s-lin"], "s-lin"); styleRoutes(); renderList(); renderWidthKey(); };
 
 document.getElementById("open-method").addEventListener("click", () => document.getElementById("method").showModal());
 document.getElementById("close-method").addEventListener("click", () => document.getElementById("method").close());
