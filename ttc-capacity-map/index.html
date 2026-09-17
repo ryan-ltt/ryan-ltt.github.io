@@ -563,9 +563,18 @@ function displayName(r) {
   const short = r.short.trim().toLowerCase();
   let n = r.name.trim();
   const low = n.toLowerCase();
+  // Only strip a whole token: GO's codes are letters (KI, MI, ST), and "Kitchener"
+  // must not become "tchener".
+  const SEP = /[\s:–—-]/;
   for (const token of ["route " + short, short]) {
-    if (low.startsWith(token)) { n = n.slice(token.length).replace(/^[\s:–—-]+/, ""); break; }
-    if (low.endsWith(token)) { n = n.slice(0, n.length - token.length).replace(/[\s:–—-]+$/, ""); break; }
+    if (low.startsWith(token)) {
+      const rest = n.slice(token.length);
+      if (rest === "" || SEP.test(rest[0])) { n = rest.replace(/^[\s:–—-]+/, ""); break; }
+    }
+    if (low.endsWith(token)) {
+      const head = n.slice(0, n.length - token.length);
+      if (head === "" || SEP.test(head[head.length - 1])) { n = head.replace(/[\s:–—-]+$/, ""); break; }
+    }
   }
   NAME_CACHE.set(r.id, n.trim());
   return NAME_CACHE.get(r.id);
