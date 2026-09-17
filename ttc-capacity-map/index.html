@@ -337,7 +337,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>GO bus and UP Express:</b> counted at seated capacity — 57 per coach, 173 per UP train.</li>
         <li><b>YRT:</b> Viva routes counted as 60-foot articulated, others as 40-foot, using YRT's own Table 11 figures.</li>
         <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated; Hamilton's 10 B-Line likewise.</li>
-        <li><b>MiWay, Halton agencies:</b> no articulated assignment is published, so all trips are counted as 12 m buses. MiWay runs articulated buses on some corridors, so its busiest routes are understated.</li>
+        <li><b>MiWay:</b> no articulated assignment is published, so the map watches the agency’s realtime feed instead. Every vehicle broadcasts its fleet number, and MiWay’s published roster says which numbers are 60-foot artics, so routes are classified by what actually ran. The route panel shows the share and how many sightings it rests on.</li><li><b>Halton agencies (Oakville, Burlington, Milton):</b> all trips counted as 12 m buses.</li>
       </ul>
     </section>
 
@@ -771,6 +771,7 @@ function renderDrawer() {
     </figure>
     <div class="dsec"><h3>Vehicles &amp; planning load</h3>
       <div class="tablewrap"><table class="lt-table"><thead><tr><th>Vehicle</th><th class="num">Peak</th><th class="num">Off-peak</th><th>Basis</th></tr></thead><tbody>${loadRows}</tbody></table></div>
+      ${r.observed ? `<p><span class="tag">Observed</span> ${Math.round(r.observed.share * 100)}% of ${r.observed.total} vehicle sightings on this route were articulated, from the agency's realtime feed.</p>` : ""}
       ${periodHtml}
     </div>
     ${branches.length > 1 ? `<div class="dsec"><h3>Branches</h3><ul class="br">${branches.map(([b, d]) => `<li><b>${esc(b)}</b>${esc(d)}</li>`).join("")}</ul></div>` : ""}
