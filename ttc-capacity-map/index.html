@@ -235,7 +235,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
       <p class="eyebrow" id="eyebrow">Ontario · Fall 2026 schedules</p>
       <h1>Ontario Capacity Map</h1>
-      <p class="dek">Every route from forty agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
+      <p class="dek">Every route from forty-two agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -333,6 +333,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated. Brampton runs 40-foot buses on Züm too, and its realtime feed needs an API key, so these four routes are overstated.</li>
         <li><b>VIA Rail:</b> Corridor trains are counted as one Siemens Venture set — 281 seats, the configuration VIA publishes. Which set works which train is not published, and the Canadian and the Maple Leaf run seasonal consists, so those are a flat estimate.</li>
         <li><b>Ontario Northland:</b> the Northlander at its published 169 seats; the motor coaches at an estimated 55, since ONTC publishes no seat count.</li>
+        <li><b>FlixBus and Greyhound:</b> one feed carries both carriers, at the same estimated 55 seats. It is continental, so a route appears only if it genuinely runs in Ontario — 18 FlixBus routes and one Greyhound, New York–Buffalo–Toronto. Its times are published in UTC and are converted to Toronto time here.</li>
         <li><b>O-Train and ION:</b> neither operator publishes a planning load, so the TTC's streetcar rule is applied to the capacity each does publish — peak at 52% of it, off-peak at the seat count. A two-car Citadis Spirit on O-Train Line 1 comes out at 312.</li>
         <li><b>MiWay, Hamilton and Durham:</b> none publishes an articulated assignment, so the map watches their realtime feeds. Every vehicle broadcasts its fleet number, and the published rosters say which numbers are 60-foot artics. Where a route runs a mix, it is counted at the observed proportion rather than all-or-nothing — Durham’s eight artics work PULSE 900 and 901, but most trips there are still 40-foot buses. The route panel shows the share and how many sightings it rests on.</li>
       </ul>
@@ -343,8 +344,9 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <ul>
         <li>Scheduled service, not delivered service.</li>
         <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
-        <li>Feeds come from forty agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li>Feeds come from forty-two agencies with different update cycles, so some schedules are fresher than others.</li>
         <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps.</li>
+        <li>Megabus and Rider Express are missing for cause, not oversight: Megabus's feed still lists Toronto stops but runs no trips to them, and Rider Express's published feed expired at the end of 2023.</li>
         <li>Membership was tested rather than assumed: every candidate agency's stops were matched against the stops of GO, UP, the TTC, VIA and Ontario Northland. Kawartha Lakes and St. Thomas came out 27 km and 21 km from anything Toronto-bound, so they are not on the map.</li>
         <li>School and seasonal routes appear only if they run on the sample days. Hamilton lists 80 routes but runs 31 on a normal weekday.</li>
         <li>GO's seated-capacity basis is not comparable to the TTC's standing-load standards: a GO train counted at seats only still dwarfs a bus counted with standees.</li>
@@ -387,7 +389,7 @@ const S = {
   viacorridor: { t: "VIA Rail — new Corridor fleet: 194 economy and 87 business seats per standard trainset", u: "https://corpo.viarail.ca/en/projects-infrastructure/train-fleet/corridor-fleet" },
   vialongdistance: { t: "VIA Rail — the Canadian and the Maple Leaf (consists vary by season; the figure here is an estimate)", u: "https://www.viarail.ca/en/explore-our-destinations/trains/rockies-and-pacific/toronto-vancouver-canadian" },
   northlander: { t: "Ontario Northland — Siemens Venture trainset, 169 seats in three coaches", u: "https://www.ontarionorthland.ca/en/northlander/siemens-venture-trainset" },
-  ontccoach: { t: "Ontario Northland motor coach — 55 seats, estimated from its MCI fleet; ONTC publishes no figure", u: "https://www.ontarionorthland.ca/en/travel/travelling-bus" },
+  iccoach: { t: "Intercity motor coach — 55 seats, estimated from typical MCI and Van Hool fleets; no intercity operator publishes a figure", u: "https://www.ontarionorthland.ca/en/travel/travelling-bus" },
   ottspirit: { t: "OC Transpo — Spirit trains: 600 per two-car train, 240 of them seated", u: "https://www.octranspo.com/en/our-services/vehicles/spirit-trains/" },
   ottrail: { t: "OC Transpo — O-Train Lines 2 and 4: 420 per Stadler FLIRT, 260 per Alstom LINT", u: "https://www.octranspo.com/en/our-services/vehicles/flirt-trains/" },
   ion: { t: "ION light rail — Flexity Freedom, the same 30 m car as Line 5", u: "https://www.grt.ca/en/about-grt/ion-light-rail-vehicles.aspx" },
@@ -408,6 +410,8 @@ const FEED_SOURCE = {
   burlington: { t: "City of Burlington Open Data — Transit schedule data (GTFS)", u: "https://navburl-burlington.opendata.arcgis.com/datasets/Burlington::transit-schedule-data-gtfs" },
   milton: { t: "Milton Transit GTFS (Metrolinx-hosted)", u: "https://discover-milton.hub.arcgis.com/datasets/milton-gtfs-1/about" },
   via: { t: "VIA Rail — Developer resources (GTFS, Open Government Licence – Canada)", u: "https://www.viarail.ca/en/developer-resources" },
+  flix: { t: "FlixBus — North American GTFS feed (also carries Greyhound Lines)", u: "https://gtfs.gis.flix.tech/gtfs_generic_us.zip" },
+  greyhound: { t: "Greyhound Lines — published inside FlixBus's North American GTFS feed", u: "https://gtfs.gis.flix.tech/gtfs_generic_us.zip" },
 };
 // Most agencies outside the GTHA publish no portal page for their feed, so the feed
 // itself is the citation.
@@ -494,7 +498,7 @@ const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 5, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedules: 40 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 42 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
