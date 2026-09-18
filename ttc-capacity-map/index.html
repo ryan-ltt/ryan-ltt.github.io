@@ -235,7 +235,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
       <p class="eyebrow" id="eyebrow">Ontario · Fall 2026 schedules</p>
       <h1>Ontario Capacity Map</h1>
-      <p class="dek">Every route from forty-two agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
+      <p class="dek">Every route from forty-four agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -333,6 +333,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated. Brampton runs 40-foot buses on Züm too, and its realtime feed needs an API key, so these four routes are overstated.</li>
         <li><b>VIA Rail:</b> Corridor trains are counted as one Siemens Venture set — 281 seats, the configuration VIA publishes. Which set works which train is not published, and the Canadian and the Maple Leaf run seasonal consists, so those are a flat estimate.</li>
         <li><b>Ontario Northland:</b> the Northlander at its published 169 seats; the motor coaches at an estimated 55, since ONTC publishes no seat count.</li>
+        <li><b>Peterborough and Brantford publish no feed at all.</b> Both connect to Toronto — GO buses call at Peterborough's terminal and Brantford's — so their service is read from the timetable tables on each city's website, with route geometry from Peterborough's own GIS and from OpenStreetMap for Brantford. Those two are the only agencies here not built from a published feed, and the route panel says so. Their timetables list timepoints rather than every stop, so a route's busiest point is its busiest timepoint.</li>
         <li><b>FlixBus and Greyhound:</b> one feed carries both carriers, at the same estimated 55 seats. It is continental, so a route appears only if it genuinely runs in Ontario — 18 FlixBus routes and one Greyhound, New York–Buffalo–Toronto. Its times are published in UTC and are converted to Toronto time here.</li>
         <li><b>O-Train and ION:</b> neither operator publishes a planning load, so the TTC's streetcar rule is applied to the capacity each does publish — peak at 52% of it, off-peak at the seat count. A two-car Citadis Spirit on O-Train Line 1 comes out at 312.</li>
         <li><b>MiWay, Hamilton and Durham:</b> none publishes an articulated assignment, so the map watches their realtime feeds. Every vehicle broadcasts its fleet number, and the published rosters say which numbers are 60-foot artics. Where a route runs a mix, it is counted at the observed proportion rather than all-or-nothing — Durham’s eight artics work PULSE 900 and 901, but most trips there are still 40-foot buses. The route panel shows the share and how many sightings it rests on.</li>
@@ -344,7 +345,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <ul>
         <li>Scheduled service, not delivered service.</li>
         <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
-        <li>Feeds come from forty-two agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li>Feeds come from forty-four agencies with different update cycles, so some schedules are fresher than others.</li>
         <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps.</li>
         <li>Megabus and Rider Express are missing for cause, not oversight: Megabus's feed still lists Toronto stops but runs no trips to them, and Rider Express's published feed expired at the end of 2023.</li>
         <li>Membership was tested rather than assumed: every candidate agency's stops were matched against the stops of GO, UP, the TTC, VIA and Ontario Northland. Kawartha Lakes and St. Thomas came out 27 km and 21 km from anything Toronto-bound, so they are not on the map.</li>
@@ -415,7 +416,13 @@ const FEED_SOURCE = {
 };
 // Most agencies outside the GTHA publish no portal page for their feed, so the feed
 // itself is the citation.
-const feedSource = k => FEED_SOURCE[k] || { t: `${(D.agencies[k] || {}).full || k} — GTFS schedule feed`, u: (D.agencies[k] || {}).feed || "#" };
+const feedSource = k => {
+  const a = D.agencies[k] || {};
+  if (FEED_SOURCE[k]) return FEED_SOURCE[k];
+  const what = a.derived ? "timetables published by the city, assembled into a feed by this project"
+                         : "GTFS schedule feed";
+  return { t: `${a.full || k} — ${what}`, u: a.feed || "#" };
+};
 
 /* ---------- constants ---------- */
 const TTC_RAIL = new Set(["1", "2", "4", "5", "6"]);
@@ -498,7 +505,7 @@ const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 5, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedules: 42 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 44 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
@@ -771,6 +778,8 @@ function renderDrawer() {
     }).join("")}</tr>`).join("")}</tbody></table></div>`;
   }
 
+  const derived = (D.agencies[r.agency] || {}).derived
+    ? `<p class="note"><b>Built from published timetables.</b> ${esc((D.agencies[r.agency] || {}).full)} publishes no GTFS feed, so this route's service comes from the timetable tables on the city's own website and its shape from public route geometry. Times are listed at timepoints rather than every stop.</p>` : "";
   const branches = Object.entries(r.branches || {});
   const pages = r.summaryPages || [];
   const feed = feedSource(r.agency);
@@ -787,6 +796,7 @@ function renderDrawer() {
       <button type="button" class="x" id="dclose" aria-label="Close route details">×</button>
     </header>
     ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
+    ${derived}
     <div class="fig"><span class="k">${esc(when)}</span>${fig}</div>
     <figure class="chart">
       <div class="legendrow" aria-hidden="true">
