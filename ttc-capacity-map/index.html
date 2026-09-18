@@ -235,7 +235,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
       <p class="eyebrow" id="eyebrow">Ontario · Fall 2026 schedules</p>
       <h1>Ontario Capacity Map</h1>
-      <p class="dek">Every route from thirty-five agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
+      <p class="dek">Every route from forty agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -343,7 +343,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <ul>
         <li>Scheduled service, not delivered service.</li>
         <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
-        <li>Feeds come from thirty-five agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li>Feeds come from forty agencies with different update cycles, so some schedules are fresher than others.</li>
         <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps.</li>
         <li>Membership was tested rather than assumed: every candidate agency's stops were matched against the stops of GO, UP, the TTC, VIA and Ontario Northland. Kawartha Lakes and St. Thomas came out 27 km and 21 km from anything Toronto-bound, so they are not on the map.</li>
         <li>School and seasonal routes appear only if they run on the sample days. Hamilton lists 80 routes but runs 31 on a normal weekday.</li>
@@ -494,7 +494,7 @@ const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 5, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedules: 35 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 40 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
