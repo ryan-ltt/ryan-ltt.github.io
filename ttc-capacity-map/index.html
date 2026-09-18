@@ -138,6 +138,7 @@ a:hover{text-decoration-color:var(--ink)}
 .timebar .seg{grid-auto-columns:auto}
 .timebar output{font:500 16px/1 var(--font-mono);font-variant-numeric:tabular-nums;min-width:8.5ch;text-align:right}
 .slider{position:relative;padding-bottom:16px}
+.notime .slider,.notime .play{opacity:.38;pointer-events:none}
 #hour{width:100%;margin:0;accent-color:var(--ink);display:block}
 .ticks span{position:absolute;bottom:0;transform:translateX(-50%);font:10.5px/1 var(--font-mono);color:var(--ink-3);white-space:nowrap}
 .play{border:0;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--panel);cursor:pointer;display:grid;place-items:center}
@@ -280,6 +281,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
         <button type="button" data-day="saturday" aria-pressed="false">Sat</button>
         <button type="button" data-day="sunday" aria-pressed="false">Sun</button>
+        <button type="button" data-day="all" aria-pressed="false" title="Every route at its own busiest hour">All routes</button>
       </div>
       <button type="button" class="play" id="play" aria-label="Play through the day"><svg viewBox="0 0 14 14"><path d="M3 1.5v11l9-5.5z"/></svg></button>
       <div class="slider">
@@ -310,6 +312,7 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins — where branches and short-turns overlap.</li>
         <li><b>Days.</b> Real sample days inside every feed's validity window: Tuesday Sept 22, Saturday Sept 26 and Sunday Sept 27, 2026.</li>
         <li><b>Late night.</b> After about 1 AM, daytime routes show only their last trips finishing their runs. Overnight service is the TTC's Blue Night network and a few regional night routes.</li>
+        <li><b>All routes.</b> The fourth button on the time bar drops the hour and draws every route at its own busiest hour, so peak-only and school routes are not hidden. Each route is then at a different moment, so the map is a catalogue rather than a snapshot.</li>
         <li><b>Where the lines stop.</b> Routes are drawn only inside Ontario — VIA reaches Vancouver and New York, Ontario Northland reaches Winnipeg — but every figure counts the whole trip.</li>
       </ul>
     </section>
@@ -413,7 +416,8 @@ const feedSource = k => FEED_SOURCE[k] || { t: `${(D.agencies[k] || {}).full || 
 /* ---------- constants ---------- */
 const TTC_RAIL = new Set(["1", "2", "4", "5", "6"]);
 const DAYS = ["weekday", "saturday", "sunday"];
-const DAY_LABEL = { weekday: "Weekday", saturday: "Saturday", sunday: "Sunday" };
+const DAY_LABEL = { weekday: "Weekday", saturday: "Saturday", sunday: "Sunday", all: "All routes" };
+const ALL = "all";   // every route at its own busiest hour, rather than one shared hour
 const TYPES = [
   ["rapid", "Subway & light rail", r => r.mode === "subway" || r.mode === "lrt"],
   ["rail", "Commuter rail", r => r.mode === "rail"],
@@ -479,8 +483,12 @@ const state = {
   agencies: new Set(Object.keys(D.agencies)),
   types: new Set(TYPES.map(t => t[0]).filter(t => t !== "night")),
 };
-const capAt = r => r.hourly[state.day][BASIS][state.hour];
-const tripsAt = r => r.hourly[state.day].n[state.hour];
+const isAll = () => state.day === ALL;
+const peakOf = r => r.stats[BASIS].max;
+const dayOf = r => (isAll() ? peakOf(r).day : state.day);
+const hourOf = r => (isAll() ? peakOf(r).hour : state.hour);
+const capAt = r => (isAll() ? peakOf(r).v : r.hourly[state.day][BASIS][state.hour]);
+const tripsAt = r => (isAll() ? peakOf(r).trips : r.hourly[state.day].n[state.hour]);
 const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 
 /* ---------- map ---------- */
@@ -690,8 +698,8 @@ function renderList() {
   const matches = routes.filter(r => visible(r) && (!q || r.short.toLowerCase().startsWith(q) || r.name.toLowerCase().includes(q) || r.agencyName.toLowerCase().includes(q)));
   const items = matches.filter(r => capAt(r) > 0)
     .sort((a, b) => capAt(b) - capAt(a) || a.short.localeCompare(b.short, "en", { numeric: true }));
-  const when = `${DAY_LABEL[state.day]}, ${fmtRange(state.hour)}`;
-  document.getElementById("list-title").textContent = `Routes running · ${when}`;
+  const when = isAll() ? "every route at its busiest hour" : `${DAY_LABEL[state.day]}, ${fmtRange(state.hour)}`;
+  document.getElementById("list-title").textContent = isAll() ? "All routes · busiest hour" : `Routes running · ${when}`;
   document.getElementById("count").textContent = `${items.length} of ${matches.length}`;
   const top = unitWidth(MAXCAP);
   const shown = items.slice(0, 260);
@@ -740,7 +748,7 @@ function renderDrawer() {
   const used = vehiclesUsed(r);
   const col = colOf(r);
   const v = capAt(r), n = tripsAt(r);
-  const when = `${DAY_LABEL[state.day]} · ${fmtRange(state.hour)}`;
+  const when = isAll() ? `Busiest hour · ${DAY_LABEL[dayOf(r)]} ${fmtRange(hourOf(r))}` : `${DAY_LABEL[state.day]} · ${fmtRange(state.hour)}`;
   const fig = v > 0
     ? `<span class="v">${fmt(v)}<u>passengers/hr</u></span><span class="w">${n} ${unitWord(r, n)} at the busiest stop, ≈ ${fmt(v / n)} passengers each</span>`
     : `<span class="v">—</span><span class="w">Not running in this hour</span>`;
@@ -778,7 +786,7 @@ function renderDrawer() {
     <div class="fig"><span class="k">${esc(when)}</span>${fig}</div>
     <figure class="chart">
       <div class="legendrow" aria-hidden="true">
-        ${DAYS.map((d, i) => `<span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${d === state.day ? col : C["ink-3"]}" stroke-width="${d === state.day ? 2.5 : 1.5}" ${d === state.day ? "" : `stroke-dasharray="${i % 2 ? "1.5 3" : "5 3"}"`}/></svg>${DAY_LABEL[d]}</span>`).join("")}
+        ${DAYS.map((d, i) => `<span><svg viewBox="0 0 22 8"><line x1="1" y1="4" x2="21" y2="4" stroke="${d === dayOf(r) ? col : C["ink-3"]}" stroke-width="${d === dayOf(r) ? 2.5 : 1.5}" ${d === dayOf(r) ? "" : `stroke-dasharray="${i % 2 ? "1.5 3" : "5 3"}"`}/></svg>${DAY_LABEL[d]}</span>`).join("")}
       </div>
       ${chartSvg(r)}
       <p class="readout" id="readout">Passengers per hour through the day. Click the chart to jump to an hour.</p>
@@ -806,9 +814,9 @@ function chartSvg(r) {
   const grid = [0, ymax / 2, ymax].map(v => `<line x1="${CH.l}" x2="${CH.W - CH.r}" y1="${y(v)}" y2="${y(v)}" stroke="${C.rule}" stroke-width="1"/><text x="${CH.l - 6}" y="${y(v) + 3.5}" text-anchor="end">${compact(v)}</text>`).join("");
   const xt = [[2, "6 AM"], [8, "12 PM"], [14, "6 PM"], [20, "12 AM"]].map(([i, t]) => `<text x="${cx(i)}" y="${CH.H - 6}" text-anchor="middle">${t}</text>`).join("");
   const line = arr => arr.map((v, i) => `${i ? "L" : "M"}${cx(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
-  const cur = series[state.day];
-  const others = DAYS.filter(d => d !== state.day);
-  const i = ORDER.indexOf(state.hour);
+  const cur = series[dayOf(r)];
+  const others = DAYS.filter(d => d !== dayOf(r));
+  const i = ORDER.indexOf(hourOf(r));
   return `<svg id="chart" viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="Hourly capacity for ${esc(routeTitle(r))} on weekday, Saturday and Sunday">
     <rect x="${(cx(i) - 6).toFixed(1)}" y="${CH.t}" width="12" height="${CH.H - CH.t - CH.b}" rx="2" fill="${C["panel-2"]}"/>
     ${grid}${xt}
@@ -835,7 +843,12 @@ function wireChart(r) {
     out.textContent = `${fmtRange(h)} · ${DAYS.map(d => `${DAY_LABEL[d].slice(0, 3)} ${fmt(r.hourly[d][BASIS][h])}`).join(" · ")}`;
   });
   hit.addEventListener("pointerleave", () => { xh.setAttribute("opacity", "0"); out.textContent = "Passengers per hour through the day. Click the chart to jump to an hour."; });
-  hit.addEventListener("click", e => { stopPlay(); setHour(ORDER[indexAt(e)]); });
+  hit.addEventListener("click", e => {
+    stopPlay();
+    const h = ORDER[indexAt(e)];     // read the position before setDay redraws this chart away
+    if (isAll()) setDay(dayOf(r));   // leave all-routes mode at the day this chart is drawn for
+    setHour(h);
+  });
 }
 
 /* ---------- time controls ---------- */
@@ -847,12 +860,21 @@ function refresh() { rebuildOrder(); styleRoutes(); renderList(); renderWidthKey
 function setHour(h) {
   state.hour = h;
   hourEl.value = ORDER.indexOf(h);
-  hourOut.textContent = fmtRange(h);
+  syncTime();
   refresh(); writeHash();
+}
+function syncTime() {
+  const all = isAll();
+  hourOut.textContent = all ? "Busiest hour" : fmtRange(state.hour);
+  hourEl.disabled = all;
+  playBtn.disabled = all;
+  document.getElementById("timebar").classList.toggle("notime", all);
 }
 function setDay(d) {
   state.day = d;
+  if (isAll()) stopPlay();
   document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === d)));
+  syncTime();
   refresh(); writeHash();
 }
 hourEl.addEventListener("input", () => { stopPlay(); setHour(ORDER[+hourEl.value]); });
@@ -900,7 +922,7 @@ function writeHash() {
 }
 function readHash() {
   const p = new URLSearchParams(location.hash.slice(1));
-  if (DAYS.includes(p.get("day"))) state.day = p.get("day");
+  if ([...DAYS, ALL].includes(p.get("day"))) state.day = p.get("day");
   const h = Number(p.get("hour"));
   if (p.has("hour") && Number.isInteger(h) && h >= 0 && h < 24) state.hour = h;
   return p.get("route");
@@ -921,7 +943,7 @@ map.fitBounds(L.latLngBounds([[43.10, -80.30], [44.20, -78.60]]), { padding: [8,
 styleBase(); styleStations(); renderClassKey(); zoomClasses();
 document.querySelectorAll("#timebar [data-day]").forEach(o => o.setAttribute("aria-pressed", String(o.dataset.day === state.day)));
 hourEl.value = ORDER.indexOf(state.hour);
-hourOut.textContent = fmtRange(state.hour);
+syncTime();
 refresh();
 if (startRoute) { const r = byId.get(startRoute) || routes.find(x => x.short === startRoute); if (r) select(r, true); }
 })();
