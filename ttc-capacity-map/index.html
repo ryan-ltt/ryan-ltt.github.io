@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Ontario Capacity Map</title>
-<meta name="description" content="Every transit route in Ontario that connects to Toronto, drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
+<title>Ontario &amp; Québec Capacity Map</title>
+<meta name="description" content="Every transit route in Ontario and Québec you can reach from Toronto, drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
@@ -233,9 +233,9 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
   <aside class="rail" id="rail" aria-label="Map controls and route list">
     <header class="brand">
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
-      <p class="eyebrow" id="eyebrow">Ontario · Fall 2026 schedules</p>
-      <h1>Ontario Capacity Map</h1>
-      <p class="dek">Every route from forty-four agencies — every Ontario system that connects to Toronto — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch the province through the day.</p>
+      <p class="eyebrow" id="eyebrow">Ontario &amp; Québec · Fall 2026 schedules</p>
+      <h1>Ontario &amp; Québec Capacity Map</h1>
+      <p class="dek">Every route from fifty-six agencies — every system in Ontario and Québec you can reach from Toronto by transit — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch two provinces through the day.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -269,13 +269,13 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
     <footer class="railfoot">
       <button type="button" class="linkbtn" id="open-method">Method &amp; sources</button>
       <p>Capacity is scheduled, not observed: trips in each agency's published GTFS schedule × the planning load for each vehicle.</p>
-      <p>Intercity lines are drawn only inside Ontario; their figures still count the whole trip.</p>
+      <p>Intercity lines are drawn only inside Ontario and Québec; their figures still count the whole trip.</p>
       <p>Data used in this product or service is provided with the permission of Metrolinx.</p>
     </footer>
   </aside>
 
   <main class="stage">
-    <div id="map" role="application" aria-label="Map of Ontario transit routes drawn by capacity"></div>
+    <div id="map" role="application" aria-label="Map of Ontario and Québec transit routes drawn by capacity"></div>
     <div class="timebar" id="timebar">
       <div class="seg" role="group" aria-label="Day of week">
         <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
@@ -310,10 +310,10 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <div class="formula">capacity (pph) = Σ trips departing the busiest stop in that hour × planning load of each trip's vehicle</div>
       <ul>
         <li><b>Busiest point.</b> For each hour, every stop in both directions is checked and the highest total wins — where branches and short-turns overlap.</li>
-        <li><b>Days.</b> Real sample days inside every feed's validity window: Tuesday Sept 22, Saturday Sept 26 and Sunday Sept 27, 2026.</li>
+        <li><b>Days.</b> Real sample days inside every feed's validity window: Thursday Sept 24, Saturday Sept 26 and Sunday Sept 27, 2026.</li>
         <li><b>Late night.</b> After about 1 AM, daytime routes show only their last trips finishing their runs. Overnight service is the TTC's Blue Night network and a few regional night routes.</li>
         <li><b>All routes.</b> The fourth button on the time bar drops the hour and draws every route at its own busiest hour, so peak-only and school routes are not hidden. Each route is then at a different moment, so the map is a catalogue rather than a snapshot.</li>
-        <li><b>Where the lines stop.</b> Routes are drawn only inside Ontario — VIA reaches Vancouver and New York, Ontario Northland reaches Winnipeg — but every figure counts the whole trip.</li>
+        <li><b>Where the lines stop.</b> Routes are drawn only inside Ontario and Québec — VIA reaches Vancouver and Halifax, Ontario Northland reaches Winnipeg — but every figure counts the whole trip.</li>
       </ul>
     </section>
 
@@ -333,9 +333,13 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Brampton:</b> Züm routes (501, 502, 505, 511) counted as articulated. Brampton runs 40-foot buses on Züm too, and its realtime feed needs an API key, so these four routes are overstated.</li>
         <li><b>VIA Rail:</b> Corridor trains are counted as one Siemens Venture set — 281 seats, the configuration VIA publishes. Which set works which train is not published, and the Canadian and the Maple Leaf run seasonal consists, so those are a flat estimate.</li>
         <li><b>Ontario Northland:</b> the Northlander at its published 169 seats; the motor coaches at an estimated 55, since ONTC publishes no seat count.</li>
+        <li><b>Montréal's metro.</b> The TTC's streetcar rule does not transfer to a metro, so the yardstick here is the TTC's own subway standard: Table 4 puts a six-car Toronto Rocket at 1,100 in the peak and 540 off-peak against a published 1,458 crush load, which is 75% and 37%. Those shares are applied to each Montréal train's published capacity — 1,173 for a nine-car Azur, 724 for the six-car MR-73 that works the blue line. Line 2 is counted as Azur and line 4 as MR-73; line 1 still runs both, so it is counted at the mid-point of the two.</li>
+        <li><b>The REM</b> is counted at the 600 its operator publishes for the four-car train it runs in the peak, and at the 64 seats of the two-car train it runs off-peak.</li>
+        <li><b>exo trains</b> are the Montréal side of the GO problem: exo publishes no per-trip consist either. Each train is counted as eight cars at the 147 seats of its newest multilevel cars, a range of 880 to 1,470, and the route panel says so.</li>
+        <li><b>RTC and STO</b> are the only agencies outside the GTHA whose articulated assignment is documented: Québec City's Métrobus network (the 800 series) and Gatineau's Rapibus corridor both run 60-foot buses, and are counted that way. STM's SRB Pie-IX is counted the same way. Everything else in Québec is counted as a 40-foot bus.</li>
         <li><b>Peterborough and Brantford publish no feed at all.</b> Both connect to Toronto — GO buses call at Peterborough's terminal and Brantford's — so their service is read from the timetable tables on each city's website, with route geometry from Peterborough's own GIS and from OpenStreetMap for Brantford. Those two are the only agencies here not built from a published feed, and the route panel says so. Their timetables list timepoints rather than every stop, so a route's busiest point is its busiest timepoint.</li>
-        <li><b>FlixBus and Greyhound:</b> one feed carries both carriers, at the same estimated 55 seats. It is continental, so a route appears only if it genuinely runs in Ontario — 16 FlixBus routes and one Greyhound, New York–Buffalo–Toronto. Its times are published in UTC and are converted to Toronto time here.</li>
-        <li><b>Where a border-crossing line stops.</b> Natural Earth's provincial outline runs inside the true border in places, so routes are drawn against Ontario plus about 3 km — without that, Sault Ste. Marie, Niagara and Sarnia lose road that really is in Ontario. That margin would otherwise reach onto Detroit's and Buffalo's streets, so the four carriers that actually leave the province are clipped against a frame with the neighbouring states and provinces cut back out of it. A coach to Detroit now stops in the middle of the Detroit River, which is where Ontario ends.</li>
+        <li><b>FlixBus and Greyhound:</b> one feed carries both carriers, at the same estimated 55 seats. It is continental, so a route appears only if it genuinely runs on the map — 19 FlixBus routes and three Greyhound. Its times are published in UTC and are converted to Toronto time here.</li>
+        <li><b>Where a border-crossing line stops.</b> Natural Earth's provincial outline runs inside the true border in places, so routes are drawn against Ontario and Québec plus about 3 km — without that, Sault Ste. Marie, Niagara and Sarnia lose road that really is in Ontario. That margin would otherwise reach onto Detroit's and Buffalo's streets, so the four carriers that actually leave them are clipped against a frame with the neighbouring states and provinces cut back out of it. A coach to Detroit now stops in the middle of the Detroit River, which is where Ontario ends.</li>
         <li><b>O-Train and ION:</b> neither operator publishes a planning load, so the TTC's streetcar rule is applied to the capacity each does publish — peak at 52% of it, off-peak at the seat count. A two-car Citadis Spirit on O-Train Line 1 comes out at 312.</li>
         <li><b>MiWay, Hamilton and Durham:</b> none publishes an articulated assignment, so the map watches their realtime feeds. Every vehicle broadcasts its fleet number, and the published rosters say which numbers are 60-foot artics. Where a route runs a mix, it is counted at the observed proportion rather than all-or-nothing — Durham’s eight artics work PULSE 900 and 901, but most trips there are still 40-foot buses. The route panel shows the share and how many sightings it rests on.</li>
       </ul>
@@ -346,10 +350,11 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <ul>
         <li>Scheduled service, not delivered service.</li>
         <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
-        <li>Feeds come from forty-four agencies with different update cycles, so some schedules are fresher than others.</li>
-        <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps.</li>
+        <li>Feeds come from fifty-six agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps; the STM, which runs about 300 articulated buses and publishes no list of where, is the second.</li>
         <li>Megabus and Rider Express are missing for cause, not oversight: Megabus's feed still lists Toronto stops but runs no trips to them, and Rider Express's published feed expired at the end of 2023.</li>
-        <li>Membership was tested rather than assumed: every candidate agency's stops were matched against the stops of GO, UP, the TTC, VIA and Ontario Northland. Kawartha Lakes and St. Thomas came out 27 km and 21 km from anything Toronto-bound, so they are not on the map.</li>
+        <li>Membership is tested rather than assumed, and it is a chain rather than a single hop: start from the services that reach Toronto — GO, UP, the TTC, VIA and Ontario Northland — and admit any agency with a stop within 500 m of one already in, until nothing new joins. Most of Québec joins on VIA at Montréal or Québec City; Laval and Sorel-Tracy join on exo; Gatineau joins on OC Transpo, and Transcollines on Gatineau, three hops out.</li>
+        <li>Four systems failed that test and are off the map for it: Kawartha Lakes (27 km from anything), St. Thomas (21 km), Trois-Rivières (18 km) and Sherbrooke (61 km). The last two are the awkward ones — you really can reach both by coach, but the carriers that get you there, Orléans Express and Limocar, publish no schedule data at all, so nothing the map can see connects them. Rouyn-Noranda is off for the same reason at 69 km.</li>
         <li>School and seasonal routes appear only if they run on the sample days. Hamilton lists 80 routes but runs 31 on a normal weekday.</li>
         <li>GO's seated-capacity basis is not comparable to the TTC's standing-load standards: a GO train counted at seats only still dwarfs a bus counted with standees.</li>
       </ul>
@@ -395,6 +400,10 @@ const S = {
   ottspirit: { t: "OC Transpo — Spirit trains: 600 per two-car train, 240 of them seated", u: "https://www.octranspo.com/en/our-services/vehicles/spirit-trains/" },
   ottrail: { t: "OC Transpo — O-Train Lines 2 and 4: 420 per Stadler FLIRT, 260 per Alstom LINT", u: "https://www.octranspo.com/en/our-services/vehicles/flirt-trains/" },
   ion: { t: "ION light rail — Flexity Freedom, the same 30 m car as Line 5", u: "https://www.grt.ca/en/about-grt/ion-light-rail-vehicles.aspx" },
+  azur: { t: "STM MPM-10 Azur — nine cars, 262 seats, 1,555 capacity", u: "https://en.wikipedia.org/wiki/MPM-10" },
+  mr73: { t: "STM MR-73 — 160 per car: nine cars on line 4, six on line 5 (960 a train)", u: "https://fr.wikipedia.org/wiki/MR-73_(m%C3%A9tro)" },
+  rem: { t: "REM rolling stock — 600 per four-car peak train, 128 seats; two cars off-peak", u: "https://rem.info/en/rolling-stock" },
+  exotrain: { t: "exo — the new multilevel cars, up to 147 seats each; exo publishes no per-trip consist", u: "https://exo.quebec/fr/a-propos/medias-publications/communiques-presse/nouvelles-voitures-2050-exo" },
   osm: { t: "Shorelines © OpenStreetMap contributors (ODbL), for every place transit meets water", u: "https://www.openstreetmap.org/copyright" },
   naturalearth: { t: "Open water and the north — Natural Earth 10 m (public domain), too coarse for shorelines close up", u: "https://www.naturalearthdata.com/" },
   boundary: { t: "City of Toronto — Regional Municipal Boundary (Open Government Licence – Toronto)", u: "https://open.toronto.ca/dataset/regional-municipal-boundary/" },
@@ -412,6 +421,8 @@ const FEED_SOURCE = {
   burlington: { t: "City of Burlington Open Data — Transit schedule data (GTFS)", u: "https://navburl-burlington.opendata.arcgis.com/datasets/Burlington::transit-schedule-data-gtfs" },
   milton: { t: "Milton Transit GTFS (Metrolinx-hosted)", u: "https://discover-milton.hub.arcgis.com/datasets/milton-gtfs-1/about" },
   via: { t: "VIA Rail — Developer resources (GTFS, Open Government Licence – Canada)", u: "https://www.viarail.ca/en/developer-resources" },
+  stm: { t: "Société de transport de Montréal — Développeurs (GTFS)", u: "https://www.stm.info/fr/a-propos/developpeurs" },
+  exo: { t: "exo — Open data: one GTFS feed per sector plus one for the trains, joined here into one agency", u: "https://exo.quebec/en/about/open-data" },
   flix: { t: "FlixBus — North American GTFS feed (also carries Greyhound Lines)", u: "https://gtfs.gis.flix.tech/gtfs_generic_us.zip" },
   greyhound: { t: "Greyhound Lines — published inside FlixBus's North American GTFS feed", u: "https://gtfs.gis.flix.tech/gtfs_generic_us.zip" },
 };
@@ -443,7 +454,7 @@ const TYPES = [
 ];
 const MODE_LABEL = { subway: "Subway", lrt: "Light rail", streetcar: "Streetcar", bus: "Bus", express: "Express bus", community: "Community bus", night: "Overnight bus", rail: "Commuter rail", regional: "Regional bus", brt: "BRT", intercity: "Intercity train", coach: "Intercity coach" };
 const CLASS_KEY = [
-  ["rail", "Trains", "GO, UP Express, VIA, the Northlander"],
+  ["rail", "Trains", "GO, UP Express, exo, VIA, the Northlander"],
   ["brt", "BRT & articulated buses", "Viva, Züm, B-Line, TTC artics"],
   ["streetcar", "Streetcar", "TTC 500-series"],
   ["bus", "Bus", "local, express, regional and intercity coach"],
@@ -506,7 +517,7 @@ const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 5, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedules: 44 Ontario agencies · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 56 agencies in Ontario and Québec · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
