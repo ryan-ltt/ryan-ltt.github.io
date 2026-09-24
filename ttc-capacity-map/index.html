@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Ontario, Québec &amp; Maritimes Capacity Map</title>
-<meta name="description" content="Every transit route in Ontario, Québec and the Maritimes you can reach from Toronto, drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
+<title>Eastern Canada Capacity Map</title>
+<meta name="description" content="Every transit route in Ontario, Québec and Atlantic Canada with a schedule to read, drawn as wide as the passengers per hour its schedule can carry, hour by hour.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
@@ -233,9 +233,9 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
   <aside class="rail" id="rail" aria-label="Map controls and route list">
     <header class="brand">
       <nav class="sitenav" aria-label="Site"><a href="/">home</a><a href="/projects/">projects</a></nav>
-      <p class="eyebrow" id="eyebrow">Ontario, Québec &amp; the Maritimes · Fall 2026 schedules</p>
-      <h1>Ontario, Québec &amp; Maritimes Capacity Map</h1>
-      <p class="dek">Every route from sixty-three agencies — every system in Ontario, Québec, New Brunswick, Nova Scotia and Prince Edward Island you can reach from Toronto by transit — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch five provinces through the day. All times are Toronto time.</p>
+      <p class="eyebrow" id="eyebrow">Ontario, Québec &amp; Atlantic Canada · Fall 2026 schedules</p>
+      <h1>Eastern Canada Capacity Map</h1>
+      <p class="dek">Every route from ninety-one agencies — every transit system, ferry and intercity coach in Ontario, Québec and the four Atlantic provinces with a schedule to read — drawn as wide as the <b>passengers per hour</b> its schedule can carry in the hour you pick. Drag the time bar, or press play to watch six provinces through the day. All times are Toronto time.</p>
     </header>
 
     <section class="section" aria-label="Display options">
@@ -269,14 +269,14 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
     <footer class="railfoot">
       <button type="button" class="linkbtn" id="open-method">Method &amp; sources</button>
       <p>Capacity is scheduled, not observed: trips in each agency's published GTFS schedule × the planning load for each vehicle.</p>
-      <p>Intercity lines are drawn only inside the five provinces; their figures still count the whole trip.</p>
-      <p>One clock for the whole map: Toronto time. The Maritimes run an hour ahead, so Halifax's 8 AM rush shows at 7 AM.</p>
+      <p>Intercity lines are drawn only inside the six provinces; their figures still count the whole trip.</p>
+      <p>One clock for the whole map: Toronto time. The Maritimes run an hour ahead and Newfoundland an hour and a half, so Halifax's 8 AM rush shows at 7 AM and St. John's at 6:30.</p>
       <p>Data used in this product or service is provided with the permission of Metrolinx.</p>
     </footer>
   </aside>
 
   <main class="stage">
-    <div id="map" role="application" aria-label="Map of Ontario, Québec and Maritime transit routes drawn by capacity"></div>
+    <div id="map" role="application" aria-label="Map of Ontario, Québec and Atlantic Canada transit routes drawn by capacity"></div>
     <div class="timebar" id="timebar">
       <div class="seg" role="group" aria-label="Day of week">
         <button type="button" data-day="weekday" aria-pressed="true">Weekday</button>
@@ -314,8 +314,8 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>Days.</b> Real sample days inside every feed's validity window: Thursday Sept 24, Saturday Sept 26 and Sunday Sept 27, 2026.</li>
         <li><b>Late night.</b> After about 1 AM, daytime routes show only their last trips finishing their runs. Overnight service is the TTC's Blue Night network and a few regional night routes.</li>
         <li><b>All routes.</b> The fourth button on the time bar drops the hour and draws every route at its own busiest hour, so peak-only and school routes are not hidden. Each route is then at a different moment, so the map is a catalogue rather than a snapshot.</li>
-        <li><b>One clock.</b> The time bar is Toronto time everywhere, so the map is one moment across all five provinces. New Brunswick, Nova Scotia and PEI run on Atlantic time, an hour ahead, so their schedules are shifted an hour earlier: Halifax's 8 AM rush appears at 7 AM. A trip leaving Halifax at 12:30 AM lands at 11:30 PM on the same service day, the way a 25:00 trip is kept on the day it began.</li>
-        <li><b>Where the lines stop.</b> Routes are drawn only inside Ontario, Québec, New Brunswick, Nova Scotia and Prince Edward Island — VIA reaches Vancouver, Ontario Northland reaches Winnipeg — but every figure counts the whole trip.</li>
+        <li><b>One clock.</b> The time bar is Toronto time everywhere, so the map is one moment across all six provinces. New Brunswick, Nova Scotia and PEI run on Atlantic time, an hour ahead, and Newfoundland half an hour further, so their schedules are shifted earlier: Halifax's 8 AM rush appears at 7 AM, and a St. John's bus leaving at 8:15 is counted in the 6 AM hour. A trip leaving Halifax at 12:30 AM lands at 11:30 PM on the same service day, the way a 25:00 trip is kept on the day it began.</li>
+        <li><b>Where the lines stop.</b> Routes are drawn only inside Ontario, Québec and the four Atlantic provinces — VIA reaches Vancouver, Ontario Northland reaches Winnipeg — but every figure counts the whole trip.</li>
       </ul>
     </section>
 
@@ -340,7 +340,10 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
         <li><b>exo trains</b> are the Montréal side of the GO problem: exo publishes no per-trip consist either. Each train is counted as eight cars at the 147 seats of its newest multilevel cars, a range of 880 to 1,470, and the route panel says so.</li>
         <li><b>RTC and STO</b> are the only agencies outside the GTHA whose articulated assignment is documented: Québec City's Métrobus network (the 800 series) and Gatineau's Rapibus corridor both run 60-foot buses, and are counted that way. STM's SRB Pie-IX is counted the same way. Everything else in Québec is counted as a 40-foot bus.</li>
         <li><b>The Maritimes.</b> None of Halifax, Moncton, Saint John, Fredericton, Charlottetown or the Annapolis Valley publishes a loading standard or an articulated assignment, so their buses are counted at the TTC's 40-foot figure. The Halifax–Dartmouth ferries are counted at 390, the certified capacity of the Stannix-class boats; a ferry cannot board past its certificate, and Halifax publishes no planning load. Maritime Bus coaches are counted at the same estimated 55 seats as every other coach.</li>
-        <li><b>Peterborough and Brantford publish no feed at all.</b> Both connect to Toronto — GO buses call at Peterborough's terminal and Brantford's — so their service is read from the timetable tables on each city's website, with route geometry from Peterborough's own GIS and from OpenStreetMap for Brantford. Those two are the only agencies here not built from a published feed, and the route panel says so. Their timetables list timepoints rather than every stop, so a route's busiest point is its busiest timepoint.</li>
+        <li><b>Other ferries</b> are counted at each boat's published passenger capacity: Marine Atlantic 1,000, the Fundy Rose 1,317, Northumberland Ferries 600, and the Société des traversiers du Québec's boats from 590 (Québec–Lévis) and 800 (Matane) down to 70 (L'Isle-Verte). Three small STQ crossings publish nothing and are estimated at 12. Newfoundland's buses, Cape Breton's and Corner Brook's are counted at the TTC's 40-foot figure like everywhere else outside the GTHA.</li>
+        <li><b>Peterborough and Brantford publish no feed at all.</b> Their service is read from the timetable tables on each city's website, with route geometry from Peterborough's own GIS and from OpenStreetMap for Brantford. Their timetables list timepoints rather than every stop, so a route's busiest point is its busiest timepoint.</li>
+        <li><b>Timetables transcribed by this project.</b> Nine more operators publish no usable feed but do publish a timetable, and each is copied into a small file that names its source and the date it was read: DRL's coach across Newfoundland, Marine Atlantic, the Northumberland and Fundy Rose ferries, Autobus Maheux and Autobus Gatineau (from Maheux's July 2026 PDF), Transit Cape Breton (route PDFs, with lines and stops from the city's transit GIS), Corner Brook Transit, and Tidal Transit in the Annapolis Valley, whose TransLoc feed declares Denver time and repeats every trip into four buses an hour where its own timetable runs one. Coach and Corner Brook stops are placed with OpenStreetMap's geocoder, and roadside junctions that could not be placed reliably are left out; a single coach carries the same load past them either way. The route panel marks all of these as derived.</li>
+        <li><b>Lines drawn by this project.</b> Orléans Express, Intercar and the STQ ferries publish schedules but no route shapes, and neither do the transcribed timetables, so their lines are routed stop to stop along OpenStreetMap roads (OSRM), or drawn straight across the water for ferries, bent around headlands where a straight line would cross land. The route panel says when a line was drawn this way.</li>
         <li><b>FlixBus and Greyhound:</b> one feed carries both carriers, at the same estimated 55 seats. It is continental, so a route appears only if it genuinely runs on the map — 19 FlixBus routes and three Greyhound. Its times are published in UTC and are converted to Toronto time here.</li>
         <li><b>Where a border-crossing line stops.</b> Natural Earth's provincial outline runs inside the true border in places, so routes are drawn against the covered provinces plus about 3 km — without that, Sault Ste. Marie, Niagara and Sarnia lose road that really is in Ontario. That margin would otherwise reach onto Detroit's and Buffalo's streets, so the four carriers that actually leave them are clipped against a frame with the neighbouring states and provinces cut back out of it. A coach to Detroit now stops in the middle of the Detroit River, which is where Ontario ends.</li>
         <li><b>O-Train and ION:</b> neither operator publishes a planning load, so the TTC's streetcar rule is applied to the capacity each does publish — peak at 52% of it, off-peak at the seat count. A two-car Citadis Spirit on O-Train Line 1 comes out at 312.</li>
@@ -353,11 +356,11 @@ dialog::backdrop{background:rgb(10 15 18 / .45)}
       <ul>
         <li>Scheduled service, not delivered service.</li>
         <li>Routes sharing a street are not added together; each is drawn on its own, thicker routes underneath.</li>
-        <li>Feeds come from sixty-three agencies with different update cycles, so some schedules are fresher than others.</li>
+        <li>Feeds come from ninety-one agencies with different update cycles, so some schedules are fresher than others.</li>
         <li><b>Buses outside the GTHA are counted as 40-foot buses.</b> No agency east or west of the Toronto region publishes an articulated assignment, and their realtime feeds either need a key or do not exist, so OC Transpo, Grand River Transit, London and the rest are understated wherever they run 60-foot or double-decker buses. OC Transpo, which runs a lot of both, is the largest of these gaps; the STM, which runs about 300 articulated buses and publishes no list of where, is the second.</li>
         <li>Megabus and Rider Express are missing for cause, not oversight: Megabus's feed still lists Toronto stops but runs no trips to them, and Rider Express's published feed expired at the end of 2023.</li>
-        <li>Membership is tested rather than assumed, and it is a chain rather than a single hop: start from the services that reach Toronto — GO, UP, the TTC, VIA and Ontario Northland — and admit any agency with a stop within 500 m of one already in, until nothing new joins. Most of Québec joins on VIA at Montréal or Québec City; Laval and Sorel-Tracy join on exo; Gatineau joins on OC Transpo, and Transcollines on Gatineau, three hops out. In the Maritimes, VIA's Ocean brings in Moncton, Halifax and Maritime Bus; Maritime Bus then brings in Saint John, Fredericton, Charlottetown and the Annapolis Valley.</li>
-        <li>Four systems failed that test and are off the map for it: Kawartha Lakes (27 km from anything), St. Thomas (21 km), Trois-Rivières (18 km) and Sherbrooke (61 km). The last two are the awkward ones — you really can reach both by coach, but the carriers that get you there, Orléans Express and Limocar, publish no schedule data at all, so nothing the map can see connects them. Rouyn-Noranda is off for the same reason at 69 km. So is <b>Newfoundland and Labrador</b>: its one feed, St. John's Metrobus, is 563 km from the nearest stop on the map, because the Marine Atlantic ferry and the DRL coach across the island publish no schedule data.</li>
+        <li><b>Every system with a schedule is on the map</b>, whether or not you can get there from Toronto. Until September 2026 membership was a test, and the test still labels the map: it is a chain rather than a single hop: start from the services that reach Toronto — GO, UP, the TTC, VIA and Ontario Northland — and admit any agency with a stop within 500 m of one already in, until nothing new joins. Most of Québec joins on VIA at Montréal or Québec City; Laval and Sorel-Tracy join on exo; Gatineau joins on OC Transpo, and Transcollines on Gatineau, three hops out. In the Maritimes, VIA's Ocean brings in Moncton, Halifax and Maritime Bus; Maritime Bus then brings in Saint John, Fredericton, Charlottetown and the Annapolis Valley. The transcribed timetables close most of the old gaps: Limocar reaches Sherbrooke, Orléans Express Trois-Rivières, Maheux Rouyn-Noranda, and Marine Atlantic and DRL carry the chain to St. John's and Corner Brook.</li>
+        <li>Three systems are still reached by no published schedule, and their route panels say so: Lindsay (Kawartha Lakes has no coach the map can read), and the Northumberland and Fundy Rose ferries, whose terminals at Wood Islands, Caribou, Saint John and Digby have no bus stop within 500 m. Exo's Roussillon and Haut-Saint-Laurent feeds expired in 2023 and 2024, Miramichi's only feed is gone, and Perth County's PC Connect feed no longer downloads, so those four are missing.</li>
         <li>School and seasonal routes appear only if they run on the sample days. Hamilton lists 80 routes but runs 31 on a normal weekday.</li>
         <li>GO's seated-capacity basis is not comparable to the TTC's standing-load standards: a GO train counted at seats only still dwarfs a bus counted with standees.</li>
       </ul>
@@ -407,6 +410,11 @@ const S = {
   mr73: { t: "STM MR-73 — 160 per car: nine cars on line 4, six on line 5 (960 a train)", u: "https://fr.wikipedia.org/wiki/MR-73_(m%C3%A9tro)" },
   rem: { t: "REM rolling stock — 600 per four-car peak train, 128 seats; two cars off-peak", u: "https://rem.info/en/rolling-stock" },
   hfxferry: { t: "E.Y.E. Marine — Halifax Transit ferries: 390 passengers and 5 crew, 24 m", u: "https://www.eyemarine.com/vessel/halifax-transit-passenger-ferries/" },
+  maferry: { t: "Marine Atlantic — our fleet (Blue Puttees, Highlanders, Ala'suinu 1,000 passengers; Leif Ericson 500)", u: "https://www.marineatlantic.ca/onboard-experience/our-fleet" },
+  nflferry: { t: "Northumberland Ferries — MV Northumberland, up to 600 passengers", u: "https://www.ferries.ca/ns-pei-ferry/mv-northumberland" },
+  fundyrose: { t: "MV Fundy Rose — 1,317 passengers as configured for Canadian service", u: "https://en.wikipedia.org/wiki/MV_Fundy_Rose" },
+  stq: { t: "Société des traversiers du Québec — vessel pages and crossing announcements (passenger capacities)", u: "https://www.traversiers.com/en/about-stq/our-vessels/mv-alphonse-desjardins" },
+  osrm: { t: "Routed lines for feeds without shapes — OSRM over OpenStreetMap roads; stop positions from Nominatim (ODbL)", u: "https://project-osrm.org/" },
   exotrain: { t: "exo — the new multilevel cars, up to 147 seats each; exo publishes no per-trip consist", u: "https://exo.quebec/fr/a-propos/medias-publications/communiques-presse/nouvelles-voitures-2050-exo" },
   osm: { t: "Shorelines © OpenStreetMap contributors (ODbL), for every place transit meets water", u: "https://www.openstreetmap.org/copyright" },
   naturalearth: { t: "Open water and the north — Natural Earth 10 m (public domain), too coarse for shorelines close up", u: "https://www.naturalearthdata.com/" },
@@ -436,7 +444,7 @@ const FEED_SOURCE = {
 const feedSource = k => {
   const a = D.agencies[k] || {};
   if (FEED_SOURCE[k]) return FEED_SOURCE[k];
-  const what = a.derived ? "timetables published by the city, assembled into a feed by this project"
+  const what = a.derived ? "timetable published by the operator, transcribed into a feed by this project"
                          : "GTFS schedule feed";
   return { t: `${a.full || k} — ${what}`, u: a.feed || "#" };
 };
@@ -463,7 +471,7 @@ const CLASS_KEY = [
   ["rail", "Trains", "GO, UP Express, exo, VIA, the Northlander, the Ocean"],
   ["brt", "BRT & articulated buses", "Viva, Züm, B-Line, TTC artics"],
   ["streetcar", "Streetcar", "TTC 500-series"],
-  ["ferry", "Ferry", "Halifax–Dartmouth"],
+  ["ferry", "Ferry", "harbour ferries, STQ, Marine Atlantic"],
   ["bus", "Bus", "local, express, regional and intercity coach"],
   ["community", "Community bus", "small accessible buses"],
 ];
@@ -525,7 +533,7 @@ const visible = r => state.agencies.has(r.agency) && state.types.has(r.type);
 /* ---------- map ---------- */
 const map = L.map("map", { zoomControl: false, minZoom: 5, maxZoom: 17, zoomSnap: 0.5, zoomDelta: 0.5, attributionControl: true });
 L.control.zoom({ position: "topleft" }).addTo(map);
-map.attributionControl.setPrefix(false).addAttribution('Schedules: 63 agencies in Ontario, Québec and the Maritimes · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
+map.attributionControl.setPrefix(false).addAttribution('Schedules: 91 agencies in Ontario, Québec and Atlantic Canada · Routing and geocoding © OpenStreetMap · Metrolinx data used with permission · Shoreline © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> and Natural Earth');
 
 map.createPane("base").style.zIndex = 250;
 map.createPane("routes").style.zIndex = 420;
@@ -800,7 +808,12 @@ function renderDrawer() {
   }
 
   const derived = (D.agencies[r.agency] || {}).derived
-    ? `<p class="note"><b>Built from published timetables.</b> ${esc((D.agencies[r.agency] || {}).full)} publishes no GTFS feed, so this route's service comes from the timetable tables on the city's own website and its shape from public route geometry. Times are listed at timepoints rather than every stop.</p>` : "";
+    ? `<p class="note"><b>Built from published timetables.</b> ${esc((D.agencies[r.agency] || {}).full)} publishes no GTFS feed, so this route's service comes from the timetable the operator publishes, transcribed by this project. Times are listed at timepoints rather than every stop.</p>` : "";
+  const ag = D.agencies[r.agency] || {};
+  const drawn = ag.drawn
+    ? `<p class="note"><b>Line drawn by this project.</b> ${esc(ag.full)} publishes no route shapes, so this line is ${ag.drawn === "sea" ? "drawn straight between the terminals" : "routed between its stops along OpenStreetMap roads"}; the figures come from the schedule.</p>` : "";
+  const alone = ag.hop === null
+    ? `<p class="note"><b>Not connected.</b> No published schedule on this map reaches ${esc(ag.full)} from Toronto; nothing else stops within 500 m of it.</p>` : "";
   const branches = Object.entries(r.branches || {});
   const pages = r.summaryPages || [];
   const feed = feedSource(r.agency);
@@ -818,6 +831,8 @@ function renderDrawer() {
     </header>
     ${r.note ? `<p class="note"><b>Service note:</b> ${esc(r.note)}</p>` : ""}
     ${derived}
+    ${drawn}
+    ${alone}
     <div class="fig"><span class="k">${esc(when)}</span>${fig}</div>
     <figure class="chart">
       <div class="legendrow" aria-hidden="true">
