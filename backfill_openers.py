@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 backfill_openers.py — one-time pass to add opening acts to every existing concert
-card in blog/post2.html.
+card in blog/post1.html.
 
 setlist.fm sits behind an AWS WAF JavaScript bot-challenge, so the plain-urllib
 scraper in add_concert.py cannot load these pages in bulk (it gets HTTP 202 +
@@ -26,7 +26,7 @@ is idempotent: a card that already has a `.concert-openers` block is skipped, so
 is safe to re-run after adding more dates to the JSON.
 
 Usage:
-    python backfill_openers.py --openers openers.json [--blog-post blog/post2.html] [--dry-run]
+    python backfill_openers.py --openers openers.json [--blog-post blog/post1.html] [--dry-run]
 """
 
 import re
@@ -102,10 +102,10 @@ def inject_openers(card: str, openers: list) -> str:
 
 
 def main():
-    p = argparse.ArgumentParser(description="Backfill opening acts into post2.html")
+    p = argparse.ArgumentParser(description="Backfill opening acts into post1.html")
     p.add_argument("--openers", required=True,
                    help="JSON file mapping each show date to its opener list")
-    p.add_argument("--blog-post", default="blog/post2.html")
+    p.add_argument("--blog-post", default="blog/post1.html")
     p.add_argument("--dry-run", action="store_true", help="Report only; don't write the file")
     args = p.parse_args()
 

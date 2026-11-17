@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-add_concert.py — scrape a setlist.fm page and add/update a concert card in post2.html
+add_concert.py — scrape a setlist.fm page and add/update a concert card in post1.html
 
 Usage:
     python add_concert.py <setlist.fm URL> [--notes "optional notes"]
@@ -379,13 +379,13 @@ def patch_html(html: str, new_card: str, fill_template: bool) -> str:
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="Add a concert card to post2.html from a setlist.fm URL.")
+    parser = argparse.ArgumentParser(description="Add a concert card to post1.html from a setlist.fm URL.")
     parser.add_argument("url", help="setlist.fm URL to scrape")
     parser.add_argument("--notes", default="", help="Optional notes to add below the setlist")
     parser.add_argument("--fill-template", action="store_true",
                         help="Replace the placeholder template card instead of appending")
-    parser.add_argument("--blog-post", default="blog/post2.html",
-                        help="Path to the blog post HTML file (default: blog/post2.html)")
+    parser.add_argument("--blog-post", default="blog/post1.html",
+                        help="Path to the blog post HTML file (default: blog/post1.html)")
     parser.add_argument("--no-openers", action="store_true",
                         help="Skip scraping opening acts from the same-venue/date box")
     args = parser.parse_args()
