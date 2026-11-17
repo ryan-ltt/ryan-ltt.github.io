@@ -99,3 +99,41 @@ h2
 	background-color: transparent;
 	padding: 0;
 }
+
+/* phones: less padding and smaller text so more words fit per line */
+@media (max-width: 600px)
+{
+	body
+	{
+		padding: 12px;
+	}
+	.blog-post
+	{
+		padding: 24px 18px;
+	}
+	.back-link
+	{
+		margin-bottom: 20px;
+	}
+	h1
+	{
+		font-size: 22px;
+	}
+	h1 b
+	{
+		font-size: 26px;
+	}
+	h2
+	{
+		font-size: 18px;
+	}
+	.post-date
+	{
+		margin-bottom: 24px;
+	}
+	.post-content
+	{
+		font-size: 14px;
+		line-height: 1.7;
+	}
+}
